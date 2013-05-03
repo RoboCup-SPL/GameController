@@ -1,0 +1,32 @@
+<project default="distribute">
+  <property name="src.dir"     value="src"/>
+
+  <property name="build.dir"   value="build"/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="jar.dir"     value="${build.dir}/jar"/>
+  <property name="resources.dir"  value="resources" />
+
+  <target name="clean">
+    <delete dir="${build.dir}" quiet="true" />
+  </target>
+
+  <target name="compile" depends="clean">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
+  </target>
+
+  <target name="distribute" depends="compile">
+    <mkdir dir="${jar.dir}"/>
+    <jar destfile="${jar.dir}/GameController2.jar" basedir="${classes.dir}">
+      <manifest>
+	<attribute name="Main-Class" value="controller.Main"/>
+	<attribute name="Author" value="Michel Bartsch, Marcel Steinbeck" />
+      </manifest>
+    </jar>
+    
+    <mkdir dir="${jar.dir}" />
+    <copy todir="${jar.dir}" overwrite="true">
+      <fileset dir="${resources.dir}" />
+    </copy>
+  </target>
+</project>
