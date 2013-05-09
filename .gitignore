@@ -2,6 +2,7 @@
 build/*
 nbproject/*
 config/*
+logs/*
 # Package Files #
 *.jar
 *.war
