@@ -28,6 +28,9 @@ public class StartInput extends JFrame implements Serializable
     private static final long serialVersionUID = 1L;
     private static Pattern IPV4_PATTERN;
 
+    /**
+     * This is used to check if the broadcast ip is legal.
+     */
     static {
         IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
     }
@@ -53,6 +56,7 @@ public class StartInput extends JFrame implements Serializable
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
+    private static final String BROADCAST_LABEL = "Broadcast:";
     private static final String START_LABEL = "Start";
     
     /** If true, this GUI has finished and offers it`s input. */
@@ -68,7 +72,9 @@ public class StartInput extends JFrame implements Serializable
      * is recommended.
      */
     private boolean fulltimeOK = false;
-
+    /**
+     * This is true, if the broadcast-address is a legal ip-address.
+     */
     private boolean broadcastAddressOk = false;
     
     /** The inputs that can be read from this GUI when it has finished. */
@@ -150,23 +156,23 @@ public class StartInput extends JFrame implements Serializable
             }
         );
 
-        optionsRight = new JPanel();
-        optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
-        optionsRight.setLayout(new BoxLayout(optionsRight, BoxLayout.PAGE_AXIS));
-        add(optionsRight);
+        optionsLeft = new JPanel();
+        optionsLeft.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
+        optionsLeft.setLayout(new BoxLayout(optionsLeft, BoxLayout.PAGE_AXIS));
+        add(optionsLeft);
 
         JPanel fullscreenPanel = new JPanel();
         fullscreenPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        optionsRight.add(fullscreenPanel);
+        optionsLeft.add(fullscreenPanel);
         JPanel broadcastAddressPanel = new JPanel();
         broadcastAddressPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        optionsRight.add(broadcastAddressPanel);
+        optionsLeft.add(broadcastAddressPanel);
 
         fullscreen = new Checkbox(FULLSCREEN_LABEL);
         fullscreen.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         fullscreen.setState(true);
         fullscreenPanel.add(fullscreen);
-        broadcastAddressLabel = new JLabel("Broadcast:");
+        broadcastAddressLabel = new JLabel(BROADCAST_LABEL);
         broadcastAddressPanel.add(broadcastAddressLabel);
         broadcastAddressInput = new JTextField();
         broadcastAddressInput.setPreferredSize(new Dimension(BROADCAST_WIDTH, BROADCAST_HEIGHT));
@@ -195,9 +201,9 @@ public class StartInput extends JFrame implements Serializable
         });
         broadcastAddressPanel.add(broadcastAddressInput);
 
-        optionsLeft = new JPanel();
-        optionsLeft.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
-        add(optionsLeft);
+        optionsRight = new JPanel();
+        optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
+        add(optionsRight);
         Dimension optionsDim = new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_HEIGHT);
         nofulltime = new JRadioButton(FULLTIME_LABEL_NO);
         nofulltime.setPreferredSize(optionsDim);
@@ -206,8 +212,8 @@ public class StartInput extends JFrame implements Serializable
         fulltimeGroup = new ButtonGroup();
         fulltimeGroup.add(nofulltime);
         fulltimeGroup.add(fulltime);
-        optionsLeft.add(nofulltime);
-        optionsLeft.add(fulltime);
+        optionsRight.add(nofulltime);
+        optionsRight.add(fulltime);
         nofulltime.addActionListener(new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
