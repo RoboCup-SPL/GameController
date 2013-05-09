@@ -26,8 +26,12 @@ public class Log
     
     /** The file to write into. */
     private FileWriter file;
+    /** The error-file to write into. */
+    private FileWriter errorFile;
     /** The format of timestamps. */
     private SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy.M.dd-kk.mm.ss");
+    /** The file to write into. */
+    private String errorPath = "error.txt";
     /** The timeline. */
     private LinkedList<AdvancedData> states = new LinkedList<AdvancedData>();
     
@@ -133,11 +137,31 @@ public class Log
     }
 
     /**
+     * Writes a line, beginning with a timestamp, in the error-file and creates
+     * a new one, if it does not yet exist.
+     * 
+     * @param s     The string to be written in the error-file.
+     */
+    public static void toErrorFile(String s)
+    {
+        try{
+            if(instance.errorFile == null) {
+                instance.errorFile = new FileWriter(new File(instance.errorPath));
+            }
+            instance.errorFile.write(instance.timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
+            instance.errorFile.flush();
+        } catch(IOException e) {}
+    }
+    
+    /**
      * Closes the Log
      *
-     * @throws IOException if an error occurred while trying to close the FileWriter
+     * @throws IOException if an error occurred while trying to close the FileWriters
      */
     public static void close() throws IOException {
+        if(instance.errorFile != null) {
+            instance.errorFile.close();
+        }
         instance.file.close();
     }
 }

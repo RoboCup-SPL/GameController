@@ -3,6 +3,7 @@ build/*
 nbproject/*
 config/*
 logs/*
+error.txt
 # Package Files #
 *.jar
 *.war
