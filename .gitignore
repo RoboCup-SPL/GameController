@@ -1,6 +1,7 @@
 *.class
 build/*
 nbproject/*
+config/*
 # Package Files #
 *.jar
 *.war
