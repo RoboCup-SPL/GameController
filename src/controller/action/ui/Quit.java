@@ -1,8 +1,8 @@
 package controller.action.ui;
 
-import controller.action.GCAction;
 import controller.EventHandler;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 
 

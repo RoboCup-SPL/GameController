@@ -1,7 +1,6 @@
 package controller.net;
 
 import data.GameControlData;
-
 import java.io.IOException;
 import java.net.*;
 

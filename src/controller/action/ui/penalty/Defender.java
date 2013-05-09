@@ -1,10 +1,10 @@
 package controller.action.ui.penalty;
 
 import controller.EventHandler;
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
@@ -53,10 +53,10 @@ public class Defender extends GCAction
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         player.penalty = penalty;
-        ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.PENALTY_STANDARD_TIME);
+        ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyStandardTime);
         
         Log.state(data, "Illegal Defender "+
-                Rules.TEAM_COLOR_NAME[data.team[side].teamColor]
+                Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
     }
     

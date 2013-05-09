@@ -207,7 +207,7 @@ public class GUI extends JFrame implements GCGUI
         for(int i=0; i<2; i++) {
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
             name[i].setHorizontalAlignment(JLabel.CENTER);
-            name[i].setForeground(Rules.TEAM_COLOR[data.team[i].teamColor]);
+            name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
             goalInc[i] = new JButton("+");
             goalDec[i] = new JButton("-");
             kickOff[i] = new JRadioButton(KICKOFF);
@@ -221,10 +221,10 @@ public class GUI extends JFrame implements GCGUI
         }
         //  robots
         robots = new JPanel[2];
-        robot = new JButton[2][Rules.TEAM_SIZE];
-        robotLabel = new JLabel[2][Rules.TEAM_SIZE];
-        lanIcon = new ImageIcon[2][Rules.TEAM_SIZE];
-        robotTime = new JProgressBar[2][Rules.TEAM_SIZE];
+        robot = new JButton[2][Rules.league.teamSize];
+        robotLabel = new JLabel[2][Rules.league.teamSize];
+        lanIcon = new ImageIcon[2][Rules.league.teamSize];
+        robotTime = new JProgressBar[2][Rules.league.teamSize];
         for(int i=0; i<2; i++) {
             robots[i] = new JPanel();
             robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, 10));
@@ -610,7 +610,7 @@ public class GUI extends JFrame implements GCGUI
     private void updateColor(AdvancedData data)
     {
         for(int i=0; i<2; i++) {
-            name[i].setForeground(Rules.TEAM_COLOR[data.team[i].teamColor]);
+            name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
             side[i].setImage(backgroundSide[i][data.team[i].teamColor].getImage());
         }
     }
@@ -711,18 +711,18 @@ public class GUI extends JFrame implements GCGUI
                     if(data.team[i].player[j].secsTillUnpenalised != Pushing.BANN_TIME) {
                         if(data.team[i].player[j].secsTillUnpenalised == 0 
                                 && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP) {
-                            robotLabel[i][j].setText(Rules.TEAM_COLOR_NAME[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
+                            robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
                         } else {
-                            robotLabel[i][j].setText(Rules.TEAM_COLOR_NAME[i]+" "+(j+1)+": "+clockFormat.format(new Date(data.team[i].player[j].secsTillUnpenalised*1000)));
+                            robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+clockFormat.format(new Date(data.team[i].player[j].secsTillUnpenalised*1000)));
                         }
-                        robotTime[i][j].setValue(100*data.team[i].player[j].secsTillUnpenalised/Rules.PENALTY_STANDARD_TIME);
+                        robotTime[i][j].setValue(100*data.team[i].player[j].secsTillUnpenalised/Rules.league.penaltyStandardTime);
                         robotTime[i][j].setVisible(true);
                     } else {
                         robotLabel[i][j].setText(EJECTED);
                         robotTime[i][j].setVisible(false);
                     }
                 } else {
-                    robotLabel[i][j].setText(Rules.TEAM_COLOR_NAME[i]+" "+(j+1));
+                    robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1));
                     robotTime[i][j].setVisible(false);
                 }
                 robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
@@ -779,7 +779,7 @@ public class GUI extends JFrame implements GCGUI
     {
         for(int i=0; i<2; i++) {
             if(data.gameState == GameControlData.STATE_PLAYING
-                    && -1*(data.remainingKickoffBlocked - Rules.KICKOFF_TIME*1000) < Rules.MIN_DURATION_BEFORE_GLOBAL_GAME_STUCK*1000)
+                    && -1*(data.remainingKickoffBlocked - Rules.league.kickoffTime*1000) < Rules.league.minDurationBeforeStuck*1000)
             {
                 if(data.kickOffTeam == data.team[i].teamColor)
                 {

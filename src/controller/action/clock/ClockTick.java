@@ -109,12 +109,12 @@ public class ClockTick extends GCAction
             if( (data.gameState == GameControlData.STATE_FINISHED)
              && (data.secGameState == GameControlData.STATE2_NORMAL) ) {
                 if(data.firstHalf == GameControlData.C_TRUE) {
-                    if(data.remainingPaused <= Rules.PAUSE_TIME*1000/2) {
+                    if(data.remainingPaused <= Rules.league.pauseTime*1000/2) {
                         ActionBoard.secondHalf.perform(data);
                     }
                 } else {
                     if(data.remainingPaused > 0
-                     && data.remainingPaused <= Rules.PAUSE_PENALTY_SHOOT_TIME*1000/2) {
+                     && data.remainingPaused <= Rules.league.pausePenaltyShootTime*1000/2) {
                         ActionBoard.penaltyShoot.perform(data);
                     }
                 }
@@ -137,7 +137,7 @@ public class ClockTick extends GCAction
     
     public boolean isClockRunning(AdvancedData data) {
         boolean halfNotStarted = (data.firstHalf == GameControlData.C_TRUE ?
-                data.firstHalfTime : data.secondHalfTime) == Rules.HALF_TIME*1000;
+                data.firstHalfTime : data.secondHalfTime) == Rules.league.halfTime*1000;
         return ( !( (data.gameState == GameControlData.STATE_INITIAL)
          || (data.gameState == GameControlData.STATE_FINISHED)
          || (

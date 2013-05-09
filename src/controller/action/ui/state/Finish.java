@@ -1,9 +1,9 @@
 package controller.action.ui.state;
 
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import controller.action.ui.half.FirstHalf;
 import data.AdvancedData;
 import data.GameControlData;
@@ -41,9 +41,9 @@ public class Finish extends GCAction
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
             ActionBoard.clock.resetPlayerPenTime(data);
             if(data.firstHalf == GameControlData.C_TRUE) {
-                data.remainingPaused = Rules.PAUSE_TIME*1000;
+                data.remainingPaused = Rules.league.pauseTime*1000;
             } else if (data.fulltime && data.team[0].score == data.team[1].score){
-                data.remainingPaused = Rules.PAUSE_PENALTY_SHOOT_TIME*1000;
+                data.remainingPaused = Rules.league.pausePenaltyShootTime*1000;
             } else {
                 data.remainingPaused = 0;
             }

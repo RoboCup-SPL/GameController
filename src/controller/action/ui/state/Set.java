@@ -40,11 +40,11 @@ public class Set extends GCAction
         ActionBoard.clock.resetPlayerPenTime(data);
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             if(data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]
-                    >= (!data.fulltime ? Rules.NUMBER_OF_PENALTY_SHOOTS_SHORT : Rules.NUMBER_OF_PENALTY_SHOOTS_LONG))
+                    >= (!data.fulltime ? Rules.league.numberOfPenaltyShootsShort : Rules.league.numberOfPenaltyShootsLong))
             {
-                data.penaltyShootTime = Rules.PENALTY_SHOOT_TIME_SUDDEN_DEATH*1000;
+                data.penaltyShootTime = Rules.league.penaltyShootTimeSuddenDeath*1000;
             } else {
-              data.penaltyShootTime = Rules.PENALTY_SHOOT_TIME*1000;  
+              data.penaltyShootTime = Rules.league.penaltyShootTime*1000;  
             }
         }
         Log.state(data, "State set to Set");

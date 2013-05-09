@@ -53,15 +53,15 @@ public class Manual extends GCAction
     {
         if(!unpen) {
             data.team[side].player[number].penalty = penalty;
-            ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.PENALTY_MANUAL_TIME);
+            ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyManualTime);
             Log.state(data, "Manual Unpenalised "+
-                    Rules.TEAM_COLOR_NAME[data.team[side].teamColor]
+                    Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         } else {
             data.team[side].player[number].penalty = PlayerInfo.PENALTY_NONE;
             data.team[side].player[number].secsTillUnpenalised = 0;
             Log.state(data, "Manual Penalised "+
-                    Rules.TEAM_COLOR_NAME[data.team[side].teamColor]
+                    Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         }
     }

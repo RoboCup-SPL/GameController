@@ -1,8 +1,8 @@
 package controller.action.ui;
 
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
@@ -47,10 +47,10 @@ public class TimeOut extends GCAction
                 data.kickOffTeam = data.team[side].teamColor == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
             }
             data.remainingReady = 0;
-            Log.state(data, "TimeOut by "+Rules.TEAM_COLOR_NAME[data.team[side].teamColor]);
+            Log.state(data, "TimeOut by "+Rules.league.teamColorName[data.team[side].teamColor]);
         } else {
             data.timeOutActive[side] = false;
-            Log.state(data, "TimeOut by "+Rules.TEAM_COLOR_NAME[data.team[side].teamColor]+" ended");
+            Log.state(data, "TimeOut by "+Rules.league.teamColorName[data.team[side].teamColor]+" ended");
         }
     }
     
@@ -67,7 +67,7 @@ public class TimeOut extends GCAction
             || ( (data.gameState == GameControlData.STATE_INITIAL ||
                   data.gameState == GameControlData.STATE_READY ||
                   data.gameState == GameControlData.STATE_SET)
-                && data.numberOfTimeOuts[side] < Rules.TIME_OUT_MAX_NUMBER
+                && data.numberOfTimeOuts[side] < Rules.league.timeOutMaxNumber
                 && !data.timeOutActive[side == 0 ? 1 : 0])
             || data.testmode;
     }

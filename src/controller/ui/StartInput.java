@@ -1,5 +1,6 @@
 package controller.ui;
 
+import data.Rules;
 import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
@@ -46,7 +47,8 @@ public class StartInput extends JFrame implements Serializable
     private static final int TEAMS_HEIGHT = 300;
     private static final int IMAGE_SIZE = 250;
     private static final int OPTIONS_CONTAINER_HEIGHT = 80;
-    private static final int OPTIONS_HEIGHT = 30;
+    private static final int OPTIONS_HEIGHT = 22;
+    private static final int START_HEIGHT = 30;
     /** This is not what the name says ;) */
     private static final int FULLSCREEN_WIDTH = 100;
     private static final int BROADCAST_WIDTH = 125;
@@ -90,6 +92,7 @@ public class StartInput extends JFrame implements Serializable
     private JComboBox[] team = new JComboBox[2];
     private JPanel optionsLeft;
     private JPanel optionsRight;
+    private JComboBox league;
     private JRadioButton nofulltime;
     private JRadioButton fulltime;
     private ButtonGroup fulltimeGroup;
@@ -178,23 +181,28 @@ public class StartInput extends JFrame implements Serializable
         broadcastAddressInput.setPreferredSize(new Dimension(BROADCAST_WIDTH, BROADCAST_HEIGHT));
         broadcastAddressInput.setText(getDefaultBroadcastAddress(args));
         broadcastAddressOk = true; // setText does not trigger change event...
-        broadcastAddressInput.getDocument().addDocumentListener(new DocumentListener() {
+        broadcastAddressInput.getDocument().addDocumentListener(new DocumentListener()
+            {
             @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e)
+            {
                 validateBroadcast();
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e)
+            {
                 validateBroadcast();
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e)
+            {
                 validateBroadcast();
             }
 
-            private void validateBroadcast() {
+            private void validateBroadcast()
+            {
                 broadcastAddressOk = IPV4_PATTERN.matcher(broadcastAddressInput.getText()).matches();
                 startEnableing();
             }
@@ -204,7 +212,36 @@ public class StartInput extends JFrame implements Serializable
         optionsRight = new JPanel();
         optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
         add(optionsRight);
-        Dimension optionsDim = new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_HEIGHT);
+        Dimension optionsDim = new Dimension(WINDOW_WIDTH/3-2*STANDARD_SPACE, OPTIONS_HEIGHT);
+        league = new JComboBox();
+        for(int i=0; i < Rules.LEAGUES.length; i++) {
+            league.addItem(Rules.LEAGUES[i].leagueName);
+        }
+        league.setPreferredSize(optionsDim);
+        league.addActionListener(new ActionListener()
+            {
+            @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    for(int i=0; i < Rules.LEAGUES.length; i++) {
+                        if(Rules.LEAGUES[i].leagueName.equals((String)league.getSelectedItem())) {
+                            Rules.league = Rules.LEAGUES[i];
+                            break;
+                        }
+                    }
+                    for(int i=0; i < 2; i++) {
+                        team[i].setSelectedIndex(0);
+                        outTeam[i] = 0;
+                        setTeamIcon(i, outTeam[i]);
+                        teamIconLabel[i].setIcon(teamIcon[i]);
+                        teamIconLabel[i].repaint();
+                    }
+                    teamsOK = false;
+                    startEnableing();
+                }
+            }
+        );
+        optionsRight.add(league);
         nofulltime = new JRadioButton(FULLTIME_LABEL_NO);
         nofulltime.setPreferredSize(optionsDim);
         fulltime = new JRadioButton(FULLTIME_LABEL_YES);
@@ -230,7 +267,7 @@ public class StartInput extends JFrame implements Serializable
                 }});
         
         start = new JButton(START_LABEL);
-        start.setPreferredSize(optionsDim);
+        start.setPreferredSize(new Dimension(WINDOW_WIDTH/3-2*STANDARD_SPACE, START_HEIGHT));
         start.setEnabled(false);
         add(start);
         start.addActionListener(new ActionListener() {

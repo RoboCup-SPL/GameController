@@ -1,10 +1,10 @@
 package controller.action.ui.penalty;
 
 import controller.EventHandler;
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
@@ -62,15 +62,15 @@ public class Pushing extends GCAction
         }
         
         boolean ejected = false;
-        for(int i=0; i<Rules.PUSHES_TO_EJECTION.length; i++) {
-            if(data.pushes[side] == Rules.PUSHES_TO_EJECTION[i]) {
+        for(int i=0; i<Rules.league.pushesToEjection.length; i++) {
+            if(data.pushes[side] == Rules.league.pushesToEjection[i]) {
                 ejected = true;
                 break;
             }
         }
         if(data.gameState != GameControlData.STATE_READY) {
             if(!ejected) {
-                ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.PENALTY_STANDARD_TIME);
+                ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyStandardTime);
             } else {
                 ActionBoard.clock.setPlayerPenTime(data, side, number, BANN_TIME);
             }
@@ -78,7 +78,7 @@ public class Pushing extends GCAction
             ActionBoard.clock.setPlayerPenTime(data, side, number, (int)(data.remainingReady/1000));
         }
         Log.state(data, "Player Pushing "+
-                    Rules.TEAM_COLOR_NAME[data.team[side].teamColor]
+                    Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
     }
     

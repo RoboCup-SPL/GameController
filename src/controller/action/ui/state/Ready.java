@@ -36,7 +36,7 @@ public class Ready extends GCAction
             return;
         }
         data.gameState = GameControlData.STATE_READY;
-        data.remainingReady = Rules.READY_TIME*1000;
+        data.remainingReady = Rules.league.readyTime*1000;
         Log.state(data, "State set to Ready");
     }
     

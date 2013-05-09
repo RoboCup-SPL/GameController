@@ -19,12 +19,12 @@ public class RobotWatcher
     private static RobotWatcher instance = new RobotWatcher();
 
     /** A timestamp when the last reply from each robot was received. */
-    private long [][] robotsLastAnswer = new long[2][Rules.TEAM_SIZE];
+    private long [][] robotsLastAnswer = new long[2][Rules.league.teamSize];
     /** Last message reeived from each robot.
      *  Look at GameControlReturnData for information about messages */
-    private int [][] robotsLastMessage = new int[2][Rules.TEAM_SIZE];
+    private int [][] robotsLastMessage = new int[2][Rules.league.teamSize];
     /** The calculated information about the online-status. */
-    private RobotOnlineStatus [][] status = new RobotOnlineStatus[2][Rules.TEAM_SIZE];
+    private RobotOnlineStatus [][] status = new RobotOnlineStatus[2][Rules.league.teamSize];
 
     /** What the constants name says. */
     private final static int MILLIS_UNTILL_ROBOTER_IS_OFFLINE = 4*1000;
@@ -36,7 +36,7 @@ public class RobotWatcher
     private RobotWatcher()
     {
         for(int i  = 0; i < 2; i++) {
-            for (int j = 0; j < Rules.TEAM_SIZE; j++) {
+            for (int j = 0; j < Rules.league.teamSize; j++) {
                 robotsLastMessage[i][j] = PlayerInfo.PENALTY_NONE;
                 status[i][j] = RobotOnlineStatus.UNKNOWN;
             }
@@ -60,7 +60,7 @@ public class RobotWatcher
             return;
         }
         number = gameControlReturnData.player;
-        if(number <= 0 || number > Rules.TEAM_SIZE) {
+        if(number <= 0 || number > Rules.league.teamSize) {
             return;
         }
         instance.robotsLastAnswer[team][number-1] = System.currentTimeMillis();
@@ -88,8 +88,8 @@ public class RobotWatcher
             for(int j=0; j < instance.status[i].length; j++) {
                 if(currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTILL_ROBOTER_IS_OFFLINE) {
                     instance.status[i][j] = RobotOnlineStatus.OFFLINE;
-                    if(++robotsOffline >= Rules.TEAM_SIZE) {
-                        for(int k=0; k < Rules.TEAM_SIZE; k++) {
+                    if(++robotsOffline >= Rules.league.teamSize) {
+                        for(int k=0; k < Rules.league.teamSize; k++) {
                             instance.status[i][k] = RobotOnlineStatus.UNKNOWN;
                         }
                     }

@@ -55,16 +55,16 @@ public class GameControlData
             2 * TeamInfo.SIZE;
     
     //this is streamed
-    // GAMECONTROLLER_STRUCT_HEADER                       // header to identify the structure
-    // GAMECONTROLLER_STRUCT_VERSION                      // version of the data structure
-    public byte playersPerTeam = (byte)Rules.TEAM_SIZE;   // The number of players on a team
-    public byte gameState = STATE_INITIAL;                // state of the game (STATE_READY, STATE_PLAYING, etc)
-    public byte firstHalf = C_TRUE;                       // 1 = game in first half, 0 otherwise
-    public byte kickOffTeam = TEAM_BLUE;                  // the next team to kick off
-    public byte secGameState = STATE2_NORMAL;             // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
-    public byte dropInTeam;                               // team that caused last drop in
-    public short dropInTime = -1;                         // number of seconds passed since the last drop in.  -1 before first dropin
-    public int secsRemaining = Rules.HALF_TIME;           // estimate of number of seconds remaining in the half
+    // GAMECONTROLLER_STRUCT_HEADER                             // header to identify the structure
+    // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
+    public byte playersPerTeam = (byte)Rules.league.teamSize;   // The number of players on a team
+    public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
+    public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
+    public byte kickOffTeam = TEAM_BLUE;                        // the next team to kick off
+    public byte secGameState = STATE2_NORMAL;                   // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+    public byte dropInTeam;                                     // team that caused last drop in
+    public short dropInTime = -1;                               // number of seconds passed since the last drop in.  -1 before first dropin
+    public int secsRemaining = Rules.league.halfTime;           // estimate of number of seconds remaining in the half
     public TeamInfo[] team = new TeamInfo[2];
     
     

@@ -2,6 +2,7 @@ package controller.action;
 
 import controller.action.clock.ClockTick;
 import controller.action.net.Manual;
+import controller.action.ui.CancelUndo;
 import controller.action.ui.ClockPause;
 import controller.action.ui.ClockReset;
 import controller.action.ui.GlobalStuck;
@@ -13,16 +14,15 @@ import controller.action.ui.Robot;
 import controller.action.ui.Testmode;
 import controller.action.ui.TimeOut;
 import controller.action.ui.Undo;
-import controller.action.ui.CancelUndo;
 import controller.action.ui.half.FirstHalf;
 import controller.action.ui.half.PenaltyShoot;
 import controller.action.ui.half.SecondHalf;
 import controller.action.ui.penalty.Defender;
+import controller.action.ui.penalty.Fallen;
 import controller.action.ui.penalty.Hands;
 import controller.action.ui.penalty.Holding;
 import controller.action.ui.penalty.Inactive;
 import controller.action.ui.penalty.Leaving;
-import controller.action.ui.penalty.Fallen;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.Pushing;
 import controller.action.ui.state.Finish;
@@ -59,7 +59,7 @@ public class ActionBoard
     public static Goal[] goalDec = new Goal[2];
     public static Goal[] goalInc = new Goal[2];
     public static KickOff[] kickOff = new KickOff[2];
-    public static Robot[][] robot = new Robot[2][Rules.TEAM_SIZE];
+    public static Robot[][] robot = new Robot[2][Rules.league.teamSize];
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static Out[] out = new Out[2];
@@ -82,8 +82,8 @@ public class ActionBoard
     public static Hands hands;
     public static PickUp pickUp;
     
-    public static Manual[][] manualPen = new Manual[2][Rules.TEAM_SIZE];
-    public static Manual[][] manualUnpen = new Manual[2][Rules.TEAM_SIZE];
+    public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
+    public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
     
     
     /**
@@ -135,7 +135,7 @@ public class ActionBoard
         pickUp = new PickUp();
         
         for(int i=0; i<2; i++) {
-            for(int j=0; j<Rules.TEAM_SIZE; j++) {
+            for(int j=0; j<Rules.league.teamSize; j++) {
                 manualPen[i][j] = new Manual(i, j, false);
                 manualUnpen[i][j] = new Manual(i, j, true);
             }

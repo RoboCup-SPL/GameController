@@ -2,8 +2,8 @@ package controller.action.ui;
 
 import controller.EventHandler;
 import controller.Log;
-import controller.action.GCAction;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.PlayerInfo;
 import data.Rules;
@@ -51,7 +51,7 @@ public class Robot extends GCAction
             player.penalty = PlayerInfo.PENALTY_NONE;
             player.secsTillUnpenalised = 0;
             Log.state(data, "Unpenalised "+
-                Rules.TEAM_COLOR_NAME[data.team[side].teamColor]
+                Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
         }
     }

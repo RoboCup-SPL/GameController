@@ -1,8 +1,8 @@
 package controller.action.ui.state;
 
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
@@ -37,7 +37,7 @@ public class Play extends GCAction
         }
         data.gameState = GameControlData.STATE_PLAYING;
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
-            data.remainingKickoffBlocked = Rules.KICKOFF_TIME*1000;
+            data.remainingKickoffBlocked = Rules.league.kickoffTime*1000;
         } else {
             data.remainingKickoffBlocked = -10*1000;
             data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]++;

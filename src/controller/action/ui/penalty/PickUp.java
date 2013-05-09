@@ -1,10 +1,10 @@
 package controller.action.ui.penalty;
 
 import controller.EventHandler;
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
@@ -54,13 +54,13 @@ public class PickUp extends GCAction
     {
         player.penalty = penalty;
         if(data.gameState != GameControlData.STATE_READY) {
-            ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.PENALTY_STANDARD_TIME);
+            ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyStandardTime);
         } else {
             ActionBoard.clock.setPlayerPenTime(data, side, number, (int)(data.remainingReady/1000));
         }
       
         Log.state(data, "Request for PickUp "+
-                Rules.TEAM_COLOR_NAME[data.team[side].teamColor]
+                Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
     }
     

@@ -6,44 +6,55 @@ import java.awt.Color;
 /**
  * @author: Michel Bartsch
  * 
- * This class holds constants given by the spl rules.
+ * This class holds attributes defining rules.
  */
-public class Rules
-{
+public abstract class Rules
+{   
+    /** Note all league´s rules here to have them available. */
+    public static final Rules[] LEAGUES = {
+        new SPL(),
+        new Humanoid()
+    };
+    
+    /** The rules of the league playing. */
+    public static Rules league = LEAGUES[0];
+    
+    /** The league´s name this rules are for. */
+    public String leagueName;
     /** How many robots are in a team. */
-    public static final int TEAM_SIZE = 5;
+    public int teamSize;
     /** The Java Colors the left and the right team starts with. */
-    public static final Color[] TEAM_COLOR = {Color.BLUE, Color.RED};
+    public Color[] teamColor;
     /** The name of the colors. */
-    public static final String[] TEAM_COLOR_NAME = {"Blue", "Red"};
+    public String[] teamColorName;
     /** Time in seconds one half is long. */
-    public static final int HALF_TIME = 10*60;
+    public int halfTime;
     /** Time in seconds the ready state is long. */
-    public static final int READY_TIME = 45;
+    public int readyTime;
     /** Time in seconds between first and second half. */
-    public static final int PAUSE_TIME = 10*60;
+    public int pauseTime;
     /** Time in seconds the ball is blocked after kickoff. */
-    public static final int KICKOFF_TIME = 10;
+    public int kickoffTime;
     /** Time in seconds before a global game stuck can be called. */
-    public static final int MIN_DURATION_BEFORE_GLOBAL_GAME_STUCK = 30;
+    public int minDurationBeforeStuck;
     /** Time in seconds between second half and penalty shoot. */
-    public static final int PAUSE_PENALTY_SHOOT_TIME = 5*60;
+    public int pausePenaltyShootTime;
     /** Time in seconds one penalty shoot is long. */
-    public static final int PENALTY_SHOOT_TIME = 1*60;
+    public int penaltyShootTime;
     /** Time in seconds one penalty shoot is long in sudden-death. */
-    public static final int PENALTY_SHOOT_TIME_SUDDEN_DEATH = 2*60;
+    public int penaltyShootTimeSuddenDeath;
     /** Number of penalty-shoots for each team when a half has 10minutes. */
-    public static final int NUMBER_OF_PENALTY_SHOOTS_SHORT = 3;
+    public int numberOfPenaltyShootsShort;
     /** Number of penalty-shoots for each team after full 10minutes playing. */
-    public static final int NUMBER_OF_PENALTY_SHOOTS_LONG = 5;
+    public int numberOfPenaltyShootsLong;
     /** Time in seconds normal penalties take. */
-    public static final int PENALTY_STANDARD_TIME = 30;
+    public int penaltyStandardTime;
     /** Time in seconds a robot is taken out when manually penalized (ChestButton). */
-    public static final int PENALTY_MANUAL_TIME = 1;
+    public int penaltyManualTime;
     /** Time in seconds one team has as timeOut. */
-    public static final int TIME_OUT_TIME = 5*60;
+    public int timeOutTime;
     /** How many times a team may take a timeOut. */
-    public static final int TIME_OUT_MAX_NUMBER = 1;
+    public int timeOutMaxNumber;
     /** On how many pushings is a robot ejected. */
-    public static final int[] PUSHES_TO_EJECTION = {4, 6, 8, 10, 12};
+    public int[] pushesToEjection;
 }

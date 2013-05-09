@@ -19,27 +19,27 @@ public class AdvancedData extends GameControlData
     /** Total time in millis since the Clock started */
     public long sumOfTime = 0;
     /** Time in millis remaining for the first half. */
-    public long firstHalfTime = Rules.HALF_TIME*1000;
+    public long firstHalfTime = Rules.league.halfTime*1000;
     /** Time in millis remaining for the second half. */
-    public long secondHalfTime = Rules.HALF_TIME*1000;
+    public long secondHalfTime = Rules.league.halfTime*1000;
     /** Time in millis remaining for the current penalty shoot. */
-    public long penaltyShootTime = Rules.PENALTY_SHOOT_TIME*1000;
+    public long penaltyShootTime = Rules.league.penaltyShootTime*1000;
     /** Contains the amount of extra time. */
     public int extraTime = 0;
     /** Time in millis remaining in the ready state. */
-    public long remainingReady = Rules.READY_TIME*1000;
+    public long remainingReady = Rules.league.readyTime*1000;
     /** Time in millis remaining between first and second half. */
     public long remainingPaused = 0;
     /** Time in millis remaining until ball is unblocked after kickoff. */
-    public long remainingKickoffBlocked = Rules.KICKOFF_TIME*1000;
+    public long remainingKickoffBlocked = Rules.league.kickoffTime*1000;
     /** Time in millis remaining to be penalized for each layer. */
-    public long[][] playerPenTime = new long[2][Rules.TEAM_SIZE];
+    public long[][] playerPenTime = new long[2][Rules.league.teamSize];
     /** Pushing counters for each team, 0:left side, 1:right side. */
     public int[] pushes = {0, 0};
     /** Time in millis since last dropIn. */
     public long dropIn = -1*1000;
     /** Time in millis remaining for each teams timeOut, 0:left side, 1:right side. */
-    public long[] timeOut = {Rules.TIME_OUT_TIME*1000, Rules.TIME_OUT_TIME*1000};
+    public long[] timeOut = {Rules.league.timeOutTime*1000, Rules.league.timeOutTime*1000};
     /** If true, this team is currently taking a timeOut, 0:left side, 1:right side. */
     public boolean[] timeOutActive = {false, false};
     /** TimeOut counters for each team, 0:left side, 1:right side. */
@@ -79,7 +79,7 @@ public class AdvancedData extends GameControlData
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
         remainingKickoffBlocked = data.remainingKickoffBlocked;
-        playerPenTime = new long[2][Rules.TEAM_SIZE];
+        playerPenTime = new long[2][Rules.league.teamSize];
         for(int i=0; i<2; i++) {
             for(int j=0; j<playerPenTime[i].length; j++) {
                 playerPenTime[i][j] = data.playerPenTime[i][j];

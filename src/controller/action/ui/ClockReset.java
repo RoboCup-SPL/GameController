@@ -1,8 +1,8 @@
 package controller.action.ui;
 
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
@@ -33,19 +33,19 @@ public class ClockReset extends GCAction
     public void perform(AdvancedData data)
     {
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
-            data.penaltyShootTime = Rules.PENALTY_SHOOT_TIME*1000;
+            data.penaltyShootTime = Rules.league.penaltyShootTime*1000;
         } else {
             if(data.firstHalf == GameControlData.C_TRUE) {
-                data.firstHalfTime = Rules.HALF_TIME*1000;
+                data.firstHalfTime = Rules.league.halfTime*1000;
             } else {
-                data.secondHalfTime = Rules.HALF_TIME*1000;
+                data.secondHalfTime = Rules.league.halfTime*1000;
             }
         }
         if(data.gameState == GameControlData.STATE_READY) {
-            data.remainingReady = Rules.READY_TIME*1000;
+            data.remainingReady = Rules.league.readyTime*1000;
         } else if( (data.gameState == GameControlData.STATE_INITIAL)
                 && (data.firstHalf == GameControlData.C_TRUE) ) {
-            data.remainingPaused = Rules.PAUSE_TIME*1000;
+            data.remainingPaused = Rules.league.pauseTime*1000;
         }
         Log.state(data, "Time reset");
     }

@@ -2,7 +2,6 @@ package controller.net;
 
 import data.GameControlData;
 import data.GameControlReturnData;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

@@ -10,7 +10,6 @@ import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Teams;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;

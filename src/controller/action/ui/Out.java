@@ -1,9 +1,9 @@
 package controller.action.ui;
 
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
@@ -42,7 +42,7 @@ public class Out extends GCAction
     {
         ActionBoard.clock.newDropInTime(data);
         data.dropInTeam = data.team[side].teamColor;
-        Log.state(data, "Out by "+Rules.TEAM_COLOR_NAME[data.team[side].teamColor]);
+        Log.state(data, "Out by "+Rules.league.teamColorName[data.team[side].teamColor]);
     }
     
     /**

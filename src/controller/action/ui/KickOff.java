@@ -1,8 +1,8 @@
 package controller.action.ui;
 
-import controller.action.GCAction;
 import controller.Log;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.Rules;
 
@@ -40,7 +40,7 @@ public class KickOff extends GCAction
     {
         data.kickOffTeam = data.team[side].teamColor;
         Log.state(data, "Kickoff "+
-                Rules.TEAM_COLOR_NAME[data.team[side].teamColor]);
+                Rules.league.teamColorName[data.team[side].teamColor]);
     }
     
     /**
