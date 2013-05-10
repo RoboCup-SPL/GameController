@@ -44,6 +44,7 @@ public class Main
      */
     public static void main(String[] args)
     {
+        Log.error("test");
         //application-lock
         final ApplicationLock applicationLock = new ApplicationLock("GameController");
         try {
@@ -130,7 +131,7 @@ public class Main
                 try {
                     applicationLock.release();
                 } catch (IOException e) {
-                    System.err.println("Error while trying to release the application lock.");
+                    Log.error("Error while trying to release the application lock.");
                 }
                 Sender.getInstance().interrupt();
                 Receiver.getInstance().interrupt();
@@ -138,7 +139,7 @@ public class Main
                 try {
                     Log.close();
                 } catch (IOException e) {
-                    System.err.println("Error while trying to close the log.");
+                    Log.error("Error while trying to close the log.");
                 }
             }
         });

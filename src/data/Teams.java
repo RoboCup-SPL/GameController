@@ -1,5 +1,6 @@
 package data;
 
+import controller.Log;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -72,7 +73,7 @@ public class Teams
                     }
                 }
             } catch(IOException e) {
-                System.out.println("cannot load "+PATH+dir+"/"+CONFIG);
+                Log.error("cannot load "+PATH+dir+"/"+CONFIG);
             }
             finally {
                 if(br != null) {
@@ -98,7 +99,9 @@ public class Teams
                 return i;
             }
         }
-        return -1; //should never happen
+        //should never happen
+        Log.error("selected league is odd");
+        return -1;
     }
     
     /**
@@ -120,7 +123,7 @@ public class Teams
                 instance.names[getLeagueIndex()][value] = line.split("=")[0]+": "+line.split("=")[1];
             }
         } catch(IOException e) {
-            System.out.println("cannot load "+PATH+Rules.league.leagueDirectory+"/"+CONFIG);
+            Log.error("cannot load "+PATH+Rules.league.leagueDirectory+"/"+CONFIG);
         }
         finally {
             if(br != null) {
@@ -178,7 +181,7 @@ public class Teams
             try{
                 out = ImageIO.read(file);
             } catch(IOException e) {
-                System.out.println("cannot load "+file);
+                Log.error("cannot load "+file);
             }
         }
         if(out == null) {

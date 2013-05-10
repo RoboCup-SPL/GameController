@@ -1,5 +1,6 @@
 package controller.net;
 
+import controller.Log;
 import data.GameControlData;
 import data.GameControlReturnData;
 import java.io.IOException;
@@ -75,7 +76,7 @@ public class Receiver extends Thread
                     RobotWatcher.update(player);
                 }
             } catch(IOException e) {
-                // ignore here
+                Log.error("something went wrong while receiving");
             }
         }
 

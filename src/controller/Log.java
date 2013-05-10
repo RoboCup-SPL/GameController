@@ -22,7 +22,7 @@ import java.util.LinkedList;
 public class Log
 {
     /** The instance of the singleton. */
-    private static Log instance;
+    private static Log instance = new Log();;
     
     /** The file to write into. */
     private FileWriter file;
@@ -48,15 +48,13 @@ public class Log
      */
     public synchronized static void init(String path)
     {
-        if (instance != null) {
+        if (instance.file != null) {
             throw new IllegalStateException("logger already initialized");
         }
-        instance = new Log();
         try{
             instance.file = new FileWriter(new File(path));
         } catch(IOException e) {
-            String error = "\ncannot write to logfile "+path;
-            System.out.println(error);
+            error("cannot write to logfile "+path);
         }
         toFile(Main.version);
     }
@@ -72,7 +70,9 @@ public class Log
         try{
             instance.file.write(instance.timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
             instance.file.flush();
-        } catch(IOException e) {}
+        } catch(IOException e) {
+            error("cannot write to logfile!");
+        }
     }
     
     /**
@@ -140,17 +140,22 @@ public class Log
      * Writes a line, beginning with a timestamp, in the error-file and creates
      * a new one, if it does not yet exist.
      * 
+     * This can be used before initialising the log!
+     * 
      * @param s     The string to be written in the error-file.
      */
-    public static void toErrorFile(String s)
+    public static void error(String s)
     {
+        System.err.println(s);
         try{
             if(instance.errorFile == null) {
                 instance.errorFile = new FileWriter(new File(instance.errorPath));
             }
             instance.errorFile.write(instance.timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
             instance.errorFile.flush();
-        } catch(IOException e) {}
+        } catch(IOException e) {
+             System.err.println("cannot write to error file!");
+        }
     }
     
     /**

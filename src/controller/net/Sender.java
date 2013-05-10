@@ -1,5 +1,6 @@
 package controller.net;
 
+import controller.Log;
 import data.GameControlData;
 import java.io.IOException;
 import java.net.*;
@@ -94,6 +95,7 @@ public class Sender extends Thread {
                 try {
                     datagramSocket.send(packet);
                 } catch (IOException e) {
+                    Log.error("Error while sending");
                     e.printStackTrace();
                 }
             }
