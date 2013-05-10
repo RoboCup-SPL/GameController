@@ -135,7 +135,12 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    outTeam[0] = Integer.valueOf(((String)team[0].getSelectedItem()).split(": ")[0]);
+                    Object selected = team[0].getSelectedItem();
+                    if(selected == null)
+                    {
+                        return;
+                    }
+                    outTeam[0] = Integer.valueOf(((String)selected).split(": ")[0]);
                     setTeamIcon(0, outTeam[0]);
                     teamIconLabel[0].setIcon(teamIcon[0]);
                     teamIconLabel[0].repaint();
@@ -149,7 +154,12 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    outTeam[1] = Integer.valueOf(((String)team[1].getSelectedItem()).split(": ")[0]);
+                    Object selected = team[1].getSelectedItem();
+                    if(selected == null)
+                    {
+                        return;
+                    }
+                    outTeam[1] = Integer.valueOf(((String)selected).split(": ")[0]);
                     setTeamIcon(1, outTeam[1]);
                     teamIconLabel[1].setIcon(teamIcon[1]);
                     teamIconLabel[1].repaint();
@@ -230,7 +240,12 @@ public class StartInput extends JFrame implements Serializable
                         }
                     }
                     for(int i=0; i < 2; i++) {
-                        team[i].setSelectedIndex(0);
+                        team[i].removeAllItems();
+                        String[] names = Teams.getNames(true);
+                        for(int j=0; j < names.length; j++) {
+                            team[i].addItem(names[j]);
+                        }
+                        //team[i].setSelectedIndex(0);
                         outTeam[i] = 0;
                         setTeamIcon(i, outTeam[i]);
                         teamIconLabel[i].setIcon(teamIcon[i]);

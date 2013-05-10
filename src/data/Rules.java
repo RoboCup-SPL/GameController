@@ -21,6 +21,8 @@ public abstract class Rules
     
     /** The league´s name this rules are for. */
     public String leagueName;
+    /** The league´s directory name with it´s teams and icons. */
+    public String leagueDirectory;
     /** How many robots are in a team. */
     public int teamSize;
     /** The Java Colors the left and the right team starts with. */

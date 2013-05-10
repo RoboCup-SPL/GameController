@@ -22,8 +22,8 @@ import javax.imageio.ImageIO;
  */
 public class Teams
 {
-    /** The path to the config file and icons. */
-    private static final String PATH = "config/spl/";
+    /** The path to the leagues directories. */
+    private static final String PATH = "config/";
     /** The name of the config file. */
     private static final String CONFIG = "teams.cfg";
     /** The charset to read the config file. */
@@ -38,14 +38,14 @@ public class Teams
     /** The instance of the singleton. */
     private static Teams instance = new Teams();
     
-    /** The names read from the config file. */
-    private String[] names;
+    /** The names read from the config files. */
+    private String[][] names;
     /**
      * The icons read.
      * Note, that not all icons are read from the start but just when you ask
      * for them.
      */
-    private BufferedImage[] icons;
+    private BufferedImage[][] icons;
     
     
     /**
@@ -53,32 +53,52 @@ public class Teams
      */
     private Teams()
     {
-        int value;
-        int maxValue = 0;
-        BufferedReader br = null;
-        try {
-            InputStream inStream = new FileInputStream(PATH+CONFIG);
-            br = new BufferedReader(
-                    new InputStreamReader(inStream, CHARSET));
-            String line;
-            while((line = br.readLine()) != null) {
-                value = Integer.valueOf(line.split("=")[0]);
-                if(value > maxValue) {
-                    maxValue = value;
+        names = new String[Rules.LEAGUES.length][];
+        icons = new BufferedImage[Rules.LEAGUES.length][];
+        for(int i=0; i < Rules.LEAGUES.length; i++) {
+            String dir = Rules.LEAGUES[i].leagueDirectory;
+            int value;
+            int maxValue = 0;
+            BufferedReader br = null;
+            try {
+                InputStream inStream = new FileInputStream(PATH+dir+"/"+CONFIG);
+                br = new BufferedReader(
+                        new InputStreamReader(inStream, CHARSET));
+                String line;
+                while((line = br.readLine()) != null) {
+                    value = Integer.valueOf(line.split("=")[0]);
+                    if(value > maxValue) {
+                        maxValue = value;
+                    }
+                }
+            } catch(IOException e) {
+                System.out.println("cannot load "+PATH+dir+"/"+CONFIG);
+            }
+            finally {
+                if(br != null) {
+                    try {
+                        br.close();
+                    } catch(Exception e) {}
                 }
             }
-        } catch(IOException e) {
-            System.out.println("cannot load "+PATH+CONFIG);
+            names[i] = new String[maxValue+1];
+            icons[i] = new BufferedImage[maxValue+1];
         }
-        finally {
-            if(br != null) {
-                try {
-                    br.close();
-                } catch(Exception e) {}
+    }
+    
+    /**
+     * Returns the index the current league has within the LEAGUES-array.
+     * 
+     * @return the leagues index.
+     */
+    private static int getLeagueIndex()
+    {
+        for(int i=0; i < Rules.LEAGUES.length; i++) {
+            if(Rules.LEAGUES[i] == Rules.league) {
+                return i;
             }
         }
-        names = new String[maxValue+1];
-        icons = new BufferedImage[maxValue+1];
+        return -1; //should never happen
     }
     
     /**
@@ -91,16 +111,16 @@ public class Teams
         int value;
         BufferedReader br = null;
         try {
-            InputStream inStream = new FileInputStream(PATH+CONFIG);
+            InputStream inStream = new FileInputStream(PATH+Rules.league.leagueDirectory+"/"+CONFIG);
             br = new BufferedReader(
                     new InputStreamReader(inStream, CHARSET));
             String line;
             while((line = br.readLine()) != null) {
                 value = Integer.valueOf(line.split("=")[0]);
-                instance.names[value] = line.split("=")[0]+": "+line.split("=")[1];
+                instance.names[getLeagueIndex()][value] = line.split("=")[0]+": "+line.split("=")[1];
             }
         } catch(IOException e) {
-            System.out.println("cannot load "+PATH+CONFIG);
+            System.out.println("cannot load "+PATH+Rules.league.leagueDirectory+"/"+CONFIG);
         }
         finally {
             if(br != null) {
@@ -120,15 +140,16 @@ public class Teams
      */
     public static String[] getNames(boolean withNumbers)
     {
-        if(instance.names[0] == null) {
+        int leagueIndex = getLeagueIndex();
+        if(instance.names[leagueIndex][0] == null) {
             readNames();
         }
         if(withNumbers) {
-            return instance.names;
+            return instance.names[leagueIndex];
         } else {
-            String[] out = new String[instance.names.length];
-            for(int i=0; i<instance.names.length; i++) {
-                out[i] = instance.names[i].split(":")[1].substring(1);
+            String[] out = new String[instance.names[leagueIndex].length];
+            for(int i=0; i<instance.names[leagueIndex].length; i++) {
+                out[i] = instance.names[leagueIndex][i].split(":")[1].substring(1);
             }
             return out;
         }
@@ -145,7 +166,7 @@ public class Teams
         BufferedImage out = null;
         File file = null;
         for(int i=0; i< PIC_ENDING.length; i++) {
-            file = new File(PATH+team+"."+PIC_ENDING[i]);
+            file = new File(PATH+Rules.league.leagueDirectory+"/"+team+"."+PIC_ENDING[i]);
             if(file.exists()) {
                 break;
             }
@@ -166,7 +187,7 @@ public class Teams
             graphics.setColor(new Color(0f, 0f, 0f, 0f));
             graphics.fillRect(0, 0, out.getWidth(), out.getHeight());
         }
-        instance.icons[team] = out;
+        instance.icons[getLeagueIndex()][team] = out;
     }
     
     /**
@@ -178,9 +199,10 @@ public class Teams
      */
     public static BufferedImage getIcon(int team)
     {
-        if(instance.icons[team] == null) {
+        int leagueIndex = getLeagueIndex();
+        if(instance.icons[leagueIndex][team] == null) {
             readIcon(team);
         }
-        return instance.icons[team];
+        return instance.icons[leagueIndex][team];
     }
 }

@@ -14,6 +14,8 @@ public class SPL extends Rules
     {
         /** The league´s name this rules are for. */
         leagueName = "SPL";
+        /** The league´s directory name with it´s teams and icons. */
+        leagueDirectory = "spl";
         /** How many robots are in a team. */
         teamSize = 5;
         /** The Java Colors the left and the right team starts with. */
