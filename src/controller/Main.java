@@ -44,7 +44,6 @@ public class Main
      */
     public static void main(String[] args)
     {
-        Log.error("test");
         //application-lock
         final ApplicationLock applicationLock = new ApplicationLock("GameController");
         try {
