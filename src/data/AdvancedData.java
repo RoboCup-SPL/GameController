@@ -44,6 +44,8 @@ public class AdvancedData extends GameControlData
     public boolean[] timeOutActive = {false, false};
     /** TimeOut counters for each team, 0:left side, 1:right side. */
     public int[] numberOfTimeOuts = {0, 0};
+    /** TimeOut counters within the current half for each team, 0:left side, 1:right side. */
+    public int[] numberOfTimeOutsCurrentHalf = {0, 0};
     /** how many penalty-shoots have been made by each team, 0:left side, 1:right side. */
     public int[] penaltyShoot = {0, 0};
     /** If true, the clock has manually been paused in the testmode. */

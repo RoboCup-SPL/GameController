@@ -17,7 +17,7 @@ public class Humanoid extends Rules
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl";
         /** How many robots are in a team. */
-        teamSize = 5;
+        teamSize = 3;
         /** The Java Colors the left and the right team starts with. */
         teamColor = new Color[2];
         teamColor[0] = Color.BLUE;
@@ -29,9 +29,9 @@ public class Humanoid extends Rules
         /** Time in seconds one half is long. */
         halfTime = 10*60;
         /** Time in seconds the ready state is long. */
-        readyTime = 45;
+        readyTime = 30;
         /** Time in seconds between first and second half. */
-        pauseTime = 10*60;
+        pauseTime = 5*60;
         /** Time in seconds the ball is blocked after kickoff. */
         kickoffTime = 10;
         /** Time in seconds before a global game stuck can be called. */
@@ -51,15 +51,17 @@ public class Humanoid extends Rules
         /** Time in seconds a robot is taken out when manually penalized (ChestButton). */
         penaltyManualTime = 1;
         /** Time in seconds one team has as timeOut. */
-        timeOutTime = 5*60;
+        timeOutTime = 2*60;
+        /** If true, the timeOutTime will be resetted for each timeOut. */
+        timeOutTimeResette = true;
         /** How many times a team may take a timeOut. */
-        timeOutMaxNumber = 1;
+        timeOutMaxNumber = 99; // does not matter because of timeOutMaxNumberHalf = 1
+        /** How many times a team may take a timeOut within one half. */
+        timeOutMaxNumberHalf = 1;
         /** On how many pushings is a robot ejected. */
-        pushesToEjection = new int[5];
-        pushesToEjection[0] = 4;
-        pushesToEjection[1] = 6;
-        pushesToEjection[2] = 8;
-        pushesToEjection[3] = 10;
-        pushesToEjection[4] = 12;
+        pushesToEjection = new int[3];
+        pushesToEjection[0] = 99;
+        pushesToEjection[1] = 99;
+        pushesToEjection[2] = 99;
     }
 }

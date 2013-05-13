@@ -44,6 +44,9 @@ public class PenaltyShoot extends GCAction
                     data.team[i].player[j].secsTillUnpenalised = 0;
                 }
             }
+            for(int i=0; i<2; i++) {
+                data.numberOfTimeOutsCurrentHalf[i] = 0;
+            }
             Log.state(data, "Half set to PenaltyShoot");
         }
     }

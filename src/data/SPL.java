@@ -52,8 +52,12 @@ public class SPL extends Rules
         penaltyManualTime = 1;
         /** Time in seconds one team has as timeOut. */
         timeOutTime = 5*60;
+        /** If true, the timeOutTime will be resetted for each timeOut. */
+        timeOutTimeResette = false;
         /** How many times a team may take a timeOut. */
         timeOutMaxNumber = 1;
+        /** How many times a team may take a timeOut within one half. */
+        timeOutMaxNumberHalf = 99; //does not matter because of timeOutMaxNumber = 1
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[5];
         pushesToEjection[0] = 4;

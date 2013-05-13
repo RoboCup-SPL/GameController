@@ -40,8 +40,12 @@ public class TimeOut extends GCAction
     public void perform(AdvancedData data)
     {
         if(!data.timeOutActive[side]) {
+            if(Rules.league.timeOutTimeResette) {
+                data.timeOut[side] = Rules.league.timeOutTime*1000;
+            }
             data.timeOutActive[side] = true;
             data.numberOfTimeOuts[side]++;
+            data.numberOfTimeOutsCurrentHalf[side]++;
             data.gameState = GameControlData.STATE_INITIAL;
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.kickOffTeam = data.team[side].teamColor == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
@@ -68,6 +72,7 @@ public class TimeOut extends GCAction
                   data.gameState == GameControlData.STATE_READY ||
                   data.gameState == GameControlData.STATE_SET)
                 && data.numberOfTimeOuts[side] < Rules.league.timeOutMaxNumber
+                && data.numberOfTimeOutsCurrentHalf[side] < Rules.league.timeOutMaxNumberHalf
                 && !data.timeOutActive[side == 0 ? 1 : 0])
             || data.testmode;
     }

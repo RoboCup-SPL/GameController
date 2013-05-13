@@ -39,6 +39,9 @@ public class SecondHalf extends GCAction
             FirstHalf.changeSide(data);
             data.kickOffTeam = GameControlData.TEAM_BLUE;
             data.gameState = GameControlData.STATE_INITIAL;
+            for(int i=0; i<2; i++) {
+                data.numberOfTimeOutsCurrentHalf[i] = 0;
+            }
             Log.state(data, "Half set to SecondHalf");
         }
     }

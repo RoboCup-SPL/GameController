@@ -40,6 +40,9 @@ public class FirstHalf extends GCAction
             data.team[1].teamColor = GameControlData.TEAM_RED;
             changeSide(data);
             data.gameState = GameControlData.STATE_INITIAL;
+            for(int i=0; i<2; i++) {
+                data.numberOfTimeOutsCurrentHalf[i] = 0;
+            }
             Log.state(data, "Half set to FirstHalf");
         }
     }
