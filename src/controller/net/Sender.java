@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.*;
 
 /**
- * @author: Marcel Steinbeck
+ * @author Marcel Steinbeck
  *
  * This class is used to send the current {@link GameControlData} (game-state) to all robots every 500 ms.
  * The package will be send via UDP on port {@link GameControlData#GAMECONTROLLER_PORT} over broadcast.
@@ -106,5 +106,7 @@ public class Sender extends Thread {
                 interrupt();
             }
         }
+
+        datagramSocket.close();
     }
 }

@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 
 /**
  *
- * @author: Marcel Steinbeck
+ * @author Marcel Steinbeck
  *
  * This class is used to receive a packe send by a robot on port {@link GameControlData#GAMECONTROLLER_PORT} via UDP
  * over broadcast.
