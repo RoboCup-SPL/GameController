@@ -17,7 +17,9 @@ import controller.action.ui.Undo;
 import controller.action.ui.half.FirstHalf;
 import controller.action.ui.half.PenaltyShoot;
 import controller.action.ui.half.SecondHalf;
+import controller.action.ui.penalty.Attack;
 import controller.action.ui.penalty.Defender;
+import controller.action.ui.penalty.Defense;
 import controller.action.ui.penalty.Fallen;
 import controller.action.ui.penalty.Hands;
 import controller.action.ui.penalty.Holding;
@@ -81,6 +83,8 @@ public class ActionBoard
     public static Holding holding;
     public static Hands hands;
     public static PickUp pickUp;
+    public static Attack attack;
+    public static Defense defense;
     
     public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
@@ -133,6 +137,8 @@ public class ActionBoard
         holding = new Holding();
         hands = new Hands();
         pickUp = new PickUp();
+        attack = new Attack();
+        defense = new Defense();
         
         for(int i=0; i<2; i++) {
             for(int j=0; j<Rules.league.teamSize; j++) {

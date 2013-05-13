@@ -80,6 +80,8 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_HOLDING = "Ball Holding";
     private static final String PEN_HANDS = "Hands";
     private static final String PEN_PICKUP = "Pick-Up";
+    private static final String PEN_DEFENSE = "Illegal Defense";
+    private static final String PEN_ATTACK = "Illegal Attack";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "config/icons/timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
@@ -140,14 +142,7 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton secondHalf;
     private JToggleButton penaltyShoot;
     private ButtonGroup halfGroup;
-    private JToggleButton penPushing;
-    private JToggleButton penLeaving;
-    private JToggleButton penFallen;
-    private JToggleButton penInactive;
-    private JToggleButton penDefender;
-    private JToggleButton penHolding;
-    private JToggleButton penHands;
-    private JToggleButton penPickup;
+    private JToggleButton[] pen;
     private ImagePanel bottom;
     private JPanel log;
     private JToggleButton[] undo;
@@ -292,14 +287,24 @@ public class GUI extends JFrame implements GCGUI
         stateGroup.add(play);
         stateGroup.add(finish);
         //  penalties
-        penPushing = new JToggleButton(PEN_PUSHING);
-        penLeaving = new JToggleButton(PEN_LEAVING);
-        penFallen = new JToggleButton(PEN_FALLEN);
-        penInactive = new JToggleButton(PEN_INACTIVE);
-        penDefender = new JToggleButton(PEN_DEFENDER);
-        penHolding = new JToggleButton(PEN_HOLDING);
-        penHands = new JToggleButton(PEN_HANDS);
-        penPickup = new JToggleButton(PEN_PICKUP);
+        if(Rules.league instanceof SPL) {
+            pen = new JToggleButton[8];
+            pen[0] = new JToggleButton(PEN_PUSHING);
+            pen[1] = new JToggleButton(PEN_LEAVING);
+            pen[2] = new JToggleButton(PEN_FALLEN);
+            pen[3] = new JToggleButton(PEN_INACTIVE);
+            pen[4] = new JToggleButton(PEN_DEFENDER);
+            pen[5] = new JToggleButton(PEN_HOLDING);
+            pen[6] = new JToggleButton(PEN_HANDS);
+            pen[7] = new JToggleButton(PEN_PICKUP);
+        } else if(Rules.league instanceof Humanoid) {
+            pen = new JToggleButton[5];
+            pen[0] = new JToggleButton(PEN_HOLDING);
+            pen[1] = new JToggleButton(PEN_PUSHING);
+            pen[2] = new JToggleButton(PEN_ATTACK);
+            pen[3] = new JToggleButton(PEN_DEFENSE);
+            pen[4] = new JToggleButton(PEN_PICKUP);
+        }
         
         //--bottom--
         //  log
@@ -352,14 +357,30 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.465, .26, .07, .08, set);
         layout.add(.5425, .26, .07, .08, play);
         layout.add(.62, .26, .07, .08, finish);
-        layout.add(.31, .37, .185, .11, penPushing);
-        layout.add(.505, .37, .185, .11, penLeaving);
-        layout.add(.31, .49, .185, .11, penFallen);
-        layout.add(.505, .49, .185, .11, penInactive);
-        layout.add(.31, .61, .185, .11, penDefender);
-        layout.add(.505, .61, .185, .11, penHolding);
-        layout.add(.31, .73, .185, .11, penHands);
-        layout.add(.505, .73, .185, .11, penPickup);
+        if(pen.length > 0) {
+            layout.add(.31, .37, .185, .11, pen[0]);
+        }
+        if(pen.length > 1) {
+            layout.add(.505, .37, .185, .11, pen[1]);
+        }
+        if(pen.length > 2) {
+            layout.add(.31, .49, .185, .11, pen[2]);
+        }
+        if(pen.length > 3) {
+            layout.add(.505, .49, .185, .11, pen[3]);
+        }
+        if(pen.length > 4) {
+            layout.add(.31, .61, .185, .11, pen[4]);
+        }
+        if(pen.length > 5) {
+            layout.add(.505, .61, .185, .11, pen[5]);
+        }
+        if(pen.length > 6) {
+            layout.add(.31, .73, .185, .11, pen[6]);
+        }
+        if(pen.length > 7) {
+            layout.add(.505, .73, .185, .11, pen[7]);
+        }
         layout.add(.08, .88, .84, .11, log);
         layout.add(.925, .88, .07, .11, cancelUndo);
         layout.add(0, 0, .3, .87, side[0]);
@@ -389,14 +410,22 @@ public class GUI extends JFrame implements GCGUI
         firstHalf.addActionListener(ActionBoard.firstHalf);
         secondHalf.addActionListener(ActionBoard.secondHalf);
         penaltyShoot.addActionListener(ActionBoard.penaltyShoot);
-        penPushing.addActionListener(ActionBoard.pushing);
-        penLeaving.addActionListener(ActionBoard.leaving);
-        penFallen.addActionListener(ActionBoard.fallen);
-        penInactive.addActionListener(ActionBoard.inactive);
-        penDefender.addActionListener(ActionBoard.defender);
-        penHolding.addActionListener(ActionBoard.holding);
-        penHands.addActionListener(ActionBoard.hands);
-        penPickup.addActionListener(ActionBoard.pickUp);
+        if(Rules.league instanceof SPL) {
+            pen[0].addActionListener(ActionBoard.pushing);
+            pen[1].addActionListener(ActionBoard.leaving);
+            pen[2].addActionListener(ActionBoard.fallen);
+            pen[3].addActionListener(ActionBoard.inactive);
+            pen[4].addActionListener(ActionBoard.defender);
+            pen[5].addActionListener(ActionBoard.holding);
+            pen[6].addActionListener(ActionBoard.hands);
+            pen[7].addActionListener(ActionBoard.pickUp);
+        } else if(Rules.league instanceof Humanoid) {
+            pen[0].addActionListener(ActionBoard.hands);
+            pen[1].addActionListener(ActionBoard.pushing);
+            pen[2].addActionListener(ActionBoard.attack);
+            pen[3].addActionListener(ActionBoard.defense);
+            pen[4].addActionListener(ActionBoard.pickUp);
+        }
         for(int i=0; i<undo.length; i++) {
             undo[i].addActionListener(ActionBoard.undo[i+1]);
         }
@@ -537,7 +566,11 @@ public class GUI extends JFrame implements GCGUI
         updateTimeOut(data);
         updateGlobalStuck(data);
         updateOut(data);
-        updatePenalties(data);
+        if(Rules.league instanceof SPL) {
+            updatePenaltiesSPL(data);
+        } else if(Rules.league instanceof Humanoid) {
+            updatePenaltiesHL(data);
+        }
         updateUndo(data);
         updateFonts();
         repaint();
@@ -816,33 +849,54 @@ public class GUI extends JFrame implements GCGUI
     }
     
     /**
-     * Updates the penalties.
+     * Updates the SPL penalties.
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updatePenalties(AdvancedData data)
+    private void updatePenaltiesSPL(AdvancedData data)
     {
-        penPushing.setEnabled(ActionBoard.pushing.isLegal(data));
-        penLeaving.setEnabled(ActionBoard.leaving.isLegal(data));
-        penFallen.setEnabled(ActionBoard.fallen.isLegal(data));
-        penInactive.setEnabled(ActionBoard.inactive.isLegal(data));
-        penInactive.setText("<html><center>"
+        pen[0].setEnabled(ActionBoard.pushing.isLegal(data));
+        pen[1].setEnabled(ActionBoard.leaving.isLegal(data));
+        pen[2].setEnabled(ActionBoard.fallen.isLegal(data));
+        pen[3].setEnabled(ActionBoard.inactive.isLegal(data));
+        pen[3].setText("<html><center>"
                 +(ActionBoard.inactive.isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")
                 +PEN_INACTIVE);
-        penDefender.setEnabled(ActionBoard.defender.isLegal(data));
-        penHolding.setEnabled(ActionBoard.holding.isLegal(data));
-        penHands.setEnabled(ActionBoard.hands.isLegal(data));
-        penPickup.setEnabled(ActionBoard.pickUp.isLegal(data));
+        pen[4].setEnabled(ActionBoard.defender.isLegal(data));
+        pen[5].setEnabled(ActionBoard.holding.isLegal(data));
+        pen[6].setEnabled(ActionBoard.hands.isLegal(data));
+        pen[7].setEnabled(ActionBoard.pickUp.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
-        penPushing.setSelected(hightlightEvent == ActionBoard.pushing);
-        penLeaving.setSelected(hightlightEvent == ActionBoard.leaving);
-        penFallen.setSelected(hightlightEvent == ActionBoard.fallen);
-        penInactive.setSelected(hightlightEvent == ActionBoard.inactive);
-        penDefender.setSelected(hightlightEvent == ActionBoard.defender);
-        penHolding.setSelected(hightlightEvent == ActionBoard.holding);
-        penHands.setSelected(hightlightEvent == ActionBoard.hands);
-        penPickup.setSelected(hightlightEvent == ActionBoard.pickUp);
+        pen[0].setSelected(hightlightEvent == ActionBoard.pushing);
+        pen[1].setSelected(hightlightEvent == ActionBoard.leaving);
+        pen[2].setSelected(hightlightEvent == ActionBoard.fallen);
+        pen[3].setSelected(hightlightEvent == ActionBoard.inactive);
+        pen[4].setSelected(hightlightEvent == ActionBoard.defender);
+        pen[5].setSelected(hightlightEvent == ActionBoard.holding);
+        pen[6].setSelected(hightlightEvent == ActionBoard.hands);
+        pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
+    }
+    
+        /**
+     * Updates the HL penalties.
+     * 
+     * @param data     The current data (model) the GUI should view.
+     */
+    private void updatePenaltiesHL(AdvancedData data)
+    {
+        pen[0].setEnabled(ActionBoard.hands.isLegal(data));
+        pen[1].setEnabled(ActionBoard.pushing.isLegal(data));
+        pen[2].setEnabled(ActionBoard.attack.isLegal(data));
+        pen[3].setEnabled(ActionBoard.defense.isLegal(data));
+        pen[4].setEnabled(ActionBoard.pickUp.isLegal(data));
+        
+        GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
+        pen[0].setSelected(hightlightEvent == ActionBoard.hands);
+        pen[1].setSelected(hightlightEvent == ActionBoard.pushing);
+        pen[2].setSelected(hightlightEvent == ActionBoard.attack);
+        pen[3].setSelected(hightlightEvent == ActionBoard.defense);
+        pen[4].setSelected(hightlightEvent == ActionBoard.pickUp);
     }
     
     /**
@@ -908,14 +962,9 @@ public class GUI extends JFrame implements GCGUI
         set.setFont(stateFont);
         play.setFont(stateFont);
         finish.setFont(stateFont);
-        penPushing.setFont(standardFont);
-        penLeaving.setFont(standardFont);
-        penFallen.setFont(standardFont);
-        penInactive.setFont(standardFont);
-        penDefender.setFont(standardFont);
-        penHolding.setFont(standardFont);
-        penHands.setFont(standardFont);
-        penPickup.setFont(standardFont);
+        for(int i=0; i<pen.length; i++) {
+            pen[i].setFont(standardFont);
+        }
         for(int i=0; i<undo.length; i++) {
             undo[i].setFont(timeoutFont);
         }
