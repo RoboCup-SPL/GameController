@@ -42,7 +42,7 @@ public class Finish extends GCAction
             ActionBoard.clock.resetPlayerPenTime(data);
             if(data.firstHalf == GameControlData.C_TRUE) {
                 data.remainingPaused = Rules.league.pauseTime*1000;
-            } else if (data.fulltime && data.team[0].score == data.team[1].score){
+            } else if (data.playoff && data.team[0].score == data.team[1].score){
                 data.remainingPaused = Rules.league.pausePenaltyShootTime*1000;
             } else {
                 data.remainingPaused = 0;

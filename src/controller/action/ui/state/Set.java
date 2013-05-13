@@ -40,7 +40,7 @@ public class Set extends GCAction
         ActionBoard.clock.resetPlayerPenTime(data);
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             if(data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]
-                    >= (!data.fulltime ? Rules.league.numberOfPenaltyShootsShort : Rules.league.numberOfPenaltyShootsLong))
+                    >= (!data.playoff ? Rules.league.numberOfPenaltyShootsShort : Rules.league.numberOfPenaltyShootsLong))
             {
                 data.penaltyShootTime = Rules.league.penaltyShootTimeSuddenDeath*1000;
             } else {

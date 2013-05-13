@@ -11,6 +11,7 @@ import controller.ui.KeyboardListener;
 import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
+import data.Rules;
 import data.Teams;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class Main
      * Actually there are no dependencies, but this should be the first thing
      * to be written into the log file.
      */
-    public static final String version = "GC2 1.0";
+    public static final String version = "GC2 1.1";
     
     /** Relative directory of where logs are stored */
     private final static String LOG_DIRECTORY = "logs";
@@ -76,7 +77,7 @@ public class Main
         for(int i=0; i<2; i++) {
             data.team[i].teamNumber = (byte)input.outTeam[i];
         }
-        data.fulltime = input.outFulltime;
+        data.playoff = input.outFulltime;
 
         try {
             //sender
@@ -110,7 +111,8 @@ public class Main
                 "log_"+df.format(new Date(System.currentTimeMillis()))+".txt");
             Log.init(logFile.getPath());
         }
-        Log.toFile("Fulltime = "+data.fulltime);
+        Log.toFile("League = "+Rules.league.leagueName);
+        Log.toFile("Play-off = "+data.playoff);
         Log.toFile("Using broadcast address " + input.outBroadcastAddress);
 
         //ui

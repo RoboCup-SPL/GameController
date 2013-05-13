@@ -51,7 +51,7 @@ public class AdvancedData extends GameControlData
     /** If true, the clock has manually been started in the testmode. */
     public boolean manPlay = false;
     /** If true, the game auto-pauses the game for full 10minutes playing. */
-    public boolean fulltime;
+    public boolean playoff;
     /** If true, the testmode has been activated. */
     public boolean testmode = false;
     
@@ -101,7 +101,7 @@ public class AdvancedData extends GameControlData
         penaltyShoot = new int[2];
         penaltyShoot[0] = data.penaltyShoot[0];
         penaltyShoot[0] = data.penaltyShoot[0];
-        fulltime = data.fulltime;
+        playoff = data.playoff;
         manPause = data.manPause;
         manPlay = data.manPlay;
     }
