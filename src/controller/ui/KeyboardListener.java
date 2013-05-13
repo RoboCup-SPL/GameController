@@ -1,7 +1,12 @@
 package controller.ui;
 
+import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
+import data.GameControlData;
+import data.Humanoid;
+import data.Rules;
+import data.SPL;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -66,37 +71,28 @@ public class KeyboardListener implements KeyEventDispatcher
             case KeyEvent.VK_DELETE: event = ActionBoard.testmode; break;
             case KeyEvent.VK_BACK_SPACE: event = ActionBoard.undo[1]; break;
             
-            case KeyEvent.VK_1: event = ActionBoard.robot[0][0]; break;
-            case KeyEvent.VK_2: event = ActionBoard.robot[0][1]; break;
-            case KeyEvent.VK_3: event = ActionBoard.robot[0][2]; break;
-            case KeyEvent.VK_4: event = ActionBoard.robot[0][3]; break;
-            case KeyEvent.VK_5: event = ActionBoard.robot[0][4]; break;
-            case KeyEvent.VK_6: event = ActionBoard.robot[1][0]; break;
-            case KeyEvent.VK_7: event = ActionBoard.robot[1][1]; break;
-            case KeyEvent.VK_8: event = ActionBoard.robot[1][2]; break;
-            case KeyEvent.VK_9: event = ActionBoard.robot[1][3]; break;
-            case KeyEvent.VK_0: event = ActionBoard.robot[0][4]; break;
-            
-            case KeyEvent.VK_Q: event = ActionBoard.goalInc[0]; break;
-            case KeyEvent.VK_I: event = ActionBoard.goalInc[1]; break;
-            case KeyEvent.VK_A: event = ActionBoard.out[0]; break;
-            case KeyEvent.VK_K: event = ActionBoard.out[1]; break;
-            case KeyEvent.VK_Y: event = ActionBoard.timeOut[0]; break;
-            case KeyEvent.VK_COMMA: event = ActionBoard.timeOut[1]; break;
-            
-            case KeyEvent.VK_E: event = ActionBoard.initial; break;
-            case KeyEvent.VK_R: event = ActionBoard.ready; break;
-            case KeyEvent.VK_T: event = ActionBoard.set; break;
-            case KeyEvent.VK_Z: event = ActionBoard.play; break;
-            
-            case KeyEvent.VK_D: event = ActionBoard.pushing; break;
-            case KeyEvent.VK_F: event = ActionBoard.leaving; break;
-            case KeyEvent.VK_G: event = ActionBoard.fallen; break;
-            case KeyEvent.VK_H: event = ActionBoard.inactive; break;
-            case KeyEvent.VK_C: event = ActionBoard.defender; break;
-            case KeyEvent.VK_V: event = ActionBoard.holding; break;
-            case KeyEvent.VK_B: event = ActionBoard.hands; break;
-            case KeyEvent.VK_N: event = ActionBoard.pickUp; break;
+            case KeyEvent.VK_B: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_BLUE ? 0 : 1]; break;
+            case KeyEvent.VK_R: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_RED ? 0 : 1]; break;
+        }
+        if(Rules.league instanceof SPL) {
+            switch(key) {
+                case KeyEvent.VK_P: event = ActionBoard.pushing; break;
+                case KeyEvent.VK_L: event = ActionBoard.leaving; break;
+                case KeyEvent.VK_F: event = ActionBoard.fallen; break;
+                case KeyEvent.VK_I: event = ActionBoard.inactive; break;
+                case KeyEvent.VK_D: event = ActionBoard.defender; break;
+                case KeyEvent.VK_O: event = ActionBoard.holding; break;
+                case KeyEvent.VK_H: event = ActionBoard.hands; break;
+                case KeyEvent.VK_U: event = ActionBoard.pickUp; break;
+            }
+        } else if(Rules.league instanceof Humanoid) {
+            switch(key) {
+                case KeyEvent.VK_P: event = ActionBoard.pushing; break;
+                case KeyEvent.VK_D: event = ActionBoard.defense; break;
+                case KeyEvent.VK_H: event = ActionBoard.hands; break;
+                case KeyEvent.VK_U: event = ActionBoard.pickUp; break;
+                case KeyEvent.VK_A: event = ActionBoard.attack; break;
+            }
         }
         
         if(event != null) {
