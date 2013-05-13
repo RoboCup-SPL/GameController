@@ -1,6 +1,6 @@
 package controller.action.net;
 
-import controller.Log;
+import common.Log;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;

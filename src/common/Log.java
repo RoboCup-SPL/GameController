@@ -1,5 +1,7 @@
-package controller;
+package common;
 
+import controller.EventHandler;
+import controller.Main;
 import data.AdvancedData;
 import java.io.File;
 import java.io.FileWriter;

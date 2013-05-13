@@ -1,4 +1,4 @@
-package controller.ui;
+package common;
 
 import java.awt.Component;
 import java.awt.Container;

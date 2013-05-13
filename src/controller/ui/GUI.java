@@ -1,7 +1,8 @@
 package controller.ui;
 
+import common.TotalScaleLayout;
 import controller.EventHandler;
-import controller.Log;
+import common.Log;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
 import controller.action.ui.penalty.Pushing;

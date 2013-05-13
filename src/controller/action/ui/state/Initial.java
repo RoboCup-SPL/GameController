@@ -1,6 +1,6 @@
 package controller.action.ui.state;
 
-import controller.Log;
+import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;

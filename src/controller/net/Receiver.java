@@ -1,6 +1,6 @@
 package controller.net;
 
-import controller.Log;
+import common.Log;
 import data.GameControlData;
 import data.GameControlReturnData;
 import java.io.IOException;

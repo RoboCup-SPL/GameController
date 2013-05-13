@@ -1,6 +1,6 @@
 package data;
 
-import controller.Log;
+import common.Log;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

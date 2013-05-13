@@ -1,7 +1,7 @@
 package controller.action.ui;
 
 import controller.EventHandler;
-import controller.Log;
+import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
