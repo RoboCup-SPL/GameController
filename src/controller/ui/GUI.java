@@ -80,6 +80,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_HOLDING = "Ball Holding";
     private static final String PEN_HANDS = "Hands";
     private static final String PEN_PICKUP = "Pick-Up";
+    private static final String PEN_MANIPULATION = "Ball Manipulation";
     private static final String PEN_DEFENSE = "Illegal Defense";
     private static final String PEN_ATTACK = "Illegal Attack";
     private static final String CANCEL = "Cancel";
@@ -299,7 +300,7 @@ public class GUI extends JFrame implements GCGUI
             pen[7] = new JToggleButton(PEN_PICKUP);
         } else if(Rules.league instanceof Humanoid) {
             pen = new JToggleButton[5];
-            pen[0] = new JToggleButton(PEN_HOLDING);
+            pen[0] = new JToggleButton(PEN_MANIPULATION);
             pen[1] = new JToggleButton(PEN_PUSHING);
             pen[2] = new JToggleButton(PEN_ATTACK);
             pen[3] = new JToggleButton(PEN_DEFENSE);
@@ -420,7 +421,7 @@ public class GUI extends JFrame implements GCGUI
             pen[6].addActionListener(ActionBoard.hands);
             pen[7].addActionListener(ActionBoard.pickUp);
         } else if(Rules.league instanceof Humanoid) {
-            pen[0].addActionListener(ActionBoard.hands);
+            pen[0].addActionListener(ActionBoard.ballManipulation);
             pen[1].addActionListener(ActionBoard.pushing);
             pen[2].addActionListener(ActionBoard.attack);
             pen[3].addActionListener(ActionBoard.defense);
@@ -885,14 +886,14 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updatePenaltiesHL(AdvancedData data)
     {
-        pen[0].setEnabled(ActionBoard.hands.isLegal(data));
+        pen[0].setEnabled(ActionBoard.ballManipulation.isLegal(data));
         pen[1].setEnabled(ActionBoard.pushing.isLegal(data));
         pen[2].setEnabled(ActionBoard.attack.isLegal(data));
         pen[3].setEnabled(ActionBoard.defense.isLegal(data));
         pen[4].setEnabled(ActionBoard.pickUp.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
-        pen[0].setSelected(hightlightEvent == ActionBoard.hands);
+        pen[0].setSelected(hightlightEvent == ActionBoard.ballManipulation);
         pen[1].setSelected(hightlightEvent == ActionBoard.pushing);
         pen[2].setSelected(hightlightEvent == ActionBoard.attack);
         pen[3].setSelected(hightlightEvent == ActionBoard.defense);

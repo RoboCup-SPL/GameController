@@ -23,6 +23,7 @@ public class PlayerInfo
     public static final short PENALTY_SPL_LEAVING_THE_FIELD = 6;
     public static final short PENALTY_SPL_PLAYING_WITH_HANDS = 7;
     public static final short PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
+    public static final short PENALTY_HL_BALL_MANIPULATION = 1;
     public static final short PENALTY_HL_ILLEGAL_ATTACK = 3;
     public static final short PENALTY_HL_ILLEGAL_DEFENSE = 4;
     public static final short PENALTY_HL_REQUEST_FOR_PICKUP = 5;

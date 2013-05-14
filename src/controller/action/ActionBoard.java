@@ -18,6 +18,7 @@ import controller.action.ui.half.FirstHalf;
 import controller.action.ui.half.PenaltyShoot;
 import controller.action.ui.half.SecondHalf;
 import controller.action.ui.penalty.Attack;
+import controller.action.ui.penalty.BallManipulation;
 import controller.action.ui.penalty.Defender;
 import controller.action.ui.penalty.Defense;
 import controller.action.ui.penalty.Fallen;
@@ -83,6 +84,7 @@ public class ActionBoard
     public static Holding holding;
     public static Hands hands;
     public static PickUp pickUp;
+    public static BallManipulation ballManipulation;
     public static Attack attack;
     public static Defense defense;
     
@@ -137,6 +139,7 @@ public class ActionBoard
         holding = new Holding();
         hands = new Hands();
         pickUp = new PickUp();
+        ballManipulation = new BallManipulation();
         attack = new Attack();
         defense = new Defense();
         
