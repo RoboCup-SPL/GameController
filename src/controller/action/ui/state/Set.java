@@ -42,9 +42,14 @@ public class Set extends GCAction
             if(data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]
                     >= (!data.playoff ? Rules.league.numberOfPenaltyShootsShort : Rules.league.numberOfPenaltyShootsLong))
             {
-                data.penaltyShootTime = Rules.league.penaltyShootTimeSuddenDeath*1000;
+                if(Rules.league.suddenDeath) {
+                    data.penaltyShootTime = Rules.league.penaltyShootTimeSuddenDeath*1000;
+                } else {
+                    data.penaltyShoot[0] = 0;
+                    data.penaltyShoot[1] = 0;
+                }
             } else {
-              data.penaltyShootTime = Rules.league.penaltyShootTime*1000;  
+                data.penaltyShootTime = Rules.league.penaltyShootTime*1000;  
             }
         }
         Log.state(data, "State set to Set");
