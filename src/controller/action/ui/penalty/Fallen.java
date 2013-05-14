@@ -53,7 +53,7 @@ public class Fallen extends GCAction
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         player.penalty = penalty;
-        if(data.gameState != GameControlData.STATE_READY) {
+        if( (data.gameState != GameControlData.STATE_READY) || (!Rules.league.playOffTimeStop) ) {
             ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyStandardTime);
         } else {
             ActionBoard.clock.setPlayerPenTime(data, side, number, (int)(data.remainingReady/1000));

@@ -37,7 +37,9 @@ public class Set extends GCAction
             return;
         }
         data.gameState = GameControlData.STATE_SET;
-        ActionBoard.clock.resetPlayerPenTime(data);
+        if(Rules.league.removePenaltiesInSet) {
+            ActionBoard.clock.resetPlayerPenTime(data);
+        }
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             if(data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]
                     >= (!data.playoff ? Rules.league.numberOfPenaltyShootsShort : Rules.league.numberOfPenaltyShootsLong))

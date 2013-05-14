@@ -68,7 +68,7 @@ public class Pushing extends GCAction
                 break;
             }
         }
-        if(data.gameState != GameControlData.STATE_READY) {
+        if( (data.gameState != GameControlData.STATE_READY) || (!Rules.league.playOffTimeStop) ) {
             if(!ejected) {
                 ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyStandardTime);
             } else {

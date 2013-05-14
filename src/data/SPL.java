@@ -54,6 +54,8 @@ public class SPL extends Rules
         penaltyStandardTime = 30;
         /** Time in seconds a robot is taken out when manually penalized (ChestButton). */
         penaltyManualTime = 1;
+        /** if all penalties should be removed by switching to the set state. */
+        removePenaltiesInSet = true;
         /** Time in seconds one team has as timeOut. */
         timeOutTime = 5*60;
         /** If true, the timeOutTime will be resetted for each timeOut. */
