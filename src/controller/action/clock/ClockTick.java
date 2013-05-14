@@ -143,7 +143,7 @@ public class ClockTick extends GCAction
          || (
                 ( (data.gameState == GameControlData.STATE_READY)
                || (data.gameState == GameControlData.STATE_SET) )
-                && (data.playoff || halfNotStarted)
+                && ((data.playoff && Rules.league.playOffTimeStop) || halfNotStarted)
                 )
          || data.manPause )
          || data.manPlay       );

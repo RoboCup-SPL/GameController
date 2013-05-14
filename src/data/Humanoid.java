@@ -26,6 +26,8 @@ public class Humanoid extends Rules
         teamColorName = new String[2];
         teamColorName[0] = "Blue";
         teamColorName[1] = "Red";
+        /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
+        playOffTimeStop = false;
         /** Time in seconds one half is long. */
         halfTime = 10*60;
         /** Time in seconds the ready state is long. */
