@@ -27,6 +27,7 @@ import controller.action.ui.penalty.Holding;
 import controller.action.ui.penalty.Inactive;
 import controller.action.ui.penalty.Leaving;
 import controller.action.ui.penalty.PickUp;
+import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.Pushing;
 import controller.action.ui.state.Finish;
 import controller.action.ui.state.Initial;
@@ -87,6 +88,7 @@ public class ActionBoard
     public static BallManipulation ballManipulation;
     public static Attack attack;
     public static Defense defense;
+    public static PickUpHL pickUpHL;
     
     public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
@@ -142,6 +144,7 @@ public class ActionBoard
         ballManipulation = new BallManipulation();
         attack = new Attack();
         defense = new Defense();
+        pickUpHL = new PickUpHL();
         
         for(int i=0; i<2; i++) {
             for(int j=0; j<Rules.league.teamSize; j++) {

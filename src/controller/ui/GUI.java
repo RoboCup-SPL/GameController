@@ -425,7 +425,7 @@ public class GUI extends JFrame implements GCGUI
             pen[1].addActionListener(ActionBoard.pushing);
             pen[2].addActionListener(ActionBoard.attack);
             pen[3].addActionListener(ActionBoard.defense);
-            pen[4].addActionListener(ActionBoard.pickUp);
+            pen[4].addActionListener(ActionBoard.pickUpHL);
         }
         for(int i=0; i<undo.length; i++) {
             undo[i].addActionListener(ActionBoard.undo[i+1]);
@@ -890,14 +890,14 @@ public class GUI extends JFrame implements GCGUI
         pen[1].setEnabled(ActionBoard.pushing.isLegal(data));
         pen[2].setEnabled(ActionBoard.attack.isLegal(data));
         pen[3].setEnabled(ActionBoard.defense.isLegal(data));
-        pen[4].setEnabled(ActionBoard.pickUp.isLegal(data));
+        pen[4].setEnabled(ActionBoard.pickUpHL.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
         pen[0].setSelected(hightlightEvent == ActionBoard.ballManipulation);
         pen[1].setSelected(hightlightEvent == ActionBoard.pushing);
         pen[2].setSelected(hightlightEvent == ActionBoard.attack);
         pen[3].setSelected(hightlightEvent == ActionBoard.defense);
-        pen[4].setSelected(hightlightEvent == ActionBoard.pickUp);
+        pen[4].setSelected(hightlightEvent == ActionBoard.pickUpHL);
     }
     
     /**

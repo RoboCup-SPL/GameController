@@ -74,7 +74,8 @@ public class Robot extends GCAction
               && (EventHandler.getInstance().lastUIEvent.penalty != PlayerInfo.PENALTY_NONE)
               && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE) )
             || ( (EventHandler.getInstance().lastUIEvent != null)
-              && (EventHandler.getInstance().lastUIEvent.penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP) )
+              && ( (EventHandler.getInstance().lastUIEvent.penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
+                    || (EventHandler.getInstance().lastUIEvent.penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_PICKUP) ) )
             || data.testmode;
     }
 }
