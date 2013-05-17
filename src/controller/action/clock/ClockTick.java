@@ -50,6 +50,12 @@ public class ClockTick extends GCAction
                 if(data.gameState == GameControlData.STATE_PLAYING) {
                     data.penaltyShootTime -= timeElapsed;
                 }
+            } else if(data.secGameState == GameControlData.STATE2_OVERTIME) {
+                if(data.firstHalf == GameControlData.C_TRUE) {
+                    data.firstHalfOverTime -= timeElapsed;
+                } else {
+                    data.secondHalfOverTime -= timeElapsed;
+                }
             } else {
                 if(data.firstHalf == GameControlData.C_TRUE) {
                     data.firstHalfTime -= timeElapsed;
@@ -61,6 +67,12 @@ public class ClockTick extends GCAction
         long millisRemaining;
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             millisRemaining = data.penaltyShootTime;
+        } else if(data.secGameState == GameControlData.STATE2_OVERTIME) {
+            if(data.firstHalf == GameControlData.C_TRUE) {
+                millisRemaining = data.firstHalfOverTime;
+            } else {
+                millisRemaining = data.secondHalfOverTime;
+            }
         } else {
             if(data.firstHalf == GameControlData.C_TRUE) {
                 millisRemaining = data.firstHalfTime;
@@ -115,7 +127,12 @@ public class ClockTick extends GCAction
                 } else {
                     if(data.remainingPaused > 0
                      && data.remainingPaused <= Rules.league.pausePenaltyShootTime*1000/2) {
-                        ActionBoard.penaltyShoot.perform(data);
+                        if( (Rules.league.overtime)
+                                && (data.playoff) ) {
+                            ActionBoard.firstHalf.perform(data);
+                        } else {
+                            ActionBoard.penaltyShoot.perform(data);
+                        }
                     }
                 }
             }
@@ -136,8 +153,11 @@ public class ClockTick extends GCAction
     }
     
     public boolean isClockRunning(AdvancedData data) {
-        boolean halfNotStarted = (data.firstHalf == GameControlData.C_TRUE ?
-                data.firstHalfTime : data.secondHalfTime) == Rules.league.halfTime*1000;
+        boolean halfNotStarted = data.secGameState != GameControlData.STATE2_OVERTIME ?
+                ((data.firstHalf == GameControlData.C_TRUE ?
+                data.firstHalfTime : data.secondHalfTime) == Rules.league.halfTime*1000) :
+                ((data.firstHalf == GameControlData.C_TRUE ?
+                data.firstHalfOverTime : data.secondHalfOverTime) == Rules.league.overtimeTime*1000);
         return ( !( (data.gameState == GameControlData.STATE_INITIAL)
          || (data.gameState == GameControlData.STATE_FINISHED)
          || (

@@ -22,6 +22,10 @@ public class AdvancedData extends GameControlData
     public long firstHalfTime = Rules.league.halfTime*1000;
     /** Time in millis remaining for the second half. */
     public long secondHalfTime = Rules.league.halfTime*1000;
+    /** Time in millis remaining for the first half. */
+    public long firstHalfOverTime = Rules.league.overtimeTime*1000;
+    /** Time in millis remaining for the second half. */
+    public long secondHalfOverTime = Rules.league.overtimeTime*1000;
     /** Time in millis remaining for the current penalty shoot. */
     public long penaltyShootTime = Rules.league.penaltyShootTime*1000;
     /** Contains the amount of extra time. */
@@ -77,6 +81,8 @@ public class AdvancedData extends GameControlData
         sumOfTime = data.sumOfTime;
         firstHalfTime = data.firstHalfTime;
         secondHalfTime = data.secondHalfTime;
+        firstHalfOverTime = data.firstHalfOverTime;
+        secondHalfOverTime = data.secondHalfOverTime;
         penaltyShootTime = data.penaltyShootTime;
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
@@ -133,6 +139,8 @@ public class AdvancedData extends GameControlData
         sumOfTime = data.sumOfTime;
         firstHalfTime = data.firstHalfTime;
         secondHalfTime = data.secondHalfTime;
+        firstHalfOverTime = data.firstHalfOverTime;
+        secondHalfOverTime = data.secondHalfOverTime;
         penaltyShootTime = data.penaltyShootTime;
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;

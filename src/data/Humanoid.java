@@ -38,6 +38,10 @@ public class Humanoid extends Rules
         kickoffTime = 10;
         /** Time in seconds before a global game stuck can be called. */
         minDurationBeforeStuck = 30;
+        /** If there is an overtime before penalty-shoot in a play-off game. */
+        overtime = true;
+        /** Time in seconds one overtime half is long. */
+        overtimeTime = 5*60;
         /** Time in seconds between second half and penalty shoot. */
         pausePenaltyShootTime = 5*60;
         /** Time in seconds one penalty shoot is long. */

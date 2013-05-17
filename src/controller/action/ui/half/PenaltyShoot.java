@@ -6,6 +6,7 @@ import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
+import data.Rules;
 
 
 /**
@@ -62,7 +63,11 @@ public class PenaltyShoot extends GCAction
     {
         return (data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
           || ( (data.firstHalf != GameControlData.C_TRUE)
-            && (data.gameState == GameControlData.STATE_FINISHED) )
+            && (data.gameState == GameControlData.STATE_FINISHED)
+            && !(Rules.league.overtime
+                && (data.playoff) 
+                && (data.secGameState == GameControlData.STATE2_NORMAL)
+                && (data.team[0].score == data.team[1].score) ) )
           || (data.testmode);
     }
 }

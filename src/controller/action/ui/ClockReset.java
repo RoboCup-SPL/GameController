@@ -35,10 +35,18 @@ public class ClockReset extends GCAction
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.penaltyShootTime = Rules.league.penaltyShootTime*1000;
         } else {
-            if(data.firstHalf == GameControlData.C_TRUE) {
-                data.firstHalfTime = Rules.league.halfTime*1000;
+            if(data.secGameState != GameControlData.STATE2_OVERTIME) {
+                if(data.firstHalf == GameControlData.C_TRUE) {
+                    data.firstHalfTime = Rules.league.halfTime*1000;
+                } else {
+                    data.secondHalfTime = Rules.league.halfTime*1000;
+                }
             } else {
-                data.secondHalfTime = Rules.league.halfTime*1000;
+                if(data.firstHalf == GameControlData.C_TRUE) {
+                    data.firstHalfOverTime = Rules.league.overtimeTime*1000;
+                } else {
+                    data.secondHalfOverTime = Rules.league.overtimeTime*1000;
+                }
             }
         }
         if(data.gameState == GameControlData.STATE_READY) {

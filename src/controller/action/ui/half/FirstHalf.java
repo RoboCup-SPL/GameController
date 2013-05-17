@@ -7,6 +7,7 @@ import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
+import data.Rules;
 
 
 /**
@@ -35,7 +36,7 @@ public class FirstHalf extends GCAction
     {
         if(data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
-            data.secGameState = GameControlData.STATE2_NORMAL;
+            data.secGameState = GameControlData.STATE2_OVERTIME;
             data.team[0].teamColor = GameControlData.TEAM_BLUE;
             data.team[1].teamColor = GameControlData.TEAM_RED;
             changeSide(data);
@@ -56,7 +57,13 @@ public class FirstHalf extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.firstHalf == GameControlData.C_TRUE) || (data.testmode);
+        return (data.firstHalf == GameControlData.C_TRUE)
+                || ( (Rules.league.overtime)
+                    && (data.playoff)
+                    && (data.secGameState == GameControlData.STATE2_NORMAL)
+                    && (data.gameState == GameControlData.STATE_FINISHED)
+                    && (data.team[0].score == data.team[1].score) )
+                || (data.testmode);
     }
     
     /**

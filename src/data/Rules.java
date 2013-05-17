@@ -41,6 +41,10 @@ public abstract class Rules
     public int kickoffTime;
     /** Time in seconds before a global game stuck can be called. */
     public int minDurationBeforeStuck;
+    /** If there is an overtime before penalty-shoot in a play-off game. */
+    public boolean overtime;
+    /** Time in seconds one overtime half is long. */
+    public int overtimeTime;
     /** Time in seconds between second half and penalty shoot. */
     public int pausePenaltyShootTime;
     /** Time in seconds one penalty shoot is long. */
