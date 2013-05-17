@@ -15,8 +15,10 @@ import controller.action.ui.Testmode;
 import controller.action.ui.TimeOut;
 import controller.action.ui.Undo;
 import controller.action.ui.half.FirstHalf;
+import controller.action.ui.half.FirstHalfOvertime;
 import controller.action.ui.half.PenaltyShoot;
 import controller.action.ui.half.SecondHalf;
+import controller.action.ui.half.SecondHalfOvertime;
 import controller.action.ui.penalty.Attack;
 import controller.action.ui.penalty.BallManipulation;
 import controller.action.ui.penalty.Defender;
@@ -71,6 +73,8 @@ public class ActionBoard
     public static ClockPause clockPause;
     public static FirstHalf firstHalf;
     public static SecondHalf secondHalf;
+    public static FirstHalfOvertime firstHalfOvertime;
+    public static SecondHalfOvertime secondHalfOvertime;
     public static PenaltyShoot penaltyShoot;
     public static Initial initial;
     public static Ready ready;
@@ -125,6 +129,8 @@ public class ActionBoard
         clockPause = new ClockPause();
         firstHalf = new FirstHalf();
         secondHalf = new SecondHalf();
+        firstHalfOvertime = new FirstHalfOvertime();
+        secondHalfOvertime = new SecondHalfOvertime();
         penaltyShoot = new PenaltyShoot();
 
         initial = new Initial();

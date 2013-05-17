@@ -12,13 +12,13 @@ import data.GameControlData;
  * 
  * This action means that the half is to be set to the second half.
  */
-public class SecondHalf extends GCAction
+public class SecondHalfOvertime extends GCAction
 {
     /**
      * Creates a new SecondHalf action.
      * Look at the ActionBoard before using this.
      */
-    public SecondHalf()
+    public SecondHalfOvertime()
     {
         super(ActionType.UI);
     }
@@ -33,7 +33,7 @@ public class SecondHalf extends GCAction
     {
         if(data.firstHalf != GameControlData.C_FALSE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_FALSE;
-            data.secGameState = GameControlData.STATE2_NORMAL;
+            data.secGameState = GameControlData.STATE2_OVERTIME;
             data.team[0].teamColor = GameControlData.TEAM_BLUE;
             data.team[1].teamColor = GameControlData.TEAM_RED;
             FirstHalf.changeSide(data);
@@ -42,7 +42,7 @@ public class SecondHalf extends GCAction
             for(int i=0; i<2; i++) {
                 data.numberOfTimeOutsCurrentHalf[i] = 0;
             }
-            Log.state(data, "Half set to SecondHalf");
+            Log.state(data, "Half set to SecondHalf-Overtime");
         }
     }
     
@@ -56,8 +56,8 @@ public class SecondHalf extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ( (data.firstHalf != GameControlData.C_TRUE)
-              && (data.secGameState == GameControlData.STATE2_NORMAL) )
-            || ( (data.secGameState == GameControlData.STATE2_NORMAL)
+              && (data.secGameState == GameControlData.STATE2_OVERTIME) )
+            || ( (data.secGameState == GameControlData.STATE2_OVERTIME)
               && (data.gameState == GameControlData.STATE_FINISHED) )
             || (data.testmode);
     }

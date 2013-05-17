@@ -71,7 +71,12 @@ public class GUI extends JFrame implements GCGUI
     private static final String CLOCK_PLAY = "config/icons/play.png";
     private static final String FIRST_HALF = "First-Half";
     private static final String SECOND_HALF = "Second-Half";
+    private static final String FIRST_HALF_SHORT = "1.Half";
+    private static final String SECOND_HALF_SHORT = "2.Half";
+    private static final String FIRST_HALF_OVERTIME = "1.Overtime";
+    private static final String SECOND_HALF_OVERTIME = "2.Overtime";
     private static final String PENALTY_SHOOT = "Penalty-Shoot";
+    private static final String PENALTY_SHOOT_SHORT = "Penalty";
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
     private static final String PEN_FALLEN = "Fallen Robot";
@@ -141,6 +146,8 @@ public class GUI extends JFrame implements GCGUI
     private ImageButton clockPause;
     private JToggleButton firstHalf;
     private JToggleButton secondHalf;
+    private JToggleButton firstHalfOvertime;
+    private JToggleButton secondHalfOvertime;
     private JToggleButton penaltyShoot;
     private ButtonGroup halfGroup;
     private JToggleButton[] pen;
@@ -266,14 +273,29 @@ public class GUI extends JFrame implements GCGUI
         clockPause.setBorder(null);
         clockSub = new JLabel("0:00");
         clockSub.setHorizontalAlignment(JLabel.CENTER);
-        firstHalf = new JToggleButton(FIRST_HALF);
-        firstHalf.setSelected(true);
-        secondHalf = new JToggleButton(SECOND_HALF);
-        penaltyShoot = new JToggleButton(PENALTY_SHOOT);
-        halfGroup = new ButtonGroup();
-        halfGroup.add(firstHalf);
-        halfGroup.add(secondHalf);
-        halfGroup.add(penaltyShoot);
+        if(!Rules.league.overtime) {
+            firstHalf = new JToggleButton(FIRST_HALF);
+            firstHalf.setSelected(true);
+            secondHalf = new JToggleButton(SECOND_HALF);
+            penaltyShoot = new JToggleButton(PENALTY_SHOOT);
+            halfGroup = new ButtonGroup();
+            halfGroup.add(firstHalf);
+            halfGroup.add(secondHalf);
+            halfGroup.add(penaltyShoot);
+        } else {
+            firstHalf = new JToggleButton(FIRST_HALF_SHORT);
+            firstHalf.setSelected(true);
+            secondHalf = new JToggleButton(SECOND_HALF_SHORT);
+            firstHalfOvertime = new JToggleButton(FIRST_HALF_OVERTIME);
+            secondHalfOvertime = new JToggleButton(SECOND_HALF_OVERTIME);
+            penaltyShoot = new JToggleButton(PENALTY_SHOOT_SHORT);
+            halfGroup = new ButtonGroup();
+            halfGroup.add(firstHalf);
+            halfGroup.add(secondHalf);
+            halfGroup.add(firstHalfOvertime);
+            halfGroup.add(secondHalfOvertime);
+            halfGroup.add(penaltyShoot);
+        }
         //  state
         initial = new JToggleButton(STATE_INITIAL);
         initial.setSelected(true);
@@ -350,9 +372,17 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.4, .0, .2, .11, clockContainer);
         layout.add(.61, .0, .08, .11, clockPause);
         layout.add(.4, .11, .2, .07, clockSub);
-        layout.add(.31, .19, .12, .06, firstHalf);
-        layout.add(.44, .19, .12, .06, secondHalf);
-        layout.add(.57, .19, .12, .06, penaltyShoot);
+        if(!Rules.league.overtime) {
+            layout.add(.31, .19, .12, .06, firstHalf);
+            layout.add(.44, .19, .12, .06, secondHalf);
+            layout.add(.57, .19, .12, .06, penaltyShoot);
+        } else {
+            layout.add(.31, .19, .07, .06, firstHalf);
+            layout.add(.3875, .19, .07, .06, secondHalf);
+            layout.add(.465, .19, .07, .06, firstHalfOvertime);
+            layout.add(.5425, .19, .07, .06, secondHalfOvertime);
+            layout.add(.62, .19, .07, .06, penaltyShoot);
+        }
         layout.add(.31, .26, .07, .08, initial);
         layout.add(.3875, .26, .07, .08, ready);
         layout.add(.465, .26, .07, .08, set);
@@ -410,6 +440,10 @@ public class GUI extends JFrame implements GCGUI
         clockPause.addActionListener(ActionBoard.clockPause);
         firstHalf.addActionListener(ActionBoard.firstHalf);
         secondHalf.addActionListener(ActionBoard.secondHalf);
+        if(Rules.league.overtime) {
+            firstHalfOvertime.addActionListener(ActionBoard.firstHalfOvertime);
+            secondHalfOvertime.addActionListener(ActionBoard.secondHalfOvertime);
+        }
         penaltyShoot.addActionListener(ActionBoard.penaltyShoot);
         if(Rules.league instanceof SPL) {
             pen[0].addActionListener(ActionBoard.pushing);
@@ -630,10 +664,21 @@ public class GUI extends JFrame implements GCGUI
         }
         firstHalf.setEnabled(ActionBoard.firstHalf.isLegal(data));
         secondHalf.setEnabled(ActionBoard.secondHalf.isLegal(data));
+        if(Rules.league.overtime) {
+            firstHalfOvertime.setEnabled(ActionBoard.firstHalfOvertime.isLegal(data));
+            secondHalfOvertime.setEnabled(ActionBoard.secondHalfOvertime.isLegal(data));
+        }
         penaltyShoot.setEnabled(ActionBoard.penaltyShoot.isLegal(data));
-        firstHalf.setSelected(data.firstHalf == GameControlData.C_TRUE);
-        secondHalf.setSelected( (data.firstHalf != GameControlData.C_TRUE)
-                             && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) );
+        firstHalf.setSelected( (data.secGameState == GameControlData.STATE2_NORMAL)
+                            && (data.firstHalf == GameControlData.C_TRUE) );
+        secondHalf.setSelected( (data.secGameState == GameControlData.STATE2_NORMAL)
+                            && (data.firstHalf != GameControlData.C_TRUE) );
+        if(Rules.league.overtime) {
+           firstHalfOvertime.setSelected( (data.secGameState == GameControlData.STATE2_OVERTIME)
+                            && (data.firstHalf == GameControlData.C_TRUE) );
+           secondHalfOvertime.setSelected( (data.secGameState == GameControlData.STATE2_OVERTIME)
+                            && (data.firstHalf != GameControlData.C_TRUE) ); 
+        }
         penaltyShoot.setSelected(data.secGameState == GameControlData.STATE2_PENALTYSHOOT);
     }
     
@@ -957,6 +1002,10 @@ public class GUI extends JFrame implements GCGUI
         clockSub.setFont(timeSubFont);
         firstHalf.setFont(timeoutFont);
         secondHalf.setFont(timeoutFont);
+        if(Rules.league.overtime) {
+            firstHalfOvertime.setFont(timeoutFont);
+            secondHalfOvertime.setFont(timeoutFont);
+        }
         penaltyShoot.setFont(timeoutFont);
         initial.setFont(stateFont);
         ready.setFont(stateFont);
