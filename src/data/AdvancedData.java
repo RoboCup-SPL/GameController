@@ -52,6 +52,8 @@ public class AdvancedData extends GameControlData
     public int[] numberOfTimeOutsCurrentHalf = {0, 0};
     /** how many penalty-shoots have been made by each team, 0:left side, 1:right side. */
     public int[] penaltyShoot = {0, 0};
+    /** If true, left side has the kickoff. */
+    public boolean leftSideKickoff = true;
     /** If true, the clock has manually been paused in the testmode. */
     public boolean manPause = false;
     /** If true, the clock has manually been started in the testmode. */

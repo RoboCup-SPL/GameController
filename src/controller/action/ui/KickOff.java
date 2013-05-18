@@ -4,6 +4,7 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
+import data.GameControlData;
 import data.Rules;
 
 
@@ -39,6 +40,12 @@ public class KickOff extends GCAction
     public void perform(AdvancedData data)
     {
         data.kickOffTeam = data.team[side].teamColor;
+        if( (Rules.league.kickoffChoice)
+                && (data.secGameState == GameControlData.STATE2_NORMAL)
+                && (data.firstHalf == GameControlData.C_TRUE)
+                && (data.gameState == GameControlData.STATE_INITIAL) ) {
+            data.leftSideKickoff = (side == 0);
+        }
         Log.state(data, "Kickoff "+
                 Rules.league.teamColorName[data.team[side].teamColor]);
     }
@@ -52,6 +59,11 @@ public class KickOff extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.kickOffTeam == data.team[side].teamColor) || data.testmode;
+        return (data.kickOffTeam == data.team[side].teamColor)
+                || ( (Rules.league.kickoffChoice)
+                    && (data.secGameState == GameControlData.STATE2_NORMAL)
+                    && (data.firstHalf == GameControlData.C_TRUE)
+                    && (data.gameState == GameControlData.STATE_INITIAL) )
+                || data.testmode;
     }
 }

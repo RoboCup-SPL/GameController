@@ -34,6 +34,8 @@ public class SPL extends Rules
         readyTime = 45;
         /** Time in seconds between first and second half. */
         pauseTime = 10*60;
+        /** If left and right side may both have the first kickoff. */
+        kickoffChoice = false;
         /** Time in seconds the ball is blocked after kickoff. */
         kickoffTime = 10;
         /** Time in seconds before a global game stuck can be called. */
