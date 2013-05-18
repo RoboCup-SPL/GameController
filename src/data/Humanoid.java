@@ -46,6 +46,8 @@ public class Humanoid extends Rules
         overtimeTime = 5*60;
         /** Time in seconds between second half and penalty shoot. */
         pausePenaltyShootTime = 5*60;
+        /** If there can be a penalty-shoot retry. */
+        penaltyNewTries = true;
         /** Time in seconds one penalty shoot is long. */
         penaltyShootTime = 1*60;
         /** If there is a sudden-death. */

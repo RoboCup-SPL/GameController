@@ -51,6 +51,8 @@ public abstract class Rules
     public int pausePenaltyShootTime;
     /** Time in seconds one penalty shoot is long. */
     public int penaltyShootTime;
+    /** If there can be a penalty-shoot retry. */
+    public boolean penaltyNewTries;
     /** If there is a sudden-death. */
     public boolean suddenDeath;
     /** Time in seconds one penalty shoot is long in sudden-death. */

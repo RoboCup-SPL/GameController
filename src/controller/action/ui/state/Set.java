@@ -69,7 +69,8 @@ public class Set extends GCAction
         return (data.gameState == GameControlData.STATE_READY)
             || (data.gameState == GameControlData.STATE_SET)
             || ( (data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
-              && (data.gameState != GameControlData.STATE_PLAYING)
+              && ( (data.gameState != GameControlData.STATE_PLAYING)
+                || (Rules.league.penaltyNewTries) )
               && !data.timeOutActive[0]
               && !data.timeOutActive[1] )
             || data.testmode;
