@@ -13,7 +13,8 @@ public abstract class Rules
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
-        new Humanoid()
+        new Humanoid(),
+        new AdultSize()
     };
     
     /** The rules of the league playing. */
@@ -51,6 +52,8 @@ public abstract class Rules
     public boolean overtime;
     /** Time in seconds one overtime half is long. */
     public int overtimeTime;
+    /** If the game starts with penalty-shoots. */
+    public boolean startWithPenalty;
     /** Time in seconds between second half and penalty shoot. */
     public int pausePenaltyShootTime;
     /** Time in seconds one penalty shoot is long. */

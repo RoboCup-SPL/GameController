@@ -48,6 +48,8 @@ public class SPL extends Rules
         overtime = false;
         /** Time in seconds one overtime half is long. */
         overtimeTime = 0;
+        /** If the game starts with penalty-shoots. */
+        startWithPenalty = false;
        /** Time in seconds between second half and penalty shoot. */
         pausePenaltyShootTime = 5*60;
         /** Time in seconds one penalty shoot is long. */

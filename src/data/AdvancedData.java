@@ -69,6 +69,9 @@ public class AdvancedData extends GameControlData
     public AdvancedData()
     {
         super();
+        if(Rules.league.startWithPenalty) {
+            secGameState = GameControlData.STATE2_PENALTYSHOOT;
+        }
     }
     
     /**
