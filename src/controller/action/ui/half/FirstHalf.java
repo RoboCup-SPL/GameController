@@ -37,8 +37,10 @@ public class FirstHalf extends GCAction
         if(data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
             data.secGameState = GameControlData.STATE2_NORMAL;
-            data.team[0].teamColor = GameControlData.TEAM_BLUE;
-            data.team[1].teamColor = GameControlData.TEAM_RED;
+            if(Rules.league.colorChangeAuto) {
+                data.team[0].teamColor = GameControlData.TEAM_BLUE;
+                data.team[1].teamColor = GameControlData.TEAM_RED;
+            }
             changeSide(data);
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamColor : data.team[1].teamColor);
             data.gameState = GameControlData.STATE_INITIAL;
@@ -78,6 +80,13 @@ public class FirstHalf extends GCAction
         byte tmpScore = data.team[0].score;
         data.team[0].score = data.team[1].score;
         data.team[1].score = tmpScore;
+        
+        if( (data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
+         || (!Rules.league.colorChangeAuto) ) {
+            byte tmp = data.team[0].teamColor;
+            data.team[0].teamColor = data.team[1].teamColor;
+            data.team[1].teamColor = tmp;
+        }
         
         int tmpTimeOuts = data.numberOfTimeOuts[0];
         data.numberOfTimeOuts[0] = data.numberOfTimeOuts[1];

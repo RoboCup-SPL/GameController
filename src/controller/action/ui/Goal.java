@@ -56,9 +56,6 @@ public class Goal extends GCAction
                 Log.state(data, "Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
             } else {
                 data.gameState = GameControlData.STATE_FINISHED;
-                byte tmp = data.team[0].teamColor;
-                data.team[0].teamColor = data.team[1].teamColor;
-                data.team[1].teamColor = tmp;
                 FirstHalf.changeSide(data);
                 Log.state(data, "Goal for Team "+Teams.getNames(false)[data.team[side == 0 ? 1 : 0].teamNumber]);
             }

@@ -48,9 +48,6 @@ public class Finish extends GCAction
                 data.remainingPaused = 0;
             }
         } else {
-            byte tmp = data.team[0].teamColor;
-            data.team[0].teamColor = data.team[1].teamColor;
-            data.team[1].teamColor = tmp;
             data.kickOffTeam = data.kickOffTeam == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
             FirstHalf.changeSide(data);
         }
