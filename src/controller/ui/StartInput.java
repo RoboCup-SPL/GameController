@@ -53,8 +53,9 @@ public class StartInput extends JFrame implements Serializable
     private static final int FULLSCREEN_WIDTH = 100;
     private static final int BROADCAST_WIDTH = 125;
     private static final int BROADCAST_HEIGHT = 25;
-    private static final String[] BACKGROUND_SIDE = {"config/icons/robot_left_blue.png",
-                                                        "config/icons/robot_right_red.png"};
+    private static final String ICONS_PATH = "config/icons/";
+    private static final String[] BACKGROUND_SIDE = {"robot_left_blue.png",
+                                                        "robot_right_red.png"};
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
@@ -119,7 +120,8 @@ public class StartInput extends JFrame implements Serializable
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, STANDARD_SPACE));
         
         for(int i=0; i<2; i++) {
-            teamContainer[i] = new ImagePanel((new ImageIcon(BACKGROUND_SIDE[i])).getImage());
+            teamContainer[i] = new ImagePanel((
+                    new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
             teamContainer[i].setPreferredSize(new Dimension(WINDOW_WIDTH/2-STANDARD_SPACE, TEAMS_HEIGHT));
             teamContainer[i].setOpaque(true);
             teamContainer[i].setLayout(new BorderLayout());
@@ -240,6 +242,8 @@ public class StartInput extends JFrame implements Serializable
                         }
                     }
                     for(int i=0; i < 2; i++) {
+                        teamContainer[i].setImage((
+                                new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
                         team[i].removeAllItems();
                         String[] names = Teams.getNames(true);
                         for(int j=0; j < names.length; j++) {

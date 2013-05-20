@@ -41,23 +41,24 @@ public class GUI extends JFrame implements GCGUI
     private static final int TIME_SUB_FONT_SIZE = 40;
     private static final int TIMEOUT_FONT_SIZE = 14;
     private static final int STATE_FONT_SIZE = 12;
-    private static final String WINDOW_TITLE = "GameController2";
-    private static final String[][] BACKGROUND_SIDE = {{"config/icons/robot_left_blue.png",
-                                                        "config/icons/robot_left_red.png"},
-                                                       {"config/icons/robot_right_blue.png",
-                                                        "config/icons/robot_right_red.png"}};
-    private static final String BACKGROUND_MID = "config/icons/field.png";
-    private static final String BACKGROUND_CLOCK = "config/icons/time_ground.png";
+    private static final String WINDOW_TITLE = "GameController";
+    private static final String ICONS_PATH = "config/icons/";
+    private static final String[][] BACKGROUND_SIDE = {{"robot_left_blue.png",
+                                                        "robot_left_red.png"},
+                                                       {"robot_right_blue.png",
+                                                        "robot_right_red.png"}};
+    private static final String BACKGROUND_MID = "field.png";
+    private static final String BACKGROUND_CLOCK = "time_ground.png";
     private static final String COLOR_CHANGE = "Change Colors";
     private static final String KICKOFF = "Kickoff";
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PUSHES = "Pushes";
     private static final String SHOOTS = "Shoot";
     private static final String EJECTED = "Ejected";
-    private static final String ONLINE = "config/icons/wlan_status_green.png";
-    private static final String OFFLINE = "config/icons/wlan_status_red.png";
-    private static final String HIGH_LATENCY = "config/icons/wlan_status_yellow.png";
-    private static final String UNKNOWN_ONLINE_STATUS = "config/icons/wlan_status_grey.png";
+    private static final String ONLINE = "wlan_status_green.png";
+    private static final String OFFLINE = "wlan_status_red.png";
+    private static final String HIGH_LATENCY = "wlan_status_yellow.png";
+    private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
     private static final String TIMEOUT = "Timeout";
     private static final String STUCK = "Global<br/>Game<br/>Stuck";
     private static final String KICKOFF_GOAL = "Kickoff Goal";
@@ -67,9 +68,9 @@ public class GUI extends JFrame implements GCGUI
     private static final String STATE_SET = "Set";
     private static final String STATE_PLAY = "Play";
     private static final String STATE_FINISH = "Finish";
-    private static final String CLOCK_RESET = "config/icons/reset.png";
-    private static final String CLOCK_PAUSE = "config/icons/pause.png";
-    private static final String CLOCK_PLAY = "config/icons/play.png";
+    private static final String CLOCK_RESET = "reset.png";
+    private static final String CLOCK_PAUSE = "pause.png";
+    private static final String CLOCK_PLAY = "play.png";
     private static final String FIRST_HALF = "First-Half";
     private static final String SECOND_HALF = "Second-Half";
     private static final String FIRST_HALF_SHORT = "1.Half";
@@ -90,7 +91,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_DEFENSE = "Illegal Defense";
     private static final String PEN_ATTACK = "Illegal Attack";
     private static final String CANCEL = "Cancel";
-    private static final String BACKGROUND_BOTTOM = "config/icons/timeline_ground.png";
+    private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
     private static final Color COLOR_STANDARD = (new JButton()).getBackground();
     private static final int UNPEN_HIGHLIGHT_SECONDS = 7;
@@ -176,18 +177,18 @@ public class GUI extends JFrame implements GCGUI
         setLocation((desktop.width-WINDOW_WIDTH)/2, (desktop.height-WINDOW_HEIGHT)/2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        clockImgReset = new ImageIcon(CLOCK_RESET);
-        clockImgPlay = new ImageIcon(CLOCK_PLAY);
-        clockImgPause = new ImageIcon(CLOCK_PAUSE);
-        lanOnline = new ImageIcon(ONLINE);
-        lanHighLatency = new ImageIcon(HIGH_LATENCY);
-        lanOffline = new ImageIcon(OFFLINE);
-        lanUnknown = new ImageIcon(UNKNOWN_ONLINE_STATUS);
+        clockImgReset = new ImageIcon(ICONS_PATH+CLOCK_RESET);
+        clockImgPlay = new ImageIcon(ICONS_PATH+CLOCK_PLAY);
+        clockImgPause = new ImageIcon(ICONS_PATH+CLOCK_PAUSE);
+        lanOnline = new ImageIcon(ICONS_PATH+ONLINE);
+        lanHighLatency = new ImageIcon(ICONS_PATH+HIGH_LATENCY);
+        lanOffline = new ImageIcon(ICONS_PATH+OFFLINE);
+        lanUnknown = new ImageIcon(ICONS_PATH+UNKNOWN_ONLINE_STATUS);
         
         backgroundSide = new ImageIcon[2][2];
         for(int i=0; i<BACKGROUND_SIDE.length; i++) {
             for(int j=0; j<BACKGROUND_SIDE[i].length; j++) {
-                backgroundSide[i][j] = new ImageIcon(BACKGROUND_SIDE[i][j]);
+                backgroundSide[i][j] = new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i][j]);
             }
         }
         
@@ -198,8 +199,8 @@ public class GUI extends JFrame implements GCGUI
             side[i] = new ImagePanel(backgroundSide[i][i].getImage());
             side[i].setOpaque(true);
         }
-        mid = new ImagePanel(new ImageIcon(BACKGROUND_MID).getImage());
-        bottom = new ImagePanel(new ImageIcon(BACKGROUND_BOTTOM).getImage());
+        mid = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_MID).getImage());
+        bottom = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_BOTTOM).getImage());
         
         //--side--
         //  score
@@ -265,7 +266,7 @@ public class GUI extends JFrame implements GCGUI
         clockReset = new ImageButton(clockImgReset.getImage());
         clockReset.setOpaque(false);
         clockReset.setBorder(null);
-        clockContainer = new ImagePanel(new ImageIcon(BACKGROUND_CLOCK).getImage());
+        clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_CLOCK).getImage());
         clockContainer.setOpaque(false);
         clock = new JLabel("10:00");
         clock.setForeground(Color.WHITE);
