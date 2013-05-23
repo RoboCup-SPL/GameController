@@ -1,4 +1,4 @@
-This is the GameController2 developed by team B-Human for the RoboCup SPL.
+This is the GameController developed by team B-Human for the RoboCup SPL and Humanoid-League.
 
 If there are any question, please contact yuzong@informatik.uni-bremen.de .
 
@@ -20,49 +20,42 @@ There are three ant targets:
 	
 ########## 2. Executing the Jar ##########
 
-Double-click GameController2.jar or run 
+Double-click GameController.jar or run 
 
-java -jar GameController2.jar [-b <address> | --broadcast <address>]
+java -jar GameController.jar [-b <address> | --broadcast <address>]
 
 If no broadcast address is specified, 255.255.255.255 is used.
 
 
 ########## 3. Shortcuts ##########
 
-While the GameController2 is running, you may use the following keys on the keyboard instead of pushing buttons:
+While the GameController is running, you may use the following keys on the keyboard instead of pushing buttons:
 
 Esc		- press it twice to close the GameController2
 Delete		- toggle test-mode (everything is legal, every button is visible and enabled)
 Backspace	- undo last action
 
-1-5		- player 1-5 on the left side
-6-0		- player 1-5 on the right side
+B	- out by blue
+R	- out by red
 
-The following keys are mapped on the keyboard nearly equal to the buttons on the GUI.
+only SPL
+P	- pushing
+L	- leaving the field
+F	- fallen robot
+I	- inactive robot
+D	- illegal defender
+O	- ball holding
+H	- playing with hands
+U	- request for pickup
 
-Q	- goal left side
-I	- goal right side
-A	- out by left side
-K	- out by right side
-Y	- time-out left side
-,	- time-out right side
-
-E	- initial
-R	- ready
-T	- set
-Z	- play
-There actually is no key for finish because pushing it by mistake would be troublesome.
-
-D	- pushing
-F	- leaving the field
-G	- fallen robot
-H	- inactive robot
-C	- illegal defender
-V	- ball holding
-B	- playing with hands
-N	- request for pickup
+only Humanoid-League
+P	- pushing
+D	- illegal defense
+A	- illegal attack
+M	- ball manipulation
+U	- request for pickup
 
 
 ########## 4. Misc ##########
 
-The format of the packets the GameController2 broadcasts and receives is defined in the file RoboCupGameControlData.h, which is identical to the one that was used in 2012.
+The format of the packets the GameController broadcasts and receives is defined in the file RoboCupGameControlData.h, which is identical to the one that was used in 2012.

@@ -40,7 +40,7 @@ public class StartInput extends JFrame implements Serializable
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
      */
-    private static final String WINDOW_TITLE = "GameController2";
+    private static final String WINDOW_TITLE = "GameController";
     private static final int WINDOW_WIDTH = 600;
     private static final int WINDOW_HEIGHT = 480;
     private static final int STANDARD_SPACE = 10;

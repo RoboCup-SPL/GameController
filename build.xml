@@ -17,7 +17,7 @@
 
   <target name="distribute" depends="compile">
     <mkdir dir="${jar.dir}"/>
-    <jar destfile="${jar.dir}/GameController2.jar" basedir="${classes.dir}">
+    <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}">
       <manifest>
 	<attribute name="Main-Class" value="controller.Main"/>
 	<attribute name="Author" value="Michel Bartsch, Marcel Steinbeck" />
