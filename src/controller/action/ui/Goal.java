@@ -77,9 +77,6 @@ public class Goal extends GCAction
               && (data.gameState == GameControlData.STATE_PLAYING)
               && ( (data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
                 || (data.kickOffTeam == data.team[side].teamColor) ) )
-            || ( (set == -1)
-                && (data.gameState == GameControlData.STATE_INITIAL)
-                && (data.firstHalf == GameControlData.C_TRUE) )
             || data.testmode;
     }
 }
