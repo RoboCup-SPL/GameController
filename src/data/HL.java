@@ -8,24 +8,20 @@ import java.awt.Color;
  * 
  * This class sets attributes given by the humanoid-league rules.
  */
-public class Humanoid extends Rules
+public class HL extends Rules
 {
-    Humanoid()
+    HL()
     {
         /** The league´s name this rules are for. */
-        leagueName = "Humanoid-League";
+        leagueName = "HL Kid/Teen";
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl";
         /** How many robots are in a team. */
         teamSize = 3;
         /** The Java Colors the left and the right team starts with. */
-        teamColor = new Color[2];
-        teamColor[0] = Color.BLUE;
-        teamColor[1] = Color.RED;
+        teamColor = new Color[] {Color.BLUE, Color.RED};
         /** The name of the colors. */
-        teamColorName = new String[2];
-        teamColorName[0] = "Blue";
-        teamColorName[1] = "Red";
+        teamColorName = new String[] {"Blue", "Red"};
         /** If the colors change automatically. */
         colorChangeAuto = false;
         /** If the colors may be changed manually. */
@@ -79,9 +75,6 @@ public class Humanoid extends Rules
         /** How many times a team may take a timeOut within one half. */
         timeOutMaxNumberHalf = 1;
         /** On how many pushings is a robot ejected. */
-        pushesToEjection = new int[3];
-        pushesToEjection[0] = 99;
-        pushesToEjection[1] = 99;
-        pushesToEjection[2] = 99;
+        pushesToEjection = new int[] {};
     }
 }

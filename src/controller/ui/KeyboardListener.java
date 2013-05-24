@@ -4,7 +4,7 @@ import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
 import data.GameControlData;
-import data.Humanoid;
+import data.HL;
 import data.Rules;
 import data.SPL;
 import java.awt.KeyEventDispatcher;
@@ -85,7 +85,7 @@ public class KeyboardListener implements KeyEventDispatcher
                 case KeyEvent.VK_H: event = ActionBoard.hands; break;
                 case KeyEvent.VK_U: event = ActionBoard.pickUp; break;
             }
-        } else if(Rules.league instanceof Humanoid) {
+        } else if(Rules.league instanceof HL) {
             switch(key) {
                 case KeyEvent.VK_P: event = ActionBoard.pushing; break;
                 case KeyEvent.VK_D: event = ActionBoard.defense; break;

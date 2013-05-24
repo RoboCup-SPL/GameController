@@ -326,7 +326,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5] = new JToggleButton(PEN_HOLDING);
             pen[6] = new JToggleButton(PEN_HANDS);
             pen[7] = new JToggleButton(PEN_PICKUP);
-        } else if(Rules.league instanceof Humanoid) {
+        } else if(Rules.league instanceof HL) {
             pen = new JToggleButton[5];
             pen[0] = new JToggleButton(PEN_MANIPULATION);
             pen[1] = new JToggleButton(PEN_PUSHING);
@@ -466,7 +466,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5].addActionListener(ActionBoard.holding);
             pen[6].addActionListener(ActionBoard.hands);
             pen[7].addActionListener(ActionBoard.pickUp);
-        } else if(Rules.league instanceof Humanoid) {
+        } else if(Rules.league instanceof HL) {
             pen[0].addActionListener(ActionBoard.ballManipulation);
             pen[1].addActionListener(ActionBoard.pushing);
             pen[2].addActionListener(ActionBoard.attack);
@@ -615,7 +615,7 @@ public class GUI extends JFrame implements GCGUI
         updateOut(data);
         if(Rules.league instanceof SPL) {
             updatePenaltiesSPL(data);
-        } else if(Rules.league instanceof Humanoid) {
+        } else if(Rules.league instanceof HL) {
             updatePenaltiesHL(data);
         }
         updateUndo(data);

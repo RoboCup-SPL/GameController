@@ -19,13 +19,9 @@ public class SPL extends Rules
         /** How many robots are in a team. */
         teamSize = 5;
         /** The Java Colors the left and the right team starts with. */
-        teamColor = new Color[2];
-        teamColor[0] = Color.BLUE;
-        teamColor[1] = Color.RED;
+        teamColor = new Color[] {Color.BLUE, Color.RED};
         /** The name of the colors. */
-        teamColorName = new String[2];
-        teamColorName[0] = "Blue";
-        teamColorName[1] = "Red";
+        teamColorName = new String[] {"Blue", "Red"};
         /** If the colors change automatically. */
         colorChangeAuto = true;
         /** If the colors may be changed manually. */
@@ -79,11 +75,6 @@ public class SPL extends Rules
         /** How many times a team may take a timeOut within one half. */
         timeOutMaxNumberHalf = 99; //does not matter because of timeOutMaxNumber = 1
         /** On how many pushings is a robot ejected. */
-        pushesToEjection = new int[5];
-        pushesToEjection[0] = 4;
-        pushesToEjection[1] = 6;
-        pushesToEjection[2] = 8;
-        pushesToEjection[3] = 10;
-        pushesToEjection[4] = 12;
+        pushesToEjection = new int[] {4, 6, 8, 10, 12};
     }
 }

@@ -5,7 +5,7 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
-import data.Humanoid;
+import data.HL;
 import data.PlayerInfo;
 import data.Rules;
 
@@ -68,7 +68,7 @@ public class Robot extends GCAction
     {
         return ( (data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE)
               && ( (data.team[side].player[number].secsTillUnpenalised == 0)
-                || ( (Rules.league instanceof Humanoid)
+                || ( (Rules.league instanceof HL)
                     && (number == 0) ) ) )
             || ( (EventHandler.getInstance().lastUIEvent != null)
               && (EventHandler.getInstance().lastUIEvent.penalty != PlayerInfo.PENALTY_NONE)

@@ -6,14 +6,12 @@ package data;
  * 
  * This class sets attributes given by the humanoid-league rules.
  */
-public class AdultSize extends Humanoid
+public class HLAdult extends HL
 {
-    AdultSize()
+    HLAdult()
     {
-        super();
-        
         /** The league´s name this rules are for. */
-        leagueName = "HL (AdultSize)";
+        leagueName = "HL Adult";
         /** If the game starts with penalty-shoots. */
         startWithPenalty = true;
        /** Time in seconds one penalty shoot is long. */
