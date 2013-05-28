@@ -52,7 +52,7 @@ public class Goal extends GCAction
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.gameState = GameControlData.STATE_READY;
                 data.remainingReady = Rules.league.readyTime*1000;
-                ActionBoard.clock.resetPlayerPenTime(data);
+                data.resetPenaltyTimes();
                 Log.state(data, "Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
             } else {
                 data.gameState = GameControlData.STATE_FINISHED;

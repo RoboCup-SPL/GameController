@@ -43,7 +43,7 @@ public class GlobalStuck extends GCAction
         data.kickOffTeam = data.team[side == 0 ? 1 : 0].teamColor;
         data.gameState = GameControlData.STATE_READY;
         data.remainingReady = Rules.league.readyTime*1000;
-        ActionBoard.clock.resetPlayerPenTime(data);
+        data.resetPenaltyTimes();
         if(-1*(data.remainingKickoffBlocked - Rules.league.kickoffTime*1000) < Rules.league.minDurationBeforeStuck*1000)
         {
             Log.state(data, "Kickoff-Goal by "+Rules.league.teamColorName[data.team[side].teamColor]);

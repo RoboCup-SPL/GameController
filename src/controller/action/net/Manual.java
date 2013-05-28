@@ -1,13 +1,11 @@
 package controller.action.net;
 
 import common.Log;
-import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.PlayerInfo;
 import data.Rules;
-
 
 /**
  * @author: Michel Bartsch
@@ -24,7 +22,6 @@ public class Manual extends GCAction
     /** If true, this action means manual unpenalising, otherwise manual penalising.  */
     private boolean unpen;
     
-    
     /**
      * Creates a new Manual action.
      * Look at the ActionBoard before using this.
@@ -37,7 +34,6 @@ public class Manual extends GCAction
     public Manual(int side, int number, boolean unpen)
     {
         super(ActionType.NET);
-        penalty = PlayerInfo.PENALTY_MANUAL;
         this.side = side;
         this.number = number;
         this.unpen = unpen;
@@ -52,15 +48,14 @@ public class Manual extends GCAction
     public void perform(AdvancedData data)
     {
         if(!unpen) {
-            data.team[side].player[number].penalty = penalty;
-            ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyManualTime);
-            Log.state(data, "Manual Unpenalised "+
+            data.team[side].player[number].penalty = PlayerInfo.PENALTY_MANUAL;
+            data.whenPenalized[side][number] = System.currentTimeMillis();
+            Log.state(data, "Manually Penalised "+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         } else {
             data.team[side].player[number].penalty = PlayerInfo.PENALTY_NONE;
-            data.team[side].player[number].secsTillUnpenalised = 0;
-            Log.state(data, "Manual Penalised "+
+            Log.state(data, "Manually Unpenalised "+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         }

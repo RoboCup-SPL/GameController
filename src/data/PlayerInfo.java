@@ -37,7 +37,7 @@ public class PlayerInfo implements Serializable
     
     //this is streamed
     public short penalty = PENALTY_NONE;    // penalty state of the player
-    public short secsTillUnpenalised;       // estimate of time till unpenalised
+    protected short secsTillUnpenalised;    // estimate of time till unpenalised
     
     /**
      * Packing this Java class to the C-structure to be send.

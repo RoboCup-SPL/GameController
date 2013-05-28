@@ -88,14 +88,6 @@ public class ClockTick extends GCAction
             data.extraTime = -1* (int)Math.ceil((double)millisRemaining/1000);
         }
         if(!data.manPause) {
-            for(int i=0; i<data.playerPenTime.length; i++) {
-                for(int j=0; j<data.playerPenTime[i].length; j++) {
-                    if(data.team[i].player[j].secsTillUnpenalised != Pushing.BANN_TIME) {
-                        data.playerPenTime[i][j] = Math.max(0, data.playerPenTime[i][j] - timeElapsed);
-                        data.team[i].player[j].secsTillUnpenalised = (short)Math.ceil((double)data.playerPenTime[i][j]/1000);
-                    }
-                }
-            }
             if(data.dropInTime != -1) {
                 data.dropIn += timeElapsed;
                 data.dropInTime = (short)(data.dropIn/1000);
@@ -167,36 +159,6 @@ public class ClockTick extends GCAction
                 )
          || data.manPause )
          || data.manPlay       );
-    }
-    
-    /**
-     * Sets the penalize time for the specific player. Use this instead of just
-     * setting secsTillUnpenalised.
-     * 
-     * @param data      The current data to work on.
-     * @param side      The player's side (0:left, 1:right).
-     * @param number    The player's number
-     * @param seconds   Penalize for that much seconds.
-     */
-    public void setPlayerPenTime(AdvancedData data, int side, int number, int seconds)
-    {
-        data.team[side].player[number].secsTillUnpenalised = (short)seconds;
-        data.playerPenTime[side][number] = seconds*1000;
-    }
-    
-    /**
-     * Resets the penalize time of all players to 0.
-     * This does not unpenalize them!
-     * 
-     * @param data      The current data to work on.
-     */
-    public void resetPlayerPenTime(AdvancedData data)
-    {
-        for(int i=0; i<data.playerPenTime.length; i++) {
-            for(int j=0; j<data.playerPenTime[i].length; j++) {
-                data.playerPenTime[i][j] = 0;
-            }
-        }
     }
     
     /**

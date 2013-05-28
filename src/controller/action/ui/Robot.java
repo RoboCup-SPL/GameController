@@ -1,14 +1,17 @@
 package controller.action.ui;
 
-import controller.EventHandler;
 import common.Log;
-import controller.action.ActionType;
+import common.Tools;
+import controller.EventHandler;
+import controller.action.ui.penalty.Penalty;
+import controller.action.ui.penalty.PickUp;
 import controller.action.GCAction;
+import controller.action.ActionType;
 import data.AdvancedData;
 import data.HL;
+import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
-
 
 /**
  * @author: Michel Bartsch
@@ -21,7 +24,6 @@ public class Robot extends GCAction
     private int side;
     /** The players`s number, beginning with 0! */
     private int number;
-    
     
     /**
      * Creates a new Robot action.
@@ -46,11 +48,10 @@ public class Robot extends GCAction
     public void perform(AdvancedData data)
     {
         PlayerInfo player = data.team[side].player[number];
-        if(EventHandler.getInstance().lastUIEvent.penalty != PlayerInfo.PENALTY_NONE) {
+        if(EventHandler.getInstance().lastUIEvent instanceof Penalty) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         } else if(player.penalty != PlayerInfo.PENALTY_NONE) {
             player.penalty = PlayerInfo.PENALTY_NONE;
-            player.secsTillUnpenalised = 0;
             Log.state(data, "Unpenalised "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
@@ -66,16 +67,10 @@ public class Robot extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ( (data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE)
-              && ( (data.team[side].player[number].secsTillUnpenalised == 0)
-                || ( (Rules.league instanceof HL)
-                    && (number == 0) ) ) )
-            || ( (EventHandler.getInstance().lastUIEvent != null)
-              && (EventHandler.getInstance().lastUIEvent.penalty != PlayerInfo.PENALTY_NONE)
-              && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE) )
-            || ( (EventHandler.getInstance().lastUIEvent != null)
-              && ( (EventHandler.getInstance().lastUIEvent.penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
-                    || (EventHandler.getInstance().lastUIEvent.penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_PICKUP) ) )
-            || data.testmode;
+        return data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE && data.getRemainingPenaltyTime(side, number) == 0
+                || EventHandler.getInstance().lastUIEvent instanceof PickUp
+                || data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
+                    && EventHandler.getInstance().lastUIEvent instanceof Penalty
+                || data.testmode;
     }
 }

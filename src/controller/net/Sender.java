@@ -2,6 +2,7 @@ package controller.net;
 
 import common.Log;
 import common.Tools;
+import data.AdvancedData;
 import data.GameControlData;
 import java.io.IOException;
 import java.net.*;
@@ -32,7 +33,7 @@ public class Sender extends Thread {
     private final int port = GameControlData.GAMECONTROLLER_PORT;
 
     /** The current deep copy of the game-state. */
-    private GameControlData data;
+    private AdvancedData data;
 
     /**
      * Creates a new Sender.
@@ -82,7 +83,7 @@ public class Sender extends Thread {
      *
      * @param data the current game-state to send to all robots
      */
-    public void send(GameControlData data) {
+    public void send(AdvancedData data) {
         this.data  = Tools.clone(data);
     }
 
@@ -90,6 +91,7 @@ public class Sender extends Thread {
     public void run() {
         while (!isInterrupted()) {
             if (data != null) {
+                data.updateTimes();
                 byte[] arr = data.toByteArray().array();
                 DatagramPacket packet = new DatagramPacket(arr, arr.length, group, port);
 

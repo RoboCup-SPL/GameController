@@ -1,46 +1,18 @@
 package controller.action.ui.penalty;
 
-import controller.EventHandler;
 import common.Log;
-import controller.action.ActionBoard;
-import controller.action.ActionType;
-import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
-
 
 /**
  * @author: Michel Bartsch
  * 
  * This action means that the playing with hands penalty has been selected.
  */
-public class Hands extends GCAction
+public class Hands extends Penalty
 {
-    /**
-     * Creates a new Hands action.
-     * Look at the ActionBoard before using this.
-     */
-    public Hands()
-    {
-        super(ActionType.UI);
-        penalty = PlayerInfo.PENALTY_SPL_PLAYING_WITH_HANDS;
-    }
-
-    /**
-     * Performs this action to manipulate the data (model).
-     * 
-     * @param data      The current data to work on.
-     */
-    @Override
-    public void perform(AdvancedData data)
-    {
-        if(EventHandler.getInstance().lastUIEvent == this) {
-            EventHandler.getInstance().noLastUIEvent = true;
-        }
-    }
-    
     /**
      * Performs this action`s penalty on a selected player.
      * 
@@ -52,9 +24,8 @@ public class Hands extends GCAction
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = penalty;
-        ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyStandardTime);
-        
+        player.penalty = PlayerInfo.PENALTY_SPL_PLAYING_WITH_HANDS;
+        data.whenPenalized[side][number] = System.currentTimeMillis();
         Log.state(data, "Playing with Hands "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));

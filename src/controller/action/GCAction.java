@@ -18,12 +18,6 @@ public abstract class GCAction implements ActionListener
 {
     /** The type of an action to easily distinguish them. */
     public ActionType type;
-    /**
-     * The penalty this actions sets on a player.
-     * PENALTY_NONE if it has nothing to do with penalties.
-     */
-    public short penalty = PlayerInfo.PENALTY_NONE;
-            
     
     /**
      * Creates a new GCAction.

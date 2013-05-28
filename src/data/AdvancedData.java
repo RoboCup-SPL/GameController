@@ -1,9 +1,10 @@
 package data;
 
+import common.Tools;
 
 /**
  * @author: Michel Bartsch
- * 
+ *
  * This class extends the GameControlData that is send to the robots. It
  * contains all the additional informations the GameControler needs to
  * represent a state of the game, for example time in millis.
@@ -36,8 +37,13 @@ public class AdvancedData extends GameControlData
     public long remainingPaused = 0;
     /** Time in millis remaining until ball is unblocked after kickoff. */
     public long remainingKickoffBlocked = Rules.league.kickoffTime*1000;
-    /** Time in millis remaining to be penalized for each layer. */
-    public long[][] playerPenTime = new long[2][Rules.league.teamSize];
+
+    /** When was each player penalized last (0 = never)? */
+    public long[][] whenPenalized = new long[2][Rules.league.teamSize];
+
+    /** Which players were already ejected? */
+    public boolean [][] ejected = new boolean[2][Rules.league.teamSize];
+    
     /** Pushing counters for each team, 0:left side, 1:right side. */
     public int[] pushes = {0, 0};
     /** Time in millis since last dropIn. */
@@ -104,18 +110,43 @@ public class AdvancedData extends GameControlData
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
         remainingKickoffBlocked = data.remainingKickoffBlocked;
-        for(int i=0; i<2; i++) {
-            for(int j=0; j<playerPenTime[i].length; j++) {
-                if(team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
-                    playerPenTime[i][j] = data.playerPenTime[i][j];
-                    team[i].player[j].secsTillUnpenalised = data.team[i].player[j].secsTillUnpenalised;
-                }
-            }
-        }
         if(dropInTeam == data.dropInTeam) {
             dropIn = data.dropIn;
             dropInTime = data.dropInTime;
         }
         secsRemaining = data.secsRemaining;
+    }
+    
+    public void updateTimes()
+    {
+        for (int side = 0; side < team.length; ++side) {
+            for (int number = 0; number < team[side].player.length; ++number) {
+                PlayerInfo player = team[side].player[number];
+                player.secsTillUnpenalised = player.penalty == PlayerInfo.PENALTY_NONE
+                        ? 0 : (short) getRemainingPenaltyTime(side, number);
+            }
+        }
+    }
+    
+    /**
+     * Resets the penalize time of all players to 0.
+     * This does not unpenalize them!
+     *
+     * @param data      The current data to work on.
+     */
+    public void resetPenaltyTimes()
+    {
+        for(long[] players : whenPenalized) {
+            for(int i = 0; i < players.length; ++i) {
+                players[i] = 0;
+            }
+        }
+    }
+    
+    public int getRemainingPenaltyTime(int side, int number)
+    {
+        return Rules.league instanceof HL && number == 0 ? 0
+                : gameState == STATE_READY && whenPenalized[side][number] != 0 ? (int) ((remainingReady + 999) / 1000)
+                : Math.max(0, Tools.getRemainingSeconds(whenPenalized[side][number], Rules.league.penaltyStandardTime));
     }
 }

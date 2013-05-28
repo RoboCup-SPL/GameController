@@ -39,7 +39,7 @@ public class Finish extends GCAction
         }
         data.gameState = GameControlData.STATE_FINISHED;
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
-            ActionBoard.clock.resetPlayerPenTime(data);
+            data.resetPenaltyTimes();
             if(data.firstHalf == GameControlData.C_TRUE) {
                 data.remainingPaused = Rules.league.pauseTime*1000;
             } else if (data.playoff && data.team[0].score == data.team[1].score){

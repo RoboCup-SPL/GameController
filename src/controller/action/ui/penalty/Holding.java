@@ -1,15 +1,13 @@
 package controller.action.ui.penalty;
 
-import controller.EventHandler;
 import common.Log;
-import controller.action.ActionBoard;
+import controller.EventHandler;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
-
 
 /**
  * @author: Michel Bartsch
@@ -25,7 +23,6 @@ public class Holding extends GCAction
     public Holding()
     {
         super(ActionType.UI);
-        penalty = PlayerInfo.PENALTY_SPL_BALL_HOLDING;
     }
 
     /**
@@ -52,9 +49,8 @@ public class Holding extends GCAction
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = penalty;
-        ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyStandardTime);
-        
+        player.penalty = PlayerInfo.PENALTY_SPL_BALL_HOLDING;
+        data.whenPenalized[side][number] = System.currentTimeMillis();
         Log.state(data, "Ball Holding "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));

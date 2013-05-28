@@ -3,6 +3,7 @@ package controller.ui;
 import common.TotalScaleLayout;
 import controller.EventHandler;
 import common.Log;
+import common.Tools;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
 import controller.action.ui.penalty.Pushing;
@@ -94,7 +95,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
     private static final Color COLOR_STANDARD = (new JButton()).getBackground();
-    private static final int UNPEN_HIGHLIGHT_SECONDS = 7;
+    private static final int UNPEN_HIGHLIGHT_SECONDS = 5;
     private static final int TIMEOUT_HIGHLIGHT_SECONDS = 10;
     private static final int FINISH_HIGHLIGHT_SECONDS = 10;
     private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
@@ -243,6 +244,7 @@ public class GUI extends JFrame implements GCGUI
                 lanIcon[i][j] = lanUnknown;
                 robotLabel[i][j].setIcon(lanIcon[i][j]);
                 robotTime[i][j] = new JProgressBar();
+                robotTime[i][j].setMaximum(1000);
                 robotTime[i][j].setVisible(false);
                 TotalScaleLayout robotLayout = new TotalScaleLayout(robot[i][j]);
                 robot[i][j].setLayout(robotLayout);
@@ -803,30 +805,28 @@ public class GUI extends JFrame implements GCGUI
         for(int i=0; i<robot.length; i++) {
             for(int j=0; j<robot[i].length; j++) {            
                 if(data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
-                    if(data.team[i].player[j].secsTillUnpenalised != Pushing.BANN_TIME) {
-                        if(data.team[i].player[j].secsTillUnpenalised == 0 
-                                && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP) {
+                    if(!data.ejected[i][j]) {
+                        int seconds = data.getRemainingPenaltyTime(i, j);
+                        if(seconds == 0 && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP) {
                             robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
+                            highlight(robot[i][j], true);
                         } else {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+clockFormat.format(new Date(data.team[i].player[j].secsTillUnpenalised*1000)));
+                            robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+clockFormat.format(new Date(seconds * 1000)));
+                            highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
-                        robotTime[i][j].setValue(100*data.team[i].player[j].secsTillUnpenalised/Rules.league.penaltyStandardTime);
+                        robotTime[i][j].setValue(1000 * seconds / (seconds + Tools.getSecondsSince(data.whenPenalized[i][j])));
                         robotTime[i][j].setVisible(true);
                     } else {
                         robotLabel[i][j].setText(EJECTED);
                         robotTime[i][j].setVisible(false);
+                        highlight(robot[i][j], false);
                     }
                 } else {
                     robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1));
                     robotTime[i][j].setVisible(false);
+                    highlight(robot[i][j], false);
                 }
                 robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
-                highlight(robot[i][j],
-                        (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE)
-                        && (data.team[i].player[j].secsTillUnpenalised <= UNPEN_HIGHLIGHT_SECONDS)
-                        && (robot[i][j].getBackground() != COLOR_HIGHLIGHT
-                         || data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP
-                          && data.team[i].player[j].secsTillUnpenalised == 0) );
                 ImageIcon currentLanIcon;
                 if(onlineStatus[i][j] == RobotOnlineStatus.ONLINE) {
                     currentLanIcon = lanOnline;

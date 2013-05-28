@@ -108,9 +108,9 @@ public class FirstHalf extends GCAction
         for(int i=0; i<2; i++) {
             for(int j=0; j<data.team[i].player.length; j++) {
                 data.team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
-                data.team[i].player[j].secsTillUnpenalised = 0;
+                data.ejected[i][j] = false;
             }
         }
-        ActionBoard.clock.resetPlayerPenTime(data);
+        data.resetPenaltyTimes();
     }
 }

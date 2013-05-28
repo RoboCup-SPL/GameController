@@ -5,10 +5,6 @@
 package controller.action.ui.penalty;
 
 import common.Log;
-import controller.EventHandler;
-import controller.action.ActionBoard;
-import controller.action.ActionType;
-import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
@@ -18,31 +14,8 @@ import data.Rules;
  *
  * @author Michel-Zen
  */
-public class BallManipulation extends GCAction
+public class BallManipulation extends Penalty
 {
-    /**
-     * Creates a new Hands action.
-     * Look at the ActionBoard before using this.
-     */
-    public BallManipulation()
-    {
-        super(ActionType.UI);
-        penalty = PlayerInfo.PENALTY_HL_BALL_MANIPULATION;
-    }
-
-    /**
-     * Performs this action to manipulate the data (model).
-     * 
-     * @param data      The current data to work on.
-     */
-    @Override
-    public void perform(AdvancedData data)
-    {
-        if(EventHandler.getInstance().lastUIEvent == this) {
-            EventHandler.getInstance().noLastUIEvent = true;
-        }
-    }
-    
     /**
      * Performs this action`s penalty on a selected player.
      * 
@@ -54,9 +27,8 @@ public class BallManipulation extends GCAction
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = penalty;
-        ActionBoard.clock.setPlayerPenTime(data, side, number, Rules.league.penaltyStandardTime);
-        
+        player.penalty = PlayerInfo.PENALTY_HL_BALL_MANIPULATION;
+        data.whenPenalized[side][number] = System.currentTimeMillis();
         Log.state(data, "Ball Manipulation "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
