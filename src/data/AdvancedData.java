@@ -68,60 +68,14 @@ public class AdvancedData extends GameControlData
      */
     public AdvancedData()
     {
-        super();
         if(Rules.league.startWithPenalty) {
             secGameState = GameControlData.STATE2_PENALTYSHOOT;
         }
     }
     
     /**
-     * Copy constructure.
-     * 
-     * @param data    Object to copy.
-     */
-    public AdvancedData(AdvancedData data)
-    {
-        super(data);
-        message = data.message;
-        sumOfTime = data.sumOfTime;
-        firstHalfTime = data.firstHalfTime;
-        secondHalfTime = data.secondHalfTime;
-        firstHalfOverTime = data.firstHalfOverTime;
-        secondHalfOverTime = data.secondHalfOverTime;
-        penaltyShootTime = data.penaltyShootTime;
-        remainingReady = data.remainingReady;
-        remainingPaused = data.remainingPaused;
-        remainingKickoffBlocked = data.remainingKickoffBlocked;
-        playerPenTime = new long[2][Rules.league.teamSize];
-        for(int i=0; i<2; i++) {
-            for(int j=0; j<playerPenTime[i].length; j++) {
-                playerPenTime[i][j] = data.playerPenTime[i][j];
-            }
-        }
-        pushes = new int[2];
-        pushes[0] = data.pushes[0];
-        pushes[1] = data.pushes[1];
-        dropIn = data.dropIn;
-        timeOut = new long[2];
-        timeOut[0] = data.timeOut[0];
-        timeOut[1] = data.timeOut[1];
-        timeOutActive = new boolean[2];
-        timeOutActive[0] = data.timeOutActive[0];
-        timeOutActive[1] = data.timeOutActive[1];
-        numberOfTimeOuts = new int[2];
-        numberOfTimeOuts[0] = data.numberOfTimeOuts[0];
-        numberOfTimeOuts[1] = data.numberOfTimeOuts[1];
-        penaltyShoot = new int[2];
-        penaltyShoot[0] = data.penaltyShoot[0];
-        penaltyShoot[0] = data.penaltyShoot[0];
-        playoff = data.playoff;
-        manPause = data.manPause;
-        manPlay = data.manPlay;
-    }
-    
-    /**
      * Returns the side on which a team plays. The team should be playing
-     * via this GameControler.
+     * via this GameController.
      * 
      * @param teamNumber    The unique teamNumber.
      * 

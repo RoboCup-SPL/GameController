@@ -1,5 +1,6 @@
 package data;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -11,15 +12,14 @@ import java.nio.ByteOrder;
  * It just represents this data, reads and writes between C-structure and
  * Java, nothing more.
  */
-public class TeamInfo
+public class TeamInfo implements Serializable
 {
     /**
      * How many players a team may have.
-     * Actually that much players in each team needs to be send, even if
-     * numPlayers in GameControlData is less.
+     * Actually that many players in each team need to be sent, even if
+     * playersPerTeam in GameControlData is less.
      */
     public static final byte MAX_NUM_PLAYERS = 11;
-    
     
     /** The size in bytes this class has packed. */
     public static final int SIZE =
@@ -33,9 +33,8 @@ public class TeamInfo
     public byte teamNumber;                                         // unique team number
     public byte teamColor;                                          // colour of the team
     public byte goalColor;                                          // colour of the goal
-    public byte score = 0;                                          // team's score
+    public byte score;                                              // team's score
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
-    
     
     /**
      * Creates a new TeamInfo.
@@ -46,23 +45,6 @@ public class TeamInfo
             player[i] = new PlayerInfo();
         }
     }
-    
-    /**
-     * Copy constructure.
-     * 
-     * @param team    Object to copy.
-     */
-    public TeamInfo(TeamInfo team)
-    {
-        teamNumber = team.teamNumber;
-        teamColor = team.teamColor;
-        goalColor = team.goalColor;
-        score = team.score;
-        for(int i=0; i<player.length; i++) {
-            player[i] = new PlayerInfo(team.player[i]);
-        }
-    }
-    
     
     /**
      * Packing this Java class to the C-structure to be send.

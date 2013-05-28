@@ -1,5 +1,6 @@
 package data;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -11,7 +12,7 @@ import java.nio.ByteOrder;
  * It just represents this data, reads and writes between C-structure and
  * Java, nothing more.
  */
-public class PlayerInfo
+public class PlayerInfo implements Serializable
 {
     /** What type of penalty a player may have. */
     public static final short PENALTY_NONE = 0;
@@ -29,7 +30,6 @@ public class PlayerInfo
     public static final short PENALTY_HL_REQUEST_FOR_PICKUP = 5;
     public static final short PENALTY_MANUAL = 15;
     
-    
     /** The size in bytes this class has packed. */
     public static final int SIZE =
             2 + // penalty
@@ -38,24 +38,6 @@ public class PlayerInfo
     //this is streamed
     public short penalty = PENALTY_NONE;    // penalty state of the player
     public short secsTillUnpenalised;       // estimate of time till unpenalised
-    
-    
-    /**
-     * Creates a new PlayerInfo.
-     */
-    public PlayerInfo() {}
-    
-    /**
-     * Copy constructure.
-     * 
-     * @param player    Object to copy.
-     */
-    public PlayerInfo(PlayerInfo player)
-    {
-        penalty = player.penalty;
-        secsTillUnpenalised = player.secsTillUnpenalised;
-    }
-    
     
     /**
      * Packing this Java class to the C-structure to be send.

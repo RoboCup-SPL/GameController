@@ -1,5 +1,6 @@
 package data;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -11,7 +12,7 @@ import java.nio.ByteOrder;
  * It just represents this data, reads and writes between C-structure and
  * Java, nothing more.
  */
-public class GameControlData
+public class GameControlData implements Serializable
 {
     /** Some constants from the C-structure. */
     public static final int GAMECONTROLLER_PORT = 3838;
@@ -81,27 +82,6 @@ public class GameControlData
         team[0].goalColor = GOAL_YELLOW;
         team[1].goalColor = GOAL_YELLOW;
     }
-    
-    /**
-     * Copy constructure.
-     * 
-     * @param data    Object to copy.
-     */
-    public GameControlData(GameControlData data)
-    {
-        playersPerTeam = data.playersPerTeam;
-        gameState = data.gameState;
-        firstHalf = data.firstHalf;
-        kickOffTeam = data.kickOffTeam;
-        secGameState = data.secGameState;
-        dropInTeam = data.dropInTeam;
-        dropInTime = data.dropInTime;
-        secsRemaining = data.secsRemaining;
-        for(int i=0; i<team.length; i++) {
-            team[i] = new TeamInfo(data.team[i]);
-        }
-    }
-
     
     /**
      * Returns the corresponding byte-stream of the state of this object.
