@@ -39,7 +39,6 @@ public class Main
     private final static String LOG_DIRECTORY = "logs";
     
     
-    
     /**
      * The programm starts here.
      * 

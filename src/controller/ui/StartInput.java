@@ -61,6 +61,9 @@ public class StartInput extends JFrame implements Serializable
     private static final String FULLSCREEN_LABEL = "Fullscreen";
     private static final String BROADCAST_LABEL = "Broadcast:";
     private static final String START_LABEL = "Start";
+    private static final String DEFAULT_BROADCAST = "255.255.255.255";
+    private static final String COMMAND_BROADCAST = "--broadcast";
+    private static final String COMMAND_BROADCAST_SHORT = "-b";
     
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
@@ -301,8 +304,8 @@ public class StartInput extends JFrame implements Serializable
     }
 
     private String getDefaultBroadcastAddress(final String[] args) {
-        String defaultBroadcastAddress = "255.255.255.255";
-        if (args.length >= 2 && (args[0].equals("-b") || args[0].equals("--broadcast"))) {
+        String defaultBroadcastAddress = DEFAULT_BROADCAST;
+        if (args.length >= 2 && (args[0].equals(COMMAND_BROADCAST_SHORT) || args[0].equals(COMMAND_BROADCAST))) {
             defaultBroadcastAddress = args[1];
         }
         return defaultBroadcastAddress;
@@ -317,16 +320,16 @@ public class StartInput extends JFrame implements Serializable
     private void setTeamIcon(int side, int team)
     {
         teamIcon[side] = new ImageIcon(Teams.getIcon(team));
-            float scale_factor;
-            if(teamIcon[side].getImage().getWidth(null) > teamIcon[side].getImage().getHeight(null)) {
-                scale_factor = (float)IMAGE_SIZE/teamIcon[side].getImage().getWidth(null);
-            } else {
-                scale_factor = (float)IMAGE_SIZE/teamIcon[side].getImage().getHeight(null);
-            }
-            teamIcon[side].setImage(teamIcon[side].getImage().getScaledInstance(
-                    (int)(teamIcon[side].getImage().getWidth(null)*scale_factor),
-                    (int)(teamIcon[side].getImage().getHeight(null)*scale_factor),
-                    Image.SCALE_DEFAULT));
+        float scaleFactor;
+        if(teamIcon[side].getImage().getWidth(null) > teamIcon[side].getImage().getHeight(null)) {
+            scaleFactor = (float)IMAGE_SIZE/teamIcon[side].getImage().getWidth(null);
+        } else {
+            scaleFactor = (float)IMAGE_SIZE/teamIcon[side].getImage().getHeight(null);
+        }
+        teamIcon[side].setImage(teamIcon[side].getImage().getScaledInstance(
+                (int)(teamIcon[side].getImage().getWidth(null)*scaleFactor),
+                (int)(teamIcon[side].getImage().getHeight(null)*scaleFactor),
+                Image.SCALE_DEFAULT));
     }
     
     /**
