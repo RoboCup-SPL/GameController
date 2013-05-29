@@ -19,6 +19,7 @@ public class Tools
      * @param object The object that is cloned.
      * @return A deep copy of the object.
      */
+    @SuppressWarnings("unchecked")
     public static <T> T clone(T object)
     {
         try {
