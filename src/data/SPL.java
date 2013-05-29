@@ -39,7 +39,7 @@ public class SPL extends Rules
         /** Time in seconds the ball is blocked after kickoff. */
         kickoffTime = 10;
         /** Time in seconds before a global game stuck can be called. */
-        minDurationBeforeStuck = 30;
+        minDurationBeforeStuck = 15;
         /** If there is an overtime before penalty-shoot in a play-off game. */
         overtime = false;
         /** Time in seconds one overtime half is long. */
