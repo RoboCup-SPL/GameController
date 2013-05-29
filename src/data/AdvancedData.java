@@ -131,8 +131,6 @@ public class AdvancedData extends GameControlData
     /**
      * Resets the penalize time of all players to 0.
      * This does not unpenalize them!
-     *
-     * @param data      The current data to work on.
      */
     public void resetPenaltyTimes()
     {
@@ -145,8 +143,7 @@ public class AdvancedData extends GameControlData
     
     public int getRemainingPenaltyTime(int side, int number)
     {
-        return Rules.league instanceof HL && number == 0 ? 0
-                : gameState == STATE_READY && whenPenalized[side][number] != 0 ? (int) ((remainingReady + 999) / 1000)
+        return gameState == STATE_READY && whenPenalized[side][number] != 0 ? (int) ((remainingReady + 999) / 1000)
                 : Math.max(0, Tools.getRemainingSeconds(whenPenalized[side][number], Rules.league.penaltyStandardTime));
     }
 }
