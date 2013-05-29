@@ -102,6 +102,7 @@ public class FirstHalf extends GCAction
         data.penaltyShoot[0] = data.penaltyShoot[1];
         data.penaltyShoot[1] = tmpPenaltyShoot;
         
+        data.whenDropIn = 0;
         for(int i=0; i<2; i++) {
             data.pushes[i] = 0;
         }
