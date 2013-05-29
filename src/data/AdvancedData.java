@@ -38,6 +38,9 @@ public class AdvancedData extends GameControlData
     /** Time in millis remaining until ball is unblocked after kickoff. */
     public long remainingKickoffBlocked = Rules.league.kickoffTime*1000;
 
+    /** When was the last drop-in? */
+    public long whenDropIn;
+    
     /** When was each player penalized last (0 = never)? */
     public long[][] whenPenalized = new long[2][Rules.league.teamSize];
 
@@ -46,8 +49,6 @@ public class AdvancedData extends GameControlData
     
     /** Pushing counters for each team, 0:left side, 1:right side. */
     public int[] pushes = {0, 0};
-    /** Time in millis since last dropIn. */
-    public long dropIn = -1*1000;
     /** Time in millis remaining for each teams timeOut, 0:left side, 1:right side. */
     public long[] timeOut = {Rules.league.timeOutTime*1000, Rules.league.timeOutTime*1000};
     /** If true, this team is currently taking a timeOut, 0:left side, 1:right side. */
@@ -110,15 +111,12 @@ public class AdvancedData extends GameControlData
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
         remainingKickoffBlocked = data.remainingKickoffBlocked;
-        if(dropInTeam == data.dropInTeam) {
-            dropIn = data.dropIn;
-            dropInTime = data.dropInTime;
-        }
         secsRemaining = data.secsRemaining;
     }
     
     public void updateTimes()
     {
+        dropInTime = whenDropIn == 0 ? -1 : (short) Tools.getSecondsSince(whenDropIn);
         for (int side = 0; side < team.length; ++side) {
             for (int number = 0; number < team[side].player.length; ++number) {
                 PlayerInfo player = team[side].player[number];

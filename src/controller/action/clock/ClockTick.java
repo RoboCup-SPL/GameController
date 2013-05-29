@@ -88,10 +88,6 @@ public class ClockTick extends GCAction
             data.extraTime = -1* (int)Math.ceil((double)millisRemaining/1000);
         }
         if(!data.manPause) {
-            if(data.dropInTime != -1) {
-                data.dropIn += timeElapsed;
-                data.dropInTime = (short)(data.dropIn/1000);
-            }
             for(int i=0; i<2; i++) {
                 if(data.timeOutActive[i]) {
                     data.timeOut[i] = Math.max(0, data.timeOut[i] - timeElapsed);
@@ -159,17 +155,5 @@ public class ClockTick extends GCAction
                 )
          || data.manPause )
          || data.manPlay       );
-    }
-    
-    /**
-     * Resets the time since last drop in.
-     * Use this instead of just setting dropInTime.
-     * 
-     * @param data      The current data to work on.
-     */
-    public void newDropInTime(AdvancedData data)
-    {
-        data.dropInTime = 0;
-        data.dropIn = 0;
     }
 }

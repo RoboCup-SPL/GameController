@@ -64,7 +64,7 @@ public class GameControlData implements Serializable
     public byte kickOffTeam = TEAM_BLUE;                        // the next team to kick off
     public byte secGameState = STATE2_NORMAL;                   // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     public byte dropInTeam;                                     // team that caused last drop in
-    public short dropInTime = -1;                               // number of seconds passed since the last drop in.  -1 before first dropin
+    protected short dropInTime = -1;                            // number of seconds passed since the last drop in. -1 before first dropin
     public int secsRemaining = Rules.league.halfTime;           // estimate of number of seconds remaining in the half
     public TeamInfo[] team = new TeamInfo[2];
     
