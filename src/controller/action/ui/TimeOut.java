@@ -50,7 +50,6 @@ public class TimeOut extends GCAction
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.kickOffTeam = data.team[side].teamColor == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
             }
-            data.remainingReady = 0;
             Log.state(data, "TimeOut by "+Rules.league.teamColorName[data.team[side].teamColor]);
         } else {
             data.timeOutActive[side] = false;

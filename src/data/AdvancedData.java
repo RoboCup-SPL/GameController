@@ -21,8 +21,6 @@ public class AdvancedData extends GameControlData implements Cloneable
 {
     /** This message is set when the data is put into the timeline */
     public String message = "";
-    /** Time in millis remaining in the ready state. */
-    public long remainingReady = Rules.league.readyTime*1000;
     /** Time in millis remaining between first and second half. */
     public long remainingPaused = 0;
 
@@ -121,7 +119,6 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public void copyTime(AdvancedData data)
     {
-        remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
     }
     
@@ -239,7 +236,7 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public int getRemainingPenaltyTime(int side, int number)
     {
-        return gameState == STATE_READY && whenPenalized[side][number] != 0 ? (int) ((remainingReady + 999) / 1000)
+        return gameState == STATE_READY && whenPenalized[side][number] != 0 ? Rules.league.readyTime - getSecondsSince(whenCurrentGameStateBegan)
                 : Math.max(0, getRemainingSeconds(whenPenalized[side][number], Rules.league.penaltyStandardTime));
     }
 }

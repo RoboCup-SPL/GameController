@@ -36,9 +36,7 @@ public class ClockReset extends GCAction
         data.whenCurrentGameStateBegan = data.getTime();
         data.manWhenClockChanged = data.whenCurrentGameStateBegan;
         data.manRemainingGameTimeOffset = 0;
-        if(data.gameState == GameControlData.STATE_READY) {
-            data.remainingReady = Rules.league.readyTime*1000;
-        } else if( (data.gameState == GameControlData.STATE_INITIAL)
+        if( (data.gameState == GameControlData.STATE_INITIAL)
                 && (data.firstHalf == GameControlData.C_TRUE) ) {
             data.remainingPaused = Rules.league.pauseTime*1000;
         }

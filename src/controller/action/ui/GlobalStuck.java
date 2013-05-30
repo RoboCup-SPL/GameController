@@ -41,14 +41,12 @@ public class GlobalStuck extends GCAction
     public void perform(AdvancedData data)
     {
         data.kickOffTeam = data.team[side == 0 ? 1 : 0].teamColor;
-        data.gameState = GameControlData.STATE_READY;
-        data.remainingReady = Rules.league.readyTime*1000;
-        data.resetPenaltyTimes();
         if(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0) {
             Log.state(data, "Kickoff-Goal by "+Rules.league.teamColorName[data.team[side].teamColor]);
         } else {
             Log.state(data, "Global Game Stuck Kickoff "+Rules.league.teamColorName[data.team[side == 0 ? 1 : 0].teamColor]);
         }
+        ActionBoard.ready.perform(data);
     }
     
     /**

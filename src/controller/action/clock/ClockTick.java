@@ -44,19 +44,17 @@ public class ClockTick extends GCAction
         ActionBoard.clock.timeElapsed = tmp - lastTime;
         lastTime = tmp;
         
+        if(data.gameState == GameControlData.STATE_READY
+               && data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime) {
+            ActionBoard.set.perform(data);
+        }
+        
         if(!data.manPause) {
             for(int i=0; i<2; i++) {
                 if(data.timeOutActive[i]) {
                     data.timeOut[i] = Math.max(0, data.timeOut[i] - timeElapsed);
                 }
             }
-            if(data.gameState == GameControlData.STATE_READY) {
-                data.remainingReady -= timeElapsed;
-                if(data.remainingReady <= 0) {
-                    ActionBoard.set.perform(data);
-                }
-            }
-
             if(data.remainingPaused > 0) {
                 data.remainingPaused -= timeElapsed;
                 if(data.remainingPaused <= 0) {
