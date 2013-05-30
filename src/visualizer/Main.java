@@ -9,10 +9,7 @@ import data.Rules;
  * The main components are initialised here.
  */
 public class Main
-{    
-    /** Relative directory of where logs are stored */
-    private final static String LOG_DIRECTORY = "logs";
-    
+{        
     private static final String HELP = "Usage: java -jar GameController.jar <options>"
             + "\n  [-h | --help]                   display help"
             + "\n  [-l | --league] <league-dir>    given league is preselected";
@@ -47,5 +44,10 @@ public class Main
         
         //start
         GUI gui = new GUI();
+    }
+    
+    public static void exit()
+    {
+        System.exit(0);
     }
 }

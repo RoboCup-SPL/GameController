@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,12 +19,13 @@ import javax.swing.JPanel;
  * 
  * This class displays the game-state and listens to the keyboard.
  */
-public class GUI extends JFrame
+public class GUI extends JFrame implements KeyListener
 {
     /**
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
      */
+    private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final String WINDOW_TITLE = "GameController";
     private static final String STANDARD_FONT = "Helvetica";
     private static final String CONFIG_PATH = "config/";
@@ -35,6 +38,7 @@ public class GUI extends JFrame
     GUI()
     {
         super(WINDOW_TITLE);
+        addKeyListener(this);
         setUndecorated(true);
         GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
         devices[devices.length-1].setFullScreenWindow(this);
@@ -46,8 +50,27 @@ public class GUI extends JFrame
         setLayout(layout);
         layout.add(0, 0, 1, 1, background);
         
+        if(IS_OSX) {
+            devices[devices.length-1].setFullScreenWindow(null);
+            setSize(devices[devices.length-1].getDisplayMode().getWidth(), devices[devices.length-1].getDisplayMode().getHeight());
+        }
+        
         setVisible(true);
     }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e)
+    {
+        if(e.getKeyCode() == KeyEvent.VK_F10) {
+            Main.exit();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
     
     /**
      * @author: Michel Bartsch
