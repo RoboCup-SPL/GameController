@@ -1,7 +1,6 @@
 package controller.net;
 
 import common.Log;
-import common.Tools;
 import data.AdvancedData;
 import data.GameControlData;
 import java.io.IOException;
@@ -84,7 +83,7 @@ public class Sender extends Thread {
      * @param data the current game-state to send to all robots
      */
     public void send(AdvancedData data) {
-        this.data  = Tools.clone(data);
+        this.data = (AdvancedData) data.clone();
     }
 
     @Override

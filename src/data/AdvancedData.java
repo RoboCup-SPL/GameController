@@ -1,5 +1,11 @@
 package data;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.IOException;
+
 /**
  * @author: Michel Bartsch
  *
@@ -11,7 +17,7 @@ package data;
  * only actions in their perform method are allowed to write into this and they
  * are all in the same thread. Look in the EventHandler for more information.
  */
-public class AdvancedData extends GameControlData
+public class AdvancedData extends GameControlData implements Cloneable
 {
     /** This message is set when the data is put into the timeline */
     public String message = "";
@@ -72,6 +78,25 @@ public class AdvancedData extends GameControlData
         if(Rules.league.startWithPenalty) {
             secGameState = GameControlData.STATE2_PENALTYSHOOT;
         }
+    }
+    
+    /**
+     * Generically clone this object. Everything referenced must be Serializable.
+     * @return A deep copy of this object.
+     */
+    public Object clone()
+    {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            new ObjectOutputStream(out).writeObject(this);
+            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+            return new ObjectInputStream(in).readObject();
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return null; // Should never be reached
     }
     
     /**

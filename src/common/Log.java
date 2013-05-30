@@ -89,7 +89,7 @@ public class Log
      */
     public static void state(AdvancedData data, String message)
     {
-        AdvancedData state = Tools.clone(data);
+        AdvancedData state = (AdvancedData) data.clone();
         state.message = message;
         instance.states.add(state);
         toFile(message);
@@ -111,7 +111,7 @@ public class Log
         for(int i=0; i<states; i++) {
             instance.states.removeLast();
         }
-        AdvancedData state = Tools.clone(instance.states.getLast());
+        AdvancedData state = (AdvancedData) instance.states.getLast().clone();
         state.copyTime(EventHandler.getInstance().data);
         EventHandler.getInstance().data = state;
         return state.message;
