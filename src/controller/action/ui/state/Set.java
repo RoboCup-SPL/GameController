@@ -37,7 +37,7 @@ public class Set extends GCAction
             return;
         }
         data.gameState = GameControlData.STATE_SET;
-        if(Rules.league.removePenaltiesInSet) {
+        if(Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {

@@ -35,6 +35,9 @@ public class Ready extends GCAction
         if(data.gameState == GameControlData.STATE_READY) {
             return;
         }
+        if(Rules.league.returnRobotsInGameStoppages) {
+            data.resetPenaltyTimes();
+        }
         data.gameState = GameControlData.STATE_READY;
         data.remainingReady = Rules.league.readyTime*1000;
         Log.state(data, "State set to Ready");

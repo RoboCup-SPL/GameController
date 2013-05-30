@@ -5,7 +5,7 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
-
+import data.Rules;
 
 /**
  * @author: Michel Bartsch
@@ -33,6 +33,9 @@ public class Initial extends GCAction
     {
         if(data.gameState == GameControlData.STATE_INITIAL) {
             return;
+        }
+        if(Rules.league.returnRobotsInGameStoppages) {
+            data.resetPenaltyTimes();
         }
         data.gameState = GameControlData.STATE_INITIAL;
         Log.state(data, "State set to Initial");

@@ -37,6 +37,9 @@ public class Finish extends GCAction
         if(data.gameState == GameControlData.STATE_FINISHED) {
             return;
         }
+        if(Rules.league.returnRobotsInGameStoppages) {
+            data.resetPenaltyTimes();
+        }
         data.gameState = GameControlData.STATE_FINISHED;
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
             data.resetPenaltyTimes();

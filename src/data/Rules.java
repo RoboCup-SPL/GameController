@@ -73,8 +73,8 @@ public abstract class Rules
     public int penaltyStandardTime;
     /** Time in seconds a robot is taken out when manually penalized (ChestButton). */
     public int penaltyManualTime;
-    /** if all penalties should be removed by switching to the set state. */
-    public boolean removePenaltiesInSet;
+    /** if robots should return from penalties when the game state changes. */
+    public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */
     public int timeOutTime;
     /** If true, the timeOutTime will be resetted for each timeOut. */
