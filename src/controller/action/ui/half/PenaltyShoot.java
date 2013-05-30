@@ -35,6 +35,7 @@ public class PenaltyShoot extends GCAction
     {
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
             data.secGameState = GameControlData.STATE2_PENALTYSHOOT;
+            // Don't set data.whenCurrentGameStateBegan, because it's used to count the pause
             data.gameState = GameControlData.STATE_INITIAL;
             data.timeBeforeCurrentGameState = 0;
             data.resetPenalties();

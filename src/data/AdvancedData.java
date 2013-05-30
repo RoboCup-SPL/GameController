@@ -21,8 +21,6 @@ public class AdvancedData extends GameControlData implements Cloneable
 {
     /** This message is set when the data is put into the timeline */
     public String message = "";
-    /** Time in millis remaining between first and second half. */
-    public long remainingPaused = 0;
 
     /** How much time summed up before the current state? (ms)*/
     public long timeBeforeCurrentGameState;
@@ -118,18 +116,6 @@ public class AdvancedData extends GameControlData implements Cloneable
     }
     
     /**
-     * Copys all time based values from the given data into this data.
-     * This is needed to go back in the timeline without setting back the
-     * time.
-     * 
-     * @param data    The data to take the time from.
-     */
-    public void copyTime(AdvancedData data)
-    {
-        remainingPaused = data.remainingPaused;
-    }
-    
-    /**
      * Returns the current time. Can be stopped in test mode.
      * @return The current time in ms. May become incompatible to
      *         the time delivered by System.currentTimeMillis().
@@ -205,6 +191,36 @@ public class AdvancedData extends GameControlData implements Cloneable
         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
                 : getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset);
         return duration - timePlayed;
+    }
+    
+    /**
+     * Checks whether there currently is a pause in the game, either halftime 
+     * or the pause before the penalty shoot-out.
+     * @return Is there a pause?
+     */
+    public boolean isPause()
+    {
+        return secGameState == GameControlData.STATE2_NORMAL
+                && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
+                    || gameState == STATE_FINISHED && firstHalf == C_TRUE)
+                || Rules.league.pausePenaltyShootOutTime != 0 && playoff && team[0].score == team[1].score
+                    && (gameState == STATE_INITIAL && secGameState == STATE2_PENALTYSHOOT && !timeOutActive[0] && !timeOutActive[1]
+                    || gameState == STATE_FINISHED && firstHalf != C_TRUE);
+    }
+    
+    /**
+     * The method returns the remaining pause time.
+     * Note that it should only be called if there is a pause.
+     * @return The remaining number of seconds of the game pause.
+     */
+    public int getRemainingPauseTime()
+    {
+        if(gameState == STATE_INITIAL && secGameState == STATE2_NORMAL && firstHalf != C_TRUE
+           || gameState == STATE_FINISHED && secGameState == STATE2_NORMAL && firstHalf == C_TRUE) {
+            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.halfTime);
+        } else {
+            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pausePenaltyShootOutTime);
+        }
     }
     
     /**

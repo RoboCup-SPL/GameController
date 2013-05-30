@@ -43,17 +43,6 @@ public class Finish extends GCAction
         data.addTimeInCurrentState();
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_FINISHED;
-
-        if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
-            data.resetPenaltyTimes();
-            if(data.firstHalf == GameControlData.C_TRUE) {
-                data.remainingPaused = Rules.league.pauseTime*1000;
-            } else if (data.playoff && data.team[0].score == data.team[1].score){
-                data.remainingPaused = Rules.league.pausePenaltyShootOutTime*1000;
-            } else {
-                data.remainingPaused = 0;
-            }
-        }
         Log.state(data, "State set to Finished");
     }
     

@@ -16,12 +16,6 @@ import data.Rules;
  */
 public class ClockTick extends GCAction
 {
-    /** A timestamp when the this action has been performed last. */
-    private long lastTime;
-    /** The time in millis since this action has been performed last. */
-    private long timeElapsed;
-    
-    
     /**
      * Creates a new ClockTick action.
      * Look at the ActionBoard before using this.
@@ -29,7 +23,6 @@ public class ClockTick extends GCAction
     public ClockTick()
     {
         super(ActionType.CLOCK);
-        lastTime = System.currentTimeMillis();
     }
 
     /**
@@ -40,39 +33,14 @@ public class ClockTick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        long tmp = data.getTime();
-        ActionBoard.clock.timeElapsed = tmp - lastTime;
-        lastTime = tmp;
-        
         if(data.gameState == GameControlData.STATE_READY
                && data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime) {
             ActionBoard.set.perform(data);
-        }
-        
-        if(!data.manPause) {
-            if(data.remainingPaused > 0) {
-                data.remainingPaused -= timeElapsed;
-                if(data.remainingPaused <= 0) {
-                    data.remainingPaused = 0;
-                }
-            }
-            if( (data.gameState == GameControlData.STATE_FINISHED)
-             && (data.secGameState == GameControlData.STATE2_NORMAL) ) {
-                if(data.firstHalf == GameControlData.C_TRUE) {
-                    if(data.remainingPaused <= Rules.league.pauseTime*1000/2) {
-                        ActionBoard.secondHalf.perform(data);
-                    }
-                } else {
-                    if(data.remainingPaused > 0
-                     && data.remainingPaused <= Rules.league.pausePenaltyShootOutTime*1000/2) {
-                        if( (Rules.league.overtime)
-                                && (data.playoff) ) {
-                            ActionBoard.firstHalf.perform(data);
-                        } else {
-                            ActionBoard.penaltyShoot.perform(data);
-                        }
-                    }
-                }
+        } else if(data.gameState == GameControlData.STATE_FINISHED && data.isPause()) {
+            if(data.firstHalf == GameControlData.C_TRUE && data.getRemainingPauseTime() <= Rules.league.halfTime / 2) {
+                ActionBoard.secondHalf.perform(data);
+            } else if(data.firstHalf != GameControlData.C_TRUE && data.getRemainingPauseTime() <= Rules.league.pausePenaltyShootOutTime / 2) {
+                ActionBoard.penaltyShoot.perform(data);
             }
         }
     }

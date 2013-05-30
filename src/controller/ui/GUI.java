@@ -641,10 +641,8 @@ public class GUI extends JFrame implements GCGUI
         } else if(data.gameState == GameControlData.STATE_READY) {
             clockSub.setText(formatTime(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.readyTime)));
             clockSub.setForeground(Color.BLACK);
-        } else if( ( (data.gameState == GameControlData.STATE_FINISHED)
-                  || (data.gameState == GameControlData.STATE_INITIAL) )
-                && (data.remainingPaused > 0) ) {
-            clockSub.setText(clockFormat.format(new Date(data.remainingPaused+999)));
+        } else if(data.isPause()) {
+            clockSub.setText(formatTime(data.getRemainingPauseTime()));
             clockSub.setForeground(Color.BLACK);
         } else if( (data.gameState == GameControlData.STATE_PLAYING && data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
                 && (timeKickOffBlocked > -KICKOFF_BLOCKED_HIGHLIGHT_SECONDS) ) {

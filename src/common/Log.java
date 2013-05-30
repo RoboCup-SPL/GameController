@@ -112,7 +112,6 @@ public class Log
             instance.states.removeLast();
         }
         AdvancedData state = (AdvancedData) instance.states.getLast().clone();
-        state.copyTime(EventHandler.getInstance().data);
         EventHandler.getInstance().data = state;
         return state.message;
     }

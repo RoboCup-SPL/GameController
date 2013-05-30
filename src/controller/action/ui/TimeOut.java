@@ -50,6 +50,7 @@ public class TimeOut extends GCAction
         } else {
             data.timeOutActive[side] = false;
             Log.state(data, "TimeOut by "+Rules.league.teamColorName[data.team[side].teamColor]+" ended");
+            ActionBoard.ready.perform(data);
         }
     }
     
