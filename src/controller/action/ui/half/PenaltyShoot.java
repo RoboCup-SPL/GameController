@@ -38,8 +38,8 @@ public class PenaltyShoot extends GCAction
             data.gameState = GameControlData.STATE_INITIAL;
             data.timeBeforeCurrentGameState = 0;
             data.resetPenalties();
-            for(int i=0; i<2; i++) {
-                data.numberOfTimeOutsCurrentHalf[i] = 0;
+            if(Rules.league.timeOutPerHalf) {
+                data.timeOutTaken = new boolean[] {false, false};
             }
             Log.state(data, "Half set to PenaltyShoot");
         }

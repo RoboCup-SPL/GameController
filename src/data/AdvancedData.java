@@ -41,32 +41,39 @@ public class AdvancedData extends GameControlData implements Cloneable
     
     /** Pushing counters for each team, 0:left side, 1:right side. */
     public int[] pushes = {0, 0};
-    /** Time in millis remaining for each teams timeOut, 0:left side, 1:right side. */
-    public long[] timeOut = {Rules.league.timeOutTime*1000, Rules.league.timeOutTime*1000};
+
     /** If true, this team is currently taking a timeOut, 0:left side, 1:right side. */
     public boolean[] timeOutActive = {false, false};
+    
     /** TimeOut counters for each team, 0:left side, 1:right side. */
-    public int[] numberOfTimeOuts = {0, 0};
-    /** TimeOut counters within the current half for each team, 0:left side, 1:right side. */
-    public int[] numberOfTimeOutsCurrentHalf = {0, 0};
+    public boolean[] timeOutTaken = {false, false};
+    
     /** how many penalty-shoots have been made by each team, 0:left side, 1:right side. */
     public int[] penaltyShot = {0, 0};
+    
     /** If true, left side has the kickoff. */
     public boolean leftSideKickoff = true;
+    
     /** If true, the game auto-pauses the game for full 10minutes playing. */
     public boolean playoff;
-    /** If true, the clock has manually been paused in the testmode. */
-    public boolean manPause = false;
-    /** If true, the clock has manually been started in the testmode. */
-    public boolean manPlay = false;
-    /** When was the last manual intervention to the clock? */
-    public long manWhenClockChanged;
-    /** Time offset resulting from manually stopping the clock. */
-    public long manTimeOffset;
-    /** Time offset resulting from starting the clock when it should be stopped. */
-    public long manRemainingGameTimeOffset;
+    
     /** If true, the testmode has been activated. */
     public boolean testmode = false;
+
+    /** If true, the clock has manually been paused in the testmode. */
+    public boolean manPause = false;
+    
+    /** If true, the clock has manually been started in the testmode. */
+    public boolean manPlay = false;
+    
+    /** When was the last manual intervention to the clock? */
+    public long manWhenClockChanged;
+    
+    /** Time offset resulting from manually stopping the clock. */
+    public long manTimeOffset;
+    
+    /** Time offset resulting from starting the clock when it should be stopped. */
+    public long manRemainingGameTimeOffset;
     
     /**
      * Creates a new AdvancedData.

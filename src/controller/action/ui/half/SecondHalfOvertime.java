@@ -42,9 +42,6 @@ public class SecondHalfOvertime extends GCAction
             FirstHalf.changeSide(data);
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamColor : data.team[1].teamColor);
             data.gameState = GameControlData.STATE_INITIAL;
-            for(int i=0; i<2; i++) {
-                data.numberOfTimeOutsCurrentHalf[i] = 0;
-            }
             Log.state(data, "Half set to SecondHalf-Overtime");
         }
     }

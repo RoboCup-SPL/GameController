@@ -50,11 +50,6 @@ public class ClockTick extends GCAction
         }
         
         if(!data.manPause) {
-            for(int i=0; i<2; i++) {
-                if(data.timeOutActive[i]) {
-                    data.timeOut[i] = Math.max(0, data.timeOut[i] - timeElapsed);
-                }
-            }
             if(data.remainingPaused > 0) {
                 data.remainingPaused -= timeElapsed;
                 if(data.remainingPaused <= 0) {

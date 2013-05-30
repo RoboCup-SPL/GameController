@@ -68,12 +68,8 @@ public class SPL extends Rules
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */
         timeOutTime = 5*60;
-        /** If true, the timeOutTime will be resetted for each timeOut. */
-        timeOutTimeResette = false;
-        /** How many times a team may take a timeOut. */
-        timeOutMaxNumber = 1;
-        /** How many times a team may take a timeOut within one half. */
-        timeOutMaxNumberHalf = 99; //does not matter because of timeOutMaxNumber = 1
+        /** One time-out per half? */
+        timeOutPerHalf = false;
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
     }

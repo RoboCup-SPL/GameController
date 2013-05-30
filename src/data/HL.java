@@ -68,12 +68,8 @@ public class HL extends Rules
         returnRobotsInGameStoppages = false;
         /** Time in seconds one team has as timeOut. */
         timeOutTime = 2*60;
-        /** If true, the timeOutTime will be resetted for each timeOut. */
-        timeOutTimeResette = true;
-        /** How many times a team may take a timeOut. */
-        timeOutMaxNumber = 99; // does not matter because of timeOutMaxNumberHalf = 1
-        /** How many times a team may take a timeOut within one half. */
-        timeOutMaxNumberHalf = 1;
+        /** One time-out per half? */
+        timeOutPerHalf = true;
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[] {};
     }

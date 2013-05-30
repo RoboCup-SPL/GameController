@@ -45,10 +45,6 @@ public class FirstHalf extends GCAction
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamColor : data.team[1].teamColor);
             data.gameState = GameControlData.STATE_INITIAL;
             data.whenCurrentGameStateBegan = data.getTime();
-
-            for(int i=0; i<2; i++) {
-                data.numberOfTimeOutsCurrentHalf[i] = 0;
-            }
             Log.state(data, "Half set to FirstHalf");
         }
     }
@@ -90,14 +86,13 @@ public class FirstHalf extends GCAction
             color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = color;
+            if(Rules.league.timeOutPerHalf)
+                data.timeOutTaken = new boolean[] {false, false};
         }
         
-        int tmpTimeOuts = data.numberOfTimeOuts[0];
-        data.numberOfTimeOuts[0] = data.numberOfTimeOuts[1];
-        data.numberOfTimeOuts[1] = tmpTimeOuts;
-        long tmpTimeOutTime = data.timeOut[0];
-        data.timeOut[0] = data.timeOut[1];
-        data.timeOut[1] = tmpTimeOutTime;
+        boolean timeOutTaken = data.timeOutTaken[0];
+        data.timeOutTaken[0] = data.timeOutTaken[1];
+        data.timeOutTaken[1] = timeOutTaken;
         
         int penaltyShot = data.penaltyShot[0];
         data.penaltyShot[0] = data.penaltyShot[1];

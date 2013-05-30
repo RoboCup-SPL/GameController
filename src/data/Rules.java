@@ -77,12 +77,8 @@ public abstract class Rules
     public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */
     public int timeOutTime;
-    /** If true, the timeOutTime will be resetted for each timeOut. */
-    public boolean timeOutTimeResette;
-    /** How many times a team may take a timeOut. */
-    public int timeOutMaxNumber;
-    /** How many times a team may take a timeOut within one half. */
-    public int timeOutMaxNumberHalf;
+    /** One time-out per half? */
+    public boolean timeOutPerHalf;
     /** On how many pushings is a robot ejected. */
     public int[] pushesToEjection;
 }

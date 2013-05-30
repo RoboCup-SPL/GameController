@@ -257,7 +257,7 @@ public class GUI extends JFrame implements GCGUI
         stuck = new JButton[2];
         out = new JButton[2];
         for(int i=0; i<2; i++) {
-            timeOut[i] = new JToggleButton();
+            timeOut[i] = new JToggleButton(TIMEOUT);
             stuck[i] = new JButton();
             out[i] = new JButton(OUT);
         }
@@ -631,12 +631,14 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updateClock(AdvancedData data)
     {
-        int remainingTime = data.getRemainingGameTime();
-        clock.setText((remainingTime < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(remainingTime) * 1000)));
+        clock.setText(formatTime(data.getRemainingGameTime()));
 
         int timeKickOffBlocked = data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
-        if(data.gameState == GameControlData.STATE_READY) {
-            clockSub.setText(clockFormat.format(new Date(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.readyTime) * 1000)));
+        if(data.gameState == GameControlData.STATE_INITIAL && (data.timeOutActive[0] || data.timeOutActive[1])) {
+            clockSub.setText(formatTime(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.timeOutTime)));
+            clockSub.setForeground(Color.BLACK);
+        } else if(data.gameState == GameControlData.STATE_READY) {
+            clockSub.setText(formatTime(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.readyTime)));
             clockSub.setForeground(Color.BLACK);
         } else if( ( (data.gameState == GameControlData.STATE_FINISHED)
                   || (data.gameState == GameControlData.STATE_INITIAL) )
@@ -645,7 +647,7 @@ public class GUI extends JFrame implements GCGUI
             clockSub.setForeground(Color.BLACK);
         } else if( (data.gameState == GameControlData.STATE_PLAYING && data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
                 && (timeKickOffBlocked > -KICKOFF_BLOCKED_HIGHLIGHT_SECONDS) ) {
-            clockSub.setText(clockFormat.format(new Date(Math.max(0, timeKickOffBlocked * 1000))));
+            clockSub.setText(formatTime(Math.max(0, timeKickOffBlocked)));
             clockSub.setForeground(timeKickOffBlocked <= 0
                     && clockSub.getForeground() != COLOR_HIGHLIGHT ? COLOR_HIGHLIGHT : Color.BLACK);
         } else {
@@ -809,7 +811,7 @@ public class GUI extends JFrame implements GCGUI
                             robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
                             highlight(robot[i][j], true);
                         } else {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+clockFormat.format(new Date(seconds * 1000)));
+                            robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
                             highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
                         robotTime[i][j].setValue(1000 * seconds / (seconds + data.getSecondsSince(data.whenPenalized[i][j])));
@@ -849,12 +851,10 @@ public class GUI extends JFrame implements GCGUI
     {
         for(int i=0; i<2; i++) {
             if(!data.timeOutActive[i]) {
-                timeOut[i].setText(TIMEOUT);
                 timeOut[i].setSelected(false);
                 highlight(timeOut[i], false);
             } else {
-                timeOut[i].setText(clockFormat.format(new Date(data.timeOut[i])));
-                boolean shouldHighlight = (data.timeOut[i]/1000 < TIMEOUT_HIGHLIGHT_SECONDS)
+                boolean shouldHighlight = (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.timeOutTime) < TIMEOUT_HIGHLIGHT_SECONDS)
                         && (timeOut[i].getBackground() != COLOR_HIGHLIGHT);
                 timeOut[i].setSelected(!IS_OSX || !shouldHighlight);
                 highlight(timeOut[i], shouldHighlight);
@@ -1050,5 +1050,9 @@ public class GUI extends JFrame implements GCGUI
             button.setOpaque(highlight);
             button.setBorderPainted(!highlight);
         }
+    }
+    
+    private String formatTime(int seconds) {
+        return (seconds < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(seconds) * 1000));
     }
 }
