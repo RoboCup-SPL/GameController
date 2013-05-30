@@ -636,7 +636,7 @@ public class GUI extends JFrame implements GCGUI
 
         int timeKickOffBlocked = data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
         if(data.gameState == GameControlData.STATE_READY) {
-            clockSub.setText(clockFormat.format(new Date((Rules.league.readyTime - data.getSecondsSince(data.whenCurrentGameStateBegan)) * 1000)));
+            clockSub.setText(clockFormat.format(new Date(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.readyTime) * 1000)));
             clockSub.setForeground(Color.BLACK);
         } else if( ( (data.gameState == GameControlData.STATE_FINISHED)
                   || (data.gameState == GameControlData.STATE_INITIAL) )
