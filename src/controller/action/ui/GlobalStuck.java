@@ -1,6 +1,7 @@
 package controller.action.ui;
 
 import common.Log;
+import common.Tools;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
@@ -44,8 +45,7 @@ public class GlobalStuck extends GCAction
         data.gameState = GameControlData.STATE_READY;
         data.remainingReady = Rules.league.readyTime*1000;
         data.resetPenaltyTimes();
-        if(-1*(data.remainingKickoffBlocked - Rules.league.kickoffTime*1000) < Rules.league.minDurationBeforeStuck*1000)
-        {
+        if(Tools.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0) {
             Log.state(data, "Kickoff-Goal by "+Rules.league.teamColorName[data.team[side].teamColor]);
         } else {
             Log.state(data, "Global Game Stuck Kickoff "+Rules.league.teamColorName[data.team[side == 0 ? 1 : 0].teamColor]);

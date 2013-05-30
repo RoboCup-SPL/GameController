@@ -35,9 +35,13 @@ public class AdvancedData extends GameControlData
     public long remainingReady = Rules.league.readyTime*1000;
     /** Time in millis remaining between first and second half. */
     public long remainingPaused = 0;
-    /** Time in millis remaining until ball is unblocked after kickoff. */
-    public long remainingKickoffBlocked = Rules.league.kickoffTime*1000;
 
+    /** How much time summed up before the current state? */
+    public int timeBeforeCurrentGameState;
+    
+    /** When was switched to the current state? */
+    public long whenCurrentGameStateBegan;
+    
     /** When was the last drop-in? */
     public long whenDropIn;
     
@@ -110,7 +114,6 @@ public class AdvancedData extends GameControlData
         penaltyShootTime = data.penaltyShootTime;
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
-        remainingKickoffBlocked = data.remainingKickoffBlocked;
         secsRemaining = data.secsRemaining;
     }
     

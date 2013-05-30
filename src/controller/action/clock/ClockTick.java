@@ -124,7 +124,6 @@ public class ClockTick extends GCAction
                     }
                 }
             }
-            data.remainingKickoffBlocked -= timeElapsed;
         }
     }
     

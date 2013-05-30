@@ -1,6 +1,7 @@
 package controller.action.ui.state;
 
 import common.Log;
+import common.Tools;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
@@ -38,6 +39,10 @@ public class Ready extends GCAction
         if(Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
+        if (data.gameState == GameControlData.STATE_PLAYING) {
+            data.timeBeforeCurrentGameState += Tools.getSecondsSince(data.whenCurrentGameStateBegan);
+        }
+        data.whenCurrentGameStateBegan = System.currentTimeMillis();
         data.gameState = GameControlData.STATE_READY;
         data.remainingReady = Rules.league.readyTime*1000;
         Log.state(data, "State set to Ready");

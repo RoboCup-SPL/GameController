@@ -1,6 +1,7 @@
 package controller.action.ui.state;
 
 import common.Log;
+import common.Tools;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
@@ -40,7 +41,10 @@ public class Finish extends GCAction
         if(Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
+        data.timeBeforeCurrentGameState += Tools.getSecondsSince(data.whenCurrentGameStateBegan);
+        data.whenCurrentGameStateBegan = System.currentTimeMillis();
         data.gameState = GameControlData.STATE_FINISHED;
+
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
             data.resetPenaltyTimes();
             if(data.firstHalf == GameControlData.C_TRUE) {

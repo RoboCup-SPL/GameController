@@ -638,6 +638,7 @@ public class GUI extends JFrame implements GCGUI
             clock.setText("-" + clockFormat.format(new Date(data.extraTime*1000)));
         }
 
+        int timeKickOffBlocked = Tools.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
         if(data.gameState == GameControlData.STATE_READY) {
             clockSub.setText(clockFormat.format(new Date(data.remainingReady+999)));
             clockSub.setForeground(Color.BLACK);
@@ -646,10 +647,10 @@ public class GUI extends JFrame implements GCGUI
                 && (data.remainingPaused > 0) ) {
             clockSub.setText(clockFormat.format(new Date(data.remainingPaused+999)));
             clockSub.setForeground(Color.BLACK);
-        } else if( (data.gameState == GameControlData.STATE_PLAYING)
-                && (data.remainingKickoffBlocked >= -KICKOFF_BLOCKED_HIGHLIGHT_SECONDS*1000) ) {
-            clockSub.setText(clockFormat.format(new Date(Math.max(0, data.remainingKickoffBlocked+999))));
-            clockSub.setForeground(data.remainingKickoffBlocked < 0
+        } else if( (data.gameState == GameControlData.STATE_PLAYING && data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
+                && (timeKickOffBlocked > -KICKOFF_BLOCKED_HIGHLIGHT_SECONDS) ) {
+            clockSub.setText(clockFormat.format(new Date(Math.max(0, timeKickOffBlocked * 1000))));
+            clockSub.setForeground(timeKickOffBlocked <= 0
                     && clockSub.getForeground() != COLOR_HIGHLIGHT ? COLOR_HIGHLIGHT : Color.BLACK);
         } else {
             clockSub.setText("");
@@ -874,7 +875,7 @@ public class GUI extends JFrame implements GCGUI
     {
         for(int i=0; i<2; i++) {
             if(data.gameState == GameControlData.STATE_PLAYING
-                    && -1*(data.remainingKickoffBlocked - Rules.league.kickoffTime*1000) < Rules.league.minDurationBeforeStuck*1000)
+                    && Tools.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0)
             {
                 if(data.kickOffTeam == data.team[i].teamColor)
                 {

@@ -1,6 +1,7 @@
 package controller.action.ui.state;
 
 import common.Log;
+import common.Tools;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
@@ -36,10 +37,15 @@ public class Set extends GCAction
         if(data.gameState == GameControlData.STATE_SET) {
             return;
         }
-        data.gameState = GameControlData.STATE_SET;
         if(Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
+        if (!data.playoff && data.timeBeforeCurrentGameState != 0) {
+            data.timeBeforeCurrentGameState += Tools.getSecondsSince(data.whenCurrentGameStateBegan);
+        }
+        data.whenCurrentGameStateBegan = System.currentTimeMillis();
+        data.gameState = GameControlData.STATE_SET;
+        
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             if(data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]
                     >= (!data.playoff ? Rules.league.numberOfPenaltyShootsShort : Rules.league.numberOfPenaltyShootsLong))
