@@ -24,7 +24,7 @@ public class PickUp extends Penalty
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         if (player.penalty == PlayerInfo.PENALTY_NONE) {
-            data.whenPenalized[side][number] = System.currentTimeMillis();
+            data.whenPenalized[side][number] = data.getTime();
         }
         player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
         Log.state(data, "Request for PickUp "+

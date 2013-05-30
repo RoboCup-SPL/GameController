@@ -1,7 +1,6 @@
 package controller.action.ui.state;
 
 import common.Log;
-import common.Tools;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
@@ -42,7 +41,7 @@ public class Ready extends GCAction
         if (data.gameState == GameControlData.STATE_PLAYING) {
             data.addTimeInCurrentState();
         }
-        data.whenCurrentGameStateBegan = System.currentTimeMillis();
+        data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_READY;
         Log.state(data, "State set to Ready");
     }

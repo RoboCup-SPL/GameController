@@ -3,7 +3,6 @@ package controller.ui;
 import common.TotalScaleLayout;
 import controller.EventHandler;
 import common.Log;
-import common.Tools;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
 import controller.action.ui.penalty.Pushing;
@@ -635,7 +634,7 @@ public class GUI extends JFrame implements GCGUI
         int remainingTime = data.getRemainingGameTime();
         clock.setText((remainingTime < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(remainingTime) * 1000)));
 
-        int timeKickOffBlocked = Tools.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
+        int timeKickOffBlocked = data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
         if(data.gameState == GameControlData.STATE_READY) {
             clockSub.setText(clockFormat.format(new Date(data.remainingReady+999)));
             clockSub.setForeground(Color.BLACK);
@@ -813,7 +812,7 @@ public class GUI extends JFrame implements GCGUI
                             robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+clockFormat.format(new Date(seconds * 1000)));
                             highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
-                        robotTime[i][j].setValue(1000 * seconds / (seconds + Tools.getSecondsSince(data.whenPenalized[i][j])));
+                        robotTime[i][j].setValue(1000 * seconds / (seconds + data.getSecondsSince(data.whenPenalized[i][j])));
                         robotTime[i][j].setVisible(true);
                     } else {
                         robotLabel[i][j].setText(EJECTED);
@@ -873,7 +872,7 @@ public class GUI extends JFrame implements GCGUI
     {
         for(int i=0; i<2; i++) {
             if(data.gameState == GameControlData.STATE_PLAYING
-                    && Tools.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0)
+                    && data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0)
             {
                 if(data.kickOffTeam == data.team[i].teamColor)
                 {

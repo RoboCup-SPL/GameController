@@ -32,21 +32,10 @@ public class ClockReset extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
-            if(data.secGameState != GameControlData.STATE2_OVERTIME) {
-                if(data.firstHalf == GameControlData.C_TRUE) {
-                    data.firstHalfTime = Rules.league.halfTime*1000;
-                } else {
-                    data.secondHalfTime = Rules.league.halfTime*1000;
-                }
-            } else {
-                if(data.firstHalf == GameControlData.C_TRUE) {
-                    data.firstHalfOverTime = Rules.league.overtimeTime*1000;
-                } else {
-                    data.secondHalfOverTime = Rules.league.overtimeTime*1000;
-                }
-            }
-        }
+        data.timeBeforeCurrentGameState = 0;
+        data.whenCurrentGameStateBegan = data.getTime();
+        data.manWhenClockChanged = data.whenCurrentGameStateBegan;
+        data.manRemainingGameTimeOffset = 0;
         if(data.gameState == GameControlData.STATE_READY) {
             data.remainingReady = Rules.league.readyTime*1000;
         } else if( (data.gameState == GameControlData.STATE_INITIAL)

@@ -1,7 +1,6 @@
 package controller.action.ui.state;
 
 import common.Log;
-import common.Tools;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
@@ -42,7 +41,7 @@ public class Finish extends GCAction
             data.resetPenaltyTimes();
         }
         data.addTimeInCurrentState();
-        data.whenCurrentGameStateBegan = System.currentTimeMillis();
+        data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_FINISHED;
 
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {

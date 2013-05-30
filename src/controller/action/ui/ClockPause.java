@@ -33,15 +33,19 @@ public class ClockPause extends GCAction
     {
         if(ActionBoard.clock.isClockRunning(data)) {
             if(data.manPlay) {
+                data.manRemainingGameTimeOffset += data.getTime() - data.manWhenClockChanged;
                 data.manPlay = false;
             } else {
+                data.manWhenClockChanged = data.getTime();
                 data.manPause = true;
             }
             Log.state(data, "Time manual paused");
         } else {
             if(data.manPause) {
                 data.manPause = false;
+                data.manTimeOffset -= data.getTime() - data.manWhenClockChanged;
             } else {
+                data.manWhenClockChanged = data.getTime();
                 data.manPlay = true;
             }
             Log.state(data, "Time manual running");

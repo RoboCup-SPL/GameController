@@ -49,7 +49,7 @@ public class Manual extends GCAction
     {
         if(!unpen) {
             data.team[side].player[number].penalty = PlayerInfo.PENALTY_MANUAL;
-            data.whenPenalized[side][number] = System.currentTimeMillis();
+            data.whenPenalized[side][number] = data.getTime();
             Log.state(data, "Manually Penalised "+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));

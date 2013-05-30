@@ -24,7 +24,7 @@ public class Defense extends Penalty
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         player.penalty = PlayerInfo.PENALTY_HL_ILLEGAL_DEFENSE;
-        data.whenPenalized[side][number] = System.currentTimeMillis();
+        data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Illegal Defense "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));

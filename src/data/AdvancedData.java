@@ -1,7 +1,5 @@
 package data;
 
-import common.Tools;
-
 /**
  * @author: Michel Bartsch
  *
@@ -17,16 +15,6 @@ public class AdvancedData extends GameControlData
 {
     /** This message is set when the data is put into the timeline */
     public String message = "";
-    /** Time in millis remaining for the first half. */
-    public long firstHalfTime = Rules.league.halfTime*1000;
-    /** Time in millis remaining for the second half. */
-    public long secondHalfTime = Rules.league.halfTime*1000;
-    /** Time in millis remaining for the first half. */
-    public long firstHalfOverTime = Rules.league.overtimeTime*1000;
-    /** Time in millis remaining for the second half. */
-    public long secondHalfOverTime = Rules.league.overtimeTime*1000;
-    /** Contains the amount of extra time. */
-    public int extraTime = 0;
     /** Time in millis remaining in the ready state. */
     public long remainingReady = Rules.league.readyTime*1000;
     /** Time in millis remaining between first and second half. */
@@ -61,12 +49,18 @@ public class AdvancedData extends GameControlData
     public int[] penaltyShot = {0, 0};
     /** If true, left side has the kickoff. */
     public boolean leftSideKickoff = true;
+    /** If true, the game auto-pauses the game for full 10minutes playing. */
+    public boolean playoff;
     /** If true, the clock has manually been paused in the testmode. */
     public boolean manPause = false;
     /** If true, the clock has manually been started in the testmode. */
     public boolean manPlay = false;
-    /** If true, the game auto-pauses the game for full 10minutes playing. */
-    public boolean playoff;
+    /** When was the last manual intervention to the clock? */
+    public long manWhenClockChanged;
+    /** Time offset resulting from manually stopping the clock. */
+    public long manTimeOffset;
+    /** Time offset resulting from starting the clock when it should be stopped. */
+    public long manRemainingGameTimeOffset;
     /** If true, the testmode has been activated. */
     public boolean testmode = false;
     
@@ -102,19 +96,48 @@ public class AdvancedData extends GameControlData
      */
     public void copyTime(AdvancedData data)
     {
-        firstHalfTime = data.firstHalfTime;
-        secondHalfTime = data.secondHalfTime;
-        firstHalfOverTime = data.firstHalfOverTime;
-        secondHalfOverTime = data.secondHalfOverTime;
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
-        secsRemaining = data.secsRemaining;
     }
     
+    /**
+     * Returns the current time. Can be stopped in test mode.
+     * @return The current time in ms. May become incompatible to
+     *         the time delivered by System.currentTimeMillis().
+     */
+    public long getTime()
+    {
+        return manPause ? manWhenClockChanged : System.currentTimeMillis() + manTimeOffset;
+    }
+    
+    /**
+     * Returns the number of seconds since a certain timestamp.
+     * @param millis The timestamp in ms.
+     * @return The number of seconds since the timestamp.
+     */
+    public int getSecondsSince(long millis) {
+        return millis == 0 ? 100000 : (int) (getTime() - millis) / 1000;
+    }
+    
+    /**
+     * The number of seconds until a certion duration is over. The time
+     * already passed is specified as a timestamp when it began.
+     * @param millis The timestamp in ms.
+     * @param duration The full duration in s.
+     * @param The number of seconds that still remain from the duration.
+     *        Can be negative.
+     */
+    public int getRemainingSeconds(long millis, int durationInSeconds) {
+        return durationInSeconds - getSecondsSince(millis);
+    }
+
+    /**
+     * Update all durations in the GameControlData packet.
+     */
     public void updateTimes()
     {
         secsRemaining = getRemainingGameTime();
-        dropInTime = whenDropIn == 0 ? -1 : (short) Tools.getSecondsSince(whenDropIn);
+        dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         for (int side = 0; side < team.length; ++side) {
             for (int number = 0; number < team[side].player.length; ++number) {
                 PlayerInfo player = team[side].player[number];
@@ -124,11 +147,20 @@ public class AdvancedData extends GameControlData
         }
     }
     
+    /**
+     * Add the time passed in the current game state to the time that already passed before.
+     * Is usually called during changes of the game state.
+     */
     public void addTimeInCurrentState()
     {
-        timeBeforeCurrentGameState += System.currentTimeMillis() - whenCurrentGameStateBegan;
+        timeBeforeCurrentGameState += getTime() - whenCurrentGameStateBegan;
     }
     
+    /**
+     * Calculates the remaining game time in the current phase of the game.
+     * This is what the primary clock will show.
+     * @return The remaining number of seconds.
+     */
     public int getRemainingGameTime()
     {
         int regularNumberOfPenaltyShots = playoff ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
@@ -141,14 +173,14 @@ public class AdvancedData extends GameControlData
                 || (gameState == STATE_READY || gameState == STATE_SET)
                 && (playoff || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
-                ? (int) (timeBeforeCurrentGameState / 1000)
-                : Tools.getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState);
+        ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
+                : getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset);
         return duration - timePlayed;
     }
     
     /**
      * Resets the penalize time of all players to 0.
-     * This does not unpenalize them!
+     * This does not unpenalize them.
      */
     public void resetPenaltyTimes()
     {
@@ -174,9 +206,15 @@ public class AdvancedData extends GameControlData
         resetPenaltyTimes();
     }
     
+    /**
+     * Calculates the remaining time a certain robot has to stay penalized.
+     * @param side 0 or 1 depending on whether the robot's team is shown left or right.
+     * @param number The robot's number starting with 0.
+     * @return The number of seconds the robot has to stay penalized.
+     */
     public int getRemainingPenaltyTime(int side, int number)
     {
         return gameState == STATE_READY && whenPenalized[side][number] != 0 ? (int) ((remainingReady + 999) / 1000)
-                : Math.max(0, Tools.getRemainingSeconds(whenPenalized[side][number], Rules.league.penaltyStandardTime));
+                : Math.max(0, getRemainingSeconds(whenPenalized[side][number], Rules.league.penaltyStandardTime));
     }
 }

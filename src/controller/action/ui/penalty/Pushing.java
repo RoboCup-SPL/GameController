@@ -25,7 +25,7 @@ public class Pushing extends Penalty
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         player.penalty = PlayerInfo.PENALTY_SPL_PLAYER_PUSHING;
-        data.whenPenalized[side][number] = System.currentTimeMillis();
+        data.whenPenalized[side][number] = data.getTime();
 
         if(data.gameState == GameControlData.STATE_PLAYING) {
             data.pushes[side]++;

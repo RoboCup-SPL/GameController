@@ -1,7 +1,6 @@
 package controller.action.ui;
 
 import common.Log;
-import common.Tools;
 import controller.EventHandler;
 import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.PickUp;

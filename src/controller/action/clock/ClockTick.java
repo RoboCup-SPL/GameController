@@ -40,41 +40,10 @@ public class ClockTick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        long tmp = System.currentTimeMillis();
+        long tmp = data.getTime();
         ActionBoard.clock.timeElapsed = tmp - lastTime;
         lastTime = tmp;
         
-        if(isClockRunning(data)) {
-            if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
-            } else if(data.secGameState == GameControlData.STATE2_OVERTIME) {
-                if(data.firstHalf == GameControlData.C_TRUE) {
-                    data.firstHalfOverTime -= timeElapsed;
-                } else {
-                    data.secondHalfOverTime -= timeElapsed;
-                }
-            } else {
-                if(data.firstHalf == GameControlData.C_TRUE) {
-                    data.firstHalfTime -= timeElapsed;
-                } else {
-                    data.secondHalfTime -= timeElapsed;
-                }
-            }
-        }
-        long millisRemaining = 0;
-        if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
-        } else if(data.secGameState == GameControlData.STATE2_OVERTIME) {
-            if(data.firstHalf == GameControlData.C_TRUE) {
-                millisRemaining = data.firstHalfOverTime;
-            } else {
-                millisRemaining = data.secondHalfOverTime;
-            }
-        } else {
-            if(data.firstHalf == GameControlData.C_TRUE) {
-                millisRemaining = data.firstHalfTime;
-            } else {
-                millisRemaining = data.secondHalfTime;
-            }
-        }
         if(!data.manPause) {
             for(int i=0; i<2; i++) {
                 if(data.timeOutActive[i]) {
@@ -128,11 +97,7 @@ public class ClockTick extends GCAction
     }
     
     public boolean isClockRunning(AdvancedData data) {
-        boolean halfNotStarted = data.secGameState != GameControlData.STATE2_OVERTIME ?
-                ((data.firstHalf == GameControlData.C_TRUE ?
-                data.firstHalfTime : data.secondHalfTime) == Rules.league.halfTime*1000) :
-                ((data.firstHalf == GameControlData.C_TRUE ?
-                data.firstHalfOverTime : data.secondHalfOverTime) == Rules.league.overtimeTime*1000);
+        boolean halfNotStarted = data.timeBeforeCurrentGameState == 0 && data.gameState != GameControlData.STATE_PLAYING;
         return ( !( (data.gameState == GameControlData.STATE_INITIAL)
          || (data.gameState == GameControlData.STATE_FINISHED)
          || (

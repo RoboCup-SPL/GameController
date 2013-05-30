@@ -1,7 +1,6 @@
 package controller.action.ui.state;
 
 import common.Log;
-import common.Tools;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
@@ -44,7 +43,7 @@ public class Set extends GCAction
         if(!data.playoff && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
-        data.whenCurrentGameStateBegan = System.currentTimeMillis();
+        data.whenCurrentGameStateBegan = data.getTime();
         
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.timeBeforeCurrentGameState = 0;

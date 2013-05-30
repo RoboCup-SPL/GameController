@@ -34,12 +34,4 @@ public class Tools
         }
         return null; // Should never be reached
     }
-    
-    public static int getSecondsSince(long millis) {
-        return millis == 0 ? 100000 : (int) (System.currentTimeMillis() - millis) / 1000;
-    }
-    
-    public static int getRemainingSeconds(long millis, int durationInSeconds) {
-        return durationInSeconds - getSecondsSince(millis);
-    }
 }

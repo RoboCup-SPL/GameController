@@ -37,8 +37,8 @@ public class Initial extends GCAction
         if(Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
+        data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_INITIAL;
-        data.whenCurrentGameStateBegan = System.currentTimeMillis();
         Log.state(data, "State set to Initial");
     }
     
