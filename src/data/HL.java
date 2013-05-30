@@ -47,7 +47,7 @@ public class HL extends Rules
         /** If the game starts with penalty-shoots. */
         startWithPenalty = false;
         /** Time in seconds between second half and penalty shoot. */
-        pausePenaltyShootOutTime = 5*60;
+        pausePenaltyShootOutTime = 0;
         /** If there can be a penalty-shoot retry. */
         penaltyShotRetries = true;
         /** Time in seconds one penalty shoot is long. */
