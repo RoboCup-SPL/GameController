@@ -47,19 +47,19 @@ public class HL extends Rules
         /** If the game starts with penalty-shoots. */
         startWithPenalty = false;
         /** Time in seconds between second half and penalty shoot. */
-        pausePenaltyShootTime = 5*60;
+        pausePenaltyShootOutTime = 5*60;
         /** If there can be a penalty-shoot retry. */
-        penaltyNewTries = true;
+        penaltyShotRetries = true;
         /** Time in seconds one penalty shoot is long. */
-        penaltyShootTime = 1*60;
+        penaltyShotTime = 1*60;
         /** If there is a sudden-death. */
         suddenDeath = false;
         /** Time in seconds one penalty shoot is long in sudden-death. */
-        penaltyShootTimeSuddenDeath = 2*60; // does not matter
+        penaltyShotTimeSuddenDeath = 2*60; // does not matter
         /** Number of penalty-shoots for each team when a half has 10minutes. */
-        numberOfPenaltyShootsShort = 3;
+        numberOfPenaltyShotsShort = 3;
         /** Number of penalty-shoots for each team after full 10minutes playing. */
-        numberOfPenaltyShootsLong = 5;
+        numberOfPenaltyShotsLong = 5;
         /** Time in seconds normal penalties take. */
         penaltyStandardTime = 30;
         /** Time in seconds a robot is taken out when manually penalized (ChestButton). */

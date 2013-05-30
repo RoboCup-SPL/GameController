@@ -19,6 +19,6 @@ public class HLAdult extends HL
         /** If the game starts with penalty-shoots. */
         startWithPenalty = true;
        /** Time in seconds one penalty shoot is long. */
-        penaltyShootTime = (int)(2.5*60);
+        penaltyShotTime = (int)(2.5*60);
     }
 }

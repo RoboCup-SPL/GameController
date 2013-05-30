@@ -43,13 +43,9 @@ public class ClockTick extends GCAction
         long tmp = System.currentTimeMillis();
         ActionBoard.clock.timeElapsed = tmp - lastTime;
         lastTime = tmp;
-        data.sumOfTime += timeElapsed;
         
         if(isClockRunning(data)) {
             if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
-                if(data.gameState == GameControlData.STATE_PLAYING) {
-                    data.penaltyShootTime -= timeElapsed;
-                }
             } else if(data.secGameState == GameControlData.STATE2_OVERTIME) {
                 if(data.firstHalf == GameControlData.C_TRUE) {
                     data.firstHalfOverTime -= timeElapsed;
@@ -64,9 +60,8 @@ public class ClockTick extends GCAction
                 }
             }
         }
-        long millisRemaining;
+        long millisRemaining = 0;
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
-            millisRemaining = data.penaltyShootTime;
         } else if(data.secGameState == GameControlData.STATE2_OVERTIME) {
             if(data.firstHalf == GameControlData.C_TRUE) {
                 millisRemaining = data.firstHalfOverTime;
@@ -79,13 +74,6 @@ public class ClockTick extends GCAction
             } else {
                 millisRemaining = data.secondHalfTime;
             }
-        }
-        if(millisRemaining > 0) {
-            data.secsRemaining = (int)Math.ceil((double)millisRemaining/1000);
-            data.extraTime = 0;
-        } else {
-            data.secsRemaining = 0;
-            data.extraTime = -1* (int)Math.ceil((double)millisRemaining/1000);
         }
         if(!data.manPause) {
             for(int i=0; i<2; i++) {
@@ -114,7 +102,7 @@ public class ClockTick extends GCAction
                     }
                 } else {
                     if(data.remainingPaused > 0
-                     && data.remainingPaused <= Rules.league.pausePenaltyShootTime*1000/2) {
+                     && data.remainingPaused <= Rules.league.pausePenaltyShootOutTime*1000/2) {
                         if( (Rules.league.overtime)
                                 && (data.playoff) ) {
                             ActionBoard.firstHalf.perform(data);

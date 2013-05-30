@@ -37,13 +37,10 @@ public class Play extends GCAction
             return;
         }
         if (!data.playoff && data.timeBeforeCurrentGameState != 0) {
-            data.timeBeforeCurrentGameState += Tools.getSecondsSince(data.whenCurrentGameStateBegan);
+            data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = System.currentTimeMillis();
         data.gameState = GameControlData.STATE_PLAYING;
-        if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
-            data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]++;
-        }
         Log.state(data, "State set to Playing");
     }
     

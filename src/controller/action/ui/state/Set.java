@@ -5,6 +5,7 @@ import common.Tools;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
+import controller.action.ui.half.FirstHalf;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
@@ -40,26 +41,22 @@ public class Set extends GCAction
         if(Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
-        if (!data.playoff && data.timeBeforeCurrentGameState != 0) {
-            data.timeBeforeCurrentGameState += Tools.getSecondsSince(data.whenCurrentGameStateBegan);
+        if(!data.playoff && data.timeBeforeCurrentGameState != 0) {
+            data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = System.currentTimeMillis();
-        data.gameState = GameControlData.STATE_SET;
         
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
-            if(data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]
-                    >= (!data.playoff ? Rules.league.numberOfPenaltyShootsShort : Rules.league.numberOfPenaltyShootsLong))
-            {
-                if(Rules.league.suddenDeath) {
-                    data.penaltyShootTime = Rules.league.penaltyShootTimeSuddenDeath*1000;
-                } else {
-                    data.penaltyShoot[0] = 0;
-                    data.penaltyShoot[1] = 0;
-                }
-            } else {
-                data.penaltyShootTime = Rules.league.penaltyShootTime*1000;  
+            data.timeBeforeCurrentGameState = 0;
+            if(data.gameState != GameControlData.STATE_INITIAL) {
+                data.kickOffTeam = data.kickOffTeam == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
+                FirstHalf.changeSide(data);
+            }
+            if(data.gameState != GameControlData.STATE_PLAYING) {
+                data.penaltyShot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]++;
             }
         }
+        data.gameState = GameControlData.STATE_SET;
         Log.state(data, "State set to Set");
     }
     
@@ -76,7 +73,7 @@ public class Set extends GCAction
             || (data.gameState == GameControlData.STATE_SET)
             || ( (data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
               && ( (data.gameState != GameControlData.STATE_PLAYING)
-                || (Rules.league.penaltyNewTries) )
+                || (Rules.league.penaltyShotRetries) )
               && !data.timeOutActive[0]
               && !data.timeOutActive[1] )
             || data.testmode;

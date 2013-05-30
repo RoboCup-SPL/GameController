@@ -40,11 +40,10 @@ public class Ready extends GCAction
             data.resetPenaltyTimes();
         }
         if (data.gameState == GameControlData.STATE_PLAYING) {
-            data.timeBeforeCurrentGameState += Tools.getSecondsSince(data.whenCurrentGameStateBegan);
+            data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = System.currentTimeMillis();
         data.gameState = GameControlData.STATE_READY;
-        data.remainingReady = Rules.league.readyTime*1000;
         Log.state(data, "State set to Ready");
     }
     

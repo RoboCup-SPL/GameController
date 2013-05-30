@@ -8,7 +8,7 @@ import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
-
+import data.TeamInfo;
 
 /**
  * @author: Michel Bartsch
@@ -73,45 +73,36 @@ public class FirstHalf extends GCAction
      */
     public static void changeSide(AdvancedData data)
     {
-        byte tmpTeamID = data.team[0].teamNumber;
-        data.team[0].teamNumber = data.team[1].teamNumber;
-        data.team[1].teamNumber = tmpTeamID;
+        TeamInfo team = data.team[0];
+        data.team[0] = data.team[1];
+        data.team[1] = team;
         
-        byte tmpScore = data.team[0].score;
-        data.team[0].score = data.team[1].score;
-        data.team[1].score = tmpScore;
-        
-        if( (data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
-         || (!Rules.league.colorChangeAuto) ) {
-            byte tmp = data.team[0].teamColor;
+        // swap back goal colors
+        byte color = data.team[0].goalColor;
+        data.team[0].goalColor = data.team[1].goalColor;
+        data.team[1].goalColor = color;
+
+        // if necessary, swap back team colors
+        if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT
+                && Rules.league.colorChangeAuto) {
+            color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
-            data.team[1].teamColor = tmp;
+            data.team[1].teamColor = color;
         }
         
         int tmpTimeOuts = data.numberOfTimeOuts[0];
         data.numberOfTimeOuts[0] = data.numberOfTimeOuts[1];
         data.numberOfTimeOuts[1] = tmpTimeOuts;
-        boolean tmpTimeOut = data.timeOutActive[0];
-        data.timeOutActive[0] = data.timeOutActive[1];
-        data.timeOutActive[1] = tmpTimeOut;
         long tmpTimeOutTime = data.timeOut[0];
         data.timeOut[0] = data.timeOut[1];
         data.timeOut[1] = tmpTimeOutTime;
         
-        int tmpPenaltyShoot = data.penaltyShoot[0];
-        data.penaltyShoot[0] = data.penaltyShoot[1];
-        data.penaltyShoot[1] = tmpPenaltyShoot;
+        int penaltyShot = data.penaltyShot[0];
+        data.penaltyShot[0] = data.penaltyShot[1];
+        data.penaltyShot[1] = penaltyShot;
         
+        data.timeBeforeCurrentGameState = 0;
         data.whenDropIn = 0;
-        for(int i=0; i<2; i++) {
-            data.pushes[i] = 0;
-        }
-        for(int i=0; i<2; i++) {
-            for(int j=0; j<data.team[i].player.length; j++) {
-                data.team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
-                data.ejected[i][j] = false;
-            }
-        }
-        data.resetPenaltyTimes();
+        data.resetPenalties();
     }
 }

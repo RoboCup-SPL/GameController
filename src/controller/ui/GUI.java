@@ -54,7 +54,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String KICKOFF = "Kickoff";
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PUSHES = "Pushes";
-    private static final String SHOOTS = "Shoot";
+    private static final String SHOTS = "Shot";
     private static final String EJECTED = "Ejected";
     private static final String ONLINE = "wlan_status_green.png";
     private static final String OFFLINE = "wlan_status_red.png";
@@ -632,11 +632,8 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updateClock(AdvancedData data)
     {
-        if(data.extraTime == 0) {
-            clock.setText(clockFormat.format(new Date(data.secsRemaining*1000+999)));
-        } else {
-            clock.setText("-" + clockFormat.format(new Date(data.extraTime*1000)));
-        }
+        int remainingTime = data.getRemainingGameTime();
+        clock.setText((remainingTime < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(remainingTime) * 1000)));
 
         int timeKickOffBlocked = Tools.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
         if(data.gameState == GameControlData.STATE_READY) {
@@ -742,7 +739,8 @@ public class GUI extends JFrame implements GCGUI
                 finish.setSelected(true);
                 break;
         }
-        highlight(finish, (data.secsRemaining <= FINISH_HIGHLIGHT_SECONDS)
+        highlight(finish, (data.gameState != GameControlData.STATE_FINISHED)
+                && (data.getRemainingGameTime() <= FINISH_HIGHLIGHT_SECONDS)
                 && (finish.getBackground() != COLOR_HIGHLIGHT) );
     }
     
@@ -790,7 +788,7 @@ public class GUI extends JFrame implements GCGUI
             {
                 pushes[i].setText(PUSHES+": "+data.pushes[i]);
             } else {
-                pushes[i].setText(SHOOTS+": "+data.penaltyShoot[i]);
+                pushes[i].setText(SHOTS+": "+data.penaltyShot[i]);
             }
         }
     }

@@ -17,8 +17,6 @@ public class AdvancedData extends GameControlData
 {
     /** This message is set when the data is put into the timeline */
     public String message = "";
-    /** Total time in millis since the Clock started */
-    public long sumOfTime = 0;
     /** Time in millis remaining for the first half. */
     public long firstHalfTime = Rules.league.halfTime*1000;
     /** Time in millis remaining for the second half. */
@@ -27,8 +25,6 @@ public class AdvancedData extends GameControlData
     public long firstHalfOverTime = Rules.league.overtimeTime*1000;
     /** Time in millis remaining for the second half. */
     public long secondHalfOverTime = Rules.league.overtimeTime*1000;
-    /** Time in millis remaining for the current penalty shoot. */
-    public long penaltyShootTime = Rules.league.penaltyShootTime*1000;
     /** Contains the amount of extra time. */
     public int extraTime = 0;
     /** Time in millis remaining in the ready state. */
@@ -36,16 +32,16 @@ public class AdvancedData extends GameControlData
     /** Time in millis remaining between first and second half. */
     public long remainingPaused = 0;
 
-    /** How much time summed up before the current state? */
-    public int timeBeforeCurrentGameState;
+    /** How much time summed up before the current state? (ms)*/
+    public long timeBeforeCurrentGameState;
     
-    /** When was switched to the current state? */
+    /** When was switched to the current state? (ms) */
     public long whenCurrentGameStateBegan;
     
-    /** When was the last drop-in? */
+    /** When was the last drop-in? (ms, 0 = never) */
     public long whenDropIn;
     
-    /** When was each player penalized last (0 = never)? */
+    /** When was each player penalized last (ms, 0 = never)? */
     public long[][] whenPenalized = new long[2][Rules.league.teamSize];
 
     /** Which players were already ejected? */
@@ -62,7 +58,7 @@ public class AdvancedData extends GameControlData
     /** TimeOut counters within the current half for each team, 0:left side, 1:right side. */
     public int[] numberOfTimeOutsCurrentHalf = {0, 0};
     /** how many penalty-shoots have been made by each team, 0:left side, 1:right side. */
-    public int[] penaltyShoot = {0, 0};
+    public int[] penaltyShot = {0, 0};
     /** If true, left side has the kickoff. */
     public boolean leftSideKickoff = true;
     /** If true, the clock has manually been paused in the testmode. */
@@ -106,12 +102,10 @@ public class AdvancedData extends GameControlData
      */
     public void copyTime(AdvancedData data)
     {
-        sumOfTime = data.sumOfTime;
         firstHalfTime = data.firstHalfTime;
         secondHalfTime = data.secondHalfTime;
         firstHalfOverTime = data.firstHalfOverTime;
         secondHalfOverTime = data.secondHalfOverTime;
-        penaltyShootTime = data.penaltyShootTime;
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
         secsRemaining = data.secsRemaining;
@@ -119,6 +113,7 @@ public class AdvancedData extends GameControlData
     
     public void updateTimes()
     {
+        secsRemaining = getRemainingGameTime();
         dropInTime = whenDropIn == 0 ? -1 : (short) Tools.getSecondsSince(whenDropIn);
         for (int side = 0; side < team.length; ++side) {
             for (int number = 0; number < team[side].player.length; ++number) {
@@ -127,6 +122,28 @@ public class AdvancedData extends GameControlData
                         ? 0 : (short) getRemainingPenaltyTime(side, number);
             }
         }
+    }
+    
+    public void addTimeInCurrentState()
+    {
+        timeBeforeCurrentGameState += System.currentTimeMillis() - whenCurrentGameStateBegan;
+    }
+    
+    public int getRemainingGameTime()
+    {
+        int regularNumberOfPenaltyShots = playoff ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
+        int duration = secGameState == STATE2_NORMAL ? Rules.league.halfTime
+                : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
+                : Math.max(penaltyShot[0], penaltyShot[1]) > regularNumberOfPenaltyShots
+                ? Rules.league.penaltyShotTimeSuddenDeath
+                : Rules.league.penaltyShotTime;
+        int timePlayed = gameState == STATE_INITIAL // during timeouts
+                || (gameState == STATE_READY || gameState == STATE_SET)
+                && (playoff || timeBeforeCurrentGameState == 0)
+                || gameState == STATE_FINISHED
+                ? (int) (timeBeforeCurrentGameState / 1000)
+                : Tools.getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState);
+        return duration - timePlayed;
     }
     
     /**
@@ -140,6 +157,21 @@ public class AdvancedData extends GameControlData
                 players[i] = 0;
             }
         }
+    }
+    
+    /**
+     * Resets all penalties.
+     */
+    public void resetPenalties()
+    {
+        for(int i = 0; i < team.length; ++i) {
+            pushes[i] = 0;
+            for(int j = 0; j < Rules.league.teamSize; j++) {
+                team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
+                ejected[i][j] = false;
+            }
+        }
+        resetPenaltyTimes();
     }
     
     public int getRemainingPenaltyTime(int side, int number)

@@ -49,26 +49,26 @@ public abstract class Rules
     public int kickoffTime;
     /** Time in seconds before a global game stuck can be called. */
     public int minDurationBeforeStuck;
-    /** If there is an overtime before penalty-shoot in a play-off game. */
+    /** If there is an overtime before the penalty shoot-out in a play-off game. */
     public boolean overtime;
     /** Time in seconds one overtime half is long. */
     public int overtimeTime;
-    /** If the game starts with penalty-shoots. */
+    /** If the game starts with penalty-shots. */
     public boolean startWithPenalty;
-    /** Time in seconds between second half and penalty shoot. */
-    public int pausePenaltyShootTime;
+    /** Time in seconds between second half and penalty shoot-out. */
+    public int pausePenaltyShootOutTime;
     /** Time in seconds one penalty shoot is long. */
-    public int penaltyShootTime;
-    /** If there can be a penalty-shoot retry. */
-    public boolean penaltyNewTries;
+    public int penaltyShotTime;
+    /** If there can be a penalty-shot retry. */
+    public boolean penaltyShotRetries;
     /** If there is a sudden-death. */
     public boolean suddenDeath;
     /** Time in seconds one penalty shoot is long in sudden-death. */
-    public int penaltyShootTimeSuddenDeath;
-    /** Number of penalty-shoots for each team when a half has 10minutes. */
-    public int numberOfPenaltyShootsShort;
-    /** Number of penalty-shoots for each team after full 10minutes playing. */
-    public int numberOfPenaltyShootsLong;
+    public int penaltyShotTimeSuddenDeath;
+    /** Number of penalty-shots for each team when a half has 10minutes. */
+    public int numberOfPenaltyShotsShort;
+    /** Number of penalty-shots for each team after full 10minutes playing. */
+    public int numberOfPenaltyShotsLong;
     /** Time in seconds normal penalties take. */
     public int penaltyStandardTime;
     /** Time in seconds a robot is taken out when manually penalized (ChestButton). */

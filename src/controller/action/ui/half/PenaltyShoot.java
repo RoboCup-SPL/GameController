@@ -36,15 +36,8 @@ public class PenaltyShoot extends GCAction
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
             data.secGameState = GameControlData.STATE2_PENALTYSHOOT;
             data.gameState = GameControlData.STATE_INITIAL;
-            for(int i=0; i<2; i++) {
-                data.pushes[i] = 0;
-            }
-            for(int i=0; i<2; i++) {
-                for(int j=0; j<data.team[i].player.length; j++) {
-                    data.team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
-                    data.whenPenalized[i][j] = 0;
-                }
-            }
+            data.timeBeforeCurrentGameState = 0;
+            data.resetPenalties();
             for(int i=0; i<2; i++) {
                 data.numberOfTimeOutsCurrentHalf[i] = 0;
             }

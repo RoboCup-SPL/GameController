@@ -41,7 +41,7 @@ public class Finish extends GCAction
         if(Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
-        data.timeBeforeCurrentGameState += Tools.getSecondsSince(data.whenCurrentGameStateBegan);
+        data.addTimeInCurrentState();
         data.whenCurrentGameStateBegan = System.currentTimeMillis();
         data.gameState = GameControlData.STATE_FINISHED;
 
@@ -50,13 +50,10 @@ public class Finish extends GCAction
             if(data.firstHalf == GameControlData.C_TRUE) {
                 data.remainingPaused = Rules.league.pauseTime*1000;
             } else if (data.playoff && data.team[0].score == data.team[1].score){
-                data.remainingPaused = Rules.league.pausePenaltyShootTime*1000;
+                data.remainingPaused = Rules.league.pausePenaltyShootOutTime*1000;
             } else {
                 data.remainingPaused = 0;
             }
-        } else {
-            data.kickOffTeam = data.kickOffTeam == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
-            FirstHalf.changeSide(data);
         }
         Log.state(data, "State set to Finished");
     }
