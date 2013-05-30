@@ -53,7 +53,8 @@ public class GUI extends JFrame implements GCGUI
     private static final String KICKOFF = "Kickoff";
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PUSHES = "Pushes";
-    private static final String SHOTS = "Shot";
+    private static final String SHOT = "Shot";
+    private static final String SHOTS = "Shots";
     private static final String EJECTED = "Ejected";
     private static final String ONLINE = "wlan_status_green.png";
     private static final String OFFLINE = "wlan_status_red.png";
@@ -71,13 +72,13 @@ public class GUI extends JFrame implements GCGUI
     private static final String CLOCK_RESET = "reset.png";
     private static final String CLOCK_PAUSE = "pause.png";
     private static final String CLOCK_PLAY = "play.png";
-    private static final String FIRST_HALF = "First-Half";
-    private static final String SECOND_HALF = "Second-Half";
+    private static final String FIRST_HALF = "First Half";
+    private static final String SECOND_HALF = "Second Half";
     private static final String FIRST_HALF_SHORT = "1.Half";
     private static final String SECOND_HALF_SHORT = "2.Half";
     private static final String FIRST_HALF_OVERTIME = "1.Overtime";
     private static final String SECOND_HALF_OVERTIME = "2.Overtime";
-    private static final String PENALTY_SHOOT = "Penalty-Shoot";
+    private static final String PENALTY_SHOOT = "Penalty Shots";
     private static final String PENALTY_SHOOT_SHORT = "Penalty";
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
@@ -785,11 +786,11 @@ public class GUI extends JFrame implements GCGUI
     private void updatePushes(AdvancedData data)
     {
         for(int i=0; i<2; i++) {
-            if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
-            {
+            if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 pushes[i].setText(PUSHES+": "+data.pushes[i]);
             } else {
-                pushes[i].setText(SHOTS+": "+data.penaltyShot[i]);
+                pushes[i].setText((i == 0 && (data.gameState == GameControlData.STATE_SET
+                        || data.gameState == GameControlData.STATE_PLAYING) ? SHOT : SHOTS)+": "+data.penaltyShot[i]);
             }
         }
     }
