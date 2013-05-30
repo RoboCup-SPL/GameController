@@ -193,7 +193,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                 : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL // during timeouts
                 || (gameState == STATE_READY || gameState == STATE_SET)
-                && (playoff || timeBeforeCurrentGameState == 0)
+                && (playoff && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
                 : getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset);
