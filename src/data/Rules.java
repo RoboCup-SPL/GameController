@@ -71,8 +71,6 @@ public abstract class Rules
     public int numberOfPenaltyShotsLong;
     /** Time in seconds normal penalties take. */
     public int penaltyStandardTime;
-    /** Time in seconds a robot is taken out when manually penalized (ChestButton). */
-    public int penaltyManualTime;
     /** if robots should return from penalties when the game state changes. */
     public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */

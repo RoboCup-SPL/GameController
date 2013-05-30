@@ -62,8 +62,6 @@ public class SPL extends Rules
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds normal penalties take. */
         penaltyStandardTime = 30;
-        /** Time in seconds a robot is taken out when manually penalized (ChestButton). */
-        penaltyManualTime = 1;
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */
