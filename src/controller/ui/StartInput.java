@@ -15,8 +15,6 @@ import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 
 /**
@@ -50,13 +48,14 @@ public class StartInput extends JFrame implements Serializable
     private static final int OPTIONS_HEIGHT = 22;
     private static final int START_HEIGHT = 30;
     /** This is not what the name says ;) */
-    private static final int FULLSCREEN_WIDTH = 100;
+    private static final int FULLSCREEN_WIDTH = 120;
     private static final String ICONS_PATH = "config/icons/";
     private static final String[] BACKGROUND_SIDE = {"robot_left_blue.png",
                                                         "robot_right_red.png"};
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
+    private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
     private static final String HELP = "Usage: java -jar GameController.jar <options>"
             + "\n  [-h | --help]                   display help"
@@ -88,6 +87,7 @@ public class StartInput extends JFrame implements Serializable
     public int[] outTeam = {0, 0};
     public boolean outFulltime;
     public boolean outFullscreen;
+    public boolean outAutoColorChange;
     public String outBroadcastAddress;
     
     /** All the components of this GUI. */
@@ -102,6 +102,7 @@ public class StartInput extends JFrame implements Serializable
     private JRadioButton fulltime;
     private ButtonGroup fulltimeGroup;
     private Checkbox fullscreen;
+    private Checkbox autoColorChange;
     private JButton start;
     
     
@@ -210,14 +211,19 @@ public class StartInput extends JFrame implements Serializable
         JPanel fullscreenPanel = new JPanel();
         fullscreenPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         optionsLeft.add(fullscreenPanel);
-        JPanel broadcastAddressPanel = new JPanel();
-        broadcastAddressPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        optionsLeft.add(broadcastAddressPanel);
+        JPanel autoColorChangePanel = new JPanel();
+        autoColorChangePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        optionsLeft.add(autoColorChangePanel);
 
         fullscreen = new Checkbox(FULLSCREEN_LABEL);
         fullscreen.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         fullscreen.setState(true);
         fullscreenPanel.add(fullscreen);
+        
+        autoColorChange = new Checkbox(COLOR_CHANGE_LABEL);
+        autoColorChange.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
+        autoColorChange.setState(Rules.league.colorChangeAuto);
+        autoColorChangePanel.add(autoColorChange);
 
         optionsRight = new JPanel();
         optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
@@ -250,13 +256,13 @@ public class StartInput extends JFrame implements Serializable
                         for(int j=0; j < names.length; j++) {
                             team[i].addItem(names[j]);
                         }
-                        //team[i].setSelectedIndex(0);
                         outTeam[i] = 0;
                         setTeamIcon(i, outTeam[i]);
                         teamIconLabel[i].setIcon(teamIcon[i]);
                         teamIconLabel[i].repaint();
                     }
                     teamsOK = false;
+                    autoColorChange.setState(Rules.league.colorChangeAuto);
                     startEnableing();
                 }
             }
@@ -294,6 +300,7 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFullscreen = fullscreen.getState();
+                    outAutoColorChange = autoColorChange.getState();
                     finished = true;
                 }});
                 
