@@ -13,9 +13,9 @@ public class HL extends Rules
     HL()
     {
         /** The league´s name this rules are for. */
-        leagueName = "HL Kid/Teen";
+        leagueName = "HL Kid";
         /** The league´s directory name with it´s teams and icons. */
-        leagueDirectory = "hl";
+        leagueDirectory = "hl_kid";
         /** How many robots are in a team. */
         teamSize = 3;
         /** The Java Colors the left and the right team starts with. */

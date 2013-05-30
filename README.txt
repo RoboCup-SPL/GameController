@@ -22,9 +22,10 @@ There are three ant targets:
 
 Double-click GameController.jar or run 
 
-java -jar GameController.jar [-b <address> | --broadcast <address>]
-
-If no broadcast address is specified, 255.255.255.255 is used.
+java -jar GameController.jar <options>
+  [-h | --help]                   display help
+  [-b | --broadcast] <address>    changes the broadcast ip to the given one
+  [-l | --league] <league-dir>    given league is preselected
 
 
 ########## 3. Usage ##########

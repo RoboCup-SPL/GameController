@@ -51,19 +51,24 @@ public class StartInput extends JFrame implements Serializable
     private static final int START_HEIGHT = 30;
     /** This is not what the name says ;) */
     private static final int FULLSCREEN_WIDTH = 100;
-    private static final int BROADCAST_WIDTH = 125;
-    private static final int BROADCAST_HEIGHT = 25;
     private static final String ICONS_PATH = "config/icons/";
     private static final String[] BACKGROUND_SIDE = {"robot_left_blue.png",
                                                         "robot_right_red.png"};
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
-    private static final String BROADCAST_LABEL = "Broadcast:";
     private static final String START_LABEL = "Start";
+    private static final String HELP = "Usage: java -jar GameController.jar <options>"
+            + "\n  [-h | --help]                   display help"
+            + "\n  [-b | --broadcast] <address>    changes the broadcast ip to the given one"
+            + "\n  [-l | --league] <league-dir>    given league is preselected";
+    private static final String COMMAND_HELP = "--help";
+    private static final String COMMAND_HELP_SHORT = "-h";
     private static final String DEFAULT_BROADCAST = "255.255.255.255";
     private static final String COMMAND_BROADCAST = "--broadcast";
     private static final String COMMAND_BROADCAST_SHORT = "-b";
+    private static final String COMMAND_LEAGUE = "--league";
+    private static final String COMMAND_LEAGUE_SHORT = "-l";
     
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
@@ -78,10 +83,6 @@ public class StartInput extends JFrame implements Serializable
      * is recommended.
      */
     private boolean fulltimeOK = false;
-    /**
-     * This is true, if the broadcast-address is a legal ip-address.
-     */
-    private boolean broadcastAddressOk = false;
     
     /** The inputs that can be read from this GUI when it has finished. */
     public int[] outTeam = {0, 0};
@@ -101,8 +102,6 @@ public class StartInput extends JFrame implements Serializable
     private JRadioButton fulltime;
     private ButtonGroup fulltimeGroup;
     private Checkbox fullscreen;
-    private JLabel broadcastAddressLabel;
-    private JTextField broadcastAddressInput;
     private JButton start;
     
     
@@ -114,6 +113,35 @@ public class StartInput extends JFrame implements Serializable
     public StartInput(final String[] args)
     {
         super(WINDOW_TITLE);
+        
+        //commands
+        if( (args.length > 0)
+                && ( (args[0].equalsIgnoreCase(COMMAND_HELP_SHORT))
+                  || (args[0].equalsIgnoreCase(COMMAND_HELP)) ) ) {
+            System.out.println(HELP);
+            System.exit(0);
+        }
+        outBroadcastAddress = DEFAULT_BROADCAST;
+        for(int i=0; i<args.length; i++) {
+            if( (args.length > i+1)
+                    && ( (args[i].equalsIgnoreCase(COMMAND_BROADCAST_SHORT))
+                      || (args[i].equalsIgnoreCase(COMMAND_BROADCAST)) )
+                    && IPV4_PATTERN.matcher(args[++i]).matches() ) {
+                outBroadcastAddress = args[i];
+            }
+            if( (args.length > i+1)
+                    && ( (args[i].equalsIgnoreCase(COMMAND_LEAGUE_SHORT))
+                      || (args[i].equalsIgnoreCase(COMMAND_LEAGUE)) ) ) {
+                i++;
+                for(int j=0; j < Rules.LEAGUES.length; j++) {
+                    if(Rules.LEAGUES[j].leagueDirectory.equals(args[i])) {
+                        Rules.league = Rules.LEAGUES[j];
+                        break;
+                    }
+                }
+            }
+        }
+        
         //layout
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         Dimension desktop = Toolkit.getDefaultToolkit().getScreenSize();
@@ -190,39 +218,6 @@ public class StartInput extends JFrame implements Serializable
         fullscreen.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         fullscreen.setState(true);
         fullscreenPanel.add(fullscreen);
-        broadcastAddressLabel = new JLabel(BROADCAST_LABEL);
-        broadcastAddressPanel.add(broadcastAddressLabel);
-        broadcastAddressInput = new JTextField();
-        broadcastAddressInput.setPreferredSize(new Dimension(BROADCAST_WIDTH, BROADCAST_HEIGHT));
-        broadcastAddressInput.setText(getDefaultBroadcastAddress(args));
-        broadcastAddressOk = true; // setText does not trigger change event...
-        broadcastAddressInput.getDocument().addDocumentListener(new DocumentListener()
-            {
-            @Override
-            public void insertUpdate(DocumentEvent e)
-            {
-                validateBroadcast();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e)
-            {
-                validateBroadcast();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e)
-            {
-                validateBroadcast();
-            }
-
-            private void validateBroadcast()
-            {
-                broadcastAddressOk = IPV4_PATTERN.matcher(broadcastAddressInput.getText()).matches();
-                startEnableing();
-            }
-        });
-        broadcastAddressPanel.add(broadcastAddressInput);
 
         optionsRight = new JPanel();
         optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
@@ -231,6 +226,9 @@ public class StartInput extends JFrame implements Serializable
         league = new JComboBox();
         for(int i=0; i < Rules.LEAGUES.length; i++) {
             league.addItem(Rules.LEAGUES[i].leagueName);
+            if(Rules.LEAGUES[i] == Rules.league) {
+                league.setSelectedIndex(i);
+            }
         }
         league.setPreferredSize(optionsDim);
         league.addActionListener(new ActionListener()
@@ -296,19 +294,10 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFullscreen = fullscreen.getState();
-                    outBroadcastAddress = broadcastAddressInput.getText();
                     finished = true;
                 }});
                 
         setVisible(true);
-    }
-
-    private String getDefaultBroadcastAddress(final String[] args) {
-        String defaultBroadcastAddress = DEFAULT_BROADCAST;
-        if (args.length >= 2 && (args[0].equals(COMMAND_BROADCAST_SHORT) || args[0].equals(COMMAND_BROADCAST))) {
-            defaultBroadcastAddress = args[1];
-        }
-        return defaultBroadcastAddress;
     }
     
     /**
@@ -337,7 +326,7 @@ public class StartInput extends JFrame implements Serializable
      */
     private void startEnableing()
     {
-        start.setEnabled(teamsOK && fulltimeOK && broadcastAddressOk);
+        start.setEnabled(teamsOK && fulltimeOK);
     }
     
     /**
