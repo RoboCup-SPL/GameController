@@ -16,6 +16,7 @@ public class PlayerInfo implements Serializable
 {
     /** What type of penalty a player may have. */
     public static final short PENALTY_NONE = 0;
+    
     public static final short PENALTY_SPL_BALL_HOLDING = 1;
     public static final short PENALTY_SPL_PLAYER_PUSHING = 2;
     public static final short PENALTY_SPL_OBSTRUCTION = 3;
@@ -24,10 +25,15 @@ public class PlayerInfo implements Serializable
     public static final short PENALTY_SPL_LEAVING_THE_FIELD = 6;
     public static final short PENALTY_SPL_PLAYING_WITH_HANDS = 7;
     public static final short PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
+    
     public static final short PENALTY_HL_BALL_MANIPULATION = 1;
+    public static final short PENALTY_HL_PHYSICAL_CONTACT = 2;
     public static final short PENALTY_HL_ILLEGAL_ATTACK = 3;
     public static final short PENALTY_HL_ILLEGAL_DEFENSE = 4;
     public static final short PENALTY_HL_REQUEST_FOR_PICKUP = 5;
+    public static final short PENALTY_HL_REQUEST_FOR_SEVICE = 6;
+    public static final short PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE = 7;
+    
     public static final short PENALTY_MANUAL = 15;
     
     /** The size in bytes this class has packed. */
