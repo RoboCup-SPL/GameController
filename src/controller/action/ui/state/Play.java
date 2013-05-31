@@ -40,7 +40,7 @@ public class Play extends GCAction
         }
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_PLAYING;
-        Log.state(data, "State set to Playing");
+        Log.state(data, "Playing State");
     }
     
     /**

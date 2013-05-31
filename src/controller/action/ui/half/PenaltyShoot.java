@@ -42,7 +42,7 @@ public class PenaltyShoot extends GCAction
             if(Rules.league.timeOutPerHalf) {
                 data.timeOutTaken = new boolean[] {false, false};
             }
-            Log.state(data, "Half set to PenaltyShoot");
+            Log.state(data, "Penalty Shoot-out");
         }
     }
     

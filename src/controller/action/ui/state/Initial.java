@@ -39,7 +39,7 @@ public class Initial extends GCAction
         }
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_INITIAL;
-        Log.state(data, "State set to Initial");
+        Log.state(data, "Initial State");
     }
     
     /**

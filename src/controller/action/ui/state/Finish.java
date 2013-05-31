@@ -43,7 +43,7 @@ public class Finish extends GCAction
         data.addTimeInCurrentState();
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_FINISHED;
-        Log.state(data, "State set to Finished");
+        Log.state(data, "Finished State");
     }
     
     /**

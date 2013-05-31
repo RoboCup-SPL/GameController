@@ -56,7 +56,7 @@ public class Set extends GCAction
             }
         }
         data.gameState = GameControlData.STATE_SET;
-        Log.state(data, "State set to Set");
+        Log.state(data, "Set State");
     }
     
     /**
