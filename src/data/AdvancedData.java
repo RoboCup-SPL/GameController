@@ -217,7 +217,7 @@ public class AdvancedData extends GameControlData implements Cloneable
     {
         if(gameState == STATE_INITIAL && secGameState == STATE2_NORMAL && firstHalf != C_TRUE
            || gameState == STATE_FINISHED && secGameState == STATE2_NORMAL && firstHalf == C_TRUE) {
-            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.halfTime);
+            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pauseTime);
         } else {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pausePenaltyShootOutTime);
         }

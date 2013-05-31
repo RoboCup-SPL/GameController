@@ -37,7 +37,7 @@ public class ClockTick extends GCAction
                && data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime) {
             ActionBoard.set.perform(data);
         } else if(data.gameState == GameControlData.STATE_FINISHED && data.isPause()) {
-            if(data.firstHalf == GameControlData.C_TRUE && data.getRemainingPauseTime() <= Rules.league.halfTime / 2) {
+            if(data.firstHalf == GameControlData.C_TRUE && data.getRemainingPauseTime() <= Rules.league.pauseTime / 2) {
                 ActionBoard.secondHalf.perform(data);
             } else if(data.firstHalf != GameControlData.C_TRUE && data.getRemainingPauseTime() <= Rules.league.pausePenaltyShootOutTime / 2) {
                 ActionBoard.penaltyShoot.perform(data);
