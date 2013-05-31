@@ -1,6 +1,7 @@
 package visualizer;
 
 import common.TotalScaleLayout;
+import data.GameControlData;
 import data.Rules;
 import data.Teams;
 import java.awt.Color;
@@ -35,6 +36,9 @@ public class GUI extends JFrame implements KeyListener
     /** All the components of this GUI. */
     private ImagePanel background;
     
+    /**
+     * Creates a new GUI.
+     */
     GUI()
     {
         super(WINDOW_TITLE);
@@ -56,6 +60,17 @@ public class GUI extends JFrame implements KeyListener
         }
         
         setVisible(true);
+    }
+    
+    /**
+     * This is called by the Listener after receiving GameCOntrolData to show
+     * them on the gui.
+     * 
+     * @param data  The GameControlData to show.
+     */
+    public void update(GameControlData data)
+    {
+        
     }
 
     @Override
