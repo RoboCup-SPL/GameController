@@ -3,7 +3,7 @@ package controller.action.ui;
 import common.Log;
 import controller.EventHandler;
 import controller.action.ui.penalty.Penalty;
-import controller.action.ui.penalty.PickUp;
+import controller.action.ui.penalty.PickUpHL;
 import controller.action.GCAction;
 import controller.action.ActionType;
 import data.AdvancedData;
@@ -68,7 +68,7 @@ public class Robot extends GCAction
     {
         return data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
                 && (data.getRemainingPenaltyTime(side, number) == 0 || Rules.league instanceof HL && number == 0)
-                || EventHandler.getInstance().lastUIEvent instanceof PickUp
+                || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
                 || data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
                     && EventHandler.getInstance().lastUIEvent instanceof Penalty
                 || data.testmode;

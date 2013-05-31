@@ -23,9 +23,7 @@ public class PickUp extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (player.penalty == PlayerInfo.PENALTY_NONE) {
-            data.whenPenalized[side][number] = data.getTime();
-        }
+        data.whenPenalized[side][number] = data.getTime();
         player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
         Log.state(data, "Request for PickUp "+
                 Rules.league.teamColorName[data.team[side].teamColor]
