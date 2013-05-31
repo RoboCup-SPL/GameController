@@ -3,8 +3,8 @@ package visualizer;
 import common.TotalScaleLayout;
 import data.GameControlData;
 import data.Rules;
-import data.Teams;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -14,6 +14,7 @@ import java.awt.event.KeyListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * @author: Michel Bartsch
@@ -29,12 +30,20 @@ public class GUI extends JFrame implements KeyListener
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final String WINDOW_TITLE = "GameController";
     private static final String STANDARD_FONT = "Helvetica";
+    private static final String TEST_FONT = "Lucida Console";
     private static final String CONFIG_PATH = "config/";
     private static final String BACKGROUND = "background.png";
     private static final String ICONS_PATH = "config/icons/";
     
     /** All the components of this GUI. */
     private ImagePanel background;
+    private JTextArea testDisplayLeft;
+    private JTextArea testDisplayRight;
+    
+    /** If a key is currently pressed. */
+    private boolean pressing = false;
+    /** If testmode is on to just display whole GameControlData. */
+    private boolean testmode = false;
     
     /**
      * Creates a new GUI.
@@ -48,11 +57,18 @@ public class GUI extends JFrame implements KeyListener
         devices[devices.length-1].setFullScreenWindow(this);
         
         background = new ImagePanel((new ImageIcon(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND)).getImage(), true);
+        testDisplayLeft = new JTextArea();
+        testDisplayRight = new JTextArea();
+        Font testDisplayFont = new Font(TEST_FONT, Font.PLAIN, 14);
+        testDisplayLeft.setFont(testDisplayFont);
+        testDisplayRight.setFont(testDisplayFont);
         
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
         layout.add(0, 0, 1, 1, background);
+        layout.add(0.4, 0.2, 0.23, 0.7, testDisplayLeft);
+        layout.add(0.65, 0.2, 0.23, 0.7, testDisplayRight);
         
         if(IS_OSX) {
             devices[devices.length-1].setFullScreenWindow(null);
@@ -71,6 +87,24 @@ public class GUI extends JFrame implements KeyListener
     public void update(GameControlData data)
     {
         
+        if(testmode) {
+            String disp = "";
+            disp += data;
+            for(int i=0; i<2; i++) {
+                disp += data.team[i];
+            }
+            testDisplayLeft.setText(disp);
+            disp = "";
+            for(int i=0; i<2; i++) {
+                for(int j=0; j<data.team[i].player.length; j++) {
+                    disp += data.team[i].player[j];
+                }
+            }
+            testDisplayRight.setText(disp);
+        } else {
+            testDisplayLeft.setText("");
+            testDisplayRight.setText("");
+        }
     }
 
     @Override
@@ -79,13 +113,30 @@ public class GUI extends JFrame implements KeyListener
     @Override
     public void keyPressed(KeyEvent e)
     {
-        if(e.getKeyCode() == KeyEvent.VK_F10) {
-            Main.exit();
+        if(!pressing) {
+            switch(e.getKeyCode()) {
+                case KeyEvent.VK_F10:
+                    Main.exit();
+                    break;
+                case KeyEvent.VK_F11:
+                    pressing = true;
+                    testmode = !testmode;
+                    if(testmode) {
+                        testDisplayLeft.setText("waiting for package...");
+                    } else {
+                        testDisplayLeft.setText("");
+                        testDisplayRight.setText("");
+                    }
+                    break;
+            }
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e)
+    {
+        pressing = false;
+    }
     
     /**
      * @author: Michel Bartsch

@@ -80,4 +80,27 @@ public class TeamInfo implements Serializable
             player[i].fromByteArray(buffer);
         }
     }
+    
+    @Override
+    public String toString()
+    {
+        String out = "--------------------------------------------------\n";
+        String temp;
+        
+        out += "         teamNumber: "+teamNumber+"\n";
+        switch(teamColor) {
+            case GameControlData.TEAM_BLUE: temp = "blue"; break;
+            case GameControlData.TEAM_RED:  temp = "red";  break;
+            default: temp = "undefinied("+teamColor+")";
+        }
+        out += "          teamColor: "+temp+"\n";
+        switch(goalColor) {
+            case GameControlData.GOAL_BLUE:   temp = "blue";   break;
+            case GameControlData.GOAL_YELLOW: temp = "yellow"; break;
+            default: temp = "undefinied("+goalColor+")";
+        }
+        out += "          goalColor: "+temp+"\n";
+        out += "              score: "+score+"\n";
+        return out;
+    }
 }

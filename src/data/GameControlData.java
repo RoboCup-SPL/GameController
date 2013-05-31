@@ -136,4 +136,52 @@ public class GameControlData implements Serializable
         }
         return true;
     }
+    
+    @Override
+    public String toString()
+    {
+        String out = "";
+        String temp;
+        
+        out += "             Header: "+GAMECONTROLLER_STRUCT_HEADER+"\n";
+        out += "            Version: "+GAMECONTROLLER_STRUCT_VERSION+"\n";
+        out += "   Players per Team: "+playersPerTeam+"\n";
+        switch(gameState) {
+            case STATE_INITIAL:  temp = "initial"; break;
+            case STATE_READY:    temp = "ready";   break;
+            case STATE_SET:      temp = "set";     break;
+            case STATE_PLAYING:  temp = "playing"; break;
+            case STATE_FINISHED: temp = "finish";  break;
+            default: temp = "undefinied("+gameState+")";
+        }
+        out += "          gameState: "+temp+"\n";
+        switch(firstHalf) {
+            case C_TRUE:  temp = "true";  break;
+            case C_FALSE: temp = "false"; break;
+            default: temp = "undefinied("+firstHalf+")";
+        }
+        out += "          firstHalf: "+temp+"\n";
+        switch(kickOffTeam) {
+            case TEAM_BLUE: temp = "blue"; break;
+            case TEAM_RED:  temp = "red";  break;
+            default: temp = "undefinied("+kickOffTeam+")";
+        }
+        out += "        kickOffTeam: "+temp+"\n";
+        switch(secGameState) {
+            case STATE2_NORMAL:       temp = "blue"; break;
+            case STATE2_PENALTYSHOOT: temp = "red";  break;
+            case STATE2_OVERTIME:     temp = "red";  break;
+            default: temp = "undefinied("+secGameState+")";
+        }
+        out += "       secGameState: "+temp+"\n";
+        switch(dropInTeam) {
+            case TEAM_BLUE: temp = "blue"; break;
+            case TEAM_RED:  temp = "red";  break;
+            default: temp = "undefinied("+dropInTeam+")";
+        }
+        out += "         dropInTeam: "+temp+"\n";
+        out += "         dropInTime: "+dropInTime+"\n";
+        out += "      secsRemaining: "+secsRemaining+"\n";
+        return out;
+    }
 }

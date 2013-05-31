@@ -50,12 +50,15 @@ public class Listener implements Runnable
         while (!closed) {
             try {
                 socket.receive(packet);
+                buffer.rewind();
                 GameControlData data = new GameControlData();
                 if(data.fromByteArray(buffer)) {
                     gui.update(data);
                 }
             } catch(Exception e) {
-                Log.error("Error while listening to port "+PORT);
+                if(!closed) {
+                    Log.error("Error while listening to port "+PORT);
+                }
             }
         }
     }

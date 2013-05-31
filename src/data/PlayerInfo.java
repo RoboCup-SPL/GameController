@@ -63,4 +63,41 @@ public class PlayerInfo implements Serializable
         penalty = buffer.getShort();
         secsTillUnpenalised = buffer.getShort();
     }
+    
+    @Override
+    public String toString()
+    {
+        String out = "----------------------------------------------\n";
+        String temp;
+        
+        if(Rules.league instanceof SPL) {
+            switch(penalty) {
+                case PENALTY_NONE:                   temp = "none"; break;
+                case PENALTY_SPL_BALL_HOLDING:       temp = "ball holding"; break;
+                case PENALTY_SPL_PLAYER_PUSHING:     temp = "pushing"; break;
+                case PENALTY_SPL_OBSTRUCTION:        temp = "fallen robot"; break;
+                case PENALTY_SPL_INACTIVE_PLAYER:    temp = "inactive"; break;
+                case PENALTY_SPL_ILLEGAL_DEFENDER:   temp = "illegal defender"; break;
+                case PENALTY_SPL_LEAVING_THE_FIELD:  temp = "leaving the field"; break;
+                case PENALTY_SPL_PLAYING_WITH_HANDS: temp = "hands"; break;
+                case PENALTY_SPL_REQUEST_FOR_PICKUP: temp = "request for pickup"; break;
+                case PENALTY_MANUAL:                 temp = "manual"; break;
+                default: temp = "undefinied("+penalty+")";
+            }
+        } else {
+            switch(penalty) {
+                case PENALTY_NONE:
+                case PENALTY_HL_BALL_MANIPULATION:  temp = "none"; break;
+                case PENALTY_SPL_PLAYER_PUSHING:    temp = "pushing"; break;
+                case PENALTY_HL_ILLEGAL_ATTACK:     temp = "illegal attack"; break;
+                case PENALTY_HL_ILLEGAL_DEFENSE:    temp = "illegal defender"; break;
+                case PENALTY_HL_REQUEST_FOR_PICKUP: temp = "request for pickup"; break;
+                case PENALTY_MANUAL:                temp = "manual"; break;
+                default: temp = "undefinied("+penalty+")";
+            }
+        }
+        out += "            penalty: "+temp+"\n";
+        out += "secsTillUnpenalised: "+secsTillUnpenalised+"\n";
+        return out;
+    }
 }

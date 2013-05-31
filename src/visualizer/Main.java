@@ -18,6 +18,7 @@ public class Main
     private final static String COMMAND_LEAGUE = "--league";
     private final static String COMMAND_LEAGUE_SHORT = "-l";
     
+    private static Listener listener;
     
     /**
      * The programm starts here.
@@ -44,10 +45,14 @@ public class Main
         
         //start
         GUI gui = new GUI();
+        listener = new Listener(gui);
+        Thread network = new Thread(listener);
+        network.start();
     }
     
     public static void exit()
     {
+        listener.close();
         System.exit(0);
     }
 }
