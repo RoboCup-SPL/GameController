@@ -633,26 +633,22 @@ public class GUI extends JFrame implements GCGUI
     private void updateClock(AdvancedData data)
     {
         clock.setText(formatTime(data.getRemainingGameTime()));
-
-        int timeKickOffBlocked = data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
-        if(data.gameState == GameControlData.STATE_INITIAL && (data.timeOutActive[0] || data.timeOutActive[1])) {
-            clockSub.setText(formatTime(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.timeOutTime)));
-            clockSub.setForeground(Color.BLACK);
-        } else if(data.gameState == GameControlData.STATE_READY) {
-            clockSub.setText(formatTime(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.readyTime)));
-            clockSub.setForeground(Color.BLACK);
-        } else if(data.isPause()) {
-            clockSub.setText(formatTime(data.getRemainingPauseTime()));
-            clockSub.setForeground(Color.BLACK);
-        } else if( (data.gameState == GameControlData.STATE_PLAYING && data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
-                && (timeKickOffBlocked > -KICKOFF_BLOCKED_HIGHLIGHT_SECONDS) ) {
-            clockSub.setText(formatTime(Math.max(0, timeKickOffBlocked)));
-            clockSub.setForeground(timeKickOffBlocked <= 0
-                    && clockSub.getForeground() != COLOR_HIGHLIGHT ? COLOR_HIGHLIGHT : Color.BLACK);
+        
+        Integer secondaryTime = data.getSecondaryTime(KICKOFF_BLOCKED_HIGHLIGHT_SECONDS - 1);
+        if(secondaryTime != null) {
+            if(data.gameState == GameControlData.STATE_PLAYING) {
+                clockSub.setText(formatTime(Math.max(0, secondaryTime)));
+                clockSub.setForeground(secondaryTime <= 0
+                        && clockSub.getForeground() != COLOR_HIGHLIGHT ? COLOR_HIGHLIGHT : Color.BLACK);
+            } else {
+                clockSub.setText(formatTime(secondaryTime));
+                clockSub.setForeground(Color.BLACK);
+            }
         } else {
             clockSub.setText("");
             clockSub.setForeground(Color.BLACK);
         }
+        
         ImageIcon tmp;
         if(ActionBoard.clock.isClockRunning(data)) {
             tmp = clockImgPause;

@@ -194,32 +194,21 @@ public class AdvancedData extends GameControlData implements Cloneable
     }
     
     /**
-     * Checks whether there currently is a pause in the game, either halftime 
-     * or the pause before the penalty shoot-out.
-     * @return Is there a pause?
-     */
-    public boolean isPause()
-    {
-        return secGameState == GameControlData.STATE2_NORMAL
-                && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
-                    || gameState == STATE_FINISHED && firstHalf == C_TRUE)
-                || Rules.league.pausePenaltyShootOutTime != 0 && playoff && team[0].score == team[1].score
-                    && (gameState == STATE_INITIAL && secGameState == STATE2_PENALTYSHOOT && !timeOutActive[0] && !timeOutActive[1]
-                    || gameState == STATE_FINISHED && firstHalf != C_TRUE);
-    }
-    
-    /**
      * The method returns the remaining pause time.
-     * Note that it should only be called if there is a pause.
-     * @return The remaining number of seconds of the game pause.
+     * @return The remaining number of seconds of the game pause or null if there currently is no pause.
      */
-    public int getRemainingPauseTime()
+    public Integer getRemainingPauseTime()
     {
-        if(gameState == STATE_INITIAL && secGameState == STATE2_NORMAL && firstHalf != C_TRUE
-           || gameState == STATE_FINISHED && secGameState == STATE2_NORMAL && firstHalf == C_TRUE) {
+        if(secGameState == GameControlData.STATE2_NORMAL
+                && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
+                || gameState == STATE_FINISHED && firstHalf == C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pauseTime);
-        } else {
+        } else if(Rules.league.pausePenaltyShootOutTime != 0 && playoff && team[0].score == team[1].score
+                && (gameState == STATE_INITIAL && secGameState == STATE2_PENALTYSHOOT && !timeOutActive[0] && !timeOutActive[1]
+                || gameState == STATE_FINISHED && firstHalf != C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pausePenaltyShootOutTime);
+        } else {
+            return null;
         }
     }
     
@@ -262,5 +251,28 @@ public class AdvancedData extends GameControlData implements Cloneable
         return team[side].player[number].penalty == PlayerInfo.PENALTY_MANUAL ? 0
                 : gameState == STATE_READY && whenPenalized[side][number] != 0 ? Rules.league.readyTime - getSecondsSince(whenCurrentGameStateBegan)
                 : Math.max(0, getRemainingSeconds(whenPenalized[side][number], Rules.league.penaltyStandardTime));
+    }
+    
+    /**
+     * Determines the secondary time. Although this is a GUI feature, the secondary time
+     * will also be encoded in the network packet.
+     * @param timeKickOffBlockedOvertime In case the kickOffBlocked time is delivered, this
+     *                                   parameter specified how long negative values will
+     *                                   be returned before the time is switched off.
+     * @return The secondary time in seconds or null if there currently is none.
+     */
+    public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
+    {
+        int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
+        if(gameState == STATE_INITIAL && (timeOutActive[0] || timeOutActive[1])) {
+            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
+        } else if(gameState == STATE_READY) {
+            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
+        } else if(gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
+                && timeKickOffBlocked >= -timeKickOffBlockedOvertime) {
+            return timeKickOffBlocked;
+        } else {
+            return getRemainingPauseTime();
+        }
     }
 }
