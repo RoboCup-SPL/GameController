@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 import javax.swing.*;
 
 
@@ -38,6 +39,19 @@ public class Main
     /** Relative directory of where logs are stored */
     private final static String LOG_DIRECTORY = "logs";
     
+    private static Pattern IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
+
+    private static final String HELP_TEMPLATE = "Usage: java -jar GameController.jar {options}"
+    + "\n  (-h | --help)                   display help"
+    + "\n  (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)"
+    + "\n  (-l | --league) %s%sselect league (default is spl)\n";
+    private static final String COMMAND_HELP = "--help";
+    private static final String COMMAND_HELP_SHORT = "-h";
+    private static final String DEFAULT_BROADCAST = "255.255.255.255";
+    private static final String COMMAND_BROADCAST = "--broadcast";
+    private static final String COMMAND_BROADCAST_SHORT = "-b";
+    private static final String COMMAND_LEAGUE = "--league";
+    private static final String COMMAND_LEAGUE_SHORT = "-l";
     
     /**
      * The programm starts here.
@@ -46,6 +60,40 @@ public class Main
      */
     public static void main(String[] args)
     {
+        //commands
+        String outBroadcastAddress = DEFAULT_BROADCAST;
+        parsing:
+        for(int i=0; i<args.length; i++) {
+            if( (args.length > i+1)
+                    && ( (args[i].equalsIgnoreCase(COMMAND_BROADCAST_SHORT))
+                    || (args[i].equalsIgnoreCase(COMMAND_BROADCAST)) )
+                    && IPV4_PATTERN.matcher(args[++i]).matches() ) {
+                outBroadcastAddress = args[i];
+                continue parsing;
+            } else if( (args.length > i+1)
+                    && ( (args[i].equalsIgnoreCase(COMMAND_LEAGUE_SHORT))
+                    || (args[i].equalsIgnoreCase(COMMAND_LEAGUE)) ) ) {
+                i++;
+                for(int j=0; j < Rules.LEAGUES.length; j++) {
+                    if(Rules.LEAGUES[j].leagueDirectory.equals(args[i])) {
+                        Rules.league = Rules.LEAGUES[j];
+                        continue parsing;
+                    }
+                }
+            }
+            String leagues = "";
+            for(Rules rules : Rules.LEAGUES) {
+                leagues += (leagues.equals("") ? "" : " | ") + rules.leagueDirectory;
+            }
+            if(leagues.contains("|")) {
+                leagues = "(" + leagues + ")";
+            }
+            System.out.printf(HELP_TEMPLATE, leagues, leagues.length() < 17
+                              ? "                ".substring(leagues.length())
+                              : "\n                                  ");
+            System.exit(0);
+        }
+        
         //application-lock
         final ApplicationLock applicationLock = new ApplicationLock("GameController");
         try {
@@ -80,7 +128,7 @@ public class Main
 
         try {
             //sender
-            Sender.initialize(input.outBroadcastAddress);
+            Sender.initialize(outBroadcastAddress);
             Sender sender = Sender.getInstance();
             sender.send(data);
             sender.start();
@@ -112,7 +160,7 @@ public class Main
         }
         Log.toFile("League = "+Rules.league.leagueName);
         Log.toFile("Play-off = "+data.playoff);
-        Log.toFile("Using broadcast address " + input.outBroadcastAddress);
+        Log.toFile("Using broadcast address " + outBroadcastAddress);
 
         //ui
         ActionBoard.init();

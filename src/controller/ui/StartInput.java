@@ -13,7 +13,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
-import java.util.regex.Pattern;
 import javax.swing.*;
 
 
@@ -25,14 +24,6 @@ import javax.swing.*;
 public class StartInput extends JFrame implements Serializable
 {
     private static final long serialVersionUID = 1L;
-    private static Pattern IPV4_PATTERN;
-
-    /**
-     * This is used to check if the broadcast ip is legal.
-     */
-    static {
-        IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
-    }
 
     /**
      * Some constants defining this GUI`s appearance as their names say.
@@ -48,7 +39,7 @@ public class StartInput extends JFrame implements Serializable
     private static final int OPTIONS_HEIGHT = 22;
     private static final int START_HEIGHT = 30;
     /** This is not what the name says ;) */
-    private static final int FULLSCREEN_WIDTH = 120;
+    private static final int FULLSCREEN_WIDTH = 160;
     private static final String ICONS_PATH = "config/icons/";
     private static final String[] BACKGROUND_SIDE = {"robot_left_blue.png",
                                                         "robot_right_red.png"};
@@ -57,17 +48,6 @@ public class StartInput extends JFrame implements Serializable
     private static final String FULLSCREEN_LABEL = "Fullscreen";
     private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
-    private static final String HELP = "Usage: java -jar GameController.jar <options>"
-            + "\n  [-h | --help]                   display help"
-            + "\n  [-b | --broadcast] <address>    changes the broadcast ip to the given one"
-            + "\n  [-l | --league] <league-dir>    given league is preselected";
-    private static final String COMMAND_HELP = "--help";
-    private static final String COMMAND_HELP_SHORT = "-h";
-    private static final String DEFAULT_BROADCAST = "255.255.255.255";
-    private static final String COMMAND_BROADCAST = "--broadcast";
-    private static final String COMMAND_BROADCAST_SHORT = "-b";
-    private static final String COMMAND_LEAGUE = "--league";
-    private static final String COMMAND_LEAGUE_SHORT = "-l";
     
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
@@ -88,7 +68,6 @@ public class StartInput extends JFrame implements Serializable
     public boolean outFulltime;
     public boolean outFullscreen;
     public boolean outAutoColorChange;
-    public String outBroadcastAddress;
     
     /** All the components of this GUI. */
     private ImagePanel[] teamContainer = new ImagePanel[2];
@@ -114,36 +93,7 @@ public class StartInput extends JFrame implements Serializable
     public StartInput(final String[] args)
     {
         super(WINDOW_TITLE);
-        
-        //commands
-        if( (args.length > 0)
-                && ( (args[0].equalsIgnoreCase(COMMAND_HELP_SHORT))
-                  || (args[0].equalsIgnoreCase(COMMAND_HELP)) ) ) {
-            System.out.println(HELP);
-            System.exit(0);
-        }
-        outBroadcastAddress = DEFAULT_BROADCAST;
-        for(int i=0; i<args.length; i++) {
-            if( (args.length > i+1)
-                    && ( (args[i].equalsIgnoreCase(COMMAND_BROADCAST_SHORT))
-                      || (args[i].equalsIgnoreCase(COMMAND_BROADCAST)) )
-                    && IPV4_PATTERN.matcher(args[++i]).matches() ) {
-                outBroadcastAddress = args[i];
-            }
-            if( (args.length > i+1)
-                    && ( (args[i].equalsIgnoreCase(COMMAND_LEAGUE_SHORT))
-                      || (args[i].equalsIgnoreCase(COMMAND_LEAGUE)) ) ) {
-                i++;
-                for(int j=0; j < Rules.LEAGUES.length; j++) {
-                    if(Rules.LEAGUES[j].leagueDirectory.equals(args[i])) {
-                        Rules.league = Rules.LEAGUES[j];
-                        break;
-                    }
-                }
-            }
-        }
-        
-        //layout
+
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         Dimension desktop = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((desktop.width-WINDOW_WIDTH)/2, (desktop.height-WINDOW_HEIGHT)/2);
@@ -205,7 +155,7 @@ public class StartInput extends JFrame implements Serializable
 
         optionsLeft = new JPanel();
         optionsLeft.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
-        optionsLeft.setLayout(new BoxLayout(optionsLeft, BoxLayout.PAGE_AXIS));
+        optionsLeft.setLayout(new FlowLayout(FlowLayout.CENTER));
         add(optionsLeft);
 
         JPanel fullscreenPanel = new JPanel();
