@@ -74,10 +74,10 @@ public class GUI extends JFrame implements GCGUI
     private static final String CLOCK_PLAY = "play.png";
     private static final String FIRST_HALF = "First Half";
     private static final String SECOND_HALF = "Second Half";
-    private static final String FIRST_HALF_SHORT = "1.Half";
-    private static final String SECOND_HALF_SHORT = "2.Half";
-    private static final String FIRST_HALF_OVERTIME = "1.Overtime";
-    private static final String SECOND_HALF_OVERTIME = "2.Overtime";
+    private static final String FIRST_HALF_SHORT = "1st Half";
+    private static final String SECOND_HALF_SHORT = "2nd Half";
+    private static final String FIRST_HALF_OVERTIME = "1st Extra";
+    private static final String SECOND_HALF_OVERTIME = "2nd Extra";
     private static final String PENALTY_SHOOT = "Penalty Shots";
     private static final String PENALTY_SHOOT_SHORT = "Penalty";
     private static final String PEN_PUSHING = "Pushing";
