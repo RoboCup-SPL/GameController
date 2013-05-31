@@ -44,12 +44,12 @@ public class TimeOut extends GCAction
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.kickOffTeam = data.team[side].teamColor == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
             }
-            Log.state(data, "TimeOut by "+Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.setNextMessage("TimeOut by "+Rules.league.teamColorName[data.team[side].teamColor]);
             data.gameState = -1; // something impossible to force execution of next call
             ActionBoard.initial.perform(data);
         } else {
             data.timeOutActive[side] = false;
-            Log.state(data, "TimeOut by "+Rules.league.teamColorName[data.team[side].teamColor]+" ended");
+            Log.setNextMessage("TimeOut by "+Rules.league.teamColorName[data.team[side].teamColor]+" ended");
             ActionBoard.ready.perform(data);
         }
     }

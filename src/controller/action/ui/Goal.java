@@ -50,10 +50,10 @@ public class Goal extends GCAction
         if(set == 1) {
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.kickOffTeam = data.team[side].teamColor == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
-                Log.state(data, "Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
+                Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
                 ActionBoard.ready.perform(data);
             } else {
-                Log.state(data, "Goal for Team "+Teams.getNames(false)[data.team[side == 0 ? 1 : 0].teamNumber]);
+                Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side == 0 ? 1 : 0].teamNumber]);
                 ActionBoard.finish.perform(data);
             }
         } else {

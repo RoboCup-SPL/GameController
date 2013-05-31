@@ -36,7 +36,8 @@ public class Log
     private String errorPath = "error.txt";
     /** The timeline. */
     private LinkedList<AdvancedData> states = new LinkedList<AdvancedData>();
-    
+    /** If != null, the next log entry will use this message. */ 
+    private String message = null;
     
     /**
      * Creates a new Log.
@@ -78,6 +79,18 @@ public class Log
     }
     
     /**
+     * Specify the message that will be used for the next log entry. It will
+     * replace the one that is specified during that log entry. This allows
+     * to replace rather generic messages by more specific ones if an
+     * action calls another action to perform its task.
+     * @param message The message that will be used for the next log entry.
+     */
+    public static void setNextMessage(String message)
+    {
+        instance.message = message;
+    }
+    
+    /**
      * Puts a copy of the given data into the timeline, attaching the message
      * to it and writing it to the file using toFile method.
      * This should be used at the very end of all actions that are meant to be
@@ -90,7 +103,8 @@ public class Log
     public static void state(AdvancedData data, String message)
     {
         AdvancedData state = (AdvancedData) data.clone();
-        state.message = message;
+        state.message = instance.message == null ? message : instance.message;
+        instance.message = null;
         instance.states.add(state);
         toFile(message);
     }
