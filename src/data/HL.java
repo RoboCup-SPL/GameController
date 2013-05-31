@@ -19,9 +19,9 @@ public class HL extends Rules
         /** How many robots are in a team. */
         teamSize = 3;
         /** The Java Colors the left and the right team starts with. */
-        teamColor = new Color[] {Color.BLUE, Color.RED};
+        teamColor = new Color[] {new Color(0, 192, 192), Color.MAGENTA};
         /** The name of the colors. */
-        teamColorName = new String[] {"Blue", "Red"};
+        teamColorName = new String[] {"Cyan", "Magenta"};
         /** If the colors change automatically. */
         colorChangeAuto = false;
         /** If the colors may be changed manually. */
