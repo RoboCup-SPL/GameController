@@ -37,8 +37,9 @@ public class GUI extends JFrame implements KeyListener
     
     /** All the components of this GUI. */
     private ImagePanel background;
-    private JTextArea testDisplayLeft;
-    private JTextArea testDisplayRight;
+    private JTextArea testDisplayMain;
+    private JTextArea testDisplayRobotsLeft;
+    private JTextArea testDisplayRobotsRight;
     
     /** If a key is currently pressed. */
     private boolean pressing = false;
@@ -57,20 +58,23 @@ public class GUI extends JFrame implements KeyListener
         devices[devices.length-1].setFullScreenWindow(this);
         
         background = new ImagePanel((new ImageIcon(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND)).getImage(), true);
-        testDisplayLeft = new JTextArea();
-        testDisplayRight = new JTextArea();
+        testDisplayMain = new JTextArea();
+        testDisplayRobotsLeft = new JTextArea();
+        testDisplayRobotsRight = new JTextArea();
         Font testDisplayFont = new Font(TEST_FONT, Font.PLAIN, 14);
-        testDisplayLeft.setFont(testDisplayFont);
-        testDisplayRight.setFont(testDisplayFont);
+        testDisplayMain.setFont(testDisplayFont);
+        testDisplayRobotsLeft.setFont(testDisplayFont);
+        testDisplayRobotsRight.setFont(testDisplayFont);
         
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
         layout.add(0, 0, 1, 1, background);
-        layout.add(0.4, 0.2, 0.23, 0.7, testDisplayLeft);
-        layout.add(0.65, 0.2, 0.23, 0.7, testDisplayRight);
+        layout.add(0.2, 0.3, 0.2, 0.6, testDisplayMain);
+        layout.add(0.425, 0.2, 0.2, 0.7, testDisplayRobotsLeft);
+        layout.add(0.65, 0.2, 0.2, 0.7, testDisplayRobotsRight);
         
-        if(IS_OSX) {
+        if(true) {
             devices[devices.length-1].setFullScreenWindow(null);
             setSize(devices[devices.length-1].getDisplayMode().getWidth(), devices[devices.length-1].getDisplayMode().getHeight());
         }
@@ -93,17 +97,21 @@ public class GUI extends JFrame implements KeyListener
             for(int i=0; i<2; i++) {
                 disp += data.team[i];
             }
-            testDisplayLeft.setText(disp);
+            testDisplayMain.setText(disp);
             disp = "";
-            for(int i=0; i<2; i++) {
-                for(int j=0; j<data.team[i].player.length; j++) {
-                    disp += data.team[i].player[j];
-                }
+            for(int j=0; j<data.team[0].player.length; j++) {
+                disp += data.team[0].player[j];
             }
-            testDisplayRight.setText(disp);
+            testDisplayRobotsLeft.setText(disp);
+            disp = "";
+            for(int j=0; j<data.team[1].player.length; j++) {
+                disp += data.team[1].player[j];
+            }
+            testDisplayRobotsRight.setText(disp);
         } else {
-            testDisplayLeft.setText("");
-            testDisplayRight.setText("");
+            testDisplayMain.setText("");
+            testDisplayRobotsLeft.setText("");
+            testDisplayRobotsRight.setText("");
         }
     }
 
@@ -122,10 +130,11 @@ public class GUI extends JFrame implements KeyListener
                     pressing = true;
                     testmode = !testmode;
                     if(testmode) {
-                        testDisplayLeft.setText("waiting for package...");
+                        testDisplayMain.setText("waiting for package...");
                     } else {
-                        testDisplayLeft.setText("");
-                        testDisplayRight.setText("");
+                        testDisplayMain.setText("");
+                        testDisplayRobotsLeft.setText("");
+                        testDisplayRobotsRight.setText("");
                     }
                     break;
             }

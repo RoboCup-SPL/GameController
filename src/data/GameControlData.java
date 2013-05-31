@@ -168,9 +168,9 @@ public class GameControlData implements Serializable
         }
         out += "        kickOffTeam: "+temp+"\n";
         switch(secGameState) {
-            case STATE2_NORMAL:       temp = "blue"; break;
-            case STATE2_PENALTYSHOOT: temp = "red";  break;
-            case STATE2_OVERTIME:     temp = "red";  break;
+            case STATE2_NORMAL:       temp = "normal"; break;
+            case STATE2_PENALTYSHOOT: temp = "penaltyshoot";  break;
+            case STATE2_OVERTIME:     temp = "overtime";  break;
             default: temp = "undefinied("+secGameState+")";
         }
         out += "       secGameState: "+temp+"\n";
