@@ -112,6 +112,8 @@ public class Log
     /**
      * Changes the data used in all actions via the EventHandler to a data from
      * the timeline. So this is the undo function.
+     * If a game state change is undone, the time when it was left is restored.
+     * Thereby, there whole remaining log is moved into the new timeframe.
      * 
      * @param states    How far you want to go back, how many states.
      * 
@@ -122,8 +124,19 @@ public class Log
         if(states >= instance.states.size()) {
             states = instance.states.size()-1;
         }
+        
+        long laterTimestamp = instance.states.getLast().whenCurrentGameStateBegan;
+        long earlierTimestamp = 0;
+        long timeInCurrentState = instance.states.getLast().getTime() - laterTimestamp;
         for(int i=0; i<states; i++) {
+            earlierTimestamp = instance.states.getLast().whenCurrentGameStateBegan;
             instance.states.removeLast();
+        }
+        if(laterTimestamp != instance.states.getLast().whenCurrentGameStateBegan) {
+            long timeOffset = laterTimestamp - earlierTimestamp + timeInCurrentState;
+            for(AdvancedData data : instance.states) {
+                data.whenCurrentGameStateBegan += timeOffset;
+            }
         }
         AdvancedData state = (AdvancedData) instance.states.getLast().clone();
         EventHandler.getInstance().data = state;
