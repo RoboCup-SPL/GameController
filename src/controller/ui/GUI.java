@@ -1,11 +1,10 @@
 package controller.ui;
 
+import common.Log;
 import common.TotalScaleLayout;
 import controller.EventHandler;
-import common.Log;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
-import controller.action.ui.penalty.Pushing;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import data.*;
@@ -49,7 +48,6 @@ public class GUI extends JFrame implements GCGUI
                                                         "robot_right_red.png"}};
     private static final String BACKGROUND_MID = "field.png";
     private static final String BACKGROUND_CLOCK = "time_ground.png";
-    private static final String COLOR_CHANGE = "Change Colors";
     private static final String KICKOFF = "Kickoff";
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PUSHES = "Pushes";
@@ -91,6 +89,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_MANIPULATION = "Ball Manipulation";
     private static final String PEN_DEFENSE = "Illegal Defense";
     private static final String PEN_ATTACK = "Illegal Attack";
+    private static final String PEN_SERVICE = "Request for Service";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
@@ -329,12 +328,13 @@ public class GUI extends JFrame implements GCGUI
             pen[6] = new JToggleButton(PEN_HANDS);
             pen[7] = new JToggleButton(PEN_PICKUP);
         } else if(Rules.league instanceof HL) {
-            pen = new JToggleButton[5];
+            pen = new JToggleButton[6];
             pen[0] = new JToggleButton(PEN_MANIPULATION);
             pen[1] = new JToggleButton(PEN_PUSHING);
             pen[2] = new JToggleButton(PEN_ATTACK);
             pen[3] = new JToggleButton(PEN_DEFENSE);
             pen[4] = new JToggleButton(PEN_PICKUP);
+            pen[5] = new JToggleButton(PEN_SERVICE);
         }
         
         //--bottom--
@@ -477,6 +477,7 @@ public class GUI extends JFrame implements GCGUI
             pen[2].addActionListener(ActionBoard.attack);
             pen[3].addActionListener(ActionBoard.defense);
             pen[4].addActionListener(ActionBoard.pickUpHL);
+            pen[5].addActionListener(ActionBoard.service);
         }
         for(int i=0; i<undo.length; i++) {
             undo[i].addActionListener(ActionBoard.undo[i+1]);
@@ -944,6 +945,7 @@ public class GUI extends JFrame implements GCGUI
         pen[2].setEnabled(ActionBoard.attack.isLegal(data));
         pen[3].setEnabled(ActionBoard.defense.isLegal(data));
         pen[4].setEnabled(ActionBoard.pickUpHL.isLegal(data));
+        pen[5].setEnabled(ActionBoard.service.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
         pen[0].setSelected(hightlightEvent == ActionBoard.ballManipulation);
@@ -951,6 +953,7 @@ public class GUI extends JFrame implements GCGUI
         pen[2].setSelected(hightlightEvent == ActionBoard.attack);
         pen[3].setSelected(hightlightEvent == ActionBoard.defense);
         pen[4].setSelected(hightlightEvent == ActionBoard.pickUpHL);
+        pen[5].setSelected(hightlightEvent == ActionBoard.service);
     }
     
     /**
