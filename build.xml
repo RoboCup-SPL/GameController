@@ -19,27 +19,27 @@
     <mkdir dir="${jar.dir}"/>
     <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}">
       <manifest>
-		<attribute name="Main-Class" value="controller.Main"/>
-		<attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
+        <attribute name="Main-Class" value="controller.Main"/>
+        <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
       </manifest>
     </jar>
-	<jar destfile="${jar.dir}/GameStateVisualizer.jar" basedir="${classes.dir}">
+    <jar destfile="${jar.dir}/GameStateVisualizer.jar" basedir="${classes.dir}">
       <manifest>
-		<attribute name="Main-Class" value="visualizer.Main"/>
-		<attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
+        <attribute name="Main-Class" value="visualizer.Main"/>
+        <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
       </manifest>
     </jar>
-    
+
     <copy todir="${jar.dir}" overwrite="true">
       <fileset dir="${resources.dir}" />
     </copy>
   </target>
   
   <target name="run" depends="jar">
-	<java jar="${jar.dir}/GameController.jar" fork="true"/>
+    <java jar="${jar.dir}/GameController.jar" fork="true"/>
   </target>
-  
+
   <target name="run_visualizer" depends="jar">
-	<java jar="${jar.dir}/GameStateVisualizer.jar" fork="true"/>
+    <java jar="${jar.dir}/GameStateVisualizer.jar" fork="true"/>
   </target>
 </project>
