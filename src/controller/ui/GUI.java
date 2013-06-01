@@ -23,13 +23,58 @@ import javax.swing.*;
  */
 public class GUI extends JFrame implements GCGUI
 {
+    private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
+    private static final Insets insets = IS_OSX ? new Insets (2, -30, 2, -30) : null;
+    private static final String BUTTON_MASK = IS_OSX
+            ? "<html><div style=\"padding: 0px 12px\"><center>%s</center></div></html>"
+            : "<html><center>%s</center></html>";
+    
+    /** Fix button centering for OSX. */
+    private class Button extends JButton
+    {
+        public Button()
+        {
+            setMargin(insets);
+        }
+        
+        public Button(String text)
+        {
+            setMargin(insets);
+            setText(text);
+        }
+        
+        public void setText(String text)
+        {
+            super.setText(String.format(BUTTON_MASK, text));
+        }
+    }
+    
+    /** Fix button centering for OSX. */
+    private class ToggleButton extends JToggleButton
+    {
+        public ToggleButton()
+        {
+            setMargin(insets);
+        }
+        
+        public ToggleButton(String text)
+        {
+            setMargin(insets);
+            setText(text);
+        }
+        
+        public void setText(String text)
+        {
+            super.setText(String.format(BUTTON_MASK, text));
+        }
+    }
+    
     private static final long serialVersionUID = 1L;
     
     /**
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
      */
-    private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
     private static final int STANDARD_FONT_SIZE = 18;
@@ -214,8 +259,8 @@ public class GUI extends JFrame implements GCGUI
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
             name[i].setHorizontalAlignment(JLabel.CENTER);
             name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
-            goalInc[i] = new JButton("+");
-            goalDec[i] = new JButton("-");
+            goalInc[i] = new Button("+");
+            goalDec[i] = new Button("-");
             kickOff[i] = new JRadioButton(KICKOFF);
             kickOff[i].setOpaque(false);
             kickOff[i].setHorizontalAlignment(JLabel.CENTER);
@@ -236,7 +281,7 @@ public class GUI extends JFrame implements GCGUI
             robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, 10));
             robots[i].setOpaque(false);
             for(int j=0; j<robot[i].length; j++) {
-                robot[i][j] = new JButton();
+                robot[i][j] = new Button();
                 robotLabel[i][j] = new JLabel();
                 robotLabel[i][j].setHorizontalAlignment(JLabel.CENTER);
                 lanIcon[i][j] = lanUnknown;
@@ -255,13 +300,13 @@ public class GUI extends JFrame implements GCGUI
         timeOut = new JToggleButton[2];
         stuck = new JButton[2];
         for(int i=0; i<2; i++) {
-            timeOut[i] = new JToggleButton(TIMEOUT);
-            stuck[i] = new JButton();
+            timeOut[i] = new ToggleButton(TIMEOUT);
+            stuck[i] = new Button();
         }
         if(Rules.league instanceof SPL) {
             out = new JButton[2];
             for(int i=0; i<2; i++) {
-                out[i] = new JButton(OUT);
+                out[i] = new Button(OUT);
             }
         }
         
@@ -281,21 +326,21 @@ public class GUI extends JFrame implements GCGUI
         clockSub = new JLabel("0:00");
         clockSub.setHorizontalAlignment(JLabel.CENTER);
         if(!Rules.league.overtime) {
-            firstHalf = new JToggleButton(FIRST_HALF);
+            firstHalf = new ToggleButton(FIRST_HALF);
             firstHalf.setSelected(true);
-            secondHalf = new JToggleButton(SECOND_HALF);
-            penaltyShoot = new JToggleButton(PENALTY_SHOOT);
+            secondHalf = new ToggleButton(SECOND_HALF);
+            penaltyShoot = new ToggleButton(PENALTY_SHOOT);
             halfGroup = new ButtonGroup();
             halfGroup.add(firstHalf);
             halfGroup.add(secondHalf);
             halfGroup.add(penaltyShoot);
         } else {
-            firstHalf = new JToggleButton(FIRST_HALF_SHORT);
+            firstHalf = new ToggleButton(FIRST_HALF_SHORT);
             firstHalf.setSelected(true);
-            secondHalf = new JToggleButton(SECOND_HALF_SHORT);
-            firstHalfOvertime = new JToggleButton(FIRST_HALF_OVERTIME);
-            secondHalfOvertime = new JToggleButton(SECOND_HALF_OVERTIME);
-            penaltyShoot = new JToggleButton(PENALTY_SHOOT_SHORT);
+            secondHalf = new ToggleButton(SECOND_HALF_SHORT);
+            firstHalfOvertime = new ToggleButton(FIRST_HALF_OVERTIME);
+            secondHalfOvertime = new ToggleButton(SECOND_HALF_OVERTIME);
+            penaltyShoot = new ToggleButton(PENALTY_SHOOT_SHORT);
             halfGroup = new ButtonGroup();
             halfGroup.add(firstHalf);
             halfGroup.add(secondHalf);
@@ -304,12 +349,12 @@ public class GUI extends JFrame implements GCGUI
             halfGroup.add(penaltyShoot);
         }
         //  state
-        initial = new JToggleButton(STATE_INITIAL);
+        initial = new ToggleButton(STATE_INITIAL);
         initial.setSelected(true);
-        ready = new JToggleButton(STATE_READY);
-        set = new JToggleButton(STATE_SET);
-        play = new JToggleButton(STATE_PLAY);
-        finish = new JToggleButton(STATE_FINISH);
+        ready = new ToggleButton(STATE_READY);
+        set = new ToggleButton(STATE_SET);
+        play = new ToggleButton(STATE_PLAY);
+        finish = new ToggleButton(STATE_FINISH);
         stateGroup = new ButtonGroup();
         stateGroup.add(initial);
         stateGroup.add(ready);
@@ -319,22 +364,22 @@ public class GUI extends JFrame implements GCGUI
         //  penalties
         if(Rules.league instanceof SPL) {
             pen = new JToggleButton[8];
-            pen[0] = new JToggleButton(PEN_PUSHING);
-            pen[1] = new JToggleButton(PEN_LEAVING);
-            pen[2] = new JToggleButton(PEN_FALLEN);
-            pen[3] = new JToggleButton(PEN_INACTIVE);
-            pen[4] = new JToggleButton(PEN_DEFENDER);
-            pen[5] = new JToggleButton(PEN_HOLDING);
-            pen[6] = new JToggleButton(PEN_HANDS);
-            pen[7] = new JToggleButton(PEN_PICKUP);
+            pen[0] = new ToggleButton(PEN_PUSHING);
+            pen[1] = new ToggleButton(PEN_LEAVING);
+            pen[2] = new ToggleButton(PEN_FALLEN);
+            pen[3] = new ToggleButton(PEN_INACTIVE);
+            pen[4] = new ToggleButton(PEN_DEFENDER);
+            pen[5] = new ToggleButton(PEN_HOLDING);
+            pen[6] = new ToggleButton(PEN_HANDS);
+            pen[7] = new ToggleButton(PEN_PICKUP);
         } else if(Rules.league instanceof HL) {
             pen = new JToggleButton[6];
-            pen[0] = new JToggleButton(PEN_MANIPULATION);
-            pen[1] = new JToggleButton(PEN_PUSHING);
-            pen[2] = new JToggleButton(PEN_ATTACK);
-            pen[3] = new JToggleButton(PEN_DEFENSE);
-            pen[4] = new JToggleButton(PEN_PICKUP);
-            pen[5] = new JToggleButton(PEN_SERVICE);
+            pen[0] = new ToggleButton(PEN_MANIPULATION);
+            pen[1] = new ToggleButton(PEN_PUSHING);
+            pen[2] = new ToggleButton(PEN_ATTACK);
+            pen[3] = new ToggleButton(PEN_DEFENSE);
+            pen[4] = new ToggleButton(PEN_PICKUP);
+            pen[5] = new ToggleButton(PEN_SERVICE);
         }
         
         //--bottom--
@@ -344,11 +389,11 @@ public class GUI extends JFrame implements GCGUI
         log.setLayout(new GridLayout(1, ActionBoard.MAX_NUM_UNDOS_AT_ONCE-1, 10, 0));
         undo = new JToggleButton[ActionBoard.MAX_NUM_UNDOS_AT_ONCE-1];
         for(int i=undo.length-1; i>=0; i--) {
-            undo[i] = new JToggleButton();
+            undo[i] = new ToggleButton();
             undo[i].setVisible(false);
             log.add(undo[i]);
         }
-        cancelUndo = new JButton(CANCEL);
+        cancelUndo = new Button(CANCEL);
         cancelUndo.setVisible(false);
       
         //--layout--
@@ -873,20 +918,14 @@ public class GUI extends JFrame implements GCGUI
                 if(data.kickOffTeam == data.team[i].teamColor)
                 {
                     stuck[i].setEnabled(true);
-                    stuck[i].setText("<html><center>"
-                        +"<font color=#000000>"
-                        +KICKOFF_GOAL);
+                    stuck[i].setText("<font color=#000000>"+KICKOFF_GOAL);
                 } else {
                     stuck[i].setEnabled(false);
-                    stuck[i].setText("<html><center>"
-                        +"<font color=#808080>"
-                        +STUCK);
+                    stuck[i].setText("<font color=#808080>"+STUCK);
                 }
             } else {
                 stuck[i].setEnabled(ActionBoard.stuck[i].isLegal(data));
-                stuck[i].setText("<html><center>"
-                        +(ActionBoard.stuck[i].isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")
-                        +STUCK);
+                stuck[i].setText((ActionBoard.stuck[i].isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")+STUCK);
             }
         }
     }
