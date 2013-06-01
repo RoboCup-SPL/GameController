@@ -10,7 +10,8 @@
     <delete dir="${build.dir}" quiet="true" />
   </target>
 
-  <target name="compile" depends="clean">
+  <target name="compile">
+    <delete dir="${classes.dir}" quiet="true" />
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
   </target>
