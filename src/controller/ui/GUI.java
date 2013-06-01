@@ -256,11 +256,15 @@ public class GUI extends JFrame implements GCGUI
         //  team
         timeOut = new JToggleButton[2];
         stuck = new JButton[2];
-        out = new JButton[2];
         for(int i=0; i<2; i++) {
             timeOut[i] = new JToggleButton(TIMEOUT);
             stuck[i] = new JButton();
-            out[i] = new JButton(OUT);
+        }
+        if(Rules.league instanceof SPL) {
+            out = new JButton[2];
+            for(int i=0; i<2; i++) {
+                out[i] = new JButton(OUT);
+            }
         }
         
         //--mid--
@@ -369,12 +373,19 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.71, .16, .08, .04, pushes[1]);
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
-        layout.add(.01, .77, .09, .09, timeOut[0]);
-        layout.add(.9, .77, .09, .09, timeOut[1]);
-        layout.add(.11, .77, .08, .09, stuck[0]);
-        layout.add(.81, .77, .08, .09, stuck[1]);
-        layout.add(.20, .77, .09, .09, out[0]);
-        layout.add(.71, .77, .09, .09, out[1]);
+        if(Rules.league instanceof SPL) {
+            layout.add(.01, .77, .09, .09, timeOut[0]);
+            layout.add(.9, .77, .09, .09, timeOut[1]);
+            layout.add(.11, .77, .08, .09, stuck[0]);
+            layout.add(.81, .77, .08, .09, stuck[1]);
+            layout.add(.20, .77, .09, .09, out[0]);
+            layout.add(.71, .77, .09, .09, out[1]);
+        } else {
+            layout.add(.01, .77, .135, .09, timeOut[0]);
+            layout.add(.855, .77, .135, .09, timeOut[1]);
+            layout.add(.155, .77, .135, .09, stuck[0]);
+            layout.add(.71, .77, .135, .09, stuck[1]);
+        }
         layout.add(.31, .0, .08, .11, clockReset);
         layout.add(.4, .012, .2, .10, clock);
         layout.add(.4, .0, .2, .11, clockContainer);
@@ -440,7 +451,9 @@ public class GUI extends JFrame implements GCGUI
             }
             timeOut[i].addActionListener(ActionBoard.timeOut[i]);
             stuck[i].addActionListener(ActionBoard.stuck[i]);
-            out[i].addActionListener(ActionBoard.out[i]);
+            if(Rules.league instanceof SPL) {
+                out[i].addActionListener(ActionBoard.out[i]);
+            }
         }
         initial.addActionListener(ActionBoard.initial);
         ready.addActionListener(ActionBoard.ready);
@@ -614,8 +627,8 @@ public class GUI extends JFrame implements GCGUI
         updatePushes(data);
         updateTimeOut(data);
         updateGlobalStuck(data);
-        updateOut(data);
         if(Rules.league instanceof SPL) {
+            updateOut(data);
             updatePenaltiesSPL(data);
         } else if(Rules.league instanceof HL) {
             updatePenaltiesHL(data);
@@ -1004,7 +1017,9 @@ public class GUI extends JFrame implements GCGUI
             }
             timeOut[i].setFont(timeoutFont);
             stuck[i].setFont(timeoutFont);
-            out[i].setFont(standardFont);
+            if(Rules.league instanceof SPL) {
+                out[i].setFont(standardFont);
+            }
         }
         clock.setFont(timeFont);
         clockSub.setFont(timeSubFont);
