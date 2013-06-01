@@ -24,8 +24,6 @@ public class SPL extends Rules
         teamColorName = new String[] {"Blue", "Red"};
         /** If the colors change automatically. */
         colorChangeAuto = true;
-        /** If the colors may be changed manually. */
-        colorChangeManual = false;
         /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
         playOffTimeStop = true;
         /** Time in seconds one half is long. */

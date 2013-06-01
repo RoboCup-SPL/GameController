@@ -147,7 +147,6 @@ public class GUI extends JFrame implements GCGUI
     private JLabel clock;
     private JLabel clockSub;
     private ImageButton clockPause;
-    private JButton manualColorChange;
     private JToggleButton firstHalf;
     private JToggleButton secondHalf;
     private JToggleButton firstHalfOvertime;
@@ -282,9 +281,6 @@ public class GUI extends JFrame implements GCGUI
         clockPause.setBorder(null);
         clockSub = new JLabel("0:00");
         clockSub.setHorizontalAlignment(JLabel.CENTER);
-        if(Rules.league.colorChangeManual) {
-            manualColorChange = new JButton(COLOR_CHANGE);
-        }
         if(!Rules.league.overtime) {
             firstHalf = new JToggleButton(FIRST_HALF);
             firstHalf.setSelected(true);
@@ -391,9 +387,6 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.4, .0, .2, .11, clockContainer);
         layout.add(.61, .0, .08, .11, clockPause);
         layout.add(.4, .11, .2, .07, clockSub);
-        if(Rules.league.colorChangeManual) {
-            layout.add(.57, .12, .12, .06, manualColorChange);
-        }
         if(!Rules.league.overtime) {
             layout.add(.31, .19, .12, .06, firstHalf);
             layout.add(.44, .19, .12, .06, secondHalf);
@@ -462,9 +455,6 @@ public class GUI extends JFrame implements GCGUI
         finish.addActionListener(ActionBoard.finish);
         clockReset.addActionListener(ActionBoard.clockReset);
         clockPause.addActionListener(ActionBoard.clockPause);
-        if(Rules.league.colorChangeManual) {
-            manualColorChange.addActionListener(ActionBoard.manualColorChange);
-        }
         firstHalf.addActionListener(ActionBoard.firstHalf);
         secondHalf.addActionListener(ActionBoard.secondHalf);
         if(Rules.league.overtime) {
@@ -680,9 +670,6 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updateHalf(AdvancedData data)
     {
-        if(Rules.league.colorChangeManual) {
-            manualColorChange.setEnabled(ActionBoard.manualColorChange.isLegal(data));
-        }
         for(int i=0; i<2; i++) {
             name[i].setText(Teams.getNames(false)[data.team[i].teamNumber]);
         }
@@ -1023,9 +1010,6 @@ public class GUI extends JFrame implements GCGUI
         }
         clock.setFont(timeFont);
         clockSub.setFont(timeSubFont);
-        if(Rules.league.colorChangeManual) {
-            manualColorChange.setFont(timeoutFont);
-        }
         firstHalf.setFont(timeoutFont);
         secondHalf.setFont(timeoutFont);
         if(Rules.league.overtime) {

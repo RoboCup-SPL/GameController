@@ -37,7 +37,7 @@ public class FirstHalf extends GCAction
         if(data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
             data.secGameState = GameControlData.STATE2_NORMAL;
-            if(Rules.league.colorChangeAuto) {
+            if(data.colorChangeAuto) {
                 data.team[0].teamColor = GameControlData.TEAM_BLUE;
                 data.team[1].teamColor = GameControlData.TEAM_RED;
             }
@@ -82,7 +82,7 @@ public class FirstHalf extends GCAction
 
         // if necessary, swap back team colors
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT
-                && Rules.league.colorChangeAuto) {
+                && data.colorChangeAuto) {
             color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = color;

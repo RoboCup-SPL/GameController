@@ -124,6 +124,7 @@ public class Main
         for(int i=0; i<2; i++) {
             data.team[i].teamNumber = (byte)input.outTeam[i];
         }
+        data.colorChangeAuto = input.outAutoColorChange;
         data.playoff = input.outFulltime;
 
         try {

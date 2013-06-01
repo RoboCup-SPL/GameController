@@ -24,8 +24,6 @@ public class HL extends Rules
         teamColorName = new String[] {"Cyan", "Magenta"};
         /** If the colors change automatically. */
         colorChangeAuto = false;
-        /** If the colors may be changed manually. */
-        colorChangeManual = true;
         /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
         playOffTimeStop = false;
         /** Time in seconds one half is long. */

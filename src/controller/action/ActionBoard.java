@@ -8,7 +8,6 @@ import controller.action.ui.ClockReset;
 import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
 import controller.action.ui.KickOff;
-import controller.action.ui.ManualColorChange;
 import controller.action.ui.Out;
 import controller.action.ui.Quit;
 import controller.action.ui.Robot;
@@ -72,7 +71,6 @@ public class ActionBoard
     public static Out[] out = new Out[2];
     public static ClockReset clockReset;
     public static ClockPause clockPause;
-    public static ManualColorChange manualColorChange;
     public static FirstHalf firstHalf;
     public static SecondHalf secondHalf;
     public static FirstHalfOvertime firstHalfOvertime;
@@ -129,7 +127,6 @@ public class ActionBoard
         }
         clockReset = new ClockReset();
         clockPause = new ClockPause();
-        manualColorChange = new ManualColorChange();
         firstHalf = new FirstHalf();
         secondHalf = new SecondHalf();
         firstHalfOvertime = new FirstHalfOvertime();

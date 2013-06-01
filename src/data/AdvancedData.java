@@ -55,6 +55,9 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** If true, the game auto-pauses the game for full 10minutes playing. */
     public boolean playoff;
     
+    /** If true, the colors change automatically. */
+    public boolean colorChangeAuto;
+    
     /** If true, the testmode has been activated. */
     public boolean testmode = false;
 
