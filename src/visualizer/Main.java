@@ -45,6 +45,7 @@ public class Main
         
         //start
         GUI gui = new GUI();
+        new KeyboardListener(gui);
         listener = new Listener(gui);
         Thread network = new Thread(listener);
         network.start();

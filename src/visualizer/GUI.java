@@ -4,13 +4,12 @@ import common.TotalScaleLayout;
 import data.GameControlData;
 import data.Rules;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,9 +18,9 @@ import javax.swing.JTextArea;
 /**
  * @author: Michel Bartsch
  * 
- * This class displays the game-state and listens to the keyboard.
+ * This class displays the game-state
  */
-public class GUI extends JFrame implements KeyListener
+public class GUI extends JFrame
 {
     /**
      * Some constants defining this GUI`s appearance as their names say.
@@ -34,17 +33,19 @@ public class GUI extends JFrame implements KeyListener
     private static final String CONFIG_PATH = "config/";
     private static final String BACKGROUND = "background.png";
     private static final String ICONS_PATH = "config/icons/";
+    private final static String WAITING_FOR_PACKAGE = "waiting for package...";
     
     /** All the components of this GUI. */
     private ImagePanel background;
     private JTextArea testDisplayMain;
     private JTextArea testDisplayRobotsLeft;
     private JTextArea testDisplayRobotsRight;
+    private JTextArea state;
     
-    /** If a key is currently pressed. */
-    private boolean pressing = false;
     /** If testmode is on to just display whole GameControlData. */
     private boolean testmode = false;
+    /** The current data to show. */
+    private GameControlData data;
     
     /**
      * Creates a new GUI.
@@ -52,7 +53,6 @@ public class GUI extends JFrame implements KeyListener
     GUI()
     {
         super(WINDOW_TITLE);
-        addKeyListener(this);
         setUndecorated(true);
         GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
         devices[devices.length-1].setFullScreenWindow(this);
@@ -65,6 +65,11 @@ public class GUI extends JFrame implements KeyListener
         testDisplayMain.setFont(testDisplayFont);
         testDisplayRobotsLeft.setFont(testDisplayFont);
         testDisplayRobotsRight.setFont(testDisplayFont);
+        testDisplayMain.setFocusable(false);
+        testDisplayRobotsLeft.setFocusable(false);
+        testDisplayRobotsRight.setFocusable(false);
+        
+        state = new JTextArea();
         
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
@@ -73,78 +78,89 @@ public class GUI extends JFrame implements KeyListener
         layout.add(0.2, 0.3, 0.2, 0.6, testDisplayMain);
         layout.add(0.425, 0.2, 0.2, 0.7, testDisplayRobotsLeft);
         layout.add(0.65, 0.2, 0.2, 0.7, testDisplayRobotsRight);
+        layout.add(0.4, 0.7, 0.2, 0.1, state);
         
-        if(true) {
+        if(IS_OSX) {
             devices[devices.length-1].setFullScreenWindow(null);
             setSize(devices[devices.length-1].getDisplayMode().getWidth(), devices[devices.length-1].getDisplayMode().getHeight());
         }
         
         setVisible(true);
+        
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                testDisplayMain.setText(WAITING_FOR_PACKAGE);
+            }
+        } );
     }
     
     /**
-     * This is called by the Listener after receiving GameCOntrolData to show
+     * This toggles the visualizer´s testmode on and off.
+     */
+    public void toggleTestmode()
+    {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                testmode = !testmode;
+                testDisplayMain.setText(WAITING_FOR_PACKAGE);
+                testDisplayRobotsLeft.setText("");
+                testDisplayRobotsRight.setText("");
+                state.setText("");
+                //debug
+                update(new GameControlData());
+            }
+        } );
+    }
+    
+    /**
+     * This is called by the Listener after receiving GameControlData to show
      * them on the gui.
      * 
      * @param data  The GameControlData to show.
      */
-    public void update(GameControlData data)
+    public void update(GameControlData newData)
     {
-        
-        if(testmode) {
-            String disp = "";
-            disp += data;
-            for(int i=0; i<2; i++) {
-                disp += data.team[i];
-            }
-            testDisplayMain.setText(disp);
-            disp = "";
-            for(int j=0; j<data.team[0].player.length; j++) {
-                disp += data.team[0].player[j];
-            }
-            testDisplayRobotsLeft.setText(disp);
-            disp = "";
-            for(int j=0; j<data.team[1].player.length; j++) {
-                disp += data.team[1].player[j];
-            }
-            testDisplayRobotsRight.setText(disp);
-        } else {
-            testDisplayMain.setText("");
-            testDisplayRobotsLeft.setText("");
-            testDisplayRobotsRight.setText("");
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {}
-
-    @Override
-    public void keyPressed(KeyEvent e)
-    {
-        if(!pressing) {
-            switch(e.getKeyCode()) {
-                case KeyEvent.VK_F10:
-                    Main.exit();
-                    break;
-                case KeyEvent.VK_F11:
-                    pressing = true;
-                    testmode = !testmode;
-                    if(testmode) {
-                        testDisplayMain.setText("waiting for package...");
-                    } else {
-                        testDisplayMain.setText("");
-                        testDisplayRobotsLeft.setText("");
-                        testDisplayRobotsRight.setText("");
+        data = newData;
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if(testmode) {
+                    String disp = "";
+                    disp += data;
+                    for(int i=0; i<2; i++) {
+                        disp += data.team[i];
                     }
-                    break;
+                    testDisplayMain.setText(disp);
+                    disp = "";
+                    for(int j=0; j<data.team[0].player.length; j++) {
+                        disp += data.team[0].player[j];
+                    }
+                    testDisplayRobotsLeft.setText(disp);
+                    disp = "";
+                    for(int j=0; j<data.team[1].player.length; j++) {
+                        disp += data.team[1].player[j];
+                    }
+                    testDisplayRobotsRight.setText(disp);
+                    state.setText("");
+                } else {
+                    testDisplayMain.setText("");
+                    testDisplayRobotsLeft.setText("");
+                    testDisplayRobotsRight.setText("");
+                    String temp;
+                    switch(data.gameState) {
+                        case GameControlData.STATE_INITIAL:  temp = "initial"; break;
+                        case GameControlData.STATE_READY:    temp = "ready";   break;
+                        case GameControlData.STATE_SET:      temp = "set";     break;
+                        case GameControlData.STATE_PLAYING:  temp = "playing"; break;
+                        case GameControlData.STATE_FINISHED: temp = "finish";  break;
+                        default: temp = "undefinied("+data.gameState+")";
+                    }
+                    state.setText(temp);
+                }
             }
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e)
-    {
-        pressing = false;
+        } );
     }
     
     /**
