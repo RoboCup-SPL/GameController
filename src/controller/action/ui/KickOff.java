@@ -39,6 +39,9 @@ public class KickOff extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        if(data.kickOffTeam == data.team[side].teamColor) {
+            return;
+        }
         data.kickOffTeam = data.team[side].teamColor;
         if( (Rules.league.kickoffChoice)
                 && (data.secGameState == GameControlData.STATE2_NORMAL)
