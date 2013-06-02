@@ -42,9 +42,11 @@ public class Main
     private static Pattern IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
 
     private static final String HELP_TEMPLATE = "Usage: java -jar GameController.jar {options}"
-    + "\n  (-h | --help)                   display help"
-    + "\n  (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)"
-    + "\n  (-l | --league) %s%sselect league (default is spl)\n";
+            + "\n  (-h | --help)                   display help"
+            + "\n  (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)"
+            + "\n  (-l | --league) %s%sselect league (default is spl)"
+            + "\n  (-w | --window)                 select window mode (default is fullscreen)"
+            + "\n";
     private static final String COMMAND_HELP = "--help";
     private static final String COMMAND_HELP_SHORT = "-h";
     private static final String DEFAULT_BROADCAST = "255.255.255.255";
@@ -52,6 +54,8 @@ public class Main
     private static final String COMMAND_BROADCAST_SHORT = "-b";
     private static final String COMMAND_LEAGUE = "--league";
     private static final String COMMAND_LEAGUE_SHORT = "-l";
+    private static final String COMMAND_WINDOW = "--window";
+    private static final String COMMAND_WINDOW_SHORT = "-w";
     
     /**
      * The programm starts here.
@@ -62,6 +66,8 @@ public class Main
     {
         //commands
         String outBroadcastAddress = DEFAULT_BROADCAST;
+        boolean windowMode = false;
+        
         parsing:
         for(int i=0; i<args.length; i++) {
             if( (args.length > i+1)
@@ -80,6 +86,9 @@ public class Main
                         continue parsing;
                     }
                 }
+            } else if (args[i].equals(COMMAND_WINDOW_SHORT) || args[i].equals(COMMAND_WINDOW)) {
+                windowMode = true;
+                continue parsing;
             }
             String leagues = "";
             for(Rules rules : Rules.LEAGUES) {
@@ -113,7 +122,7 @@ public class Main
         }
 
         //collect the start parameters and put them into the first data.
-        StartInput input = new StartInput(args);
+        StartInput input = new StartInput(!windowMode);
         while(!input.finished) {
             try{
             Thread.sleep(100);

@@ -90,7 +90,7 @@ public class StartInput extends JFrame implements Serializable
      * @param args The parameters that the jar file was started with.
      */
     @SuppressWarnings("unchecked")
-    public StartInput(final String[] args)
+    public StartInput(boolean fullscreenMode)
     {
         super(WINDOW_TITLE);
 
@@ -167,7 +167,7 @@ public class StartInput extends JFrame implements Serializable
 
         fullscreen = new Checkbox(FULLSCREEN_LABEL);
         fullscreen.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
-        fullscreen.setState(true);
+        fullscreen.setState(fullscreenMode);
         fullscreenPanel.add(fullscreen);
         
         autoColorChange = new Checkbox(COLOR_CHANGE_LABEL);
