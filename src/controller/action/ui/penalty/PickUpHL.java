@@ -24,10 +24,15 @@ public class PickUpHL extends PickUp
     {
         if (player.penalty == PlayerInfo.PENALTY_NONE) {
             data.whenPenalized[side][number] = data.getTime();
+            player.penalty = PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE;
+            Log.state(data, "Request for Pickup to Service "+
+                    Rules.league.teamColorName[data.team[side].teamColor]
+                    + " " + (number+1));
+        } else {
+            player.penalty = PlayerInfo.PENALTY_HL_REQUEST_FOR_SEVICE;
+            Log.state(data, "Request for Service "+
+                    Rules.league.teamColorName[data.team[side].teamColor]
+                    + " " + (number+1));
         }
-        player.penalty = PlayerInfo.PENALTY_HL_REQUEST_FOR_PICKUP;
-        Log.state(data, "Request for PickUp "+
-                Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
     }
 }
