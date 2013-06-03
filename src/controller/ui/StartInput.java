@@ -1,6 +1,7 @@
 package controller.ui;
 
 import data.Rules;
+import data.SPL;
 import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
@@ -45,6 +46,8 @@ public class StartInput extends JFrame implements Serializable
                                                         "robot_right_red.png"};
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
+    private static final String FULLTIME_LABEL_HL_NO = "Normal Game";
+    private static final String FULLTIME_LABEL_HL_YES = "Knock-Out Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
     private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
@@ -213,15 +216,29 @@ public class StartInput extends JFrame implements Serializable
                     }
                     teamsOK = false;
                     autoColorChange.setState(Rules.league.colorChangeAuto);
+                    if(Rules.league instanceof SPL) {
+                        nofulltime.setText(FULLTIME_LABEL_NO);
+                        fulltime.setText(FULLTIME_LABEL_YES);
+                    } else {
+                        nofulltime.setText(FULLTIME_LABEL_HL_NO);
+                        fulltime.setText(FULLTIME_LABEL_HL_YES);
+                    }
                     startEnableing();
                 }
             }
         );
         optionsRight.add(league);
-        nofulltime = new JRadioButton(FULLTIME_LABEL_NO);
+        nofulltime = new JRadioButton();
         nofulltime.setPreferredSize(optionsDim);
-        fulltime = new JRadioButton(FULLTIME_LABEL_YES);
+        fulltime = new JRadioButton();
         fulltime.setPreferredSize(optionsDim);
+        if(Rules.league instanceof SPL) {
+            nofulltime.setText(FULLTIME_LABEL_NO);
+            fulltime.setText(FULLTIME_LABEL_YES);
+        } else {
+            nofulltime.setText(FULLTIME_LABEL_HL_NO);
+            fulltime.setText(FULLTIME_LABEL_HL_YES);
+        }
         fulltimeGroup = new ButtonGroup();
         fulltimeGroup.add(nofulltime);
         fulltimeGroup.add(fulltime);
