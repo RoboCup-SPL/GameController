@@ -827,7 +827,11 @@ public class GUI extends JFrame implements GCGUI
     {
         for(int i=0; i<2; i++) {
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
-                pushes[i].setText(PUSHES+": "+data.pushes[i]);
+                if(Rules.league.pushesToEjection == null || Rules.league.pushesToEjection.length == 0) {
+                    pushes[i].setText("");
+                } else {
+                    pushes[i].setText(PUSHES+": "+data.pushes[i]);
+                }
             } else {
                 pushes[i].setText((i == 0 && (data.gameState == GameControlData.STATE_SET
                         || data.gameState == GameControlData.STATE_PLAYING) ? SHOT : SHOTS)+": "+data.penaltyShot[i]);
