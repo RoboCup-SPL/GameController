@@ -64,7 +64,8 @@ public class FirstHalfOvertime extends GCAction
                     && (data.secGameState == GameControlData.STATE2_NORMAL)
                     && (data.gameState == GameControlData.STATE_FINISHED)
                     && (data.firstHalf  != GameControlData.C_TRUE)
-                    && (data.team[0].score == data.team[1].score) )
+                    && (data.team[0].score == data.team[1].score)
+                    && (data.team[0].score > 0) )
                 || (data.testmode);
     }
 }
