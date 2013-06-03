@@ -135,6 +135,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_DEFENSE = "Illegal Defense";
     private static final String PEN_ATTACK = "Illegal Attack";
     private static final String PEN_SERVICE = "Request for Service";
+    private static final String DROP_BALL = "Dropped Ball";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
@@ -198,6 +199,7 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton penaltyShoot;
     private ButtonGroup halfGroup;
     private JToggleButton[] pen;
+    private JButton dropBall;
     private ImagePanel bottom;
     private JPanel log;
     private JToggleButton[] undo;
@@ -298,15 +300,15 @@ public class GUI extends JFrame implements GCGUI
         }
         //  team
         timeOut = new JToggleButton[2];
-        stuck = new JButton[2];
+        out = new JButton[2];
         for(int i=0; i<2; i++) {
             timeOut[i] = new ToggleButton(TIMEOUT);
-            stuck[i] = new Button();
+            out[i] = new JButton(OUT);
         }
         if(Rules.league instanceof SPL) {
-            out = new JButton[2];
+            stuck = new Button[2];
             for(int i=0; i<2; i++) {
-                out[i] = new Button(OUT);
+                stuck[i] = new Button();
             }
         }
         
@@ -380,6 +382,7 @@ public class GUI extends JFrame implements GCGUI
             pen[3] = new ToggleButton(PEN_DEFENSE);
             pen[4] = new ToggleButton(PEN_PICKUP);
             pen[5] = new ToggleButton(PEN_SERVICE);
+            dropBall = new Button(DROP_BALL);
         }
         
         //--bottom--
@@ -424,8 +427,8 @@ public class GUI extends JFrame implements GCGUI
         } else {
             layout.add(.01, .77, .135, .09, timeOut[0]);
             layout.add(.855, .77, .135, .09, timeOut[1]);
-            layout.add(.155, .77, .135, .09, stuck[0]);
-            layout.add(.71, .77, .135, .09, stuck[1]);
+            layout.add(.155, .77, .135, .09, out[0]);
+            layout.add(.71, .77, .135, .09, out[1]);
         }
         layout.add(.31, .0, .08, .11, clockReset);
         layout.add(.4, .012, .2, .10, clock);
@@ -448,29 +451,18 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.465, .26, .07, .08, set);
         layout.add(.5425, .26, .07, .08, play);
         layout.add(.62, .26, .07, .08, finish);
-        if(pen.length > 0) {
-            layout.add(.31, .37, .185, .11, pen[0]);
-        }
-        if(pen.length > 1) {
-            layout.add(.505, .37, .185, .11, pen[1]);
-        }
-        if(pen.length > 2) {
-            layout.add(.31, .49, .185, .11, pen[2]);
-        }
-        if(pen.length > 3) {
-            layout.add(.505, .49, .185, .11, pen[3]);
-        }
-        if(pen.length > 4) {
+        layout.add(.31, .37, .185, .11, pen[0]);
+        layout.add(.505, .37, .185, .11, pen[1]);
+        layout.add(.31, .49, .185, .11, pen[2]);
+        layout.add(.505, .49, .185, .11, pen[3]);
+        if(Rules.league instanceof SPL) {
             layout.add(.31, .61, .185, .11, pen[4]);
-        }
-        if(pen.length > 5) {
             layout.add(.505, .61, .185, .11, pen[5]);
-        }
-        if(pen.length > 6) {
             layout.add(.31, .73, .185, .11, pen[6]);
-        }
-        if(pen.length > 7) {
             layout.add(.505, .73, .185, .11, pen[7]);
+        } else if(Rules.league instanceof HL) {
+            layout.add(.31, .61, .38, .11, pen[4]);
+            layout.add(.31, .73, .38, .11, dropBall);
         }
         layout.add(.08, .88, .84, .11, log);
         layout.add(.925, .88, .07, .11, cancelUndo);
@@ -488,9 +480,9 @@ public class GUI extends JFrame implements GCGUI
                 robot[i][j].addActionListener(ActionBoard.robot[i][j]);
             }
             timeOut[i].addActionListener(ActionBoard.timeOut[i]);
-            stuck[i].addActionListener(ActionBoard.stuck[i]);
+            out[i].addActionListener(ActionBoard.out[i]);
             if(Rules.league instanceof SPL) {
-                out[i].addActionListener(ActionBoard.out[i]);
+                stuck[i].addActionListener(ActionBoard.stuck[i]);
             }
         }
         initial.addActionListener(ActionBoard.initial);
@@ -523,6 +515,7 @@ public class GUI extends JFrame implements GCGUI
             pen[3].addActionListener(ActionBoard.defense);
             pen[4].addActionListener(ActionBoard.pickUpHL);
             pen[5].addActionListener(ActionBoard.service);
+            dropBall.addActionListener(ActionBoard.dropBall);
         }
         for(int i=0; i<undo.length; i++) {
             undo[i].addActionListener(ActionBoard.undo[i+1]);
@@ -662,12 +655,13 @@ public class GUI extends JFrame implements GCGUI
         updateRobots(data);
         updatePushes(data);
         updateTimeOut(data);
-        updateGlobalStuck(data);
+        updateOut(data);
         if(Rules.league instanceof SPL) {
-            updateOut(data);
+            updateGlobalStuck(data);
             updatePenaltiesSPL(data);
         } else if(Rules.league instanceof HL) {
             updatePenaltiesHL(data);
+            updateDropBall(data);
         }
         updateUndo(data);
         updateFonts();
@@ -807,7 +801,12 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updateKickoff(AdvancedData data)
     {
-        kickOff[data.team[0].teamColor == data.kickOffTeam ? 0 : 1].setSelected(true);
+        if(data.kickOffTeam == GameControlData.DROPBALL) {
+            kickOff[0].setSelected(false);
+            kickOff[1].setSelected(false);
+        } else {
+            kickOff[data.team[0].teamColor == data.kickOffTeam ? 0 : 1].setSelected(true);
+        }
         for(int i=0; i<2; i++) {
             kickOff[i].setEnabled(ActionBoard.kickOff[i].isLegal(data));
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
@@ -930,6 +929,16 @@ public class GUI extends JFrame implements GCGUI
         }
     }
     
+        /**
+     * Updates the dropped-ball button.
+     * 
+     * @param data     The current data (model) the GUI should view.
+     */
+    private void updateDropBall(AdvancedData data)
+    {
+        dropBall.setEnabled(ActionBoard.dropBall.isLegal(data));
+    }
+    
     /**
      * Updates the out.
      * 
@@ -1045,9 +1054,9 @@ public class GUI extends JFrame implements GCGUI
                 robotLabel[i][j].setFont(titleFont);
             }
             timeOut[i].setFont(timeoutFont);
-            stuck[i].setFont(timeoutFont);
+            out[i].setFont(standardFont);
             if(Rules.league instanceof SPL) {
-                out[i].setFont(standardFont);
+                stuck[i].setFont(timeoutFont);
             }
         }
         clock.setFont(timeFont);
@@ -1066,6 +1075,9 @@ public class GUI extends JFrame implements GCGUI
         finish.setFont(stateFont);
         for(int i=0; i<pen.length; i++) {
             pen[i].setFont(standardFont);
+        }
+        if(dropBall != null) {
+            dropBall.setFont(standardFont);
         }
         for(int i=0; i<undo.length; i++) {
             undo[i].setFont(timeoutFont);
