@@ -29,7 +29,7 @@ public class PickUpHL extends PickUp
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         } else {
-            player.penalty = PlayerInfo.PENALTY_HL_REQUEST_FOR_SEVICE;
+            player.penalty = PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE;
             Log.state(data, "Request for Service "+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));

@@ -31,7 +31,7 @@ public class PlayerInfo implements Serializable
     public static final short PENALTY_HL_ILLEGAL_ATTACK = 3;
     public static final short PENALTY_HL_ILLEGAL_DEFENSE = 4;
     public static final short PENALTY_HL_REQUEST_FOR_PICKUP = 5;
-    public static final short PENALTY_HL_REQUEST_FOR_SEVICE = 6;
+    public static final short PENALTY_HL_REQUEST_FOR_SERVICE = 6;
     public static final short PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE = 7;
     
     public static final short PENALTY_MANUAL = 15;
@@ -93,12 +93,12 @@ public class PlayerInfo implements Serializable
         } else {
             switch(penalty) {
                 case PENALTY_NONE:
-                case PENALTY_HL_BALL_MANIPULATION:  temp = "none"; break;
-                case PENALTY_HL_PHYSICAL_CONTACT:   temp = "pushing"; break;
-                case PENALTY_HL_ILLEGAL_ATTACK:     temp = "illegal attack"; break;
-                case PENALTY_HL_ILLEGAL_DEFENSE:    temp = "illegal defender"; break;
-                case PENALTY_HL_REQUEST_FOR_PICKUP: temp = "request for pickup"; break;
-                case PENALTY_HL_REQUEST_FOR_SEVICE: temp = "request for service"; break;
+                case PENALTY_HL_BALL_MANIPULATION:   temp = "none"; break;
+                case PENALTY_HL_PHYSICAL_CONTACT:    temp = "pushing"; break;
+                case PENALTY_HL_ILLEGAL_ATTACK:      temp = "illegal attack"; break;
+                case PENALTY_HL_ILLEGAL_DEFENSE:     temp = "illegal defender"; break;
+                case PENALTY_HL_REQUEST_FOR_PICKUP:  temp = "request for pickup"; break;
+                case PENALTY_HL_REQUEST_FOR_SERVICE: temp = "request for service"; break;
                 case PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE: temp = "request for pickup to service"; break;
                 case PENALTY_MANUAL:                temp = "manual"; break;
                 default: temp = "undefinied("+penalty+")";

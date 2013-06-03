@@ -859,7 +859,7 @@ public class GUI extends JFrame implements GCGUI
                                     data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
                                || (Rules.league instanceof HL &&
                                    ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_PICKUP
-                                  || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_SEVICE
+                                  || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE
                                   || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE ) )
                                 ) ) {
                             robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
