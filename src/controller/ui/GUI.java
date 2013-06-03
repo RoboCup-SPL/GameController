@@ -451,18 +451,22 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.465, .26, .07, .08, set);
         layout.add(.5425, .26, .07, .08, play);
         layout.add(.62, .26, .07, .08, finish);
-        layout.add(.31, .37, .185, .11, pen[0]);
-        layout.add(.505, .37, .185, .11, pen[1]);
-        layout.add(.31, .49, .185, .11, pen[2]);
-        layout.add(.505, .49, .185, .11, pen[3]);
         if(Rules.league instanceof SPL) {
+            layout.add(.31, .37, .185, .11, pen[0]);
+            layout.add(.505, .37, .185, .11, pen[1]);
+            layout.add(.31, .49, .185, .11, pen[2]);
+            layout.add(.505, .49, .185, .11, pen[3]);
             layout.add(.31, .61, .185, .11, pen[4]);
             layout.add(.505, .61, .185, .11, pen[5]);
             layout.add(.31, .73, .185, .11, pen[6]);
             layout.add(.505, .73, .185, .11, pen[7]);
         } else if(Rules.league instanceof HL) {
-            layout.add(.31, .61, .38, .11, pen[4]);
-            layout.add(.31, .73, .38, .11, dropBall);
+            layout.add(.31, .38, .185, .11, pen[0]);
+            layout.add(.505, .38, .185, .11, pen[1]);
+            layout.add(.31, .50, .185, .11, pen[2]);
+            layout.add(.505, .50, .185, .11, pen[3]);
+            layout.add(.31, .62, .38, .11, pen[4]);
+            layout.add(.31, .77, .38, .09, dropBall);
         }
         layout.add(.08, .88, .84, .11, log);
         layout.add(.925, .88, .07, .11, cancelUndo);
