@@ -132,6 +132,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_HANDS = "Hands";
     private static final String PEN_PICKUP = "Pick-Up";
     private static final String PEN_MANIPULATION = "Ball Manipulation";
+    private static final String PEN_PHYSICAL = "Physical Contact";
     private static final String PEN_DEFENSE = "Illegal Defense";
     private static final String PEN_ATTACK = "Illegal Attack";
     private static final String PEN_SERVICE = "Request for Service";
@@ -377,7 +378,7 @@ public class GUI extends JFrame implements GCGUI
         } else if(Rules.league instanceof HL) {
             pen = new JToggleButton[6];
             pen[0] = new ToggleButton(PEN_MANIPULATION);
-            pen[1] = new ToggleButton(PEN_PUSHING);
+            pen[1] = new ToggleButton(PEN_PHYSICAL);
             pen[2] = new ToggleButton(PEN_ATTACK);
             pen[3] = new ToggleButton(PEN_DEFENSE);
             pen[4] = new ToggleButton(PEN_PICKUP);
