@@ -6,7 +6,7 @@ If there are any question, please contact yuzong@informatik.uni-bremen.de .
 ########## 1. Building from Source ##########
 
 To build it from the source code you may use Apache Ant.
-There are three ant targets:
+There are some ant targets:
 
 - clean
 	cleans up the project folder
@@ -14,7 +14,7 @@ There are three ant targets:
 - compile
 	compiles the code and stores files in /build/classes
 	
-- distribute
+- jar
 	creates a jar package and stores it in /build/jar
 
 	
