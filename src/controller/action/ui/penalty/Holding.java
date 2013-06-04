@@ -1,9 +1,6 @@
 package controller.action.ui.penalty;
 
 import common.Log;
-import controller.EventHandler;
-import controller.action.ActionType;
-import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
@@ -14,30 +11,8 @@ import data.Rules;
  * 
  * This action means that the ball holding penalty has been selected.
  */
-public class Holding extends GCAction
+public class Holding extends Penalty
 {
-    /**
-     * Creates a new Holding action.
-     * Look at the ActionBoard before using this.
-     */
-    public Holding()
-    {
-        super(ActionType.UI);
-    }
-
-    /**
-     * Performs this action to manipulate the data (model).
-     * 
-     * @param data      The current data to work on.
-     */
-    @Override
-    public void perform(AdvancedData data)
-    {
-        if(EventHandler.getInstance().lastUIEvent == this) {
-            EventHandler.getInstance().noLastUIEvent = true;
-        }
-    }
-    
     /**
      * Performs this action`s penalty on a selected player.
      * 
