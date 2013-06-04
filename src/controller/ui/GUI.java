@@ -255,7 +255,7 @@ public class GUI extends JFrame implements GCGUI
         goalDec = new JButton[2];
         goalInc = new JButton[2];
         goals = new JLabel[2];
-        kickOff = new JRadioButton[2];
+        kickOff = new JRadioButton[3];
         kickOffGroup = new ButtonGroup();
         pushes = new JLabel[2];
         for(int i=0; i<2; i++) {
@@ -273,6 +273,9 @@ public class GUI extends JFrame implements GCGUI
             pushes[i] = new JLabel("0");
             pushes[i].setHorizontalAlignment(JLabel.CENTER);
         }
+        kickOff[2] = new JRadioButton();
+        kickOffGroup.add(kickOff[2]);
+        
         //  robots
         robots = new JPanel[2];
         robot = new JButton[2][Rules.league.teamSize];
@@ -805,8 +808,7 @@ public class GUI extends JFrame implements GCGUI
     private void updateKickoff(AdvancedData data)
     {
         if(data.kickOffTeam == GameControlData.DROPBALL) {
-            kickOff[0].setSelected(false);
-            kickOff[1].setSelected(false);
+            kickOff[2].setSelected(true);
         } else {
             kickOff[data.team[0].teamColor == data.kickOffTeam ? 0 : 1].setSelected(true);
         }
