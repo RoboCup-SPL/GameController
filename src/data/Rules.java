@@ -67,8 +67,8 @@ public abstract class Rules
     public int numberOfPenaltyShotsShort;
     /** Number of penalty-shots for each team after full 10minutes playing. */
     public int numberOfPenaltyShotsLong;
-    /** Time in seconds normal penalties take. */
-    public int penaltyStandardTime;
+    /** Time in seconds for each kind of penalty. */
+    public int[] penaltyTime;
     /** if robots should return from penalties when the game state changes. */
     public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */

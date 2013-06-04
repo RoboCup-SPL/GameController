@@ -58,8 +58,8 @@ public class SPL extends Rules
         numberOfPenaltyShotsShort = 3;
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
-        /** Time in seconds normal penalties take. */
-        penaltyStandardTime = 30;
+        /** Time in seconds for each kind of penalty (-1 = should not be used). */
+        penaltyTime = new int[] {-1, 30, 30, 30, 30, 30, 30, 30, 30};
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */
