@@ -152,7 +152,9 @@ public class Teams
         } else {
             String[] out = new String[instance.names[leagueIndex].length];
             for(int i=0; i<instance.names[leagueIndex].length; i++) {
-                out[i] = instance.names[leagueIndex][i].split(":")[1].substring(1);
+                if(instance.names[leagueIndex][i] != null) {
+                    out[i] = instance.names[leagueIndex][i].split(":")[1].substring(1);
+                }
             }
             return out;
         }

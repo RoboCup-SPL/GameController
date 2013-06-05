@@ -104,6 +104,7 @@ public class StartInput extends JFrame implements Serializable
         setResizable(false);
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, STANDARD_SPACE));
         
+        String[] teams = getShortTeams();
         for(int i=0; i<2; i++) {
             teamContainer[i] = new ImagePanel((
                     new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
@@ -114,7 +115,7 @@ public class StartInput extends JFrame implements Serializable
             setTeamIcon(i, 0);
             teamIconLabel[i] = new JLabel(teamIcon[i]);
             teamContainer[i].add(teamIconLabel[i], BorderLayout.CENTER);
-            team[i] = new JComboBox(Teams.getNames(true));
+            team[i] = new JComboBox(teams);
             teamContainer[i].add(team[i], BorderLayout.SOUTH);
         }
         team[0].addActionListener(new ActionListener()
@@ -205,7 +206,7 @@ public class StartInput extends JFrame implements Serializable
                         teamContainer[i].setImage((
                                 new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
                         team[i].removeAllItems();
-                        String[] names = Teams.getNames(true);
+                        String[] names = getShortTeams();
                         for(int j=0; j < names.length; j++) {
                             team[i].addItem(names[j]);
                         }
@@ -272,6 +273,31 @@ public class StartInput extends JFrame implements Serializable
                 }});
                 
         setVisible(true);
+    }
+    
+    /**
+     * Calculates an array that contains only the existing Teams of the
+     * current league.
+     * 
+     * @return  Short teams array with numbers
+     */ 
+    private String[] getShortTeams()
+    {
+        String[] fullTeams = Teams.getNames(true);
+        int k = 0;
+        for(int j=0; j<fullTeams.length; j++) {
+            if(fullTeams[j] != null) {
+                k++;
+            }
+        }
+        String[] out = new String[k];
+        k = 0;
+        for(int j=0; j<fullTeams.length; j++) {
+            if(fullTeams[j] != null) {
+                out[k++] = fullTeams[j];
+            }
+        }
+        return out;
     }
     
     /**
