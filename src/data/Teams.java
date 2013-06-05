@@ -34,7 +34,7 @@ public class Teams
      * The full name of an icon must be "<teamNumber>.<png|gif>", for example
      * "7.png".
      */
-    private static final String[] PIC_ENDING = {"png", "gif"};
+    private static final String[] PIC_ENDING = {"png", "gif", "jpg", "jpeg"};
     
     /** The instance of the singleton. */
     private static Teams instance = new Teams();
