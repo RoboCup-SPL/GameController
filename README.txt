@@ -57,6 +57,8 @@ To penalize a robot, first press the penalty button, then the robot button. For 
 
 Before unpenalizing a robot, please make sure that it was put back on the field by the assistant referees. For that reason, robots are never unpenalized automatically.
 
+HL: To substitute a robot, press "Substitute" and then the robot that should leave the field. Afterwards, any of the substitutes can be be activated.
+
 When pressing "+" (goal), "Timeout", "Kickoff Goal", or "Global Game Stuck", the other team gets the next kick-off. "Kickoff Goal" and "Global Game Stuck" share the same button.
 
 
