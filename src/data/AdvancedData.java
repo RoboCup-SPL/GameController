@@ -267,6 +267,22 @@ public class AdvancedData extends GameControlData implements Cloneable
     }
     
     /**
+     * Calculates the Number of robots in play (not substitute) on one side
+     * @param side 0 or 1 depending on whether the team is shown left or right.
+     * @return The number of robots without substitute penalty on the side
+     */
+    public int getNumberOfRobotsInPlay(int side)
+    {
+        int count = 0;
+        for(int i=0; i<team[side].player.length; i++) {
+            if(team[side].player[i].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    /**
      * Determines the secondary time. Although this is a GUI feature, the secondary time
      * will also be encoded in the network packet.
      * @param timeKickOffBlockedOvertime In case the kickOffBlocked time is delivered, this
