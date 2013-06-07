@@ -68,7 +68,7 @@ public class Robot extends GCAction
     {
         return !(EventHandler.getInstance().lastUIEvent instanceof Penalty)
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
-                && (data.getRemainingPenaltyTime(side, number) == 0 || Rules.league instanceof HL && number == 0)
+                && (data.getRemainingPenaltyTime(side, number) == 0 || Rules.league instanceof HL)
                 || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE
