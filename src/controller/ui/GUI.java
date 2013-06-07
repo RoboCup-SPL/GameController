@@ -860,25 +860,29 @@ public class GUI extends JFrame implements GCGUI
                 if(data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
                     if(!data.ejected[i][j]) {
                         int seconds = data.getRemainingPenaltyTime(i, j);
-                        if(seconds == 0 && (
-                                  (Rules.league instanceof SPL &&
+                        if(seconds == 0) {
+                            if(   (Rules.league instanceof SPL &&
                                     data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
                                || (Rules.league instanceof HL &&
                                    ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_PICKUP
                                   || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE
                                   || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE ) )
-                                ) ) {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
-                            highlight(robot[i][j], true);
+                                ) {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
+                                highlight(robot[i][j], true);
+                            } else if(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_SUBSTITUTE+")");
+                                highlight(robot[i][j], false);
+                            }
                         } else {
                             robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
                             highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
                         int penTime = (seconds + data.getSecondsSince(data.whenPenalized[i][j]));
-                        if(penTime != 0) {
+                        if(seconds != 0) {
                             robotTime[i][j].setValue(1000 * seconds / penTime);
                         }
-                        robotTime[i][j].setVisible(penTime != 0);
+                        robotTime[i][j].setVisible(seconds != 0);
                     } else {
                         robotLabel[i][j].setText(EJECTED);
                         robotTime[i][j].setVisible(false);
