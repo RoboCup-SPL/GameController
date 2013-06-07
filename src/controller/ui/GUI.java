@@ -873,8 +873,11 @@ public class GUI extends JFrame implements GCGUI
                             } else if(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
                                 robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_SUBSTITUTE+")");
                                 highlight(robot[i][j], false);
+                            } else {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
+                                highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                             }
-                        } else {
+                        }  else {
                             robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
                             highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
