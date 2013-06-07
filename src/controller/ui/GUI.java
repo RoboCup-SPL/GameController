@@ -135,7 +135,8 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_PHYSICAL = "Physical Contact";
     private static final String PEN_DEFENSE = "Illegal Defense";
     private static final String PEN_ATTACK = "Illegal Attack";
-    private static final String PEN_SERVICE = "Request for Pickup/Service<br/>Incapable Player";
+    private static final String PEN_SERVICE = "Service/Incapable";
+    private static final String PEN_SUBSTITUTE = "Substitute";
     private static final String DROP_BALL = "Dropped Ball";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
@@ -379,12 +380,13 @@ public class GUI extends JFrame implements GCGUI
             pen[6] = new ToggleButton(PEN_HANDS);
             pen[7] = new ToggleButton(PEN_PICKUP);
         } else if(Rules.league instanceof HL) {
-            pen = new JToggleButton[5];
+            pen = new JToggleButton[6];
             pen[0] = new ToggleButton(PEN_MANIPULATION);
             pen[1] = new ToggleButton(PEN_PHYSICAL);
             pen[2] = new ToggleButton(PEN_ATTACK);
             pen[3] = new ToggleButton(PEN_DEFENSE);
             pen[4] = new ToggleButton(PEN_SERVICE);
+            pen[5] = new ToggleButton(PEN_SUBSTITUTE);
             dropBall = new Button(DROP_BALL);
         }
         
@@ -468,7 +470,8 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.505, .38, .185, .11, pen[1]);
             layout.add(.31, .50, .185, .11, pen[2]);
             layout.add(.505, .50, .185, .11, pen[3]);
-            layout.add(.31, .62, .38, .11, pen[4]);
+            layout.add(.31, .62, .185, .11, pen[4]);
+            layout.add(.505, .62, .185, .11, pen[5]);
             layout.add(.31, .77, .38, .09, dropBall);
         }
         layout.add(.08, .88, .84, .11, log);
@@ -521,6 +524,7 @@ public class GUI extends JFrame implements GCGUI
             pen[2].addActionListener(ActionBoard.attack);
             pen[3].addActionListener(ActionBoard.defense);
             pen[4].addActionListener(ActionBoard.pickUpHL);
+            pen[5].addActionListener(ActionBoard.substitute);
             dropBall.addActionListener(ActionBoard.dropBall);
         }
         for(int i=0; i<undo.length; i++) {
@@ -870,8 +874,11 @@ public class GUI extends JFrame implements GCGUI
                             robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
                             highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
-                        robotTime[i][j].setValue(1000 * seconds / (seconds + data.getSecondsSince(data.whenPenalized[i][j])));
-                        robotTime[i][j].setVisible(true);
+                        int penTime = (seconds + data.getSecondsSince(data.whenPenalized[i][j]));
+                        if(penTime != 0) {
+                            robotTime[i][j].setValue(1000 * seconds / penTime);
+                        }
+                        robotTime[i][j].setVisible(penTime != 0);
                     } else {
                         robotLabel[i][j].setText(EJECTED);
                         robotTime[i][j].setVisible(false);
@@ -1009,6 +1016,7 @@ public class GUI extends JFrame implements GCGUI
         pen[2].setEnabled(ActionBoard.attack.isLegal(data));
         pen[3].setEnabled(ActionBoard.defense.isLegal(data));
         pen[4].setEnabled(ActionBoard.pickUpHL.isLegal(data));
+        pen[5].setEnabled(ActionBoard.substitute.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
         pen[0].setSelected(hightlightEvent == ActionBoard.ballManipulation);
@@ -1016,6 +1024,7 @@ public class GUI extends JFrame implements GCGUI
         pen[2].setSelected(hightlightEvent == ActionBoard.attack);
         pen[3].setSelected(hightlightEvent == ActionBoard.defense);
         pen[4].setSelected(hightlightEvent == ActionBoard.pickUpHL);
+        pen[5].setSelected(hightlightEvent == ActionBoard.substitute);
     }
     
     /**

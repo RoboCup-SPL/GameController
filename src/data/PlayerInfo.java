@@ -34,6 +34,7 @@ public class PlayerInfo implements Serializable
     public static final short PENALTY_HL_REQUEST_FOR_SERVICE = 6;
     public static final short PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE = 7;
     
+    public static final short PENALTY_SUBSTITUTE = 14;
     public static final short PENALTY_MANUAL = 15;
     
     /** The size in bytes this class has packed. */
@@ -101,6 +102,7 @@ public class PlayerInfo implements Serializable
                 case PENALTY_HL_REQUEST_FOR_SERVICE: temp = "request for service"; break;
                 case PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE: temp = "request for pickup to service"; break;
                 case PENALTY_MANUAL:                temp = "manual"; break;
+                case PENALTY_SUBSTITUTE:            temp = "substitute"; break;
                 default: temp = "undefinied("+penalty+")";
             }
         }

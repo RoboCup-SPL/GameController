@@ -89,7 +89,8 @@ B	- ball manipulation
 P	- physical contact
 A	- illegal attack
 D	- illegal defense
-R	- request for pickup/service / incapable robot
+R	- service / incapable
+S	- substitute
 
 
 ########## 5. Misc ##########
