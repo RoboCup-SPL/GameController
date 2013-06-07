@@ -56,6 +56,7 @@ typedef unsigned int   uint32;
 #define PENALTY_HL_TEEN_REQUEST_FOR_SERVICE 6
 #define PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE 7
 
+#define PENALTY_SUBSTITUTE                  14
 #define PENALTY_MANUAL                      15
 
 struct RobotInfo {
