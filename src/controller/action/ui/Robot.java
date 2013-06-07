@@ -6,11 +6,13 @@ import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.GCAction;
 import controller.action.ActionType;
+import controller.action.ui.penalty.PickUp;
 import data.AdvancedData;
 import data.HL;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
+import data.SPL;
 
 /**
  * @author: Michel Bartsch
@@ -72,6 +74,8 @@ public class Robot extends GCAction
                 || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE
+                || (EventHandler.getInstance().lastUIEvent instanceof PickUp && Rules.league instanceof SPL)
+                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP
                 || data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
                     && EventHandler.getInstance().lastUIEvent instanceof Penalty
                 || data.testmode;
