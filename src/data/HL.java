@@ -17,7 +17,9 @@ public class HL extends Rules
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_kid";
         /** How many robots are in a team. */
-        teamSize = 3;
+        teamSize = 5;
+        /** How many robots of each team may play at one time. */
+        robotsPlaying = 3;
         /** The Java Colors the left and the right team starts with. */
         teamColor = new Color[] {new Color(0, 192, 192), Color.MAGENTA};
         /** The name of the colors. */

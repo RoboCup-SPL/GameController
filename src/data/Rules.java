@@ -27,6 +27,8 @@ public abstract class Rules
     public String leagueDirectory;
     /** How many robots are in a team. */
     public int teamSize;
+    /** How many robots of each team may play at one time. */
+    public int robotsPlaying;
     /** The Java Colors the left and the right team starts with. */
     public Color[] teamColor;
     /** The name of the colors. */

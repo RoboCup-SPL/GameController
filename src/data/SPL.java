@@ -18,6 +18,8 @@ public class SPL extends Rules
         leagueDirectory = "spl";
         /** How many robots are in a team. */
         teamSize = 5;
+        /** How many robots of each team may play at one time. */
+        robotsPlaying = 5;
         /** The Java Colors the left and the right team starts with. */
         teamColor = new Color[] {Color.BLUE, Color.RED};
         /** The name of the colors. */

@@ -84,6 +84,13 @@ public class AdvancedData extends GameControlData implements Cloneable
         if(Rules.league.startWithPenalty) {
             secGameState = GameControlData.STATE2_PENALTYSHOOT;
         }
+        for(int i=0; i<2; i++) {
+            for (int j=0; j < team[i].player.length; j++) {
+                if(j >= Rules.league.robotsPlaying) {
+                    team[i].player[j].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
+                }
+            }
+        }
     }
     
     /**
