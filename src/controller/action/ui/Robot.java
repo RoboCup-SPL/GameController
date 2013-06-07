@@ -53,10 +53,10 @@ public class Robot extends GCAction
         if(EventHandler.getInstance().lastUIEvent instanceof Penalty) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         } else if(player.penalty != PlayerInfo.PENALTY_NONE) {
-            player.penalty = PlayerInfo.PENALTY_NONE;
-            Log.state(data, "Unpenalised "+
+            Log.state(data, (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE ? "Substituted by Player " : "Unpenalised ")+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
+            player.penalty = PlayerInfo.PENALTY_NONE;
         }
     }
     
