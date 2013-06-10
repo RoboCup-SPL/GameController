@@ -97,4 +97,4 @@ S	- substitute
 
 ########## 5. Misc ##########
 
-The format of the packets the GameController broadcasts and receives is defined in the file RoboCupGameControlData.h, which is identical to the one that was used in 2012.
+The format of the packets the GameController broadcasts and receives is defined in the file RoboCupGameControlData.h, which is identical to the one that was used in 2012, except for the introduction of a new penalty constant that tells a robot that it is a substitute. This penalty is currently only used in the HL.
