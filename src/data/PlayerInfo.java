@@ -74,7 +74,7 @@ public class PlayerInfo implements Serializable
     @Override
     public String toString()
     {
-        String out = "----------------------------------------------\n";
+        String out = "----------------------------------------\n";
         String temp;
         
         if(Rules.league instanceof SPL) {

@@ -1,6 +1,7 @@
 package visualizer;
 
 import data.Rules;
+import javax.swing.SwingUtilities;
 
 /**
  * @author: Michel Bartsch
@@ -40,10 +41,9 @@ public class Main
                     Rules.league = Rules.LEAGUES[i];
                     break;
                 }
-            }     
+            }
         }
         
-        //start
         GUI gui = new GUI();
         new KeyboardListener(gui);
         listener = new Listener(gui);

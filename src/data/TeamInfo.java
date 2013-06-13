@@ -84,7 +84,7 @@ public class TeamInfo implements Serializable
     @Override
     public String toString()
     {
-        String out = "--------------------------------------------------\n";
+        String out = "--------------------------------------\n";
         String temp;
         
         out += "         teamNumber: "+teamNumber+"\n";
