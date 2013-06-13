@@ -3,6 +3,7 @@ package visualizer;
 import common.Log;
 import data.GameControlData;
 import data.Rules;
+import data.Teams;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -133,7 +134,7 @@ public class GUI extends JFrame
         } else if(testmode) {
             drawTestmode(g);
         } else {
-            
+            drawIcons(g);
         }
     }
     
@@ -174,6 +175,32 @@ public class GUI extends JFrame
                 }
             }
             x = (int)(0.64*getWidth());
+        }
+    }
+
+    private void drawIcons(Graphics g)
+    {
+        int x = (int)(0.07*getWidth());
+        int y = (int)(0.12*getWidth());
+        int size = (int)(0.24*getWidth());
+        BufferedImage[] icons = new BufferedImage[] {
+            Teams.getIcon(data.team[0].teamNumber),
+            Teams.getIcon(data.team[1].teamNumber)};
+        for(int i=0; i<2; i++) {
+            float scaleFactorX = 1;
+            float scaleFactorY = 1;
+            if(icons[i].getWidth() > icons[i].getHeight()) {
+                scaleFactorY = icons[i].getHeight()/(float)icons[i].getWidth();
+            } else {
+                scaleFactorX = icons[i].getWidth()/(float)icons[i].getHeight();
+            }
+            int offsetX = (int)((size - size*scaleFactorX)/2);
+            int offsetY = (int)((size - size*scaleFactorY)/2);
+            g.drawImage(icons[i],
+                    (i==0 ? x : getWidth()-x-size) + offsetX,
+                    y+offsetY,
+                    (int)(scaleFactorX*size),
+                    (int)(scaleFactorY*size), null);
         }
     }
 }
