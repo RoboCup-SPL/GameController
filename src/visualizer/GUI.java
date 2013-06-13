@@ -33,7 +33,7 @@ public class GUI extends JFrame
     private static final String WINDOW_TITLE = "GameController";
     private static final String STANDARD_FONT = "Helvetica";
     private static final double STANDARD_FONT_SIZE = 0.06;
-    private static final double STANDARD_FONT_XXL_SIZE = 0.2;
+    private static final double STANDARD_FONT_XXL_SIZE = 0.16;
     private static final String TEST_FONT = "Lucida Console";
     private static final double TEST_FONT_SIZE = 0.01;
     private static final String CONFIG_PATH = "config/";
@@ -52,6 +52,7 @@ public class GUI extends JFrame
     
     private Font testFont;
     private Font standardFont;
+    private Font scoreFont;
     
     /**
      * Creates a new GUI.
@@ -90,6 +91,7 @@ public class GUI extends JFrame
         
         testFont = new Font(TEST_FONT, Font.PLAIN, (int)(TEST_FONT_SIZE*getWidth()));
         standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*getWidth()));
+        scoreFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_XXL_SIZE*getWidth()));
         
         setVisible(true);
         Graphics g = bufferStrategy.getDrawGraphics();
@@ -135,6 +137,7 @@ public class GUI extends JFrame
             drawTestmode(g);
         } else {
             drawIcons(g);
+            drawScores(g);
         }
     }
     
@@ -149,7 +152,7 @@ public class GUI extends JFrame
     {
         g.setColor(Color.BLACK);
         g.setFont(testFont);
-        int x = (int)(0.08*getWidth());
+        int x = getRealtiveSize(0.08);
         int y = (int)(0.3*getHeight());
         String[] out = data.toString().split("\n");
         for(int i=0; i<out.length; i++) {
@@ -174,15 +177,15 @@ public class GUI extends JFrame
                     y += testFont.getSize()*1.2;
                 }
             }
-            x = (int)(0.64*getWidth());
+            x = getRealtiveSize(0.64);
         }
     }
 
     private void drawIcons(Graphics g)
     {
-        int x = (int)(0.07*getWidth());
-        int y = (int)(0.12*getWidth());
-        int size = (int)(0.24*getWidth());
+        int x = getRealtiveSize(0.05);
+        int y = getRealtiveSize(0.18);
+        int size = getRealtiveSize(0.24);
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
             Teams.getIcon(data.team[1].teamNumber)};
@@ -197,10 +200,41 @@ public class GUI extends JFrame
             int offsetX = (int)((size - size*scaleFactorX)/2);
             int offsetY = (int)((size - size*scaleFactorY)/2);
             g.drawImage(icons[i],
-                    (i==0 ? x : getWidth()-x-size) + offsetX,
+                    (i==1 ? x : getWidth()-x-size) + offsetX,
                     y+offsetY,
                     (int)(scaleFactorX*size),
                     (int)(scaleFactorY*size), null);
         }
+    }
+    
+    private void drawScores(Graphics g)
+    {
+        g.setFont(scoreFont);
+        int x = getRealtiveSize(0.34);
+        int y = getRealtiveSize(0.36);
+        int yDiv = getRealtiveSize(0.35);
+        int size = getRealtiveSize(0.12);
+        g.setColor(Color.BLACK);
+        drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
+        for(int i=0; i<2; i++) {
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            drawCenteredString(
+                    g,
+                    data.team[i].score+"",
+                    i==1 ? x : getWidth()-x-size,
+                    y,
+                    size);
+        }
+    }
+    
+    private int getRealtiveSize(double size)
+    {
+        return (int)(size*getWidth());
+    }
+    
+    private void drawCenteredString(Graphics g, String s, int x, int y, int width)
+    {
+        int offset = (width - g.getFontMetrics().stringWidth(s)) / 2;
+        g.drawString(s, x+offset, y);
     }
 }
