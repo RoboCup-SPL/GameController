@@ -149,6 +149,7 @@ public class GUI extends JFrame implements GCGUI
     private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
   
     /** Some attributes used in the GUI components. */
+    private double lastSize = 0;
     private Font standardFont;
     private Font titleFont;
     private Font goalsFont;
@@ -1065,6 +1066,11 @@ public class GUI extends JFrame implements GCGUI
     private void updateFonts()
     {
         double size = Math.min((getWidth()/(double)WINDOW_WIDTH), (getHeight()/(double)WINDOW_HEIGHT));
+        
+        if(size == lastSize) {
+            return;
+        }
+        lastSize = size;
         
         titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TITLE_FONT_SIZE*(size)));
         standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*(size)));
