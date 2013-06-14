@@ -251,7 +251,7 @@ public class GUI extends JFrame
         int y = getRelativeSize(0.42);
         int size = getRelativeSize(0.2);
         String state;
-        switch(data.secGameState) {
+        switch(data.gameState) {
             case GameControlData.STATE_INITIAL:  state = "initial"; break;
             case GameControlData.STATE_READY:    state = "ready";   break;
             case GameControlData.STATE_SET:      state = "set";     break;

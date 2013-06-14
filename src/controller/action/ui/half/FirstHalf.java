@@ -97,6 +97,9 @@ public class FirstHalf extends GCAction
         int penaltyShot = data.penaltyShot[0];
         data.penaltyShot[0] = data.penaltyShot[1];
         data.penaltyShot[1] = penaltyShot;
+        int penaltySuccess = data.penaltySuccess[0];
+        data.penaltySuccess[0] = data.penaltySuccess[1];
+        data.penaltySuccess[1] = penaltySuccess;
         
         data.timeBeforeCurrentGameState = 0;
         data.whenDropIn = 0;

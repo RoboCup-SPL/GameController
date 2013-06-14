@@ -49,6 +49,9 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** how many penalty-shoots have been made by each team, 0:left side, 1:right side. */
     public int[] penaltyShot = {0, 0};
     
+    /** how many penalty-shoots have been made successfully by each team, 0:left side, 1:right side. */
+    public int[] penaltySuccess = {0, 0};
+    
     /** If true, left side has the kickoff. */
     public boolean leftSideKickoff = true;
     
@@ -163,6 +166,14 @@ public class AdvancedData extends GameControlData implements Cloneable
     {
         secsRemaining = getRemainingGameTime();
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
+        penaltyTries = (byte)((penaltyShot[0] << 4) + penaltyShot[1]);
+        penaltyGoals = (byte)((penaltySuccess[0] << 4) + penaltySuccess[1]);
+        Integer subT = getSecondaryTime(0);
+        if(subT == null) {
+            subTime = 0;
+        } else {
+            subTime = (short)(int)subT;
+        }
         for (int side = 0; side < team.length; ++side) {
             for (int number = 0; number < team[side].player.length; ++number) {
                 PlayerInfo player = team[side].player[number];

@@ -67,6 +67,10 @@ public class GameControlData implements Serializable
     protected short dropInTime = -1;                            // number of seconds passed since the last drop in. -1 before first dropin
     public int secsRemaining = Rules.league.halfTime;        // estimate of number of seconds remaining in the half
     public TeamInfo[] team = new TeamInfo[2];
+    // hacked into the package
+    public byte penaltyTries = 0;       // left 4 bytes for the left team and right 4 bytes for the right
+    public byte penaltyGoals = 0;       // left 4 bytes for the left team and right 4 bytes for the right
+    public short subTime = 0;           // sub-time (remaining in ready state etc.) in seconds
     
     
     /**
@@ -105,6 +109,11 @@ public class GameControlData implements Serializable
         for (TeamInfo aTeam : team) {
             buffer.put(aTeam.toByteArray());
         }
+        /* Hack to have this in the package */
+        buffer.position(SIZE-4);
+        buffer.put(penaltyTries);
+        buffer.put(penaltyGoals);
+        buffer.putShort(subTime);
         return buffer;
     }
     
@@ -134,6 +143,11 @@ public class GameControlData implements Serializable
         for(int i=0; i<team.length; i++) {
             team[i].fromByteArray(buffer);
         }
+        /* Hack to have this in the package */
+        buffer.position(SIZE-4);
+        penaltyTries = buffer.get();
+        penaltyGoals = buffer.get();
+        subTime = buffer.getShort();
         return true;
     }
     
