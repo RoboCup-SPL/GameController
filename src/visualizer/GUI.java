@@ -36,11 +36,11 @@ public class GUI extends JFrame
     private static final String STANDARD_FONT = "Helvetica";
     private static final double STANDARD_FONT_SIZE = 0.06;
     private static final double STANDARD_FONT_XXL_SIZE = 0.16;
+    private static final double STANDARD_FONT_S_SIZE = 0.04;
     private static final String TEST_FONT = "Lucida Console";
     private static final double TEST_FONT_SIZE = 0.01;
     private static final String CONFIG_PATH = "config/";
     private static final String BACKGROUND = "background.png";
-    private static final String ICONS_PATH = "config/icons/";
     private final static String WAITING_FOR_PACKAGE = "waiting for package...";
     
     
@@ -54,6 +54,7 @@ public class GUI extends JFrame
     
     private Font testFont;
     private Font standardFont;
+    private Font standardSmalFont;
     private Font scoreFont;
     private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
     
@@ -94,6 +95,7 @@ public class GUI extends JFrame
         
         testFont = new Font(TEST_FONT, Font.PLAIN, (int)(TEST_FONT_SIZE*getWidth()));
         standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*getWidth()));
+        standardSmalFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_S_SIZE*getWidth()));
         scoreFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_XXL_SIZE*getWidth()));
         
         setVisible(true);
@@ -144,6 +146,7 @@ public class GUI extends JFrame
             drawScores(g);
             drawTime(g);
             drawState(g);
+            drawSubTime(g);
         }
     }
     
@@ -218,7 +221,7 @@ public class GUI extends JFrame
         g.setFont(scoreFont);
         int x = getRelativeSize(0.34);
         int y = getRelativeSize(0.33);
-        int yDiv = getRelativeSize(0.35);
+        int yDiv = getRelativeSize(0.32);
         int size = getRelativeSize(0.12);
         g.setColor(Color.BLACK);
         drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
@@ -238,7 +241,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         g.setFont(standardFont);
         int x = getRelativeSize(0.4);
-        int y = getRelativeSize(0.17);
+        int y = getRelativeSize(0.18);
         int size = getRelativeSize(0.2);
         drawCenteredString(g, formatTime(data.secsRemaining), x, y, size);
     }
@@ -246,9 +249,9 @@ public class GUI extends JFrame
     private void drawState(Graphics g)
     {
         g.setColor(Color.BLACK);
-        g.setFont(standardFont);
+        g.setFont(standardSmalFont);
         int x = getRelativeSize(0.4);
-        int y = getRelativeSize(0.42);
+        int y = getRelativeSize(0.40);
         int size = getRelativeSize(0.2);
         String state;
         switch(data.gameState) {
@@ -260,6 +263,32 @@ public class GUI extends JFrame
             default: state = "";
         }
         drawCenteredString(g, state, x, y, size);
+    }
+    
+    private void drawSubTime(Graphics g)
+    {
+        if(data.subTime == 0) {
+            return;
+        }
+        g.setColor(Color.BLACK);
+        g.setFont(standardSmalFont);
+        int x = getRelativeSize(0.4);
+        int y = getRelativeSize(0.45);
+        int size = getRelativeSize(0.2);
+        drawCenteredString(g, formatTime(data.subTime), x, y, size);
+    }
+    
+    private void drawPenaltyInfo(Graphics g)
+    {
+        g.setColor(Color.RED);
+        int x = getRelativeSize(0.4);
+        int y = getRelativeSize(0.45);
+        int size = getRelativeSize(0.2);
+        for(int i=0; i<2; i++) {
+            /*for(int j=0; j<data.penaltyTries; j++) {
+                
+            }*/
+        }
     }
     
     private int getRelativeSize(double size)

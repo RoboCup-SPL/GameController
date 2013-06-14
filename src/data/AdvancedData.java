@@ -166,8 +166,8 @@ public class AdvancedData extends GameControlData implements Cloneable
     {
         secsRemaining = getRemainingGameTime();
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
-        penaltyTries = (byte)((penaltyShot[0] << 4) + penaltyShot[1]);
-        penaltyGoals = (byte)((penaltySuccess[0] << 4) + penaltySuccess[1]);
+        /*penaltyShots[0] = (byte)((penaltyShot[0] << 4) + penaltyShot[1]);
+        penaltyGoals = (byte)((penaltySuccess[0] << 4) + penaltySuccess[1]);*/
         Integer subT = getSecondaryTime(0);
         if(subT == null) {
             subTime = 0;
