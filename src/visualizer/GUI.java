@@ -14,6 +14,8 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -53,6 +55,7 @@ public class GUI extends JFrame
     private Font testFont;
     private Font standardFont;
     private Font scoreFont;
+    private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
     
     /**
      * Creates a new GUI.
@@ -106,6 +109,7 @@ public class GUI extends JFrame
     public void toggleTestmode()
     {
         testmode = !testmode;
+        update(data);
     }
     
     /**
@@ -114,7 +118,7 @@ public class GUI extends JFrame
      * 
      * @param data  The GameControlData to show.
      */
-    public void update(GameControlData data)
+    public synchronized void update(GameControlData data)
     {
         this.data = data;
         Graphics g = bufferStrategy.getDrawGraphics();
@@ -138,6 +142,8 @@ public class GUI extends JFrame
         } else {
             drawIcons(g);
             drawScores(g);
+            drawTime(g);
+            drawState(g);
         }
     }
     
@@ -152,7 +158,7 @@ public class GUI extends JFrame
     {
         g.setColor(Color.BLACK);
         g.setFont(testFont);
-        int x = getRealtiveSize(0.08);
+        int x = getRelativeSize(0.08);
         int y = (int)(0.3*getHeight());
         String[] out = data.toString().split("\n");
         for(int i=0; i<out.length; i++) {
@@ -177,15 +183,15 @@ public class GUI extends JFrame
                     y += testFont.getSize()*1.2;
                 }
             }
-            x = getRealtiveSize(0.64);
+            x = getRelativeSize(0.64);
         }
     }
 
     private void drawIcons(Graphics g)
     {
-        int x = getRealtiveSize(0.05);
-        int y = getRealtiveSize(0.18);
-        int size = getRealtiveSize(0.24);
+        int x = getRelativeSize(0.05);
+        int y = getRelativeSize(0.15);
+        int size = getRelativeSize(0.24);
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
             Teams.getIcon(data.team[1].teamNumber)};
@@ -210,10 +216,10 @@ public class GUI extends JFrame
     private void drawScores(Graphics g)
     {
         g.setFont(scoreFont);
-        int x = getRealtiveSize(0.34);
-        int y = getRealtiveSize(0.36);
-        int yDiv = getRealtiveSize(0.35);
-        int size = getRealtiveSize(0.12);
+        int x = getRelativeSize(0.34);
+        int y = getRelativeSize(0.33);
+        int yDiv = getRelativeSize(0.35);
+        int size = getRelativeSize(0.12);
         g.setColor(Color.BLACK);
         drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
         for(int i=0; i<2; i++) {
@@ -227,7 +233,36 @@ public class GUI extends JFrame
         }
     }
     
-    private int getRealtiveSize(double size)
+    private void drawTime(Graphics g)
+    {
+        g.setColor(Color.BLACK);
+        g.setFont(standardFont);
+        int x = getRelativeSize(0.4);
+        int y = getRelativeSize(0.17);
+        int size = getRelativeSize(0.2);
+        drawCenteredString(g, formatTime(data.secsRemaining), x, y, size);
+    }
+    
+    private void drawState(Graphics g)
+    {
+        g.setColor(Color.BLACK);
+        g.setFont(standardFont);
+        int x = getRelativeSize(0.4);
+        int y = getRelativeSize(0.42);
+        int size = getRelativeSize(0.2);
+        String state;
+        switch(data.secGameState) {
+            case GameControlData.STATE_INITIAL:  state = "initial"; break;
+            case GameControlData.STATE_READY:    state = "ready";   break;
+            case GameControlData.STATE_SET:      state = "set";     break;
+            case GameControlData.STATE_PLAYING:  state = "playing"; break;
+            case GameControlData.STATE_FINISHED: state = "finish";  break;
+            default: state = "";
+        }
+        drawCenteredString(g, state, x, y, size);
+    }
+    
+    private int getRelativeSize(double size)
     {
         return (int)(size*getWidth());
     }
@@ -236,5 +271,9 @@ public class GUI extends JFrame
     {
         int offset = (width - g.getFontMetrics().stringWidth(s)) / 2;
         g.drawString(s, x+offset, y);
+    }
+    
+    private String formatTime(int seconds) {
+        return (seconds < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(seconds) * 1000));
     }
 }
