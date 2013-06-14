@@ -53,7 +53,7 @@ public class Goal extends GCAction
                 Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
                 ActionBoard.ready.perform(data);
             } else {
-                data.penaltySuccess[side]++;
+                data.penaltySuccess[side][data.penaltyShot[side]-1] = true;
                 Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side == 0 ? 1 : 0].teamNumber]);
                 ActionBoard.finish.perform(data);
             }

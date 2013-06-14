@@ -147,6 +147,7 @@ public class GUI extends JFrame
             drawTime(g);
             drawState(g);
             drawSubTime(g);
+            drawPenaltyInfo(g);
         }
     }
     
@@ -281,13 +282,25 @@ public class GUI extends JFrame
     private void drawPenaltyInfo(Graphics g)
     {
         g.setColor(Color.RED);
-        int x = getRelativeSize(0.4);
+        int x;
         int y = getRelativeSize(0.45);
-        int size = getRelativeSize(0.2);
+        int size = getRelativeSize(0.02);
+        System.out.println("---");
         for(int i=0; i<2; i++) {
-            /*for(int j=0; j<data.penaltyTries; j++) {
-                
-            }*/
+            System.out.println(data.penaltyShots[i]);
+            x = getRelativeSize(0.2);
+            int length = (data.penaltyShots[i] >> 5);
+            if(length > 5) {
+                length = 5;
+            }
+            for(int j=0; j<length; j++) {
+                if((data.penaltyShots[i] & (1 << (4-j))) != 0) {
+                    g.fillOval(i==1 ? x : getWidth()-x-size, y, size, size);
+                } else {
+                    g.drawOval(x, y, size, size);
+                }
+                x += size*2;
+            }
         }
     }
     
