@@ -1,6 +1,6 @@
 <project default="jar">
   <property name="src.dir"     value="src"/>
-
+  <property name="lib.dir"     value="lib"/>
   <property name="build.dir"   value="build"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="jar.dir"     value="${build.dir}/jar"/>
@@ -31,9 +31,14 @@
       </manifest>
     </jar>
 
+    <mkdir dir="${jar.dir}/include"/>
+    <mkdir dir="${jar.dir}/lib"/>
     <copy todir="${jar.dir}" overwrite="true">
       <fileset dir="${resources.dir}" />
     </copy>
+    <copy file="${src.dir}/libgamectrl/RoboCupGameControlData.h" tofile="${jar.dir}/include/RoboCupGameControlData.h"/>
+    <copy file="${lib.dir}/libgamectrl.so" tofile="${jar.dir}/lib/libgamectrl.so"/>
+    <copy file="README.txt" tofile="${jar.dir}/README.txt"/>
   </target>
   
   <target name="run" depends="jar">
