@@ -36,7 +36,7 @@ public class GUI extends JFrame
     private static final String TEST_FONT = "Lucida Console";
     private static final double TEST_FONT_SIZE = 0.01;
     private static final String CONFIG_PATH = "config/";
-    private static final String BACKGROUND = "background.png";
+    private static final String BACKGROUND = "background";
     private static final String WAITING_FOR_PACKAGE = "waiting for package...";
 
     /** Available screens. */
@@ -69,23 +69,22 @@ public class GUI extends JFrame
         } else {
             devices[devices.length-1].setFullScreenWindow(this);
         }
-        
-        try {
-            background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND));
-        } catch(IOException e) {
+
+        for (String format : new String [] {".png", ".jpeg", ".jpg"}) {
+            try {
+                background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND+format));
+            } catch(IOException e) {
+            }
+        }
+        if(background == null) {
             Log.error("Unable to load background image");
         }
-        float scaleFactor;
-        if(background.getWidth() > background.getHeight()) {
-            scaleFactor = (float)getWidth()/background.getWidth();
-        } else {
-            scaleFactor = (float)getHeight()/background.getHeight();
-        }
+        float scaleFactor = (float)getWidth()/background.getWidth();
         Image tmp = (new ImageIcon(background).getImage()).getScaledInstance(
                 (int)(background.getWidth()*scaleFactor),
                 (int)(background.getHeight()*scaleFactor),
                 Image.SCALE_DEFAULT);
-        background = new BufferedImage(background.getWidth(), background.getWidth(), BufferedImage.TYPE_INT_ARGB);
+        background = new BufferedImage((int) (background.getWidth() * scaleFactor), (int) (background.getWidth() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
         background.getGraphics().drawImage(tmp, 0, 0, null);
         
         testFont = new Font(TEST_FONT, Font.PLAIN, (int)(TEST_FONT_SIZE*getWidth()));
