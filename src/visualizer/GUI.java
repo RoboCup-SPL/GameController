@@ -4,12 +4,8 @@ import common.Log;
 import data.GameControlData;
 import data.Rules;
 import data.Teams;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
+
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -134,6 +130,9 @@ public class GUI extends JFrame
     
     public final void draw(Graphics g)
     {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(background, 0, 0, null);
