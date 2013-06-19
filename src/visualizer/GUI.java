@@ -145,6 +145,7 @@ public class GUI extends JFrame
             drawTeams(g);
             drawScores(g);
             drawTime(g);
+            drawSecState(g);
             drawState(g);
             drawSubTime(g);
             drawPenaltyInfo(g);
@@ -265,12 +266,35 @@ public class GUI extends JFrame
         drawCenteredString(g, formatTime(data.secsRemaining), x, y, size);
     }
     
-    private void drawState(Graphics g)
+    private void drawSecState(Graphics g)
     {
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
         int x = getRelativeSize(0.4);
         int y = (int)(0.7*getHeight());
+        int size = getRelativeSize(0.2);
+        String state;
+        switch(data.secGameState) {
+            case GameControlData.STATE2_NORMAL:
+                if(data.firstHalf == GameControlData.C_TRUE) {
+                    state = "First Half";
+                } else {
+                    state = "Second Half";
+                }
+                break;
+            case GameControlData.STATE2_OVERTIME:     state = "Overtime";   break;
+            case GameControlData.STATE2_PENALTYSHOOT: state = "Penalty Shoot";     break;
+            default: state = "";
+        }
+        drawCenteredString(g, state, x, y, size);
+    }
+    
+    private void drawState(Graphics g)
+    {
+        g.setColor(Color.BLACK);
+        g.setFont(standardSmalFont);
+        int x = getRelativeSize(0.4);
+        int y = (int)(0.8*getHeight());
         int size = getRelativeSize(0.2);
         String state;
         switch(data.gameState) {
@@ -292,7 +316,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
         int x = getRelativeSize(0.4);
-        int y = (int)(0.8*getHeight());
+        int y = (int)(0.9*getHeight());
         int size = getRelativeSize(0.2);
         drawCenteredString(g, formatTime(data.subTime), x, y, size);
     }
