@@ -194,9 +194,9 @@ public class GUI extends JFrame
     private void drawTeams(Graphics g)
     {
         int x = getRelativeSize(0.02);
-        int y = (int)(0.30*getHeight());
+        int y = (int)(0.33*getHeight());
         int size = getRelativeSize(0.27);
-        int yName = (int)(y + size * 1.2);
+        int yName = (int)(y + size * 1.15);
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
             Teams.getIcon(data.team[1].teamNumber)};
@@ -324,9 +324,10 @@ public class GUI extends JFrame
     {
         g.setColor(Color.RED);
         int x = getRelativeSize(0.05);
-        int y = (int)(0.88*getHeight());
+        int y = (int)(0.91*getHeight());
         int size = getRelativeSize(0.02);
         for(int i=0; i<2; i++) {
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             for(int j=0; j<data.penaltyShot[i]; j++) {
                 if((data.penaltyTries[i] & (1<<j)) != 0) {
                     g.fillOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
