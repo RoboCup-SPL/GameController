@@ -143,7 +143,7 @@ public class GUI extends JFrame
         } else if(testmode) {
             drawTestmode(g);
         } else {
-            drawIcons(g);
+            drawTeams(g);
             drawScores(g);
             drawTime(g);
             drawState(g);
@@ -192,15 +192,29 @@ public class GUI extends JFrame
         }
     }
 
-    private void drawIcons(Graphics g)
+    private void drawTeams(Graphics g)
     {
         int x = getRelativeSize(0.05);
         int y = getRelativeSize(0.15);
         int size = getRelativeSize(0.24);
+        int yName = (int)(y + size * 1.2);
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
             Teams.getIcon(data.team[1].teamNumber)};
+        g.setFont(standardSmalFont);
+        int fontSize = g.getFont().getSize();
+        boolean fittingSize = false;
+        while(!fittingSize) {
+            fittingSize = true;
+            for(int i=0; i<2; i++) {
+                if(g.getFontMetrics().stringWidth(Teams.getNames(false)[data.team[i].teamNumber]) > size) {
+                    fittingSize = false;
+                    g.setFont(g.getFont().deriveFont(Font.PLAIN, --fontSize));
+                }
+            }
+        }
         for(int i=0; i<2; i++) {
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             float scaleFactorX = 1;
             float scaleFactorY = 1;
             if(icons[i].getWidth() > icons[i].getHeight()) {
@@ -215,6 +229,10 @@ public class GUI extends JFrame
                     y+offsetY,
                     (int)(scaleFactorX*size),
                     (int)(scaleFactorY*size), null);
+            drawCenteredString(g, Teams.getNames(false)[data.team[i].teamNumber],
+                    (i==1 ? x : getWidth()-x-size) + offsetX,
+                    yName,
+                    size);
         }
     }
     
@@ -286,9 +304,7 @@ public class GUI extends JFrame
         int x;
         int y = getRelativeSize(0.45);
         int size = getRelativeSize(0.02);
-        System.out.println("---");
         for(int i=0; i<2; i++) {
-            System.out.println(data.penaltyShots[i]);
             x = getRelativeSize(0.2);
             int length = (data.penaltyShots[i] >> 5);
             if(length > 5) {
