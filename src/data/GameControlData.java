@@ -68,7 +68,8 @@ public class GameControlData implements Serializable
     public int secsRemaining = Rules.league.halfTime;        // estimate of number of seconds remaining in the half
     public TeamInfo[] team = new TeamInfo[2];
     // hacked into the package
-    public byte penaltyShots[] = {0, 0};       // left 3 bits for number of shots, right 5 bits for success or not
+    public byte penaltyShot[] = {0, 0};        // how many penalty-shots have been made by each team so far
+    public short penaltyTries[] = {0, 0};      // each bit, from lower to higher, represents a penalty shot: 1 = goal; 0 = fail
     public short subTime = 0;                  // sub-time (remaining in ready state etc.) in seconds
     
     
@@ -109,9 +110,11 @@ public class GameControlData implements Serializable
             buffer.put(aTeam.toByteArray());
         }
         /* Hack to have this in the package */
-        buffer.position(SIZE-4);
-        buffer.put(penaltyShots[0]);
-        buffer.put(penaltyShots[1]);
+        buffer.position(SIZE-8);
+        buffer.put(penaltyShot[0]);
+        buffer.put(penaltyShot[1]);
+        buffer.putShort(penaltyTries[0]);
+        buffer.putShort(penaltyTries[1]);
         buffer.putShort(subTime);
         return buffer;
     }
@@ -143,9 +146,11 @@ public class GameControlData implements Serializable
             team[i].fromByteArray(buffer);
         }
         /* Hack to have this in the package */
-        buffer.position(SIZE-4);
-        penaltyShots[0] = buffer.get();
-        penaltyShots[1] = buffer.get();
+        buffer.position(SIZE-8);
+        penaltyShot[0] = buffer.get();
+        penaltyShot[1] = buffer.get();
+        penaltyTries[0] = buffer.getShort();
+        penaltyTries[1] = buffer.getShort();
         subTime = buffer.getShort();
         return true;
     }

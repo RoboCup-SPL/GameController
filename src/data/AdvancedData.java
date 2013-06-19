@@ -46,12 +46,6 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** TimeOut counters for each team, 0:left side, 1:right side. */
     public boolean[] timeOutTaken = {false, false};
     
-    /** how many penalty-shoots have been made by each team, 0:left side, 1:right side. */
-    public int[] penaltyShot = {0, 0};
-    
-    /** penalty-shoot success by each team, 0:left side, 1:right side. */
-    public boolean[][] penaltySuccess = {{false, false, false, false, false}, {false, false, false, false, false}};
-    
     /** If true, left side has the kickoff. */
     public boolean leftSideKickoff = true;
     
@@ -166,12 +160,6 @@ public class AdvancedData extends GameControlData implements Cloneable
     {
         secsRemaining = getRemainingGameTime();
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
-        for(int i=0; i<2; i++) {
-            penaltyShots[i] = (byte)(penaltyShot[i] << 5);
-            for(int j=0, l=penaltySuccess[i].length; j<l; j++) {
-                penaltyShots[i] += ((penaltySuccess[i][j] ? 1 : 0) << (l-i-1));
-            }
-        }
         Integer subT = getSecondaryTime(0);
         if(subT == null) {
             subTime = 0;

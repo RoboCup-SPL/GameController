@@ -300,22 +300,16 @@ public class GUI extends JFrame
     private void drawPenaltyInfo(Graphics g)
     {
         g.setColor(Color.RED);
-        int x;
+        int x = getRelativeSize(0.05);
         int y = getRelativeSize(0.45);
         int size = getRelativeSize(0.02);
         for(int i=0; i<2; i++) {
-            x = getRelativeSize(0.2);
-            int length = (data.penaltyShots[i] >> 5);
-            if(length > 5) {
-                length = 5;
-            }
-            for(int j=0; j<length; j++) {
-                if((data.penaltyShots[i] & (1 << (4-j))) != 0) {
-                    g.fillOval(i==1 ? x : getWidth()-x-size, y, size, size);
+            for(int j=0; j<data.penaltyShot[i]; j++) {
+                if((data.penaltyTries[i] & (1<<j)) != 0) {
+                    g.fillOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
                 } else {
-                    g.drawOval(x, y, size, size);
+                    g.drawOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
                 }
-                x += size*2;
             }
         }
     }
