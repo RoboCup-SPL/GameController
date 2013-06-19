@@ -194,7 +194,7 @@ public class GUI extends JFrame
     private void drawTeams(Graphics g)
     {
         int x = getRelativeSize(0.05);
-        int y = getRelativeSize(0.15);
+        int y = (int)(0.26*getHeight());
         int size = getRelativeSize(0.24);
         int yName = (int)(y + size * 1.2);
         BufferedImage[] icons = new BufferedImage[] {
@@ -239,8 +239,8 @@ public class GUI extends JFrame
     {
         g.setFont(scoreFont);
         int x = getRelativeSize(0.34);
-        int y = getRelativeSize(0.33);
-        int yDiv = getRelativeSize(0.32);
+        int y = (int)(0.58*getHeight());
+        int yDiv = (int)(0.58*getHeight());
         int size = getRelativeSize(0.12);
         g.setColor(Color.BLACK);
         drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
@@ -260,7 +260,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         g.setFont(standardFont);
         int x = getRelativeSize(0.4);
-        int y = getRelativeSize(0.18);
+        int y = (int)(0.33*getHeight());
         int size = getRelativeSize(0.2);
         drawCenteredString(g, formatTime(data.secsRemaining), x, y, size);
     }
@@ -270,7 +270,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
         int x = getRelativeSize(0.4);
-        int y = getRelativeSize(0.40);
+        int y = (int)(0.7*getHeight());
         int size = getRelativeSize(0.2);
         String state;
         switch(data.gameState) {
@@ -292,7 +292,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
         int x = getRelativeSize(0.4);
-        int y = getRelativeSize(0.45);
+        int y = (int)(0.8*getHeight());
         int size = getRelativeSize(0.2);
         drawCenteredString(g, formatTime(data.subTime), x, y, size);
     }
@@ -301,7 +301,7 @@ public class GUI extends JFrame
     {
         g.setColor(Color.RED);
         int x = getRelativeSize(0.05);
-        int y = getRelativeSize(0.45);
+        int y = (int)(0.86*getHeight());
         int size = getRelativeSize(0.02);
         for(int i=0; i<2; i++) {
             for(int j=0; j<data.penaltyShot[i]; j++) {
