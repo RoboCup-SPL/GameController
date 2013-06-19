@@ -41,9 +41,11 @@ public class GUI extends JFrame
     private static final double TEST_FONT_SIZE = 0.01;
     private static final String CONFIG_PATH = "config/";
     private static final String BACKGROUND = "background.png";
-    private final static String WAITING_FOR_PACKAGE = "waiting for package...";
-    
-    
+    private static final String WAITING_FOR_PACKAGE = "waiting for package...";
+
+    /** Available screens. */
+    private static final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+
     BufferStrategy bufferStrategy;
     /** If testmode is on to just display whole GameControlData. */
     private boolean testmode = false;
@@ -63,17 +65,14 @@ public class GUI extends JFrame
      */
     GUI()
     {
-        super(WINDOW_TITLE);
+        super(WINDOW_TITLE, devices[devices.length - 1].getDefaultConfiguration());
         
         setUndecorated(true);
-        GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-        devices[devices.length-1].setFullScreenWindow(this);
-        if(IS_OSX) {
-            devices[devices.length-1].setFullScreenWindow(null);
-            setSize(devices[devices.length-1].getDisplayMode().getWidth(), devices[devices.length-1].getDisplayMode().getHeight());
+        if(IS_OSX && devices.length != 1) {
+            setSize(devices[devices.length-1].getDefaultConfiguration().getBounds().getSize());
+        } else {
+            devices[devices.length-1].setFullScreenWindow(this);
         }
-        createBufferStrategy(2);
-        bufferStrategy = getBufferStrategy();
         
         try {
             background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND));
@@ -99,6 +98,8 @@ public class GUI extends JFrame
         scoreFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_XXL_SIZE*getWidth()));
         
         setVisible(true);
+        createBufferStrategy(2);
+        bufferStrategy = getBufferStrategy();
         Graphics g = bufferStrategy.getDrawGraphics();
         draw(g);
         bufferStrategy.show();
