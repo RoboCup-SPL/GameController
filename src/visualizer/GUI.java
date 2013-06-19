@@ -257,11 +257,11 @@ public class GUI extends JFrame
         int size = getRelativeSize(0.2);
         String state;
         switch(data.gameState) {
-            case GameControlData.STATE_INITIAL:  state = "initial"; break;
-            case GameControlData.STATE_READY:    state = "ready";   break;
-            case GameControlData.STATE_SET:      state = "set";     break;
-            case GameControlData.STATE_PLAYING:  state = "playing"; break;
-            case GameControlData.STATE_FINISHED: state = "finish";  break;
+            case GameControlData.STATE_INITIAL:  state = "Initial"; break;
+            case GameControlData.STATE_READY:    state = "Ready";   break;
+            case GameControlData.STATE_SET:      state = "Set";     break;
+            case GameControlData.STATE_PLAYING:  state = "Playing"; break;
+            case GameControlData.STATE_FINISHED: state = "Finished";  break;
             default: state = "";
         }
         drawCenteredString(g, state, x, y, size);
