@@ -86,13 +86,15 @@ public class FirstHalf extends GCAction
             color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = color;
-            if(Rules.league.timeOutPerHalf)
-                data.timeOutTaken = new boolean[] {false, false};
         }
         
-        boolean timeOutTaken = data.timeOutTaken[0];
-        data.timeOutTaken[0] = data.timeOutTaken[1];
-        data.timeOutTaken[1] = timeOutTaken;
+        if(Rules.league.timeOutPerHalf) {
+            data.timeOutTaken = new boolean[] {false, false};
+        } else {
+            boolean timeOutTaken = data.timeOutTaken[0];
+            data.timeOutTaken[0] = data.timeOutTaken[1];
+            data.timeOutTaken[1] = timeOutTaken;
+        }
         
         byte penaltyShot = data.penaltyShot[0];
         data.penaltyShot[0] = data.penaltyShot[1];
