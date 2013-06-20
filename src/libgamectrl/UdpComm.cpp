@@ -147,14 +147,14 @@ bool UdpComm::write(const char* data, const int len)
 
 const char* UdpComm::getWifiBroadcastAddress()
 {
-  /*struct ifaddrs* ifAddrStruct = NULL;
+  struct ifaddrs* ifAddrStruct = NULL;
   struct ifaddrs* ifa = NULL;
   
   //determine ip address
   getifaddrs(&ifAddrStruct);
   for(ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) 
   {
-      // manpage getifaddrs    // check it is IP4
+       // manpage getifaddrs    // check it is IP4
     if(ifa->ifa_addr != NULL && ifa->ifa_addr->sa_family == AF_INET)
     {
       std::string interfaceName(ifa->ifa_name);
@@ -174,6 +174,6 @@ const char* UdpComm::getWifiBroadcastAddress()
         return buffer;
       }
     }
-  }*/
+  }
   return "255.255.255.255";
 }

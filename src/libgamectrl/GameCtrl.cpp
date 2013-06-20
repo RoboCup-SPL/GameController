@@ -98,11 +98,11 @@ private:
   bool previousChestButtonPressed; /**< Whether the chest button was pressed during the previous cycle. */
   bool previousLeftFootButtonPressed; /**< Whether the left foot bumper was pressed during the previous cycle. */
   bool previousRightFootButtonPressed; /**< Whether the right foot bumper was pressed during the previous cycle. */
-  int whenChestButtonStateChanged; /**< When last state change of the chest button occured (DCM time). */
-  int whenLeftFootButtonStateChanged; /**< When last state change of the left foot bumper occured (DCM time). */
-  int whenRightFootButtonStateChanged; /**< When last state change of the right foot bumper occured (DCM time). */
-  int whenPacketWasReceived; /**< When the last GameController packet was received (DCM time). */
-  int whenPacketWasSent; /**< When the last return packet was sent to the GameController (DCM time). */
+  unsigned whenChestButtonStateChanged; /**< When last state change of the chest button occured (DCM time). */
+  unsigned whenLeftFootButtonStateChanged; /**< When last state change of the left foot bumper occured (DCM time). */
+  unsigned whenRightFootButtonStateChanged; /**< When last state change of the right foot bumper occured (DCM time). */
+  unsigned whenPacketWasReceived; /**< When the last GameController packet was received (DCM time). */
+  unsigned whenPacketWasSent; /**< When the last return packet was sent to the GameController (DCM time). */
 
   /**
    * Resets the internal state when an application was just started.
@@ -131,7 +131,7 @@ private:
    */
   void handleOutput()
   {
-    int now = proxy->getTime(0);
+    unsigned now = (unsigned) proxy->getTime(0);
 
     if(teamNumber && *playerNumber &&
        *playerNumber <= gameCtrlData.playersPerTeam &&
@@ -174,7 +174,7 @@ private:
               setLED(chestRed, 0.f, 0.f, 1.f);
               break;
             case STATE_SET:
-              setLED(chestRed, 1.f, 0.5f, 0.f);
+              setLED(chestRed, 1.f, 1.0f, 0.f);
               break;
             case STATE_PLAYING:
               setLED(chestRed, 0.f, 1.f, 0.f);
@@ -183,7 +183,7 @@ private:
               setLED(chestRed, 0.f, 0.f, 0.f);
           }
 
-        ledRequest[4][0] = now;
+        ledRequest[4][0] = (int) now;
         proxy->setAlias(ledRequest);
         
         previousState = gameCtrlData.state;
@@ -222,7 +222,7 @@ private:
    */
   void handleInput()
   {
-    int now = proxy->getTime(0);
+    unsigned now = (unsigned) proxy->getTime(0);
 
     if(*teamNumberPtr != 0)
     { // new team number was set -> reset internal structure
