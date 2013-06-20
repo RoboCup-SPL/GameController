@@ -278,9 +278,17 @@ public class GUI extends JFrame
         switch(data.secGameState) {
             case GameControlData.STATE2_NORMAL:
                 if(data.firstHalf == GameControlData.C_TRUE) {
-                    state = "First Half";
+                    if(data.gameState == GameControlData.STATE_FINISHED) {
+                        state = "Half Time";
+                    } else {
+                        state = "First Half";
+                    }
                 } else {
-                    state = "Second Half";
+                    if(data.gameState == GameControlData.STATE_INITIAL) {
+                        state = "Half Time";
+                    } else {
+                        state = "Second Half";
+                    }
                 }
                 break;
             case GameControlData.STATE2_OVERTIME:     state = "Overtime";   break;
