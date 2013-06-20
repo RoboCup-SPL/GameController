@@ -29,7 +29,7 @@ public class GUI extends JFrame
      */
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final String WINDOW_TITLE = "GameController";
-    private static final String STANDARD_FONT = "Helvetica";
+    private static final String STANDARD_FONT = Font.DIALOG;
     private static final double STANDARD_FONT_SIZE = 0.06;
     private static final double STANDARD_FONT_XXL_SIZE = 0.16;
     private static final double STANDARD_FONT_S_SIZE = 0.04;
