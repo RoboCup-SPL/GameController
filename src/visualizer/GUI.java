@@ -200,6 +200,7 @@ public class GUI extends JFrame
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
             Teams.getIcon(data.team[1].teamNumber)};
+        /* Use this lines to display team-names and one line below
         g.setFont(standardSmalFont);
         int fontSize = g.getFont().getSize();
         boolean fittingSize = false;
@@ -211,7 +212,7 @@ public class GUI extends JFrame
                     g.setFont(g.getFont().deriveFont(Font.PLAIN, --fontSize));
                 }
             }
-        }
+        }*/
         for(int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             float scaleFactorX = 1;
@@ -228,10 +229,11 @@ public class GUI extends JFrame
                     y+offsetY,
                     (int)(scaleFactorX*size),
                     (int)(scaleFactorY*size), null);
+            /* Use this line to display team-names
             drawCenteredString(g, Teams.getNames(false)[data.team[i].teamNumber],
                     (i==1 ? x : getWidth()-x-size) + offsetX,
                     yName,
-                    size);
+                    size);*/
         }
     }
     
@@ -324,7 +326,7 @@ public class GUI extends JFrame
     {
         g.setColor(Color.RED);
         int x = getRelativeSize(0.05);
-        int y = (int)(0.91*getHeight());
+        int y = (int)(0.86*getHeight());
         int size = getRelativeSize(0.02);
         for(int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
