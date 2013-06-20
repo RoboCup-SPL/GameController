@@ -162,8 +162,8 @@ public class GUI extends JFrame
     {
         g.setColor(Color.BLACK);
         g.setFont(testFont);
-        int x = getRelativeSize(0.08);
-        int y = (int)(0.3*getHeight());
+        int x = getSizeToWidth(0.08);
+        int y = getSizeToHeight(0.3);
         String[] out = data.toString().split("\n");
         for(int i=0; i<out.length; i++) {
             g.drawString(out[i], x, y);
@@ -177,9 +177,9 @@ public class GUI extends JFrame
             }
         }
         
-        x = (int)(0.35*getWidth());
+        x = getSizeToWidth(0.35);
         for(int i=0; i<2; i++) {
-            y = (int)(0.2*getHeight());
+            y = getSizeToHeight(0.2);
             for(int j=0; j<data.team[i].player.length; j++) {
                 out = data.team[i].player[j].toString().split("\n");
                 for(int k=0; k<out.length; k++) {
@@ -187,16 +187,16 @@ public class GUI extends JFrame
                     y += testFont.getSize()*1.2;
                 }
             }
-            x = getRelativeSize(0.64);
+            x = getSizeToWidth(0.64);
         }
     }
 
     private void drawTeams(Graphics g)
     {
-        int x = getRelativeSize(0.02);
-        int y = (int)(0.33*getHeight());
-        int size = getRelativeSize(0.27);
-        int yName = (int)(y + size * 1.15);
+        int x = getSizeToWidth(0.02);
+        int y = getSizeToHeight(0.33);
+        int size = getSizeToWidth(0.27);
+        //int yName = (int)(y + size * 1.15);
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
             Teams.getIcon(data.team[1].teamNumber)};
@@ -240,10 +240,10 @@ public class GUI extends JFrame
     private void drawScores(Graphics g)
     {
         g.setFont(scoreFont);
-        int x = getRelativeSize(0.34);
-        int y = (int)(0.62*getHeight());
-        int yDiv = (int)(0.62*getHeight());
-        int size = getRelativeSize(0.12);
+        int x = getSizeToWidth(0.34);
+        int y = getSizeToHeight(0.62);
+        int yDiv = getSizeToHeight(0.62);
+        int size = getSizeToWidth(0.12);
         g.setColor(Color.BLACK);
         drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
         for(int i=0; i<2; i++) {
@@ -261,9 +261,9 @@ public class GUI extends JFrame
     {
         g.setColor(Color.BLACK);
         g.setFont(standardFont);
-        int x = getRelativeSize(0.4);
-        int y = (int)(0.37*getHeight());
-        int size = getRelativeSize(0.2);
+        int x = getSizeToWidth(0.4);
+        int y = getSizeToHeight(0.37);
+        int size = getSizeToWidth(0.2);
         drawCenteredString(g, formatTime(data.secsRemaining), x, y, size);
     }
     
@@ -271,9 +271,9 @@ public class GUI extends JFrame
     {
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
-        int x = getRelativeSize(0.4);
-        int y = (int)(0.74*getHeight());
-        int size = getRelativeSize(0.2);
+        int x = getSizeToWidth(0.4);
+        int y = getSizeToHeight(0.74);
+        int size = getSizeToWidth(0.2);
         String state;
         switch(data.secGameState) {
             case GameControlData.STATE2_NORMAL:
@@ -302,9 +302,9 @@ public class GUI extends JFrame
     {
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
-        int x = getRelativeSize(0.4);
-        int y = (int)(0.84*getHeight());
-        int size = getRelativeSize(0.2);
+        int x = getSizeToWidth(0.4);
+        int y = getSizeToHeight(0.84);
+        int size = getSizeToWidth(0.2);
         String state;
         switch(data.gameState) {
             case GameControlData.STATE_INITIAL:  state = "Initial"; break;
@@ -324,18 +324,18 @@ public class GUI extends JFrame
         }
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
-        int x = getRelativeSize(0.4);
-        int y = (int)(0.94*getHeight());
-        int size = getRelativeSize(0.2);
+        int x = getSizeToWidth(0.4);
+        int y = getSizeToHeight(0.94);
+        int size = getSizeToWidth(0.2);
         drawCenteredString(g, formatTime(data.subTime), x, y, size);
     }
     
     private void drawPenaltyInfo(Graphics g)
     {
         g.setColor(Color.RED);
-        int x = getRelativeSize(0.05);
-        int y = (int)(0.86*getHeight());
-        int size = getRelativeSize(0.02);
+        int x = getSizeToWidth(0.05);
+        int y = getSizeToHeight(0.86);
+        int size = getSizeToWidth(0.02);
         for(int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             for(int j=0; j<data.penaltyShot[i]; j++) {
@@ -348,9 +348,14 @@ public class GUI extends JFrame
         }
     }
     
-    private int getRelativeSize(double size)
+    private int getSizeToWidth(double size)
     {
         return (int)(size*getWidth());
+    }
+    
+    private int getSizeToHeight(double size)
+    {
+        return (int)(size*getHeight());
     }
     
     private void drawCenteredString(Graphics g, String s, int x, int y, int width)
