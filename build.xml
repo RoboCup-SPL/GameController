@@ -27,7 +27,13 @@
     <jar destfile="${jar.dir}/GameStateVisualizer.jar" basedir="${classes.dir}">
       <manifest>
         <attribute name="Main-Class" value="visualizer.Main"/>
-        <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
+        <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
+      </manifest>
+    </jar>
+    <jar destfile="${jar.dir}/LogAnalyzer.jar" basedir="${classes.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="analyzer.Main"/>
+        <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
       </manifest>
     </jar>
 
@@ -47,5 +53,9 @@
 
   <target name="run_visualizer" depends="jar">
     <java jar="${jar.dir}/GameStateVisualizer.jar" fork="true"/>
+  </target>
+  
+  <target name="run_analyzer" depends="jar">
+    <java jar="${jar.dir}/LogAnalyzer.jar" fork="true"/>
   </target>
 </project>
