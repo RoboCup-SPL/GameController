@@ -30,14 +30,15 @@ public class Log
     private FileWriter file;
     /** The error-file to write into. */
     private FileWriter errorFile;
-    /** The format of timestamps. */
-    private SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy.M.dd-kk.mm.ss");
     /** The file to write into. */
     private String errorPath = "error.txt";
     /** The timeline. */
     private LinkedList<AdvancedData> states = new LinkedList<AdvancedData>();
     /** If != null, the next log entry will use this message. */ 
     private String message = null;
+    
+    /** The format of timestamps. */
+    public static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy.M.dd-kk.mm.ss");
     
     /**
      * Creates a new Log.

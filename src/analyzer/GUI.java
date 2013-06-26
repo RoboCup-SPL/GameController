@@ -1,12 +1,17 @@
 package analyzer;
 
+import common.TotalScaleLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 
 /**
@@ -19,31 +24,48 @@ public class GUI extends JFrame
     private final static String TITLE = "Log Analyzer";
     private final static int WINDOW_WIDTH = 600;
     private final static int WINDOW_HEIGHT = 400;
+    private final static int DECO_HIGHT = 30;
     private final static int STANDARD_SPACE = 10;
+    private final static int ANALYZE_HIGHT = 40;
+    private final static String ANALYZE = "Analyze";
     
-    private DefaultListModel listModel;
-    private JList list;
+    private Games games;
+    
+    private DefaultListModel list;
+    private JList listDisplay;
     private JScrollPane scrollArea;
+    private JTextArea info;
+    private JButton analyze;
     
-    public GUI()
+    public GUI(Games games)
     {
         super(TITLE);
+        
+        this.games = games;
+        
         Dimension desktop = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((desktop.width-WINDOW_WIDTH)/2, (desktop.height-WINDOW_HEIGHT)/2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new FlowLayout(FlowLayout.CENTER, 0, STANDARD_SPACE));
         setResizable(false);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        TotalScaleLayout layout = new TotalScaleLayout(this);
+        setLayout(layout);
         
-        listModel = new DefaultListModel();
-        list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        scrollArea = new JScrollPane(list);
-        scrollArea.setPreferredSize(new Dimension((WINDOW_WIDTH-3*STANDARD_SPACE)/2, WINDOW_HEIGHT-2*STANDARD_SPACE));
-        add(scrollArea);
+        list = new DefaultListModel();
+        listDisplay = new JList(list);
+        listDisplay.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        scrollArea = new JScrollPane(listDisplay);
+        scrollArea.setPreferredSize(new Dimension((WINDOW_WIDTH-3*STANDARD_SPACE)/2, WINDOW_HEIGHT-2*STANDARD_SPACE-DECO_HIGHT));
+        info = new JTextArea();
+        info.setPreferredSize(new Dimension((WINDOW_WIDTH-3*STANDARD_SPACE)/2, WINDOW_HEIGHT-3*STANDARD_SPACE-ANALYZE_HIGHT-DECO_HIGHT));
+        info.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        analyze = new JButton(ANALYZE);
+        analyze.setPreferredSize(new Dimension((WINDOW_WIDTH-3*STANDARD_SPACE)/2, DECO_HIGHT));
+        layout.add(.03, .03, .45, .94, scrollArea);
+        layout.add(.52, .03, .45, .8, info);
+        layout.add(.52, .87, .45, .1, analyze);
         
-        //debug
-        listModel.addElement("test");
+        list.addElement(games.getLogs());
         
         setVisible(true);
     }
