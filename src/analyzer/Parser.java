@@ -17,14 +17,14 @@ public class Parser
         int i = 0;
         for(String line: log.lines) {
             i++;
-            int divPos = line.indexOf(": ")+3;
+            int divPos = line.indexOf(": ");
             Date time = null;
             try{
                 time = Log.timestampFormat.parse(line.substring(0, divPos));
             } catch(ParseException e) {
                 log.parseErrors += "error in line "+i+": Cannot parse timestamp\n";
             }
-            String action = line.substring(divPos+1);
+            String action = line.substring(divPos+2);
             
             if(i == 1) {
                 log.version = action;
@@ -43,7 +43,9 @@ public class Parser
             }
         }
         log.start = kickoffTime;
-        log.duration = (int)((endTime.getTime()-kickoffTime.getTime())/1000);
+        if( (kickoffTime != null) && (endTime != null) ) {
+            log.duration = (int)((endTime.getTime()-kickoffTime.getTime())/1000);
+        }
     }
     
     public static void statistic(LogInfo log)

@@ -3,7 +3,6 @@ package analyzer;
 import common.TotalScaleLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -13,13 +12,15 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * @author: Michel Bartsch
  * 
  * This window is to be shown to select log-files
  */
-public class GUI extends JFrame
+public class GUI extends JFrame implements ListSelectionListener
 {
     private final static String TITLE = "Log Analyzer";
     private final static int WINDOW_WIDTH = 600;
@@ -33,6 +34,7 @@ public class GUI extends JFrame
     
     private DefaultListModel list;
     private JList listDisplay;
+    private ListSelectionModel selection;
     private JScrollPane scrollArea;
     private JTextArea info;
     private JButton analyze;
@@ -54,6 +56,7 @@ public class GUI extends JFrame
         list = new DefaultListModel();
         listDisplay = new JList(list);
         listDisplay.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        selection = listDisplay.getSelectionModel();
         scrollArea = new JScrollPane(listDisplay);
         scrollArea.setPreferredSize(new Dimension((WINDOW_WIDTH-3*STANDARD_SPACE)/2, WINDOW_HEIGHT-2*STANDARD_SPACE-DECO_HIGHT));
         info = new JTextArea();
@@ -65,8 +68,18 @@ public class GUI extends JFrame
         layout.add(.52, .03, .45, .8, info);
         layout.add(.52, .87, .45, .1, analyze);
         
-        list.addElement(games.getLogs());
+        String[] logs = games.getLogs();
+        for(String log: logs) {
+            list.addElement(log);
+        }
+        selection.addListSelectionListener(this);
         
         setVisible(true);
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e)
+    {
+        info.setText(games.logs.get(selection.getMinSelectionIndex()).getInfo());
     }
 }
