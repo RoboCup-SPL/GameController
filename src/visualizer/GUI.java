@@ -30,9 +30,9 @@ public class GUI extends JFrame
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final String WINDOW_TITLE = "Visualizer";
     private static final String STANDARD_FONT = Font.DIALOG;
-    private static final double STANDARD_FONT_SIZE = 0.06;
+    private static final double STANDARD_FONT_SIZE = 0.09;
     private static final double STANDARD_FONT_XXL_SIZE = 0.16;
-    private static final double STANDARD_FONT_S_SIZE = 0.04;
+    private static final double STANDARD_FONT_S_SIZE = 0.06;
     private static final String TEST_FONT = "Lucida Console";
     private static final double TEST_FONT_SIZE = 0.01;
     private static final String CONFIG_PATH = "config/";
@@ -193,9 +193,9 @@ public class GUI extends JFrame
 
     private void drawTeams(Graphics g)
     {
-        int x = getSizeToWidth(0.02);
+        int x = getSizeToWidth(0.01);
         int y = getSizeToHeight(0.33);
-        int size = getSizeToWidth(0.27);
+        int size = getSizeToWidth(0.3);
         //int yName = (int)(y + size * 1.15);
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
@@ -217,7 +217,7 @@ public class GUI extends JFrame
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             float scaleFactorX = 1;
             float scaleFactorY = 1;
-            if(icons[i].getWidth() > icons[i].getHeight()) {
+            if(icons[i].getWidth() * 1.2f > icons[i].getHeight()) {
                 scaleFactorY = icons[i].getHeight()/(float)icons[i].getWidth();
             } else {
                 scaleFactorX = icons[i].getWidth()/(float)icons[i].getHeight();
@@ -241,8 +241,8 @@ public class GUI extends JFrame
     {
         g.setFont(scoreFont);
         int x = getSizeToWidth(0.34);
-        int y = getSizeToHeight(0.62);
-        int yDiv = getSizeToHeight(0.62);
+        int y = getSizeToHeight(0.59);
+        int yDiv = getSizeToHeight(0.59);
         int size = getSizeToWidth(0.12);
         g.setColor(Color.BLACK);
         drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
@@ -262,7 +262,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         g.setFont(standardFont);
         int x = getSizeToWidth(0.4);
-        int y = getSizeToHeight(0.37);
+        int y = getSizeToHeight(0.35);
         int size = getSizeToWidth(0.2);
         drawCenteredString(g, formatTime(data.secsRemaining), x, y, size);
     }
@@ -303,7 +303,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
         int x = getSizeToWidth(0.4);
-        int y = getSizeToHeight(0.84);
+        int y = getSizeToHeight(0.85);
         int size = getSizeToWidth(0.2);
         String state;
         switch(data.gameState) {
@@ -325,7 +325,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         g.setFont(standardSmalFont);
         int x = getSizeToWidth(0.4);
-        int y = getSizeToHeight(0.94);
+        int y = getSizeToHeight(0.96);
         int size = getSizeToWidth(0.2);
         drawCenteredString(g, formatTime(data.subTime), x, y, size);
     }
