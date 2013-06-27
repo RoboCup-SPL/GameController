@@ -27,8 +27,8 @@ public class RobotWatcher
     private RobotOnlineStatus [][] status = new RobotOnlineStatus[2][Rules.league.teamSize];
 
     /** What the constants name says. */
-    private final static int MILLIS_UNTILL_ROBOTER_IS_OFFLINE = 4*1000;
-    private final static int MILLIS_UNTILL_ROBOTER_HAS_HIGH_LATANCY = 2*1000;
+    private final static int MILLIS_UNTIL_ROBOT_IS_OFFLINE = 4*1000;
+    private final static int MILLIS_UNTIL_ROBOT_HAS_HIGH_LATANCY = 2*1000;
 
     /**
      * Creates a new RobotWatcher.
@@ -86,14 +86,14 @@ public class RobotWatcher
         for(int i=0; i<2; i++) {
             robotsOffline = 0;
             for(int j=0; j < instance.status[i].length; j++) {
-                if(currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTILL_ROBOTER_IS_OFFLINE) {
+                if(currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_IS_OFFLINE) {
                     instance.status[i][j] = RobotOnlineStatus.OFFLINE;
                     if(++robotsOffline >= Rules.league.teamSize) {
                         for(int k=0; k < Rules.league.teamSize; k++) {
                             instance.status[i][k] = RobotOnlineStatus.UNKNOWN;
                         }
                     }
-                } else if(currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTILL_ROBOTER_HAS_HIGH_LATANCY) {
+                } else if(currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_HAS_HIGH_LATANCY) {
                     instance.status[i][j] = RobotOnlineStatus.HIGH_LATENCY;
                 } else {
                     instance.status[i][j] = RobotOnlineStatus.ONLINE;
