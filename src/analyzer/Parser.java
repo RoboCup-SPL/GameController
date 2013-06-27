@@ -22,7 +22,7 @@ public class Parser
             try{
                 time = Log.timestampFormat.parse(line.substring(0, divPos));
             } catch(ParseException e) {
-                log.parseErrors += "error in line "+i+": Cannot parse timestamp\n";
+                log.parseErrors += "error in line "+i+": Cannot parse timestamp" + GUI.HTML_LF;
             }
             String action = line.substring(divPos+2);
             
@@ -34,7 +34,7 @@ public class Parser
                     log.team[0] = teams[0];
                     log.team[1] = teams[1];
                 } else {
-                    log.parseErrors += "error in line "+i+": Found vs but not 2 teams\n";
+                    log.parseErrors += "error in line "+i+": Found vs but not 2 teams" + GUI.HTML_LF;
                 }
             } else if( (kickoffTime == null) && (action.startsWith("Ready")) ) {
                 kickoffTime = time;
@@ -58,7 +58,7 @@ public class Parser
             try{
                 time = Log.timestampFormat.parse(line.substring(0, divPos));
             } catch(ParseException e) {
-                log.parseErrors += "error in line "+i+": Cannot parse timestamp\n";
+                log.parseErrors += "error in line "+i+": Cannot parse timestamp" + GUI.HTML_LF;
             }
             String action = line.substring(divPos+1);
             

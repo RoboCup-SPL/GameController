@@ -54,27 +54,50 @@ public class LogInfo
         Parser.info(this);
     }
     
-    public boolean realGame()
+    public boolean isRealLog()
     {
-        return version.equals(controller.Main.version)
-                && !team[0].equals(NOT_A_REAL_TEAM)
-                && !team[1].equals(NOT_A_REAL_TEAM)
-                && duration > MIN_DURATION;
+        return isRealVersion()
+                && isRealTeamOne()
+                && isRealTeamTwo()
+                && isRealDuration();
+    }
+    
+    private boolean isRealVersion()
+    {
+        return version.equals(controller.Main.version);
+    }
+    
+    private boolean isRealTeamOne()
+    {
+        return !team[0].equals(NOT_A_REAL_TEAM);
+    }
+    
+    private boolean isRealTeamTwo()
+    {
+        return !team[1].equals(NOT_A_REAL_TEAM);
+    }
+    
+    private boolean isRealDuration()
+    {
+        return duration > MIN_DURATION;
     }
     
     public String getInfo()
     {
-        return version + "\n"
-                + team[0] + " vs " + team[1] + "\n"
-                + start + " starting\n"
-                + duration + " secs\n"
-                + (lines.size()-NUM_OF_INFO_ENTRIES) + " actions\n"
-                + parseErrors;
+        return GUI.HTML
+                + (isRealVersion() ? version : GUI.HTML_RED + version + GUI.HTML_END) + GUI.HTML_LF
+                + (isRealTeamOne() ? team[0] : GUI.HTML_RED + team[0] + GUI.HTML_END)
+                + " vs "
+                + (isRealTeamTwo() ? team[1] : GUI.HTML_RED + team[1] + GUI.HTML_END) + GUI.HTML_LF
+                + (start != null ? start : GUI.HTML_RED + start + GUI.HTML_END) + " starting" + GUI.HTML_LF
+                + (isRealDuration() ? duration : GUI.HTML_RED + duration + GUI.HTML_END) + " seconds" + GUI.HTML_LF
+                + (lines.size()-NUM_OF_INFO_ENTRIES) + " actions" + GUI.HTML_LF
+                + GUI.HTML_RED + parseErrors;
     }
     
     @Override
     public String toString()
     {
-        return team[0] + " vs " + team[1];
+        return GUI.HTML + (isRealLog() ? team[0] + " vs " + team[1] : GUI.HTML_RED + team[0] + " vs " + team[1] + GUI.HTML_END);
     }
 }

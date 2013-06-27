@@ -22,13 +22,8 @@ public class Games
         }
     }
     
-    public String[] getLogs()
+    public void toFile(File file)
     {
-        String[] out = new String[logs.size()];
-        int i = 0;
-        for(LogInfo log: logs) {
-            out[i++] = log+"";
-        }
-        return out;
+        //TODO
     }
 }
