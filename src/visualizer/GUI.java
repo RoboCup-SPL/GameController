@@ -1,6 +1,7 @@
 package visualizer;
 
 import common.Log;
+import controller.action.ActionBoard;
 import data.GameControlData;
 import data.Rules;
 import data.Teams;
@@ -30,6 +31,7 @@ public class GUI extends JFrame
      */
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final String WINDOW_TITLE = "Visualizer";
+    private static final int DISPLAY_UPDATE_DELAY = 500;
     private static final String STANDARD_FONT = Font.DIALOG;
     private static final double STANDARD_FONT_SIZE = 0.09;
     private static final double STANDARD_FONT_XXL_SIZE = 0.16;
@@ -47,7 +49,7 @@ public class GUI extends JFrame
     /** If testmode is on to just display whole GameControlData. */
     private boolean testmode = false;
     /** The last data received to show. */
-    private GameControlData data;
+    private GameControlData data = null;
     /** The background. */
     private BufferedImage background;
     
@@ -105,7 +107,19 @@ public class GUI extends JFrame
         setVisible(true);
         createBufferStrategy(2);
         bufferStrategy = getBufferStrategy();
-        update((GameControlData)null);
+        Thread displayUpdater = new Thread()
+        {
+            @Override
+            public void run() {
+                while(true) {
+                    update(data);
+                    try {
+                        Thread.sleep(DISPLAY_UPDATE_DELAY);
+                    } catch (InterruptedException e) {}
+                }
+            }
+        };
+        displayUpdater.start();
     }
     
     /**
@@ -125,11 +139,9 @@ public class GUI extends JFrame
      */
     public synchronized void update(GameControlData data)
     {
-        int i=0;
         this.data = data;
         do {
             do {
-                System.out.println(i++);
                 Graphics g = bufferStrategy.getDrawGraphics();
                 draw(g);
                 g.dispose();
