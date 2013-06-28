@@ -4,7 +4,6 @@ import common.Log;
 import data.GameControlData;
 import data.Rules;
 import data.Teams;
-
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -45,11 +44,12 @@ public class GUI extends JFrame
     BufferStrategy bufferStrategy;
     /** If testmode is on to just display whole GameControlData. */
     private boolean testmode = false;
-    /** The current data to show. */
+    /** The last data received to show. */
     private GameControlData data;
-    
+    /** The background. */
     private BufferedImage background;
     
+    /** The fonts used. */
     private Font testFont;
     private Font standardFont;
     private Font standardSmalFont;
@@ -128,6 +128,11 @@ public class GUI extends JFrame
         }
     }
     
+    /**
+     * This draws the whole visualizer.
+     * 
+     * @param g  The graphics object to draw on.
+     */
     public final void draw(Graphics g)
     {
         Graphics2D g2 = (Graphics2D) g;
@@ -152,6 +157,11 @@ public class GUI extends JFrame
         }
     }
     
+    /**
+     * This draws something to inform that there is no package to draw.
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawNoPackage(Graphics g)
     {
         g.setColor(Color.BLACK);
@@ -159,6 +169,11 @@ public class GUI extends JFrame
         g.drawString(WAITING_FOR_PACKAGE, (int)(0.2*getWidth()), (int)(0.3*getHeight()));
     }
     
+    /**
+     * This draws everything in the package in a simple way, just for testing.
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawTestmode(Graphics g)
     {
         g.setColor(Color.BLACK);
@@ -192,6 +207,11 @@ public class GUI extends JFrame
         }
     }
 
+    /**
+     * This draws the teams´s icons.
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawTeams(Graphics g)
     {
         int x = getSizeToWidth(0.01);
@@ -238,6 +258,11 @@ public class GUI extends JFrame
         }
     }
     
+    /**
+     * This draws the score.
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawScores(Graphics g)
     {
         g.setFont(scoreFont);
@@ -258,6 +283,11 @@ public class GUI extends JFrame
         }
     }
     
+    /**
+     * This draws the main time.
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawTime(Graphics g)
     {
         g.setColor(Color.BLACK);
@@ -268,6 +298,11 @@ public class GUI extends JFrame
         drawCenteredString(g, formatTime(data.secsRemaining), x, y, size);
     }
     
+    /**
+     * This draws the secondary state, for example "First Half".
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawSecState(Graphics g)
     {
         g.setColor(Color.BLACK);
@@ -303,6 +338,11 @@ public class GUI extends JFrame
         drawCenteredString(g, state, x, y, size);
     }
     
+    /**
+     * This draws the state, for example "Initial".
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawState(Graphics g)
     {
         g.setColor(Color.BLACK);
@@ -322,6 +362,11 @@ public class GUI extends JFrame
         drawCenteredString(g, state, x, y, size);
     }
     
+    /**
+     * This draws the sub time, for example the ready time.
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawSubTime(Graphics g)
     {
         if(data.subTime == 0) {
@@ -335,6 +380,11 @@ public class GUI extends JFrame
         drawCenteredString(g, formatTime(data.subTime), x, y, size);
     }
     
+    /**
+     * This draws the penalty tries and if they scored.
+     * 
+     * @param g  The graphics object to draw on.
+     */
     private void drawPenaltyInfo(Graphics g)
     {
         g.setColor(Color.RED);
@@ -353,22 +403,52 @@ public class GUI extends JFrame
         }
     }
     
+    /**
+     * This is used to scale sizes depending on the visuaizers width.
+     * 
+     * @param size  A size between 0.0 (nothing) and 1.0 (full viualizers width).
+     * 
+     * @return A size in pixel.
+     */
     private int getSizeToWidth(double size)
     {
         return (int)(size*getWidth());
     }
     
+    /**
+     * This is used to scale sizes depending on the visuaizers height.
+     * 
+     * @param size  A size between 0.0 (nothing) and 1.0 (full viualizers height).
+     * 
+     * @return A size in pixel.
+     */
     private int getSizeToHeight(double size)
     {
         return (int)(size*getHeight());
     }
     
+    /**
+     * This simply draws a string horizontal centered on a given position.
+     * 
+     * @param g     The graphics object to draw on.
+     * @param s     The string to draw.
+     * @param x     Left position of the area to draw the string in.
+     * @param y     Upper position of the area to draw the string in.
+     * @param width The width of the area to draw the string centered in.
+     */
     private void drawCenteredString(Graphics g, String s, int x, int y, int width)
     {
         int offset = (width - g.getFontMetrics().stringWidth(s)) / 2;
         g.drawString(s, x+offset, y);
     }
     
+    /**
+     * Formats a time in seconds to a usual looking minutes and seconds time as string.
+     * 
+     * @param seconds   Time to format in seconds.
+     * 
+     * @return Time formated.
+     */
     private String formatTime(int seconds) {
         return (seconds < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(seconds) * 1000));
     }

@@ -58,6 +58,8 @@ public class KeyboardListener implements KeyEventDispatcher
      * GUI.
      * 
      * @param key  The key that has just been pressed.
+     * 
+     * @return If false, the key was used and should be consumed.
      */
     private boolean pressed(int key)
     {

@@ -51,6 +51,12 @@ public class Main
         network.start();
     }
     
+    /**
+     * This should be called when the programm is shutting down to close
+     * sockets and finally exit.
+     * 
+     * @param args  This is ignored.
+     */
     public static void exit()
     {
         listener.close();
