@@ -120,12 +120,14 @@ public class GUI extends JFrame
     public synchronized void update(GameControlData data)
     {
         this.data = data;
-        Graphics g = bufferStrategy.getDrawGraphics();
-        if (!bufferStrategy.contentsLost()) {
-            draw(g);
+        do {
+            do {
+                Graphics g = bufferStrategy.getDrawGraphics();
+                draw(g);
+                g.dispose();
+            } while (bufferStrategy.contentsRestored());
             bufferStrategy.show();
-            g.dispose();
-        }
+        } while (bufferStrategy.contentsLost());
     }
     
     /**
