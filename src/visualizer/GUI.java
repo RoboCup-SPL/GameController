@@ -275,25 +275,29 @@ public class GUI extends JFrame
         int y = getSizeToHeight(0.74);
         int size = getSizeToWidth(0.2);
         String state;
-        switch(data.secGameState) {
-            case GameControlData.STATE2_NORMAL:
-                if(data.firstHalf == GameControlData.C_TRUE) {
-                    if(data.gameState == GameControlData.STATE_FINISHED) {
-                        state = "Half Time";
+        if(data.timeOut == GameControlData.C_FALSE) {
+            switch(data.secGameState) {
+                case GameControlData.STATE2_NORMAL:
+                    if(data.firstHalf == GameControlData.C_TRUE) {
+                        if(data.gameState == GameControlData.STATE_FINISHED) {
+                            state = "Half Time";
+                        } else {
+                            state = "First Half";
+                        }
                     } else {
-                        state = "First Half";
+                        if(data.gameState == GameControlData.STATE_INITIAL) {
+                            state = "Half Time";
+                        } else {
+                            state = "Second Half";
+                        }
                     }
-                } else {
-                    if(data.gameState == GameControlData.STATE_INITIAL) {
-                        state = "Half Time";
-                    } else {
-                        state = "Second Half";
-                    }
-                }
-                break;
-            case GameControlData.STATE2_OVERTIME:     state = "Overtime";   break;
-            case GameControlData.STATE2_PENALTYSHOOT: state = "Penalty Shoot";     break;
-            default: state = "";
+                    break;
+                case GameControlData.STATE2_OVERTIME:     state = "Overtime";   break;
+                case GameControlData.STATE2_PENALTYSHOOT: state = "Penalty Shoot";     break;
+                default: state = "";
+            }
+        } else {
+            state = "Time Out";
         }
         drawCenteredString(g, state, x, y, size);
     }
