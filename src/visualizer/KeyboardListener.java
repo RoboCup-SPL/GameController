@@ -44,10 +44,10 @@ public class KeyboardListener implements KeyEventDispatcher
                 return false;
             }
             pressing = key;
-            pressed(key);
+            return pressed(key);
         }
         
-        return true;
+        return false;
     }
     
     /**
@@ -59,7 +59,7 @@ public class KeyboardListener implements KeyEventDispatcher
      * 
      * @param key  The key that has just been pressed.
      */
-    private void pressed(int key)
+    private boolean pressed(int key)
     {
         switch(key) {
                 case KeyEvent.VK_F10:
@@ -68,6 +68,9 @@ public class KeyboardListener implements KeyEventDispatcher
                 case KeyEvent.VK_F11:
                     gui.toggleTestmode();
                     break;
+                default:
+                    return false;
             }
+        return true;
     }
 }

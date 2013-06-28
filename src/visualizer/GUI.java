@@ -62,6 +62,7 @@ public class GUI extends JFrame
     GUI()
     {
         super(WINDOW_TITLE, devices[devices.length - 1].getDefaultConfiguration());
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         setUndecorated(true);
         if(IS_OSX && devices.length != 1) {
