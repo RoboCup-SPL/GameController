@@ -5,6 +5,8 @@ import data.GameControlData;
 import data.Rules;
 import data.Teams;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -62,7 +64,6 @@ public class GUI extends JFrame
     GUI()
     {
         super(WINDOW_TITLE, devices[devices.length - 1].getDefaultConfiguration());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         setUndecorated(true);
         if(IS_OSX && devices.length != 1) {
@@ -93,13 +94,18 @@ public class GUI extends JFrame
         standardSmalFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_S_SIZE*getWidth()));
         scoreFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_XXL_SIZE*getWidth()));
         
+        addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Main.exit();
+            }
+        });
+        
         setVisible(true);
         createBufferStrategy(2);
         bufferStrategy = getBufferStrategy();
-        Graphics g = bufferStrategy.getDrawGraphics();
-        draw(g);
-        bufferStrategy.show();
-        g.dispose();
+        update((GameControlData)null);
     }
     
     /**
@@ -119,9 +125,11 @@ public class GUI extends JFrame
      */
     public synchronized void update(GameControlData data)
     {
+        int i=0;
         this.data = data;
         do {
             do {
+                System.out.println(i++);
                 Graphics g = bufferStrategy.getDrawGraphics();
                 draw(g);
                 g.dispose();
