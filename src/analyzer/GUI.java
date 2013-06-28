@@ -31,6 +31,7 @@ import javax.swing.event.ListSelectionListener;
  * 
  * This window is to be shown to select log-files
  */
+@SuppressWarnings("unchecked")
 public class GUI extends JFrame implements ListSelectionListener
 {
     private final static String TITLE = "Log Analyzer";
