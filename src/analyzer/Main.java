@@ -1,5 +1,8 @@
 package analyzer;
 
+import java.io.File;
+import java.util.LinkedList;
+
 /**
  * @author: Michel Bartsch
  * 
@@ -7,7 +10,12 @@ package analyzer;
  * The main components are initialised here.
  */
 public class Main
-{        
+{
+    public final static String PATH = "logs";
+    public final static String PATH_DROPPED = "logs/dropped";
+    
+    public static LinkedList<LogInfo> logs;
+    public static File stats;
     
     /**
      * The programm starts here.
@@ -16,7 +24,19 @@ public class Main
      */
     public static void main(String[] args)
     {
-        Games games = new Games();
-        GUI gui = new GUI(games);
+        load();
+        GUI gui = new GUI();
+    }
+    
+    public static void load()
+    {
+        logs = new LinkedList<LogInfo>();
+        File dir = new File(PATH);
+        File[] files = dir.listFiles();
+        for(File file: files) {
+            if(file.isFile()) {
+                logs.add(new LogInfo(file));
+            }
+        }
     }
 }

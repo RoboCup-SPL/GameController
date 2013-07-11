@@ -21,6 +21,7 @@ public class LogInfo
     private final static int MIN_DURATION = 18*60;
     private final static int NUM_OF_INFO_ENTRIES = 6;
     
+    public File file;
     public String version;
     public String league;
     public String[] team = new String[2];
@@ -28,15 +29,14 @@ public class LogInfo
     public int duration;
     public LinkedList<String> lines = new LinkedList<String>();
     public String parseErrors = "";
-    public LogStatistic[] statistic = new LogStatistic[2];
     
     public LogInfo(File log)
     {
+        file = log;
         BufferedReader br = null;
         try {
             InputStream inStream = new FileInputStream(log);
-            br = new BufferedReader(
-                    new InputStreamReader(inStream, CHARSET));
+            br = new BufferedReader(new InputStreamReader(inStream, CHARSET));
             String currentLine;
             while((currentLine = br.readLine()) != null) {
                 lines.add(currentLine);

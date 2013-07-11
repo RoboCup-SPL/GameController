@@ -10,6 +10,8 @@ import java.util.Date;
  */
 public class Parser
 {
+    private static final String UNDONE_PREFIX = "<undone>";
+    
     public static void info(LogInfo log)
     {
         Date kickoffTime = null;
@@ -28,6 +30,17 @@ public class Parser
             
             if(i == 1) {
                 log.version = action;
+            } else if(action.startsWith("Undo")) {
+                String[] splitted = action.split(" ");
+                if(splitted.length < 2) {
+                    log.parseErrors += "error in line "+i+": cannot parse undo";
+                } else {
+                    int undos = Integer.valueOf(splitted[1]);
+                    for(int j=0; j<undos; j++) {
+                        System.out.println(3);
+                        log.lines.set(i-2-j, UNDONE_PREFIX+log.lines.get(i-2-j));
+                    }
+                }
             } else if(action.contains(" vs ")) {
                 String[] teams = action.split(" vs ");
                 if(teams.length == 2) {
@@ -53,6 +66,9 @@ public class Parser
         int i=0;
         for(String line: log.lines) {
             i++;
+            if(line.startsWith(UNDONE_PREFIX)) {
+                continue;
+            }
             int divPos = line.indexOf(": ")+2;
             Date time = null;
             try{

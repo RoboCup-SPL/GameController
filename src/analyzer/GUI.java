@@ -37,11 +37,10 @@ public class GUI extends JFrame implements ListSelectionListener
     private final static String TITLE = "Log Analyzer";
     private final static int WINDOW_WIDTH = 600;
     private final static int WINDOW_HEIGHT = 400;
-    private final static int DECO_HIGHT = 30;
     private final static int STANDARD_SPACE = 10;
-    private final static int ANALYZE_HIGHT = 40;
     private final static int CHECKBOX_WIDTH = 24;
     private final static Color LIST_HIGHLIGHT = new Color(150, 150, 255);
+    private final static String CLEAN = "Clean";
     private final static String ANALYZE = "Analyze";
     
     public final static String HTML = "<html>";
@@ -49,21 +48,17 @@ public class GUI extends JFrame implements ListSelectionListener
     public final static String HTML_RED = "<font color='red'>";
     public final static String HTML_END = "</font>";
     
-    private Games games;
-    
     private DefaultListModel list;
     private JList listDisplay;
     private ListSelectionModel selection;
     private JScrollPane scrollArea;
     private JLabel info;
+    private JButton clean;
     private JButton analyze;
     
-    public GUI(Games games)
+    public GUI()
     {
         super(TITLE);
-        
-        this.games = games;
-        
         Dimension desktop = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((desktop.width-WINDOW_WIDTH)/2, (desktop.height-WINDOW_HEIGHT)/2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,17 +88,24 @@ public class GUI extends JFrame implements ListSelectionListener
                 });
         selection = listDisplay.getSelectionModel();
         scrollArea = new JScrollPane(listDisplay);
-        scrollArea.setPreferredSize(new Dimension((WINDOW_WIDTH-3*STANDARD_SPACE)/2, WINDOW_HEIGHT-2*STANDARD_SPACE-DECO_HIGHT));
         info = new JLabel();
-        info.setPreferredSize(new Dimension((WINDOW_WIDTH-3*STANDARD_SPACE)/2, WINDOW_HEIGHT-3*STANDARD_SPACE-ANALYZE_HIGHT-DECO_HIGHT));
         Border paddingBorder = BorderFactory.createEmptyBorder(STANDARD_SPACE/2, STANDARD_SPACE/2, STANDARD_SPACE/2, STANDARD_SPACE/2);
         Border border = BorderFactory.createLineBorder(Color.GRAY);
         info.setBorder(BorderFactory.createCompoundBorder(border, paddingBorder));
         info.setBackground(Color.WHITE);
         info.setOpaque(true);
         info.setVerticalAlignment(SwingConstants.TOP);
+        clean = new JButton(CLEAN);
+        clean.addActionListener(new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        clean();
+                    }
+                }
+        );
         analyze = new JButton(ANALYZE);
-        analyze.setPreferredSize(new Dimension((WINDOW_WIDTH-3*STANDARD_SPACE)/2, DECO_HIGHT));
         analyze.addActionListener(new ActionListener()
                 {
                     @Override
@@ -115,14 +117,37 @@ public class GUI extends JFrame implements ListSelectionListener
         );
         layout.add(.03, .03, .45, .94, scrollArea);
         layout.add(.52, .03, .45, .8, info);
-        layout.add(.52, .87, .45, .1, analyze);
+        layout.add(.52, .87, .175, .1, clean);
+        layout.add(.735, .87, .235, .1, analyze);
         
-        for(LogInfo log: games.logs) {
-            list.addElement(new CheckListItem(log+"", log.isRealLog()));
-        }
+        updateList();
         selection.addListSelectionListener(this);
         
         setVisible(true);
+    }
+    
+    private void updateList()
+    {
+        list.removeAllElements();
+        for(LogInfo log: Main.logs) {
+            list.addElement(new CheckListItem(log+"", log.isRealLog()));
+        }
+    }
+    
+    private void clean()
+    {
+        File droppedDir = new File(Main.PATH_DROPPED);
+        if(!droppedDir.isDirectory()) {
+            droppedDir.mkdir();
+        }
+        int i = 0;
+        for(LogInfo log: Main.logs) {
+            if(!((CheckListItem)list.getElementAt(i++)).selected) {
+                log.file.renameTo(new File(Main.PATH_DROPPED+"/"+log.file.getName()));
+            }
+        }
+        Main.load();
+        updateList();
     }
     
     private void analyze()
@@ -131,20 +156,19 @@ public class GUI extends JFrame implements ListSelectionListener
         if(fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }
-        File file = fc.getSelectedFile();
+        Main.stats = fc.getSelectedFile();
         int i = 0;
-        for(LogInfo log: games.logs) {
+        for(LogInfo log: Main.logs) {
             if(((CheckListItem)list.getElementAt(i++)).selected) {
                 Parser.statistic(log);
             }
         }
-        games.toFile(file);
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e)
     {
-        info.setText(games.logs.get(selection.getMinSelectionIndex()).getInfo());
+        info.setText(Main.logs.get(selection.getMinSelectionIndex()).getInfo());
     }
     
     class CheckListItem
