@@ -12,4 +12,3 @@ qi_create_lib(libgamectrl SHARED ${_srcs} SUBFOLDER naoqi)
 
 qi_use_lib(libgamectrl ALCOMMON BOOST)
 
-
