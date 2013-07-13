@@ -96,7 +96,43 @@ public class Parser
             time = line.substring(0, divPos);
             raw = line.substring(divPos+1);
             
-            //TODO
+            if(raw.startsWith("Playing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Request for PickUp")) {
+                
+            } else if(raw.startsWith("Player Pushing")) {
+                
+            } else if(raw.startsWith("Out by")) {
+                
+            } else if(raw.startsWith("Leaving the Field")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                    
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else if(raw.startsWith("Pushing")) {
+                
+            } else {
+                continue;
+            }
             
             try{
                 writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
