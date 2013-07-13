@@ -107,7 +107,7 @@ public class Log
         state.message = instance.message == null ? message : instance.message;
         instance.message = null;
         instance.states.add(state);
-        toFile(message);
+        toFile(state.message);
     }
     
     /**
