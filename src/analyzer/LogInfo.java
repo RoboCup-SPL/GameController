@@ -64,17 +64,17 @@ public class LogInfo
     
     private boolean isRealVersion()
     {
-        return version.equals(controller.Main.version);
+        return version == null ? false : version.equals(controller.Main.version);
     }
     
     private boolean isRealTeamOne()
     {
-        return !team[0].equals(NOT_A_REAL_TEAM);
+        return team[0] == null ? false : !team[0].equals(NOT_A_REAL_TEAM);
     }
     
     private boolean isRealTeamTwo()
     {
-        return !team[1].equals(NOT_A_REAL_TEAM);
+        return team[1] == null ? false : !team[1].equals(NOT_A_REAL_TEAM);
     }
     
     private boolean isRealDuration()
