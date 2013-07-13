@@ -1,6 +1,7 @@
 package analyzer;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.util.LinkedList;
 
 /**
@@ -16,6 +17,7 @@ public class Main
     
     public static LinkedList<LogInfo> logs;
     public static File stats;
+    public static FileWriter writer;
     
     /**
      * The programm starts here.

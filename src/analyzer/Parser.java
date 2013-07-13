@@ -1,7 +1,7 @@
 package analyzer;
 
 import common.Log;
-import java.io.FileWriter;
+import data.Rules;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
@@ -14,6 +14,40 @@ public class Parser
 {
     private static final String UNDONE_PREFIX = "<undone>";
     private static final String OUT_SEP = ",";
+    
+    private static final String[] colorChangeActions = {
+        "1st Half",
+        "1st Half Extra Time",
+        "Penalty Shoot-out",
+        "2nd Half",
+        "2nd Half Extra Time"
+    };
+    
+    private static final String[] actions = {
+        "Manually Penalised",
+        "Dropped Ball",
+        "Kickoff Goal",
+        "Global Game Stuck",
+        "Goal for Team",
+        "Goal decrease for Team",
+        "Out by",
+        "Substituted by Player",
+        "Timeout",
+        "Illegal Attack",
+        "Ball Manipulation",
+        "Illegal Defender",
+        "Illegal Defense",
+        "Fallen Robot",
+        "Playing with Hands",
+        "Ball Holding",
+        "Inactive Player",
+        "Leaving the Field",
+        "Request for PickUp",
+        "Request for Service",
+        "Additional Request for Service",
+        "Player Pushing",
+        "Substitute Player"
+    };
     
     public static void info(LogInfo log)
     {
@@ -33,6 +67,15 @@ public class Parser
             
             if(i == 1) {
                 log.version = action;
+            } else if(action.startsWith("League = ")) {
+                String league = action.substring(9);
+                for(int j=0; j<Rules.LEAGUES.length; j++) {
+                    if(Rules.LEAGUES[j].leagueName.equals(league)) {
+                        log.league = Rules.LEAGUES[j];
+                    }
+                }
+            } else if(action.startsWith("Auto color change = false")) {
+                log.keepColors = true;
             } else if(action.startsWith("Undo")) {
                 String[] splitted = action.split(" ");
                 if(splitted.length < 2) {
@@ -64,19 +107,10 @@ public class Parser
     }
     
     public static void statistic(LogInfo log)
-    {
-        FileWriter writer;
-        try {
-            Main.stats.createNewFile();
-            writer = new FileWriter(Main.stats);
-            writer.write("datetime"+OUT_SEP+"action"+OUT_SEP+"team"+OUT_SEP+"blue"+OUT_SEP+"red\n");
-        } catch(IOException e) {
-            Log.error("Cannot create and open/write to file "+Main.stats);
-            return;
-        }
+    { 
         String time;
         String raw, action = "";
-        String team = "";
+        String team;
         String[] teams = new String[2];
         if(log.team.length >= 2) {
             teams[0] = log.team[0];
@@ -93,59 +127,45 @@ public class Parser
                 continue;
             }
             int divPos = line.indexOf(": ")+2;
-            time = line.substring(0, divPos);
-            raw = line.substring(divPos+1);
+            time = line.substring(0, divPos-2);
+            raw = line.substring(divPos);
             
-            if(raw.startsWith("Playing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Request for PickUp")) {
-                
-            } else if(raw.startsWith("Player Pushing")) {
-                
-            } else if(raw.startsWith("Out by")) {
-                
-            } else if(raw.startsWith("Leaving the Field")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                    
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else if(raw.startsWith("Pushing")) {
-                
-            } else {
+            if(!log.keepColors) {
+                for(String ca: colorChangeActions) {
+                    if(raw.startsWith(ca)) {
+                        String tmp = teams[0];
+                        teams[0] = teams[1];
+                        teams[1] = tmp;
+                        break;
+                    }
+                }
+            }
+            
+            boolean actionMatch = false;
+            for(String a: actions) {
+                if(raw.startsWith(a)) {
+                    action = a;
+                    actionMatch = true;
+                    break;
+                }
+            }
+            if(!actionMatch) {
                 continue;
             }
             
+            if(raw.contains(log.league.teamColorName[0])) {
+                team = teams[0];
+            } else if(raw.contains(log.league.teamColorName[1])) {
+                team = teams[1];
+            } else {
+                team = "";
+            }
+            
             try{
-                writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
-                writer.flush();
+                Main.writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
             } catch(IOException e) {
                 Log.error("cannot write to file "+Main.stats);
             }
-        }
-        try{
-            writer.flush();
-            writer.close();
-        } catch(IOException e) {
-            Log.error("cannot close file "+Main.stats);
         }
     }
 }

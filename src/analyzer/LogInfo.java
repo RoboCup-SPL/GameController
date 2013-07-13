@@ -1,6 +1,7 @@
 package analyzer;
 
 import common.Log;
+import data.Rules;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +24,8 @@ public class LogInfo
     
     public File file;
     public String version;
-    public String league;
+    public Rules league;
+    public boolean keepColors = false;
     public String[] team = new String[2];
     public Date start;
     public int duration;
@@ -57,6 +59,7 @@ public class LogInfo
     public boolean isRealLog()
     {
         return isRealVersion()
+                && isRealLeague()
                 && isRealTeamOne()
                 && isRealTeamTwo()
                 && isRealDuration();
@@ -65,6 +68,11 @@ public class LogInfo
     private boolean isRealVersion()
     {
         return version == null ? false : version.equals(controller.Main.version);
+    }
+    
+    private boolean isRealLeague()
+    {
+        return league != null;
     }
     
     private boolean isRealTeamOne()
@@ -86,9 +94,11 @@ public class LogInfo
     {
         return GUI.HTML
                 + (isRealVersion() ? version : GUI.HTML_RED + version + GUI.HTML_END) + GUI.HTML_LF
+                + (isRealVersion() ? league.leagueName : GUI.HTML_RED + league + GUI.HTML_END) + GUI.HTML_LF
                 + (isRealTeamOne() ? team[0] : GUI.HTML_RED + team[0] + GUI.HTML_END)
                 + " vs "
                 + (isRealTeamTwo() ? team[1] : GUI.HTML_RED + team[1] + GUI.HTML_END) + GUI.HTML_LF
+                + (keepColors ? "No Color Change" : "Color Change") + GUI.HTML_LF
                 + (start != null ? start : GUI.HTML_RED + start + GUI.HTML_END) + " starting" + GUI.HTML_LF
                 + (isRealDuration() ? duration : GUI.HTML_RED + duration + GUI.HTML_END) + " seconds" + GUI.HTML_LF
                 + (lines.size()-NUM_OF_INFO_ENTRIES) + " actions" + GUI.HTML_LF

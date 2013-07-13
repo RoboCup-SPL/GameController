@@ -1,5 +1,6 @@
 package analyzer;
 
+import common.Log;
 import common.TotalScaleLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -10,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -18,6 +21,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
@@ -35,8 +39,8 @@ import javax.swing.event.ListSelectionListener;
 public class GUI extends JFrame implements ListSelectionListener
 {
     private final static String TITLE = "Log Analyzer";
-    private final static int WINDOW_WIDTH = 600;
-    private final static int WINDOW_HEIGHT = 400;
+    private final static int WINDOW_WIDTH = 700;
+    private final static int WINDOW_HEIGHT = 600;
     private final static int STANDARD_SPACE = 10;
     private final static int CHECKBOX_WIDTH = 24;
     private final static Color LIST_HIGHLIGHT = new Color(150, 150, 255);
@@ -62,7 +66,6 @@ public class GUI extends JFrame implements ListSelectionListener
         Dimension desktop = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((desktop.width-WINDOW_WIDTH)/2, (desktop.height-WINDOW_HEIGHT)/2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
@@ -128,6 +131,7 @@ public class GUI extends JFrame implements ListSelectionListener
     
     private void updateList()
     {
+        selection.clearSelection();
         list.removeAllElements();
         for(LogInfo log: Main.logs) {
             list.addElement(new CheckListItem(log+"", log.isRealLog()));
@@ -157,18 +161,38 @@ public class GUI extends JFrame implements ListSelectionListener
             return;
         }
         Main.stats = fc.getSelectedFile();
+        try {
+            Main.stats.createNewFile();
+            Main.writer = new FileWriter(Main.stats);
+            Main.writer.write("datetime,action,team,blue,red\n");
+        } catch(IOException e) {
+            Log.error("Cannot create and open/write to file "+Main.stats);
+            return;
+        }
         int i = 0;
         for(LogInfo log: Main.logs) {
             if(((CheckListItem)list.getElementAt(i++)).selected) {
                 Parser.statistic(log);
             }
         }
+        try{
+            Main.writer.flush();
+            Main.writer.close();
+        } catch(IOException e) {
+            Log.error("cannot close file "+Main.stats);
+        }
+        JOptionPane.showMessageDialog(null, "Done");
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e)
     {
-        info.setText(Main.logs.get(selection.getMinSelectionIndex()).getInfo());
+        int i = selection.getMinSelectionIndex();
+        if(i >= 0) {
+            info.setText(Main.logs.get(i).getInfo());
+        } else {
+            info.setText("");
+        }
     }
     
     class CheckListItem
