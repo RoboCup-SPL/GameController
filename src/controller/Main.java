@@ -170,6 +170,7 @@ public class Main
         }
         Log.toFile("League = "+Rules.league.leagueName);
         Log.toFile("Play-off = "+data.playoff);
+        Log.toFile("Auto color change = "+data.colorChangeAuto);
         Log.toFile("Using broadcast address " + outBroadcastAddress);
 
         //ui
