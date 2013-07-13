@@ -24,7 +24,8 @@ There are some ant targets:
 
 Double-click GameController.jar or run 
 
-Usage: java -jar GameController.jar {options}
+Usage: `java -jar GameController.jar {options}`
+
     (-h | --help)                   display help
     (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)
     (-l | --league) (spl | hl_kid | hl_teen | hl_adult)
@@ -67,11 +68,12 @@ When pressing "+" (goal), "Timeout", "Kickoff Goal", or "Global Game Stuck", the
 
 While the GameController is running, you may use the following keys on the keyboard instead of pushing buttons:
 
-Esc		- press it twice to close the GameController2
-Delete		- toggle test-mode (everything is legal, every button is visible and enabled)
-Backspace	- undo last action
+    Esc		    - press it twice to close the GameController2
+    Delete		- toggle test-mode (everything is legal, every button is visible and enabled)
+    Backspace	- undo last action
 
 only SPL
+
     B	- out by blue
     R	- out by red
 
@@ -85,6 +87,7 @@ only SPL
     U	- request for pickup
 
 only Humanoid-League
+
     C	- out by cyan
     M	- out by magenta
 
@@ -98,40 +101,54 @@ only Humanoid-League
 
 ##5. libgamectrl (SPL)
 
-libgamectrl automatically provides the GameController packets in ALMemory. It also implements the return channel of the GameController. It handles the buttons and LEDs according to the rules (with a few additions).
+libgamectrl automatically provides the GameController packets in ALMemory. 
+It also implements the return channel of the GameController. It handles the 
+buttons and LEDs according to the rules (with a few additions).
 
 
 ### Installation
 
-Put the file libgamectrl.so somewhere on your NAO and add the library to your file "autoload.ini" so that NAOqi can find it. 
+Put the file libgamectrl.so somewhere on your NAO and add the library to your 
+file "autoload.ini" so that NAOqi can find it. 
 
 
 ### Usage
 
 In your NAOqi module, execute the follow code at the beginning (only once):
 
-AL::ALMemoryProxy *memory = new AL::ALMemoryProxy(pBroker);
-memory->insertData("GameCtrl/teamNumber", <your team number>);
-memory->insertData("GameCtrl/teamColour", <your default team color>);
-memory->insertData("GameCtrl/playerNumber", <your robot's player number>);
+    AL::ALMemoryProxy *memory = new AL::ALMemoryProxy(pBroker);
+    memory->insertData("GameCtrl/teamNumber", <your team number>);
+    memory->insertData("GameCtrl/teamColour", <your default team color>);
+    memory->insertData("GameCtrl/playerNumber", <your robot's player number>);
 
-The team number must be non-zero. Setting the team number will reset libgamectrl (e.g. go back to the initial state). libgamectrl will also set "GameCtrl/teamNumber" back to zero, so it recognize the next time your application is started.
+The team number must be non-zero. Setting the team number will reset 
+libgamectrl (e.g. go back to the initial state). libgamectrl will also set 
+"GameCtrl/teamNumber" back to zero, so it recognize the next time your 
+application is started.
 
 You can receive the current GameController packet with:
 
-RoboCupGameControlData gameCtrlData; // should probably zero it the first time it is used
-AL::ALValue value = memory->getData("GameCtrl/RoboCupGameControlData");
-if(value.isBinary() && value.getSize() == sizeof(RoboCupGameControlData))
-  memcpy(&gameControlData, value, sizeof(RoboCupGameControlData));
+    RoboCupGameControlData gameCtrlData; // should probably zero it the first time it is used
+    AL::ALValue value = memory->getData("GameCtrl/RoboCupGameControlData");
+    if(value.isBinary() && value.getSize() == sizeof(RoboCupGameControlData))
+        memcpy(&gameControlData, value, sizeof(RoboCupGameControlData));
 
 
 ### Deviations from the Rules
 
-The first time the chest button is pressed it is ignored, because many teams will use it to let the robot get up.
+The first time the chest button is pressed it is ignored, because many teams 
+will use it to let the robot get up.
 
-In the Initial state, it is also possible to switch between "normal", "penalty taker" (green LED), and "penalty goalkeeper" (yellow LED) by pressing the right foot bumper. The state is shown by the right foot LED, and only in the Initial state. An active GameController will overwrite these settings.
+In the Initial state, it is also possible to switch between "normal", 
+"penalty taker" (green LED), and "penalty goalkeeper" (yellow LED) by pressing 
+the right foot bumper. The state is shown by the right foot LED, and only in 
+the Initial state. An active GameController will overwrite these settings.
 
 
 ##6. Misc
 
-The format of the packets the GameController broadcasts and receives is defined in the file RoboCupGameControlData.h, which is identical to the one that was used in 2012, except for the introduction of a new penalty constant that tells a robot that it is a substitute. This penalty is currently only used in the HL.
+The format of the packets the GameController broadcasts and receives is 
+defined in the file RoboCupGameControlData.h, which is identical to the one 
+that was used in 2012, except for the introduction of a new penalty constant 
+that tells a robot that it is a substitute. This penalty is currently only 
+used in the HL.
