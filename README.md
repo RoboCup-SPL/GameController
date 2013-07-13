@@ -4,6 +4,8 @@ This is the GameController developed by team B-Human for the RoboCup SPL and Hum
 
 If there are any questions, please contact yuzong@informatik.uni-bremen.de .
 
+Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
+
 
 ## 1. Building from Source
 
