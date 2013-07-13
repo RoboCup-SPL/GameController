@@ -25,11 +25,11 @@ There are some ant targets:
 Double-click GameController.jar or run 
 
 Usage: java -jar GameController.jar {options}
-  (-h | --help)                   display help
-  (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)
-  (-l | --league) (spl | hl_kid | hl_teen | hl_adult)
-                                  select league (default is spl)
-  (-w | --window)                 select window mode (default is fullscreen)
+    (-h | --help)                   display help
+    (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)
+    (-l | --league) (spl | hl_kid | hl_teen | hl_adult)
+                                    select league (default is spl)
+    (-w | --window)                 select window mode (default is fullscreen)
 
 
 ##3. Usage
@@ -72,28 +72,28 @@ Delete		- toggle test-mode (everything is legal, every button is visible and ena
 Backspace	- undo last action
 
 only SPL
-B	- out by blue
-R	- out by red
+    B	- out by blue
+    R	- out by red
 
-P	- pushing
-L	- leaving the field
-F	- fallen robot
-I	- inactive robot
-D	- illegal defender
-O	- ball holding
-H	- playing with hands
-U	- request for pickup
+    P	- pushing
+    L	- leaving the field
+    F	- fallen robot
+    I	- inactive robot
+    D	- illegal defender
+    O	- ball holding
+    H	- playing with hands
+    U	- request for pickup
 
 only Humanoid-League
-C	- out by cyan
-M	- out by magenta
+    C	- out by cyan
+    M	- out by magenta
 
-B	- ball manipulation
-P	- physical contact
-A	- illegal attack
-D	- illegal defense
-R	- service / incapable
-S	- substitute
+    B	- ball manipulation
+    P	- physical contact
+    A	- illegal attack
+    D	- illegal defense
+    R	- service / incapable
+    S	- substitute
 
 
 ##5. libgamectrl (SPL)
