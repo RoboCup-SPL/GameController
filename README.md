@@ -1,9 +1,11 @@
+#RoboCup SPL and Humanoid-League GameController 
+
 This is the GameController developed by team B-Human for the RoboCup SPL and Humanoid-League.
 
-If there are any question, please contact yuzong@informatik.uni-bremen.de .
+If there are any questions, please contact yuzong@informatik.uni-bremen.de .
 
 
-########## 1. Building from Source ##########
+## 1. Building from Source
 
 To build it from the source code you may use Apache Ant.
 There are some ant targets:
@@ -18,7 +20,7 @@ There are some ant targets:
 	creates a jar package and stores it in /build/jar
 
 	
-########## 2. Executing the Jar ##########
+##2. Executing the Jar
 
 Double-click GameController.jar or run 
 
@@ -30,9 +32,8 @@ Usage: java -jar GameController.jar {options}
   (-w | --window)                 select window mode (default is fullscreen)
 
 
-########## 3. Usage ##########
-
-## Start Dialog ##
+##3. Usage
+### Start Dialog
 
 Select your league. The default can be specified as a command line parameter (see above).
 
@@ -47,7 +48,7 @@ You can select whether the GameController should run in fullscreen mode or in wi
 You can also select whether teams exchange their colors in the halftime.
 
 
-## Main Screen ##
+###Main Screen
 
 The use of the main screen should be rather obvious in most cases. Therefore, we only focus on the specialties.
 
@@ -62,7 +63,7 @@ HL: To substitute a robot, press "Substitute" and then the robot that should lea
 When pressing "+" (goal), "Timeout", "Kickoff Goal", or "Global Game Stuck", the other team gets the next kick-off. "Kickoff Goal" and "Global Game Stuck" share the same button.
 
 
-########## 4. Shortcuts ##########
+##4. Shortcuts
 
 While the GameController is running, you may use the following keys on the keyboard instead of pushing buttons:
 
@@ -95,17 +96,17 @@ R	- service / incapable
 S	- substitute
 
 
-########## 5. libgamectrl (SPL) ##########
+##5. libgamectrl (SPL)
 
 libgamectrl automatically provides the GameController packets in ALMemory. It also implements the return channel of the GameController. It handles the buttons and LEDs according to the rules (with a few additions).
 
 
-## Installation ##
+### Installation
 
 Put the file libgamectrl.so somewhere on your NAO and add the library to your file "autoload.ini" so that NAOqi can find it. 
 
 
-## Usage ##
+### Usage
 
 In your NAOqi module, execute the follow code at the beginning (only once):
 
@@ -124,13 +125,13 @@ if(value.isBinary() && value.getSize() == sizeof(RoboCupGameControlData))
   memcpy(&gameControlData, value, sizeof(RoboCupGameControlData));
 
 
-## Deviations from the Rules ##
+### Deviations from the Rules
 
 The first time the chest button is pressed it is ignored, because many teams will use it to let the robot get up.
 
 In the Initial state, it is also possible to switch between "normal", "penalty taker" (green LED), and "penalty goalkeeper" (yellow LED) by pressing the right foot bumper. The state is shown by the right foot LED, and only in the Initial state. An active GameController will overwrite these settings.
 
 
-########## 6. Misc ##########
+##6. Misc
 
 The format of the packets the GameController broadcasts and receives is defined in the file RoboCupGameControlData.h, which is identical to the one that was used in 2012, except for the introduction of a new penalty constant that tells a robot that it is a substitute. This penalty is currently only used in the HL.
