@@ -53,7 +53,7 @@ public class TimeOut extends GCAction
         } else {
             data.timeOut = GameControlData.C_FALSE;
             data.timeOutActive[side] = false;
-            Log.setNextMessage("Timeout "+Rules.league.teamColorName[data.team[side].teamColor]+" ended");
+            Log.setNextMessage("End of Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 ActionBoard.ready.perform(data);
             }
