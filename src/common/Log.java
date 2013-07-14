@@ -104,10 +104,15 @@ public class Log
     public static void state(AdvancedData data, String message)
     {
         AdvancedData state = (AdvancedData) data.clone();
-        state.message = instance.message == null ? message : instance.message;
-        instance.message = null;
+        if(instance.message == null) {
+            state.message = message;
+        } else {
+            state.message = instance.message;
+            toFile(state.message);
+            instance.message = null;
+        }
         instance.states.add(state);
-        toFile(state.message);
+        toFile(message);
     }
     
     /**
