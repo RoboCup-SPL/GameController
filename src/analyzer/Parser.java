@@ -4,6 +4,7 @@ import common.Log;
 import data.Rules;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -15,6 +16,8 @@ public class Parser
     private static final String UNDONE_PREFIX = "<undone>";
     private static final String OUT_SEP = ",";
     
+    public static final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+    
     private static final String[] colorChangeActions = {
         "1st Half",
         "1st Half Extra Time",
@@ -24,6 +27,11 @@ public class Parser
     };
     
     private static final String[] actions = {
+        "Finished",
+        "Initial",
+        "Playing",
+        "Ready",
+        "Set",
         "Manually Penalised",
         "Dropped Ball",
         "Kickoff Goal",
@@ -107,7 +115,8 @@ public class Parser
     }
     
     public static void statistic(LogInfo log)
-    { 
+    {
+        Date rawTime;
         String time;
         String raw, action = "";
         String team;
@@ -127,8 +136,15 @@ public class Parser
                 continue;
             }
             int divPos = line.indexOf(": ")+2;
-            time = line.substring(0, divPos-2);
+            try{
+                rawTime = Log.timestampFormat.parse(line.substring(0, divPos-2));
+            } catch(ParseException e) {
+                Log.error("Cannot parse time in line "+i+" of "+log.file);
+                return;
+            }
             raw = line.substring(divPos);
+            
+            time = timeFormat.format(rawTime);
             
             if(!log.keepColors) {
                 for(String ca: colorChangeActions) {
