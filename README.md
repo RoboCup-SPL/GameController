@@ -1,4 +1,4 @@
-#RoboCup SPL and Humanoid-League GameController 
+# RoboCup SPL and Humanoid-League GameController 
 
 This is the GameController developed by team B-Human for the RoboCup SPL and Humanoid-League.
 
@@ -22,7 +22,7 @@ There are some ant targets:
 	creates a jar package and stores it in /build/jar
 
 	
-##2. Executing the Jar
+## 2. Executing the Jar
 
 Double-click GameController.jar or run 
 
@@ -35,7 +35,7 @@ Usage: `java -jar GameController.jar {options}`
     (-w | --window)                 select window mode (default is fullscreen)
 
 
-##3. Usage
+## 3. Usage
 ### Start Dialog
 
 Select your league. The default can be specified as a command line parameter (see above).
@@ -51,7 +51,7 @@ You can select whether the GameController should run in fullscreen mode or in wi
 You can also select whether teams exchange their colors in the halftime.
 
 
-###Main Screen
+### Main Screen
 
 The use of the main screen should be rather obvious in most cases. Therefore, we only focus on the specialties.
 
@@ -66,7 +66,7 @@ HL: To substitute a robot, press "Substitute" and then the robot that should lea
 When pressing "+" (goal), "Timeout", "Kickoff Goal", or "Global Game Stuck", the other team gets the next kick-off. "Kickoff Goal" and "Global Game Stuck" share the same button.
 
 
-##4. Shortcuts
+## 4. Shortcuts
 
 While the GameController is running, you may use the following keys on the keyboard instead of pushing buttons:
 
@@ -101,7 +101,7 @@ only Humanoid-League
     S	- substitute
 
 
-##5. libgamectrl (SPL)
+## 5. libgamectrl (SPL)
 
 libgamectrl automatically provides the GameController packets in ALMemory. 
 It also implements the return channel of the GameController. It handles the 
@@ -147,7 +147,7 @@ the right foot bumper. The state is shown by the right foot LED, and only in
 the Initial state. An active GameController will overwrite these settings.
 
 
-##6. Misc
+## 6. Misc
 
 The format of the packets the GameController broadcasts and receives is 
 defined in the file RoboCupGameControlData.h, which is identical to the one 
