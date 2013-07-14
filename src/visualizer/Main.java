@@ -1,7 +1,6 @@
 package visualizer;
 
 import data.Rules;
-import javax.swing.SwingUtilities;
 
 /**
  * @author: Michel Bartsch

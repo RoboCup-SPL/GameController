@@ -2,15 +2,14 @@ package controller.action.ui;
 
 import common.Log;
 import controller.EventHandler;
-import controller.action.ui.penalty.Penalty;
-import controller.action.ui.penalty.PickUpHL;
-import controller.action.GCAction;
 import controller.action.ActionType;
+import controller.action.GCAction;
+import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.PickUp;
+import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.Substitute;
 import data.AdvancedData;
 import data.HL;
-import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
 import data.SPL;

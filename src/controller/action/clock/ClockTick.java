@@ -3,7 +3,6 @@ package controller.action.clock;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
-import controller.action.ui.penalty.Pushing;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;

@@ -1,10 +1,8 @@
 package controller.action.ui.state;
 
 import common.Log;
-import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
-import controller.action.ui.half.FirstHalf;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;

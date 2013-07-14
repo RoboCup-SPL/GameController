@@ -1,7 +1,6 @@
 package visualizer;
 
 import common.Log;
-import controller.action.ActionBoard;
 import data.GameControlData;
 import data.Rules;
 import data.Teams;
