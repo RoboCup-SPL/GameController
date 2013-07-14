@@ -44,7 +44,7 @@
     </copy>
     <copy file="${src.dir}/libgamectrl/RoboCupGameControlData.h" tofile="${jar.dir}/include/RoboCupGameControlData.h"/>
     <copy file="${lib.dir}/libgamectrl.so" tofile="${jar.dir}/lib/libgamectrl.so"/>
-    <copy file="README.txt" tofile="${jar.dir}/README.txt"/>
+    <copy file="README.md" tofile="${jar.dir}/README.txt"/>
   </target>
   
   <target name="run" depends="jar">
