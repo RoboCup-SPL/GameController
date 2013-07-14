@@ -124,8 +124,8 @@ In your NAOqi module, execute the follow code at the beginning (only once):
     memory->insertData("GameCtrl/playerNumber", <your robot's player number>);
 
 The team number must be non-zero. Setting the team number will reset 
-libgamectrl (e.g. go back to the initial state). libgamectrl will also set 
-"GameCtrl/teamNumber" back to zero, so it recognize the next time your 
+libgamectrl (i.e. go back to the initial state). libgamectrl will also set 
+"GameCtrl/teamNumber" back to zero, so it will recognize the next time your 
 application is started.
 
 You can receive the current GameController packet with:
