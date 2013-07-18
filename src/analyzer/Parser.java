@@ -26,12 +26,13 @@ public class Parser
         "2nd Half Extra Time"
     };
     
+    /*
+     * All the actions to extract from the logs into statistics.
+     * If there are actions which are not prefix-free, the longer
+     * action´s string must be first. For example "Playing with Hands"
+     * for "Playing".
+     */
     private static final String[] actions = {
-        "Finished",
-        "Initial",
-        "Playing",
-        "Ready",
-        "Set",
         "Manually Penalised",
         "Dropped Ball",
         "Kickoff Goal",
@@ -54,7 +55,12 @@ public class Parser
         "Request for Service",
         "Additional Request for Service",
         "Player Pushing",
-        "Substitute Player"
+        "Substitute Player",
+        "Finished",
+        "Initial",
+        "Playing",
+        "Ready",
+        "Set"
     };
     
     public static void info(LogInfo log)
