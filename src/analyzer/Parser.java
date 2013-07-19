@@ -10,18 +10,22 @@ import java.util.Date;
 /**
  * @author: Michel Bartsch
  * 
+ * This class contains all methods meant to parse logs.
  */
 public class Parser
 {
+    /* This prefix will be placed at the beginning of every logInfo´s log line,
+     which was made undone by an undo*/
     private static final String UNDONE_PREFIX = "<undone>";
+    /* The seperator used for the output within a row. */
     private static final String OUT_SEP = ",";
-    
+    /* The output´s date format (date-time) */
     public static final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
     
+    /* All the actions that would cause the teams to change colors */
     private static final String[] colorChangeActions = {
         "1st Half",
         "1st Half Extra Time",
-        "Penalty Shoot-out",
         "2nd Half",
         "2nd Half Extra Time"
     };
@@ -63,6 +67,14 @@ public class Parser
         "Set"
     };
     
+    
+     /**
+     * Parsing a log to get some information and place the undone-prefix,
+     * so this is needded before parsing for statistics. The information
+     * will be written into the LogInfo instance.
+     * 
+     * @param log   The log to parse.
+     */
     public static void info(LogInfo log)
     {
         Date kickoffTime = null;
@@ -120,6 +132,12 @@ public class Parser
         }
     }
     
+    /**
+     * Parsing a log to write all statistics from it into a file. The file
+     * is set in the main class.
+     * 
+     * @param log   The log to parse.
+     */
     public static void statistic(LogInfo log)
     {
         Date rawTime;
