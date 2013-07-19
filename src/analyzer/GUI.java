@@ -33,11 +33,13 @@ import javax.swing.event.ListSelectionListener;
 /**
  * @author: Michel Bartsch
  * 
- * This window is to be shown to select log-files
+ * This window is shown to select log-files for analyzing.
  */
 @SuppressWarnings("unchecked")
 public class GUI extends JFrame implements ListSelectionListener
 {
+    /* Some attributes for the layout and appearance, feel free to change
+     * them and look what happens. */
     private final static String TITLE = "Log Analyzer";
     private final static int WINDOW_WIDTH = 700;
     private final static int WINDOW_HEIGHT = 600;
@@ -46,12 +48,12 @@ public class GUI extends JFrame implements ListSelectionListener
     private final static Color LIST_HIGHLIGHT = new Color(150, 150, 255);
     private final static String CLEAN = "Clean";
     private final static String ANALYZE = "Analyze";
-    
     public final static String HTML = "<html>";
     public final static String HTML_LF = "<br>";
     public final static String HTML_RED = "<font color='red'>";
     public final static String HTML_END = "</font>";
     
+    /* This gui´s components. */
     private DefaultListModel list;
     private JList listDisplay;
     private ListSelectionModel selection;
@@ -60,6 +62,9 @@ public class GUI extends JFrame implements ListSelectionListener
     private JButton clean;
     private JButton analyze;
     
+    /**
+     * Creates a new GUI.
+     */
     public GUI()
     {
         super(TITLE);
@@ -129,6 +134,9 @@ public class GUI extends JFrame implements ListSelectionListener
         setVisible(true);
     }
     
+    /**
+     * Updates the list of logs, should be used after loading logs.
+     */
     private void updateList()
     {
         selection.clearSelection();
@@ -138,6 +146,10 @@ public class GUI extends JFrame implements ListSelectionListener
         }
     }
     
+    /**
+     * Moves all logs which are not seleted (unchecked) in the list to
+     * another directory.
+     */
     private void clean()
     {
         File droppedDir = new File(Main.PATH_DROPPED);
@@ -154,6 +166,10 @@ public class GUI extends JFrame implements ListSelectionListener
         updateList();
     }
     
+    /**
+     * Analize all logs which are selected (checked) in the list to create
+     * the statistic output file.
+     */
     private void analyze()
     {
         JFileChooser fc = new JFileChooser();
@@ -195,11 +211,24 @@ public class GUI extends JFrame implements ListSelectionListener
         }
     }
     
+    /**
+     * Instances of this class represent a line in the list of logs with a
+     * checkbox to select them.
+     */
     class CheckListItem
     {
+        /* If this log is selected (the checkbox is true) */
         public boolean selected;
+        /* String shown to represent the log */
         public String label;
         
+        /**
+        * Creates a new CheckListItem.
+        * 
+        * @param label  A String representing the log behind this item.
+        * @param selected   If true, this item will be selected (checkbox
+        *                   true) from the beginning.
+        */
         public CheckListItem(String label, boolean selected)
         {
             this.label = label;
@@ -207,6 +236,9 @@ public class GUI extends JFrame implements ListSelectionListener
         }
     }
     
+    /**
+     * This class is used to render a list item with checkbox.
+     */
     class CheckListRenderer extends JCheckBox implements ListCellRenderer
     {
         @Override
