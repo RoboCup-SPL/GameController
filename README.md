@@ -116,7 +116,7 @@ file "autoload.ini" so that NAOqi can find it.
 
 ### Usage
 
-In your NAOqi module, execute the follow code at the beginning (only once):
+In your NAOqi module, execute the following code at the beginning (only once):
 
     AL::ALMemoryProxy *memory = new AL::ALMemoryProxy(pBroker);
     memory->insertData("GameCtrl/teamNumber", <your team number>);
@@ -133,7 +133,7 @@ You can receive the current GameController packet with:
     RoboCupGameControlData gameCtrlData; // should probably zero it the first time it is used
     AL::ALValue value = memory->getData("GameCtrl/RoboCupGameControlData");
     if(value.isBinary() && value.getSize() == sizeof(RoboCupGameControlData))
-        memcpy(&gameControlData, value, sizeof(RoboCupGameControlData));
+        memcpy(&gameCtrlData, value, sizeof(RoboCupGameControlData));
 
 
 ### Deviations from the Rules
