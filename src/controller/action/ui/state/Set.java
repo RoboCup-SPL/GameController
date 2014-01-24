@@ -73,7 +73,8 @@ public class Set extends GCAction
               && ( (data.gameState != GameControlData.STATE_PLAYING)
                 || (Rules.league.penaltyShotRetries) )
               && !data.timeOutActive[0]
-              && !data.timeOutActive[1] )
+              && !data.timeOutActive[1]
+              && !data.refereeTimeout)
             || data.testmode;
     }
 }

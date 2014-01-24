@@ -70,5 +70,7 @@ public class HL extends Rules
         timeOutPerHalf = true;
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[] {};
+        /** Defines if the option for a referee timeout is available */
+        isRefereeTimeoutAvailable = false;
     }
 }

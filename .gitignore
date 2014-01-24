@@ -8,3 +8,6 @@ error.txt
 *.jar
 *.war
 *.ear
+/bin
+.classpath
+.project

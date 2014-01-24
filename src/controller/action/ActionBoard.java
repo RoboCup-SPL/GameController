@@ -11,6 +11,7 @@ import controller.action.ui.Goal;
 import controller.action.ui.KickOff;
 import controller.action.ui.Out;
 import controller.action.ui.Quit;
+import controller.action.ui.RefereeTimeout;
 import controller.action.ui.Robot;
 import controller.action.ui.Testmode;
 import controller.action.ui.TimeOut;
@@ -68,6 +69,7 @@ public class ActionBoard
     public static Goal[] goalInc = new Goal[2];
     public static KickOff[] kickOff = new KickOff[2];
     public static Robot[][] robot = new Robot[2][Rules.league.teamSize];
+    public static RefereeTimeout refereeTimeout;
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static Out[] out = new Out[2];
@@ -129,6 +131,7 @@ public class ActionBoard
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
         }
+        refereeTimeout = new RefereeTimeout();
         clockReset = new ClockReset();
         clockPause = new ClockPause();
         firstHalf = new FirstHalf();

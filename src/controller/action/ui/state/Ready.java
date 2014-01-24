@@ -58,6 +58,7 @@ public class Ready extends GCAction
         return ( (data.gameState == GameControlData.STATE_INITIAL)
               && !data.timeOutActive[0] 
               && !data.timeOutActive[1]
+              && !data.refereeTimeout
               && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) )
             || (data.gameState == GameControlData.STATE_READY)
             || data.testmode;

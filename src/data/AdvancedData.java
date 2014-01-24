@@ -39,7 +39,9 @@ public class AdvancedData extends GameControlData implements Cloneable
     
     /** Pushing counters for each team, 0:left side, 1:right side. */
     public int[] pushes = {0, 0};
-
+    
+    /** If true, the referee set a timeout */
+    public boolean refereeTimeout = false;
     /** If true, this team is currently taking a timeOut, 0:left side, 1:right side. */
     public boolean[] timeOutActive = {false, false};
     
@@ -298,7 +300,11 @@ public class AdvancedData extends GameControlData implements Cloneable
         int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
         if(gameState == STATE_INITIAL && (timeOutActive[0] || timeOutActive[1])) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
-        } else if(gameState == STATE_READY) {
+        } 
+        else if(gameState == STATE_INITIAL && (refereeTimeout)){
+        	return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
+        }
+        else if(gameState == STATE_READY) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
         } else if(gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
                 && timeKickOffBlocked >= -timeKickOffBlockedOvertime) {

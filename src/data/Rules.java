@@ -20,7 +20,6 @@ public abstract class Rules
     
     /** The rules of the league playing. */
     public static Rules league = LEAGUES[0];
-    
     /** The league´s name this rules are for. */
     public String leagueName;
     /** The league´s directory name with it´s teams and icons. */
@@ -75,6 +74,10 @@ public abstract class Rules
     public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */
     public int timeOutTime;
+    /** Time in seconds of a referee timeout*/
+    public int refereeTimeout;
+    /** Defines if the option for a referee timeout is available */ 
+    public boolean isRefereeTimeoutAvailable;
     /** One time-out per half? */
     public boolean timeOutPerHalf;
     /** On how many pushings is a robot ejected. */

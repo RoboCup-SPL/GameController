@@ -66,6 +66,10 @@ public class SPL extends Rules
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */
         timeOutTime = 5*60;
+        /** Time in seconds of a referee timeout*/
+        refereeTimeout = 10*60;
+        /** Defines if the option for a referee timeout is available */
+        isRefereeTimeoutAvailable = true;
         /** One time-out per half? */
         timeOutPerHalf = false;
         /** On how many pushings is a robot ejected. */
