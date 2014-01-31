@@ -71,7 +71,6 @@ public class GameControlReturnData
             byte[] header = new byte[4];
             buffer.get(header, 0, 4);
             this.header = new String(header);
-
             if(!this.header.equals(GAMECONTROLLER_RETURN_STRUCT_HEADER)) {
                 return false;
             } else {

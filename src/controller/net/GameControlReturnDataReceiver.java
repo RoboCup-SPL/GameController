@@ -1,14 +1,16 @@
 package controller.net;
 
-import common.Log;
-import data.GameControlData;
-import data.GameControlReturnData;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+
+import common.Log;
+
+import data.GameControlData;
+import data.GameControlReturnData;
 
 /**
  *
@@ -21,10 +23,10 @@ import java.nio.ByteBuffer;
  *
  * This class is a sigleton!
  */
-public class Receiver extends Thread
+public class GameControlReturnDataReceiver extends Thread
 {
     /** The instance of the singleton. */
-    private static Receiver instance;
+    private static GameControlReturnDataReceiver instance;
 
     /** The used socket to receive the packages. */
     private final DatagramSocket datagramSocket;
@@ -34,7 +36,7 @@ public class Receiver extends Thread
      *
      * @throws SocketException the an error occurs while creating the socket
      */
-    private Receiver() throws SocketException
+    private GameControlReturnDataReceiver() throws SocketException
     {
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
@@ -48,11 +50,11 @@ public class Receiver extends Thread
      * @return  The instance of the Receiver
      * @throws IllegalStateException if the first creation of the singleton throws an exception
      */
-    public synchronized static Receiver getInstance()
+    public synchronized static GameControlReturnDataReceiver getInstance()
     {
         if(instance == null) {
             try {
-                instance = new Receiver();
+                instance = new GameControlReturnDataReceiver();
             } catch(SocketException e) {
                 throw new IllegalStateException("fatal: Error while setting up Receiver.", e);
             }
@@ -65,13 +67,12 @@ public class Receiver extends Thread
        while(!isInterrupted()) {
            final ByteBuffer buffer = ByteBuffer.wrap(new byte[GameControlReturnData.SIZE]);
            final GameControlReturnData player = new GameControlReturnData();
-
+           
            final DatagramPacket packet = new DatagramPacket(buffer.array(), buffer.array().length);
 
             try {
                 datagramSocket.receive(packet);
                 buffer.rewind();
-
                 if(player.fromByteArray(buffer)) {
                     RobotWatcher.update(player);
                 }

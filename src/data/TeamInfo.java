@@ -27,6 +27,7 @@ public class TeamInfo implements Serializable
             1 + // teamColor
             1 + // goalColor
             1 + // score
+            SPLCoachMessage.SPL_COACH_MESSAGE_SIZE + // coach's message
             MAX_NUM_PLAYERS * PlayerInfo.SIZE;
     
     //this is streamed
@@ -34,6 +35,7 @@ public class TeamInfo implements Serializable
     public byte teamColor;                                          // colour of the team
     public byte goalColor;                                          // colour of the goal
     public byte score;                                              // team's score
+    public byte[] coachMessage = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
     
     /**
@@ -58,9 +60,12 @@ public class TeamInfo implements Serializable
         buffer.put(teamColor);
         buffer.put(goalColor);
         buffer.put(score);
+        buffer.put(coachMessage);
+        
         for(int i=0; i<MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray());
         }
+        
         return buffer.array();
     }
     
@@ -76,6 +81,7 @@ public class TeamInfo implements Serializable
         teamColor = buffer.get();
         goalColor = buffer.get();
         score = buffer.get();
+        buffer.get(coachMessage);
         for(int i=0; i<player.length; i++) {
             player[i].fromByteArray(buffer);
         }

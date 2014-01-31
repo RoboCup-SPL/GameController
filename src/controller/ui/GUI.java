@@ -213,6 +213,8 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton[] undo;
     private JButton cancelUndo;
   
+    private JTextField blueCouchMessageContent;
+    private JTextField redCouchMessageContent;
     
     /**
      * Creates a new GUI.
@@ -426,12 +428,20 @@ public class GUI extends JFrame implements GCGUI
         cancelUndo = new Button(CANCEL);
         cancelUndo.setVisible(false);
       
+        //coach message display
+        blueCouchMessageContent = new JTextField(20);
+        blueCouchMessageContent.setEditable(false);
+        redCouchMessageContent = new JTextField(20);
+        redCouchMessageContent.setEditable(false);
+        
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
         
         layout.add(0, 0, .3, .04, name[0]);
         layout.add(.7, 0, .3, .04, name[1]);
+        //layout.add(.01,.16, .2, .03, blueCouchMessageContent);
+        //layout.add(.79,.16, .2, .03, redCouchMessageContent);
         layout.add(.01, .05, .08, .07, goalInc[0]);
         layout.add(.91, .05, .08, .07, goalInc[1]);
         layout.add(.01, .13, .08, .06, goalDec[0]);
@@ -505,15 +515,6 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.505, .61, .185, .11, pen[5]);
             layout.add(.31, .73, .185, .11, pen[6]);
             layout.add(.505, .73, .185, .11, pen[7]);
-            //TODO remove code
-//            layout.add(.31, .38, .185, .08, pen[0]);
-//            layout.add(.505, .38, .185, .08, pen[1]);
-//            layout.add(.31, .47, .185, .08, pen[2]);
-//            layout.add(.505, .47, .185, .08, pen[3]);
-//            layout.add(.31, .56, .185, .08, pen[4]);
-//            layout.add(.505, .56, .185, .08, pen[5]);
-//            layout.add(.31, .65, .185, .08, pen[6]);
-//            layout.add(.505, .65, .185, .08, pen[7]);
         } else if(Rules.league instanceof HL) {
             layout.add(.31, .38, .185, .11, pen[0]);
             layout.add(.505, .38, .185, .11, pen[1]);
@@ -716,6 +717,7 @@ public class GUI extends JFrame implements GCGUI
         updatePushes(data);
         updateTimeOut(data);
         updateRefereeTimeout(data);
+        updateCoachMessages(data);
         updateOut(data);
         if(Rules.league instanceof SPL) {
             updateGlobalStuck(data);
@@ -729,6 +731,10 @@ public class GUI extends JFrame implements GCGUI
         repaint();
     }
     
+    private void updateCoachMessages(AdvancedData data){
+    	redCouchMessageContent.setText(new String(data.team[0].coachMessage));
+    	blueCouchMessageContent.setText(new String(data.team[1].coachMessage));
+    }
     /**
      * Updates the clock.
      * 

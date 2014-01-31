@@ -3,7 +3,8 @@ package controller;
 import common.ApplicationLock;
 import common.Log;
 import controller.action.ActionBoard;
-import controller.net.Receiver;
+import controller.net.GameControlReturnDataReceiver;
+import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
 import controller.ui.GCGUI;
 import controller.ui.GUI;
@@ -13,11 +14,13 @@ import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
 import data.Teams;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
+
 import javax.swing.*;
 
 
@@ -147,8 +150,11 @@ public class Main
             EventHandler.getInstance().data = data;
 
             //receiver
-            Receiver receiver = Receiver.getInstance();
+            GameControlReturnDataReceiver receiver = GameControlReturnDataReceiver.getInstance();
             receiver.start();
+            
+            SPLCoachMessageReceiver spl = SPLCoachMessageReceiver.getInstance();
+            spl.start();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up GameController on port: " + GameControlData.GAMECONTROLLER_PORT + ".",
@@ -195,8 +201,8 @@ public class Main
                     Log.error("Error while trying to release the application lock.");
                 }
                 Sender.getInstance().interrupt();
-                Receiver.getInstance().interrupt();
-
+                GameControlReturnDataReceiver.getInstance().interrupt();
+                SPLCoachMessageReceiver.getInstance().interrupt();
                 try {
                     Log.close();
                 } catch (IOException e) {
