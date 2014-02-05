@@ -178,7 +178,9 @@ public class StartInput extends JFrame implements Serializable
         autoColorChange.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         autoColorChange.setState(Rules.league.colorChangeAuto);
         autoColorChangePanel.add(autoColorChange);
-
+        autoColorChange.setVisible(false);
+        autoColorChange.setState(Rules.league.colorChangeAuto);
+        
         optionsRight = new JPanel();
         optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
         add(optionsRight);
@@ -216,13 +218,16 @@ public class StartInput extends JFrame implements Serializable
                         teamIconLabel[i].repaint();
                     }
                     teamsOK = false;
-                    autoColorChange.setState(Rules.league.colorChangeAuto);
+                    
                     if(Rules.league instanceof SPL) {
                         nofulltime.setText(FULLTIME_LABEL_NO);
                         fulltime.setText(FULLTIME_LABEL_YES);
+                        autoColorChange.setVisible(false);
                     } else {
                         nofulltime.setText(FULLTIME_LABEL_HL_NO);
                         fulltime.setText(FULLTIME_LABEL_HL_YES);
+                        autoColorChange.setState(Rules.league.colorChangeAuto);
+                        autoColorChange.setVisible(true);
                     }
                     startEnableing();
                 }

@@ -54,7 +54,6 @@ public class SPLCoachMessageReceiver extends Thread {
 							.get(i).team].coachMessage = splCoachMessagQueue
 							.get(i).message;
 					splCoachMessagQueue.remove(i);
-					System.out.println("SEND MESSAGE TO THE NAOS");
 				} else {
 					i++;
 				}
@@ -69,7 +68,6 @@ public class SPLCoachMessageReceiver extends Thread {
 			if (isBlueCoachPackageReceived) {
 				if ((System.currentTimeMillis() - timestampBlueCoachPackage) >= SPLCoachMessage.SPL_COACH_MESSAGE_RECEIVE_INTERVALL) {
 					isBlueCoachPackageReceived = false;
-					System.out.println("CAN RECEIVE NEW MESSAGES");
 				}
 			}
 
