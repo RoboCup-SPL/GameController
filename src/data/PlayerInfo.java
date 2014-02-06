@@ -25,6 +25,7 @@ public class PlayerInfo implements Serializable
     public static final short PENALTY_SPL_LEAVING_THE_FIELD = 6;
     public static final short PENALTY_SPL_PLAYING_WITH_HANDS = 7;
     public static final short PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
+    public static final short PENALTY_SPL_COACH_MOTION = 9;
     
     public static final short PENALTY_HL_BALL_MANIPULATION = 1;
     public static final short PENALTY_HL_PHYSICAL_CONTACT = 2;
@@ -88,6 +89,7 @@ public class PlayerInfo implements Serializable
                 case PENALTY_SPL_LEAVING_THE_FIELD:  temp = "leaving the field"; break;
                 case PENALTY_SPL_PLAYING_WITH_HANDS: temp = "hands"; break;
                 case PENALTY_SPL_REQUEST_FOR_PICKUP: temp = "request for pickup"; break;
+                case PENALTY_SPL_COACH_MOTION:		 temp = "coach motion"; break;
                 case PENALTY_MANUAL:                 temp = "manual"; break;
                 default: temp = "undefinied("+penalty+")";
             }

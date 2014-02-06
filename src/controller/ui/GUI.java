@@ -133,7 +133,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_HOLDING = "Ball Holding";
     private static final String PEN_HANDS = "Hands";
-    private static final String PEN_PICKUP = "Pick-Up";
+    private static final String PEN_PICKUP = "Pick-Up/Coach Motion";
     private static final String PEN_MANIPULATION = "Ball Manipulation";
     private static final String PEN_PHYSICAL = "Physical Contact";
     private static final String PEN_DEFENSE = "Illegal Defense";
@@ -930,7 +930,8 @@ public class GUI extends JFrame implements GCGUI
                             } else if(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
                                 robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
                                 highlight(robot[i][j], false);
-                            } else {
+                            }else if(!(Rules.league instanceof SPL) ||
+                                    !(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION)){
                                 robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
                                 highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                             }
@@ -953,7 +954,16 @@ public class GUI extends JFrame implements GCGUI
                     robotTime[i][j].setVisible(false);
                     highlight(robot[i][j], false);
                 }
-                robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
+                //A Couch who gets a couch motion penalty is banned for the whole game
+                if(Rules.league instanceof SPL &&
+                    data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION){
+                	robot[i][j].setEnabled(false);
+                	robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" (B)");
+                }
+                else{
+                	robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
+                }
+                
                 ImageIcon currentLanIcon;
                 if(onlineStatus[i][j] == RobotOnlineStatus.ONLINE) {
                     currentLanIcon = lanOnline;

@@ -4,6 +4,7 @@ import common.Log;
 import data.AdvancedData;
 import data.PlayerInfo;
 import data.Rules;
+import data.SPL;
 
 /**
  * @author: Michel Bartsch
@@ -26,10 +27,18 @@ public class PickUp extends Penalty
         if(player.penalty == PlayerInfo.PENALTY_NONE) {
             data.whenPenalized[side][number] = data.getTime();
         }
-        player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
-        Log.state(data, "Request for PickUp "+
-                Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+        if(number < SPL.league.teamSize-1){
+        	player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
+            Log.state(data, "Request for PickUp "+
+                    Rules.league.teamColorName[data.team[side].teamColor]
+                    + " " + (number+1));
+        }
+        else{
+        	player.penalty = PlayerInfo.PENALTY_SPL_COACH_MOTION;
+        	Log.state(data, "Coach Motion "+
+                    Rules.league.teamColorName[data.team[side].teamColor]
+                    + " " + (number+1));
+        }
     }
     
     /**
