@@ -100,7 +100,7 @@ public class SPLCoachMessageReceiver extends Thread {
 					}
 				}
 			} catch (IOException e) {
-				Log.error("something went wrong while receiving the coach packages");
+				Log.error("something went wrong while receiving the coach packages : "+ e.getMessage());
 			}
 		}
 

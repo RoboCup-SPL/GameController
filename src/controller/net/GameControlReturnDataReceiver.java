@@ -77,7 +77,7 @@ public class GameControlReturnDataReceiver extends Thread
                     RobotWatcher.update(player);
                 }
             } catch(IOException e) {
-                Log.error("something went wrong while receiving");
+                Log.error("something went wrong while receiving : " + e.getMessage());
             }
         }
 

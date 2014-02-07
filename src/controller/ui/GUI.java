@@ -8,11 +8,13 @@ import controller.action.GCAction;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import data.*;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.swing.*;
 
 
@@ -107,9 +109,10 @@ public class GUI extends JFrame implements GCGUI
     private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
     private static final String TIMEOUT = "Timeout";
     private static final String REFEREE_TIMEOUT = "Referee Timeout";
-    private static final String STUCK = "Global<br/>Game<br/>Stuck";
+    private static final String STUCK = "Global <br/> Game Stuck";
     private static final String KICKOFF_GOAL = "Kickoff Goal";
     private static final String OUT = "Out";
+    private static final String GOAL_KEEPER_SAVE = "Save";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
     private static final String STATE_SET = "Set";
@@ -160,6 +163,7 @@ public class GUI extends JFrame implements GCGUI
     private Font timeSubFont;
     private Font timeoutFont;
     private Font stateFont;
+    private Font refereeTimeoutFont;
     private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
     private ImageIcon clockImgReset;
     private ImageIcon clockImgPlay;
@@ -213,8 +217,6 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton[] undo;
     private JButton cancelUndo;
   
-    private JTextField blueCouchMessageContent;
-    private JTextField redCouchMessageContent;
     
     /**
      * Creates a new GUI.
@@ -428,11 +430,6 @@ public class GUI extends JFrame implements GCGUI
         cancelUndo = new Button(CANCEL);
         cancelUndo.setVisible(false);
       
-        //coach message display
-        blueCouchMessageContent = new JTextField(20);
-        blueCouchMessageContent.setEditable(false);
-        redCouchMessageContent = new JTextField(20);
-        redCouchMessageContent.setEditable(false);
         
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
@@ -440,8 +437,6 @@ public class GUI extends JFrame implements GCGUI
         
         layout.add(0, 0, .3, .04, name[0]);
         layout.add(.7, 0, .3, .04, name[1]);
-        //layout.add(.01,.16, .2, .03, blueCouchMessageContent);
-        //layout.add(.79,.16, .2, .03, redCouchMessageContent);
         layout.add(.01, .05, .08, .07, goalInc[0]);
         layout.add(.91, .05, .08, .07, goalInc[1]);
         layout.add(.01, .13, .08, .06, goalDec[0]);
@@ -455,12 +450,12 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
         if(Rules.league instanceof SPL) {
-            layout.add(.01, .77, .09, .09, timeOut[0]);
-            layout.add(.9, .77, .09, .09, timeOut[1]);
-            layout.add(.11, .77, .08, .09, stuck[0]);
-            layout.add(.81, .77, .08, .09, stuck[1]);
-            layout.add(.20, .77, .09, .09, out[0]);
-            layout.add(.71, .77, .09, .09, out[1]);
+            layout.add(.155, .82, .135, .045, timeOut[0]);
+            layout.add(.855, .82, .135, .045, timeOut[1]);
+            layout.add(.155, .765, .135, .045, stuck[0]);
+            layout.add(.855, .765, .135, .045, stuck[1]);
+            layout.add(.01, .765, .135, .1, out[0]);
+            layout.add(.71, .765, .135, .1, out[1]);
         } else {
             layout.add(.01, .77, .135, .09, timeOut[0]);
             layout.add(.855, .77, .135, .09, timeOut[1]);
@@ -717,8 +712,8 @@ public class GUI extends JFrame implements GCGUI
         updatePushes(data);
         updateTimeOut(data);
         updateRefereeTimeout(data);
-        updateCoachMessages(data);
         updateOut(data);
+        
         if(Rules.league instanceof SPL) {
             updateGlobalStuck(data);
             updatePenaltiesSPL(data);
@@ -731,10 +726,6 @@ public class GUI extends JFrame implements GCGUI
         repaint();
     }
     
-    private void updateCoachMessages(AdvancedData data){
-    	redCouchMessageContent.setText(new String(data.team[0].coachMessage));
-    	blueCouchMessageContent.setText(new String(data.team[1].coachMessage));
-    }
     /**
      * Updates the clock.
      * 
@@ -950,7 +941,12 @@ public class GUI extends JFrame implements GCGUI
                         highlight(robot[i][j], false);
                     }
                 } else {
-                    robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1));
+                	if(j == SPL.league.teamSize - 1){
+                		robotLabel[i][j].setText(Rules.league.teamColorName[i]+" Couch");
+                	}
+                	else{
+                		robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1));
+                	}
                     robotTime[i][j].setVisible(false);
                     highlight(robot[i][j], false);
                 }
@@ -958,7 +954,7 @@ public class GUI extends JFrame implements GCGUI
                 if(Rules.league instanceof SPL &&
                     data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION){
                 	robot[i][j].setEnabled(false);
-                	robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" (B)");
+                	robotLabel[i][j].setText(Rules.league.teamColorName[i]+" Couch (B)");
                 }
                 else{
                 	robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
@@ -1050,6 +1046,7 @@ public class GUI extends JFrame implements GCGUI
             out[i].setEnabled(ActionBoard.out[i].isLegal(data));
         }
     }
+    
     
     /**
      * Updates the SPL penalties.
@@ -1147,7 +1144,7 @@ public class GUI extends JFrame implements GCGUI
         timeSubFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIME_SUB_FONT_SIZE*(size)));
         timeoutFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIMEOUT_FONT_SIZE*(size)));
         stateFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STATE_FONT_SIZE*(size)));
-        Font refereeTimeoutFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STATE_FONT_SIZE*(size)));
+        refereeTimeoutFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STATE_FONT_SIZE*(size)));
         
         for(int i=0; i<=1; i++) {
             name[i].setFont(titleFont);
@@ -1160,7 +1157,7 @@ public class GUI extends JFrame implements GCGUI
                 robotLabel[i][j].setFont(titleFont);
             }
             timeOut[i].setFont(timeoutFont);
-            out[i].setFont(standardFont);
+            out[i].setFont(timeoutFont);
             if(Rules.league instanceof SPL) {
                 stuck[i].setFont(timeoutFont);
             }
