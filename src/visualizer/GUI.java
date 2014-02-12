@@ -1,10 +1,15 @@
 package visualizer;
 
-import common.Log;
-import data.GameControlData;
-import data.Rules;
-import data.Teams;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -13,9 +18,16 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+
+import common.Log;
+import data.GameControlData;
+import data.Rules;
+import data.SPL;
+import data.Teams;
 
 /**
  * @author: Michel Bartsch
@@ -57,7 +69,9 @@ public class GUI extends JFrame
     private Font standardFont;
     private Font standardSmalFont;
     private Font scoreFont;
+    private Font coachMessageFont;
     private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
+	
     
     /**
      * Creates a new GUI.
@@ -94,6 +108,7 @@ public class GUI extends JFrame
         standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*getWidth()));
         standardSmalFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_S_SIZE*getWidth()));
         scoreFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_XXL_SIZE*getWidth()));
+        coachMessageFont = new Font(Font.DIALOG, Font.PLAIN, (int)(0.05*getWidth()));
         
         addWindowListener(new WindowAdapter()
         {
@@ -175,6 +190,7 @@ public class GUI extends JFrame
             drawState(g);
             drawSubTime(g);
             drawPenaltyInfo(g);
+            drawCoachMessages(g);
         }
     }
     
@@ -237,7 +253,7 @@ public class GUI extends JFrame
     {
         int x = getSizeToWidth(0.01);
         int y = getSizeToHeight(0.33);
-        int size = getSizeToWidth(0.3);
+        int size = getSizeToWidth(0.28);
         //int yName = (int)(y + size * 1.15);
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
@@ -257,8 +273,8 @@ public class GUI extends JFrame
         }*/
         for(int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
-            float scaleFactorX = 1;
-            float scaleFactorY = 1;
+            float scaleFactorX = 1f;
+            float scaleFactorY = 1f;
             if(icons[i].getWidth() * 1.2f > icons[i].getHeight()) {
                 scaleFactorY = icons[i].getHeight()/(float)icons[i].getWidth();
             } else {
@@ -463,6 +479,52 @@ public class GUI extends JFrame
         g.drawString(s, x+offset, y);
     }
     
+    private void drawCoachMessages(Graphics g){
+		Graphics2D g2 = (Graphics2D) g; //need for setting the thickness of the line of the rectangles
+    	String coachLabel = new String("Coach:");
+    	
+    	for(int i = 0; i < 2; i++){
+    		double xOffset = 0.688;
+    		if(i == 1){
+    			xOffset = 0;
+    		}
+    		
+    		String coachMessage = new String(data.team[i].coachMessage);
+    		String coachMessagePartI = new String(coachMessage.substring(0, 10));
+        	String coachMessagePartII = new String(coachMessage.substring(10, 20));
+    		int xCoachMessageLabel = getSizeToWidth(0.001+xOffset);
+        	int yCoachMessageLabel = getSizeToHeight(0.83);
+        	int xCoachMessagePartI = getSizeToWidth(0.001+xOffset);
+        	int yCoachMessagePartI = getSizeToHeight(0.91);
+        	int xCoachMessagePartII = getSizeToWidth(0.001+xOffset);
+        	int yCoachMessagePartII = getSizeToHeight(0.98);
+        	
+        	g2.setFont(coachMessageFont);
+        	
+        	//Need to calculate the aspect ration for the right alignment of the gui elements
+        	int screenWidth = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+        	int screenHeight = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+        	int gcd = greatestCommonDivisor(screenWidth, screenHeight);
+        	
+        	//Draw the coach label and coach message box
+        	g2.setColor(Color.BLACK);
+        	g2.drawString(coachLabel, xCoachMessageLabel, yCoachMessageLabel);
+        	float thickness = 3.0f;
+        	Stroke oldStroke = g2.getStroke();
+        	g2.setStroke(new BasicStroke(thickness));
+        	if(screenWidth/gcd > 4){
+        		g2.drawRect(getSizeToWidth(0.001+xOffset), getSizeToHeight(0.84), 6*coachMessageFont.getSize()+coachMessageFont.getSize()/4, 2*coachMessageFont.getSize());
+        	}
+        	else{
+        		g2.drawRect(getSizeToWidth(0.001+xOffset), getSizeToHeight(0.86), 6*coachMessageFont.getSize()+coachMessageFont.getSize()/4, 2*coachMessageFont.getSize());
+        	}
+        	g2.setStroke(oldStroke);
+        	g2.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+        	g2.drawString(coachMessagePartI, xCoachMessagePartI, yCoachMessagePartI);
+        	g2.drawString(coachMessagePartII, xCoachMessagePartII, yCoachMessagePartII);
+    	}
+    }
+    
     /**
      * Formats a time in seconds to a usual looking minutes and seconds time as string.
      * 
@@ -472,5 +534,12 @@ public class GUI extends JFrame
      */
     private String formatTime(int seconds) {
         return (seconds < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(seconds) * 1000));
+    }
+    
+    private int greatestCommonDivisor(int a, int b){
+    	if(b == 0){
+    		return a;
+    	}
+    	return greatestCommonDivisor(b, a%b);
     }
 }

@@ -50,10 +50,13 @@ public class SPLCoachMessageReceiver extends Thread {
 			int i = 0;
 			while (i < splCoachMessagQueue.size()) {
 				if (splCoachMessagQueue.get(i).getRemainingTimeToSend() == 0) {
-					EventHandler.getInstance().data.team[splCoachMessagQueue
-							.get(i).team].coachMessage = splCoachMessagQueue
-							.get(i).message;
-					splCoachMessagQueue.remove(i);
+					for(int j = 0; j < 2; j++){
+						if(EventHandler.getInstance().data.team[j].teamColor == splCoachMessagQueue.get(i).team ){
+							EventHandler.getInstance().data.team[j].coachMessage = splCoachMessagQueue.get(i).message;
+							splCoachMessagQueue.remove(i);
+							break;
+						}
+					}
 				} else {
 					i++;
 				}
@@ -88,7 +91,6 @@ public class SPLCoachMessageReceiver extends Thread {
 							timestampBlueCoachPackage = System
 									.currentTimeMillis();
 							splCoachMessagQueue.add(coach);
-							System.out.println("GET MESSAGE : " + coach.getRemainingTimeToSend());
 						}
 					} else {
 						if (!isRedCoachPackageReceived) {

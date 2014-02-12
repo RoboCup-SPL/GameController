@@ -42,8 +42,8 @@ public class StartInput extends JFrame implements Serializable
     /** This is not what the name says ;) */
     private static final int FULLSCREEN_WIDTH = 160;
     private static final String ICONS_PATH = "config/icons/";
-    private static final String[] BACKGROUND_SIDE = {"robot_left_blue.png",
-                                                        "robot_right_red.png"};
+    private static final String[] BACKGROUND_SIDE = {"robot_left_red.png",
+                                                        "robot_right_blue.png"};
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
     private static final String FULLTIME_LABEL_HL_NO = "Normal Game";

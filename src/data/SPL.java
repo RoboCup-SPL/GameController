@@ -21,9 +21,9 @@ public class SPL extends Rules
         /** How many robots of each team may play at one time. */
         robotsPlaying = 6; //5 Field player & 1 coach
         /** The Java Colors the left and the right team starts with. */
-        teamColor = new Color[] {Color.BLUE, Color.RED};
+        teamColor = new Color[] {Color.RED, Color.BLUE};
         /** The name of the colors. */
-        teamColorName = new String[] {"Blue", "Red"};
+        teamColorName = new String[] {"Red", "Blue"};
         /** If the colors change automatically. */
         colorChangeAuto = false;
         /** If the clock may stop in certain states (Ready, Set) in a play-off game. */

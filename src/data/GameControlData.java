@@ -20,8 +20,8 @@ public class GameControlData implements Serializable
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final int GAMECONTROLLER_STRUCT_VERSION = 7;
 
-    public static final byte TEAM_BLUE = 0;
-    public static final byte TEAM_RED = 1;
+    public static final byte TEAM_RED = 0;
+    public static final byte TEAM_BLUE = 1;
     public static final byte DROPBALL = 2;
 
     public static final byte GOAL_BLUE = 0;
@@ -82,8 +82,8 @@ public class GameControlData implements Serializable
         for(int i=0; i<team.length; i++) {
             team[i] = new TeamInfo();
         }
-        team[0].teamColor = TEAM_BLUE;
-        team[1].teamColor = TEAM_RED;
+        team[0].teamColor = TEAM_RED;
+        team[1].teamColor = TEAM_BLUE;
         team[0].goalColor = GOAL_YELLOW;
         team[1].goalColor = GOAL_YELLOW;
     }

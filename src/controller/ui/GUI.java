@@ -91,10 +91,10 @@ public class GUI extends JFrame implements GCGUI
     private static final int STATE_FONT_SIZE = 12;
     private static final String WINDOW_TITLE = "GameController";
     private static final String ICONS_PATH = "config/icons/";
-    private static final String[][] BACKGROUND_SIDE = {{"robot_left_blue.png",
-                                                        "robot_left_red.png"},
-                                                       {"robot_right_blue.png",
-                                                        "robot_right_red.png"}};
+    private static final String[][] BACKGROUND_SIDE = {{"robot_left_red.png",
+                                                        "robot_left_blue.png"},
+                                                       {"robot_right_red.png",
+                                                        "robot_right_blue.png"}};
     private static final String BACKGROUND_MID = "field.png";
     private static final String BACKGROUND_CLOCK = "time_ground.png";
     private static final String KICKOFF = "Kickoff";
@@ -942,10 +942,10 @@ public class GUI extends JFrame implements GCGUI
                     }
                 } else {
                 	if(j == SPL.league.teamSize - 1){
-                		robotLabel[i][j].setText(Rules.league.teamColorName[i]+" Couch");
+                		robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" Couch");
                 	}
                 	else{
-                		robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1));
+                		robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1));
                 	}
                     robotTime[i][j].setVisible(false);
                     highlight(robot[i][j], false);
@@ -954,7 +954,7 @@ public class GUI extends JFrame implements GCGUI
                 if(Rules.league instanceof SPL &&
                     data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION){
                 	robot[i][j].setEnabled(false);
-                	robotLabel[i][j].setText(Rules.league.teamColorName[i]+" Couch (B)");
+                	robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" Couch (B)");
                 }
                 else{
                 	robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
