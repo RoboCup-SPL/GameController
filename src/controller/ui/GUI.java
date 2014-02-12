@@ -136,7 +136,8 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_HOLDING = "Ball Holding";
     private static final String PEN_HANDS = "Hands";
-    private static final String PEN_PICKUP = "Pick-Up/Coach Motion";
+    private static final String PEN_PICKUP_COACH_MOTION = "Pick-Up/Coach Motion";
+    private static final String PEN_PICKUP = "Pick-Up";
     private static final String PEN_MANIPULATION = "Ball Manipulation";
     private static final String PEN_PHYSICAL = "Physical Contact";
     private static final String PEN_DEFENSE = "Illegal Defense";
@@ -405,7 +406,12 @@ public class GUI extends JFrame implements GCGUI
             pen[4] = new ToggleButton(PEN_DEFENDER);
             pen[5] = new ToggleButton(PEN_HOLDING);
             pen[6] = new ToggleButton(PEN_HANDS);
-            pen[7] = new ToggleButton(PEN_PICKUP);
+            if(data.dropInPlayerMode){
+            	pen[7] = new ToggleButton(PEN_PICKUP);
+            }
+            else{
+            	pen[7] = new ToggleButton(PEN_PICKUP_COACH_MOTION);
+            }
         } else if(Rules.league instanceof HL) {
             pen = new JToggleButton[6];
             pen[0] = new ToggleButton(PEN_MANIPULATION);
@@ -941,7 +947,7 @@ public class GUI extends JFrame implements GCGUI
                         highlight(robot[i][j], false);
                     }
                 } else {
-                	if(j == SPL.league.teamSize - 1){
+                	if((Rules.league instanceof SPL) && (!data.dropInPlayerMode) &&(j == SPL.league.teamSize - 1)){
                 		robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" Couch");
                 	}
                 	else{

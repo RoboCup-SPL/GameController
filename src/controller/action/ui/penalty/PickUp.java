@@ -27,7 +27,7 @@ public class PickUp extends Penalty
         if(player.penalty == PlayerInfo.PENALTY_NONE) {
             data.whenPenalized[side][number] = data.getTime();
         }
-        if(number < SPL.league.teamSize-1){
+        if((data.dropInPlayerMode) || (number < SPL.league.teamSize-1)){
         	player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
             Log.state(data, "Request for PickUp "+
                     Rules.league.teamColorName[data.team[side].teamColor]

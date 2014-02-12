@@ -13,6 +13,7 @@ import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
+import data.SPL;
 import data.Teams;
 
 import java.io.File;
@@ -135,6 +136,10 @@ public class Main
         AdvancedData data = new AdvancedData();
         for(int i=0; i<2; i++) {
             data.team[i].teamNumber = (byte)input.outTeam[i];
+        }
+        data.dropInPlayerMode = input.dropInPlayerMode;
+        if(data.dropInPlayerMode){
+        	--SPL.league.teamSize; // Remove the coach for the drop-in player competition
         }
         data.colorChangeAuto = input.outAutoColorChange;
         data.playoff = input.outFulltime;

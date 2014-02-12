@@ -54,6 +54,9 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** If true, the game auto-pauses the game for full 10minutes playing. */
     public boolean playoff;
     
+    /** If true, the drop-in player competition is active*/
+    public boolean dropInPlayerMode = false;
+    
     /** If true, the colors change automatically. */
     public boolean colorChangeAuto;
     

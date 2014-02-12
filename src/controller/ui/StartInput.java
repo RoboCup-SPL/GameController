@@ -32,7 +32,7 @@ public class StartInput extends JFrame implements Serializable
      */
     private static final String WINDOW_TITLE = "GameController";
     private static final int WINDOW_WIDTH = 600;
-    private static final int WINDOW_HEIGHT = 480;
+    private static final int WINDOW_HEIGHT = 510;
     private static final int STANDARD_SPACE = 10;
     private static final int TEAMS_HEIGHT = 300;
     private static final int IMAGE_SIZE = 250;
@@ -46,6 +46,7 @@ public class StartInput extends JFrame implements Serializable
                                                         "robot_right_blue.png"};
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
+    private static final String DROP_IN_PLAYER_COMPETITION = "Drop-In Player Modus";
     private static final String FULLTIME_LABEL_HL_NO = "Normal Game";
     private static final String FULLTIME_LABEL_HL_YES = "Knock-Out Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
@@ -71,6 +72,7 @@ public class StartInput extends JFrame implements Serializable
     public boolean outFulltime;
     public boolean outFullscreen;
     public boolean outAutoColorChange;
+    public boolean dropInPlayerMode = false;
     
     /** All the components of this GUI. */
     private ImagePanel[] teamContainer = new ImagePanel[2];
@@ -82,6 +84,7 @@ public class StartInput extends JFrame implements Serializable
     private JComboBox league;
     private JRadioButton nofulltime;
     private JRadioButton fulltime;
+    private JRadioButton dropInPlayerCompetition;
     private ButtonGroup fulltimeGroup;
     private Checkbox fullscreen;
     private Checkbox autoColorChange;
@@ -182,7 +185,7 @@ public class StartInput extends JFrame implements Serializable
         autoColorChange.setState(Rules.league.colorChangeAuto);
         
         optionsRight = new JPanel();
-        optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
+        optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT + 30));
         add(optionsRight);
         Dimension optionsDim = new Dimension(WINDOW_WIDTH/3-2*STANDARD_SPACE, OPTIONS_HEIGHT);
         league = new JComboBox();
@@ -223,9 +226,11 @@ public class StartInput extends JFrame implements Serializable
                         nofulltime.setText(FULLTIME_LABEL_NO);
                         fulltime.setText(FULLTIME_LABEL_YES);
                         autoColorChange.setVisible(false);
+                        dropInPlayerCompetition.setVisible(true);
                     } else {
                         nofulltime.setText(FULLTIME_LABEL_HL_NO);
                         fulltime.setText(FULLTIME_LABEL_HL_YES);
+                        dropInPlayerCompetition.setVisible(false);
                         autoColorChange.setState(Rules.league.colorChangeAuto);
                         autoColorChange.setVisible(true);
                     }
@@ -236,11 +241,14 @@ public class StartInput extends JFrame implements Serializable
         optionsRight.add(league);
         nofulltime = new JRadioButton();
         nofulltime.setPreferredSize(optionsDim);
+        dropInPlayerCompetition = new JRadioButton();
+        dropInPlayerCompetition.setPreferredSize(optionsDim);
         fulltime = new JRadioButton();
         fulltime.setPreferredSize(optionsDim);
         if(Rules.league instanceof SPL) {
             nofulltime.setText(FULLTIME_LABEL_NO);
             fulltime.setText(FULLTIME_LABEL_YES);
+            dropInPlayerCompetition.setText(DROP_IN_PLAYER_COMPETITION);
         } else {
             nofulltime.setText(FULLTIME_LABEL_HL_NO);
             fulltime.setText(FULLTIME_LABEL_HL_YES);
@@ -248,13 +256,27 @@ public class StartInput extends JFrame implements Serializable
         fulltimeGroup = new ButtonGroup();
         fulltimeGroup.add(nofulltime);
         fulltimeGroup.add(fulltime);
+        fulltimeGroup.add(dropInPlayerCompetition);
+        
         optionsRight.add(nofulltime);
         optionsRight.add(fulltime);
+        optionsRight.add(dropInPlayerCompetition);
+        dropInPlayerCompetition.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				outFulltime = true;
+				dropInPlayerMode = true;
+                fulltimeOK = true;
+                startEnableing();
+			}
+		});
+        
         nofulltime.addActionListener(new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = false;
                     fulltimeOK = true;
+                    dropInPlayerMode = false;
                     startEnableing();
                 }});
         fulltime.addActionListener(new ActionListener() {
@@ -262,6 +284,7 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = true;
                     fulltimeOK = true;
+                    dropInPlayerMode = false;
                     startEnableing();
                 }});
         
