@@ -33,7 +33,7 @@ public class PickUp extends Penalty
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         }
-        else{
+        else{ //A request for pickup is send to the coach => Coach Motion penalty
         	player.penalty = PlayerInfo.PENALTY_SPL_COACH_MOTION;
         	Log.state(data, "Coach Motion "+
                     Rules.league.teamColorName[data.team[side].teamColor]

@@ -10,6 +10,7 @@ import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
 import controller.action.ui.KickOff;
 import controller.action.ui.Out;
+import controller.action.ui.PushingTeammate;
 import controller.action.ui.Quit;
 import controller.action.ui.RefereeTimeout;
 import controller.action.ui.Robot;
@@ -73,6 +74,7 @@ public class ActionBoard
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static Out[] out = new Out[2];
+    public static PushingTeammate[] pushingTeammate = new PushingTeammate[2];
     public static ClockReset clockReset;
     public static ClockPause clockPause;
     public static FirstHalf firstHalf;
@@ -130,6 +132,7 @@ public class ActionBoard
             timeOut[i] = new TimeOut(i);
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
+            pushingTeammate[i] = new PushingTeammate(i);
         }
         refereeTimeout = new RefereeTimeout();
         clockReset = new ClockReset();

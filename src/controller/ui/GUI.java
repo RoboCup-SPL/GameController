@@ -5,6 +5,7 @@ import common.TotalScaleLayout;
 import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
+import controller.action.ui.PushingTeammate;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import data.*;
@@ -112,7 +113,6 @@ public class GUI extends JFrame implements GCGUI
     private static final String STUCK = "Global <br/> Game Stuck";
     private static final String KICKOFF_GOAL = "Kickoff Goal";
     private static final String OUT = "Out";
-    private static final String GOAL_KEEPER_SAVE = "Save";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
     private static final String STATE_SET = "Set";
@@ -193,6 +193,7 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton[] timeOut;
     private JButton[] stuck;
     private JButton[] out;
+    private JToggleButton[] pushingTeammate;
     private JPanel mid;
     private JToggleButton initial;
     private JToggleButton ready;
@@ -324,9 +325,11 @@ public class GUI extends JFrame implements GCGUI
         //  team
         timeOut = new JToggleButton[2];
         out = new JButton[2];
+        pushingTeammate = new JToggleButton[2];
         for(int i=0; i<2; i++) {
             timeOut[i] = new ToggleButton(TIMEOUT);
             out[i] = new JButton(OUT);
+            pushingTeammate[i] = new ToggleButton("Pushing Teammate");
         }
         if(Rules.league instanceof SPL) {
             stuck = new Button[2];
@@ -460,8 +463,16 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.855, .82, .135, .045, timeOut[1]);
             layout.add(.155, .765, .135, .045, stuck[0]);
             layout.add(.855, .765, .135, .045, stuck[1]);
-            layout.add(.01, .765, .135, .1, out[0]);
-            layout.add(.71, .765, .135, .1, out[1]);
+            if(data.dropInPlayerMode){
+            	layout.add(.01, .765, .135, .045, out[0]);
+                layout.add(.71, .765, .135, .045, out[1]);
+                layout.add(.01, .82, .135, .045, pushingTeammate[0]);
+                layout.add(.71, .82, .135, .045, pushingTeammate[1]);
+            }
+            else{
+            	layout.add(.01, .765, .135, .1, out[0]);
+                layout.add(.71, .765, .135, .1, out[1]);
+            }
         } else {
             layout.add(.01, .77, .135, .09, timeOut[0]);
             layout.add(.855, .77, .135, .09, timeOut[1]);
@@ -542,6 +553,7 @@ public class GUI extends JFrame implements GCGUI
             }
             timeOut[i].addActionListener(ActionBoard.timeOut[i]);
             out[i].addActionListener(ActionBoard.out[i]);
+            pushingTeammate[i].addActionListener(ActionBoard.pushingTeammate[i]);
             if(Rules.league instanceof SPL) {
                 stuck[i].addActionListener(ActionBoard.stuck[i]);
             }
@@ -718,6 +730,7 @@ public class GUI extends JFrame implements GCGUI
         updatePushes(data);
         updateTimeOut(data);
         updateRefereeTimeout(data);
+        updatePushingTeammate(data);
         updateOut(data);
         
         if(Rules.league instanceof SPL) {
@@ -1003,7 +1016,15 @@ public class GUI extends JFrame implements GCGUI
     }
     
     private void updateRefereeTimeout(AdvancedData data){
-    	
+    	refereeTimeout.setSelected(data.refereeTimeout);
+    }
+    
+    private void updatePushingTeammate(AdvancedData data){
+    	for(int i = 0; i<2; i++){
+    		pushingTeammate[i].setEnabled(ActionBoard.pushingTeammate[i].isLegal(data));
+    		pushingTeammate[i].setSelected(EventHandler.getInstance().lastUIEvent instanceof PushingTeammate 
+    										&& ((PushingTeammate) EventHandler.getInstance().lastUIEvent).side == i);
+    	}
     }
     /**
      * Updates the global game stuck.
