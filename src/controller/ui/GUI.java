@@ -132,11 +132,11 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
     private static final String PEN_FALLEN = "Fallen Robot";
-    private static final String PEN_INACTIVE = "Inactive /<br>Local Game Stuck";
+    private static final String PEN_INACTIVE = "Inactive /<br/>Local Game Stuck";
     private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_HOLDING = "Ball Holding";
     private static final String PEN_HANDS = "Hands";
-    private static final String PEN_PICKUP_COACH_MOTION = "Pick-Up/Coach Motion";
+    private static final String PEN_PICKUP_COACH_MOTION = "Pick-Up /<br/>Coach Motion";
     private static final String PEN_PICKUP = "Pick-Up";
     private static final String PEN_MANIPULATION = "Ball Manipulation";
     private static final String PEN_PHYSICAL = "Physical Contact";
@@ -147,6 +147,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String DROP_BALL = "Dropped Ball";
     private static final String CANCEL = "Cancel";
+    private static final String COACH = "Coach";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
     private static final Color COLOR_STANDARD = (new JButton()).getBackground();
@@ -154,7 +155,7 @@ public class GUI extends JFrame implements GCGUI
     private static final int TIMEOUT_HIGHLIGHT_SECONDS = 10;
     private static final int FINISH_HIGHLIGHT_SECONDS = 10;
     private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
-  
+
     /** Some attributes used in the GUI components. */
     private double lastSize = 0;
     private Font standardFont;
@@ -960,8 +961,8 @@ public class GUI extends JFrame implements GCGUI
                         highlight(robot[i][j], false);
                     }
                 } else {
-                	if ((Rules.league instanceof SPL) && (!data.dropInPlayerMode) &&(j == SPL.league.teamSize - 1)) {
-                		robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" Couch");
+                	if ((Rules.league instanceof SPL) && (!data.dropInPlayerMode) && (j == SPL.league.teamSize - 1)) {
+                		robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+COACH);
                 	}
                 	else {
                 		robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1));
@@ -969,11 +970,11 @@ public class GUI extends JFrame implements GCGUI
                     robotTime[i][j].setVisible(false);
                     highlight(robot[i][j], false);
                 }
-                //A Couch who gets a couch motion penalty is banned for the whole game
+                //A Coach who gets a coach motion penalty is banned for the whole game
                 if (Rules.league instanceof SPL &&
                     data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION) {
                 	robot[i][j].setEnabled(false);
-                	robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" Couch (B)");
+                	robotLabel[i][j].setText(EJECTED);
                 }
                 else {
                 	robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
