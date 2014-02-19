@@ -28,14 +28,14 @@ public class PickUp extends Penalty
             data.whenPenalized[side][number] = data.getTime();
         }
         if ((data.dropInPlayerMode) || (number < SPL.league.teamSize-1)) {
-        	player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
+            player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
             Log.state(data, "Request for PickUp "+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         }
         else { //A request for pickup is send to the coach => Coach Motion penalty
-        	player.penalty = PlayerInfo.PENALTY_SPL_COACH_MOTION;
-        	Log.state(data, "Coach Motion "+
+            player.penalty = PlayerInfo.PENALTY_SPL_COACH_MOTION;
+            Log.state(data, "Coach Motion "+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         }

@@ -305,7 +305,7 @@ public class AdvancedData extends GameControlData implements Cloneable
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
         } 
         else if (gameState == STATE_INITIAL && (refereeTimeout)) {
-        	return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
+            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
         }
         else if (gameState == STATE_READY) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);

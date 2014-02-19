@@ -262,14 +262,14 @@ public class StartInput extends JFrame implements Serializable
         optionsRight.add(fulltime);
         optionsRight.add(dropInPlayerCompetition);
         dropInPlayerCompetition.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				outFulltime = true;
-				dropInPlayerMode = true;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                outFulltime = true;
+                dropInPlayerMode = true;
                 fulltimeOK = true;
                 startEnableing();
-			}
-		});
+            }
+        });
         
         nofulltime.addActionListener(new ActionListener() {
             @Override

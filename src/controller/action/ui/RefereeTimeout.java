@@ -10,13 +10,13 @@ import data.GameControlData;
 
 public class RefereeTimeout extends GCAction {
 
-	public RefereeTimeout() {
-		super(ActionType.UI);
-	}
+    public RefereeTimeout() {
+        super(ActionType.UI);
+    }
 
-	@Override
-	public void perform(AdvancedData data) {
-		if (!data.refereeTimeout) {
+    @Override
+    public void perform(AdvancedData data) {
+        if (!data.refereeTimeout) {
             data.timeOut = GameControlData.C_TRUE;
             data.refereeTimeout = true;
             Log.setNextMessage("Referee Timeout");
@@ -31,12 +31,12 @@ public class RefereeTimeout extends GCAction {
                 ActionBoard.ready.perform(data);
             }
         }
-	}
+    }
 
-	@Override
-	public boolean isLegal(AdvancedData data) {
-		//refree can make referee timeout at any time of the game
-		return true;
-	}
+    @Override
+    public boolean isLegal(AdvancedData data) {
+        //refree can make referee timeout at any time of the game
+        return true;
+    }
 
 }

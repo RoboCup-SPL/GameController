@@ -53,7 +53,7 @@ public class Robot extends GCAction
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         }
         else if (EventHandler.getInstance().lastUIEvent instanceof PushingTeammate) {
-        	EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
+            EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         } 
         else if (player.penalty != PlayerInfo.PENALTY_NONE) {
             Log.state(data, (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE ? "Substituted by Player " : "Unpenalised ")+

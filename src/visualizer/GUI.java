@@ -71,7 +71,7 @@ public class GUI extends JFrame
     private Font scoreFont;
     private Font coachMessageFont;
     private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
-	
+    
     
     /**
      * Creates a new GUI.
@@ -480,49 +480,49 @@ public class GUI extends JFrame
     }
     
     private void drawCoachMessages(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g; //need for setting the thickness of the line of the rectangles
-    	String coachLabel = new String("Coach:");
-    	
-    	for (int i = 0; i < 2; i++) {
-    		double xOffset = 0.688;
-    		if (i == 1) {
-    			xOffset = 0;
-    		}
-    		
-    		String coachMessage = new String(data.team[i].coachMessage);
-    		String coachMessagePartI = new String(coachMessage.substring(0, 10));
-        	String coachMessagePartII = new String(coachMessage.substring(10, 20));
-    		int xCoachMessageLabel = getSizeToWidth(0.001+xOffset);
-        	int yCoachMessageLabel = getSizeToHeight(0.83);
-        	int xCoachMessagePartI = getSizeToWidth(0.001+xOffset);
-        	int yCoachMessagePartI = getSizeToHeight(0.91);
-        	int xCoachMessagePartII = getSizeToWidth(0.001+xOffset);
-        	int yCoachMessagePartII = getSizeToHeight(0.98);
-        	
-        	g2.setFont(coachMessageFont);
-        	
-        	//Need to calculate the aspect ration for the right alignment of the gui elements
-        	int screenWidth = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
-        	int screenHeight = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-        	int gcd = greatestCommonDivisor(screenWidth, screenHeight);
-        	
-        	//Draw the coach label and coach message box
-        	g2.setColor(Color.BLACK);
-        	g2.drawString(coachLabel, xCoachMessageLabel, yCoachMessageLabel);
-        	float thickness = 3.0f;
-        	Stroke oldStroke = g2.getStroke();
-        	g2.setStroke(new BasicStroke(thickness));
-        	if (screenWidth/gcd > 4) {
-        		g2.drawRect(getSizeToWidth(0.001+xOffset), getSizeToHeight(0.84), 6*coachMessageFont.getSize()+coachMessageFont.getSize()/4, 2*coachMessageFont.getSize());
-        	}
-        	else {
-        		g2.drawRect(getSizeToWidth(0.001+xOffset), getSizeToHeight(0.86), 6*coachMessageFont.getSize()+coachMessageFont.getSize()/4, 2*coachMessageFont.getSize());
-        	}
-        	g2.setStroke(oldStroke);
-        	g2.setColor(Rules.league.teamColor[data.team[i].teamColor]);
-        	g2.drawString(coachMessagePartI, xCoachMessagePartI, yCoachMessagePartI);
-        	g2.drawString(coachMessagePartII, xCoachMessagePartII, yCoachMessagePartII);
-    	}
+        Graphics2D g2 = (Graphics2D) g; //need for setting the thickness of the line of the rectangles
+        String coachLabel = new String("Coach:");
+        
+        for (int i = 0; i < 2; i++) {
+            double xOffset = 0.688;
+            if (i == 1) {
+                xOffset = 0;
+            }
+            
+            String coachMessage = new String(data.team[i].coachMessage);
+            String coachMessagePartI = new String(coachMessage.substring(0, 10));
+            String coachMessagePartII = new String(coachMessage.substring(10, 20));
+            int xCoachMessageLabel = getSizeToWidth(0.001+xOffset);
+            int yCoachMessageLabel = getSizeToHeight(0.83);
+            int xCoachMessagePartI = getSizeToWidth(0.001+xOffset);
+            int yCoachMessagePartI = getSizeToHeight(0.91);
+            int xCoachMessagePartII = getSizeToWidth(0.001+xOffset);
+            int yCoachMessagePartII = getSizeToHeight(0.98);
+            
+            g2.setFont(coachMessageFont);
+            
+            //Need to calculate the aspect ration for the right alignment of the gui elements
+            int screenWidth = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+            int screenHeight = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+            int gcd = greatestCommonDivisor(screenWidth, screenHeight);
+            
+            //Draw the coach label and coach message box
+            g2.setColor(Color.BLACK);
+            g2.drawString(coachLabel, xCoachMessageLabel, yCoachMessageLabel);
+            float thickness = 3.0f;
+            Stroke oldStroke = g2.getStroke();
+            g2.setStroke(new BasicStroke(thickness));
+            if (screenWidth/gcd > 4) {
+                g2.drawRect(getSizeToWidth(0.001+xOffset), getSizeToHeight(0.84), 6*coachMessageFont.getSize()+coachMessageFont.getSize()/4, 2*coachMessageFont.getSize());
+            }
+            else {
+                g2.drawRect(getSizeToWidth(0.001+xOffset), getSizeToHeight(0.86), 6*coachMessageFont.getSize()+coachMessageFont.getSize()/4, 2*coachMessageFont.getSize());
+            }
+            g2.setStroke(oldStroke);
+            g2.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            g2.drawString(coachMessagePartI, xCoachMessagePartI, yCoachMessagePartI);
+            g2.drawString(coachMessagePartII, xCoachMessagePartII, yCoachMessagePartII);
+        }
     }
     
     /**
@@ -537,9 +537,9 @@ public class GUI extends JFrame
     }
     
     private int greatestCommonDivisor(int a, int b) {
-    	if (b == 0) {
-    		return a;
-    	}
-    	return greatestCommonDivisor(b, a%b);
+        if (b == 0) {
+            return a;
+        }
+        return greatestCommonDivisor(b, a%b);
     }
 }

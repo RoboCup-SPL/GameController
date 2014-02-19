@@ -139,7 +139,7 @@ public class Main
         }
         data.dropInPlayerMode = input.dropInPlayerMode;
         if (data.dropInPlayerMode) {
-        	--SPL.league.teamSize; // Remove the coach for the drop-in player competition
+            --SPL.league.teamSize; // Remove the coach for the drop-in player competition
         }
         data.colorChangeAuto = input.outAutoColorChange;
         data.playoff = input.outFulltime;
