@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class is part of the data wich are send to the robots.
  * It just represents this data, reads and writes between C-structure and
@@ -43,7 +43,7 @@ public class TeamInfo implements Serializable
      */
     public TeamInfo()
     {
-        for(int i=0; i<player.length; i++) {
+        for (int i=0; i<player.length; i++) {
             player[i] = new PlayerInfo();
         }
     }
@@ -62,7 +62,7 @@ public class TeamInfo implements Serializable
         buffer.put(score);
         buffer.put(coachMessage);
         
-        for(int i=0; i<MAX_NUM_PLAYERS; i++) {
+        for (int i=0; i<MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray());
         }
         
@@ -82,7 +82,7 @@ public class TeamInfo implements Serializable
         goalColor = buffer.get();
         score = buffer.get();
         buffer.get(coachMessage);
-        for(int i=0; i<player.length; i++) {
+        for (int i=0; i<player.length; i++) {
             player[i].fromByteArray(buffer);
         }
     }
@@ -94,13 +94,13 @@ public class TeamInfo implements Serializable
         String temp;
         
         out += "         teamNumber: "+teamNumber+"\n";
-        switch(teamColor) {
+        switch (teamColor) {
             case GameControlData.TEAM_BLUE: temp = "blue"; break;
             case GameControlData.TEAM_RED:  temp = "red";  break;
             default: temp = "undefinied("+teamColor+")";
         }
         out += "          teamColor: "+temp+"\n";
-        switch(goalColor) {
+        switch (goalColor) {
             case GameControlData.GOAL_BLUE:   temp = "blue";   break;
             case GameControlData.GOAL_YELLOW: temp = "yellow"; break;
             default: temp = "undefinied("+goalColor+")";

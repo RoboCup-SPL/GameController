@@ -26,7 +26,7 @@ import javax.swing.*;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * The programm starts in this class.
  * The main components are initialised here.
@@ -43,7 +43,7 @@ public class Main
     /** Relative directory of where logs are stored */
     private final static String LOG_DIRECTORY = "logs";
     
-    private static Pattern IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
+    private static Pattern IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)) {3}$");
 
     private static final String HELP_TEMPLATE = "Usage: java -jar GameController.jar {options}"
             + "\n  (-h | --help)                   display help"
@@ -73,19 +73,19 @@ public class Main
         boolean windowMode = false;
         
         parsing:
-        for(int i=0; i<args.length; i++) {
-            if( (args.length > i+1)
-                    && ( (args[i].equalsIgnoreCase(COMMAND_BROADCAST_SHORT))
-                    || (args[i].equalsIgnoreCase(COMMAND_BROADCAST)) )
-                    && IPV4_PATTERN.matcher(args[++i]).matches() ) {
+        for (int i=0; i<args.length; i++) {
+            if ((args.length > i+1)
+                    && ((args[i].equalsIgnoreCase(COMMAND_BROADCAST_SHORT))
+                    || (args[i].equalsIgnoreCase(COMMAND_BROADCAST)))
+                    && IPV4_PATTERN.matcher(args[++i]).matches()) {
                 outBroadcastAddress = args[i];
                 continue parsing;
-            } else if( (args.length > i+1)
-                    && ( (args[i].equalsIgnoreCase(COMMAND_LEAGUE_SHORT))
-                    || (args[i].equalsIgnoreCase(COMMAND_LEAGUE)) ) ) {
+            } else if ((args.length > i+1)
+                    && ((args[i].equalsIgnoreCase(COMMAND_LEAGUE_SHORT))
+                    || (args[i].equalsIgnoreCase(COMMAND_LEAGUE))) ) {
                 i++;
-                for(int j=0; j < Rules.LEAGUES.length; j++) {
-                    if(Rules.LEAGUES[j].leagueDirectory.equals(args[i])) {
+                for (int j=0; j < Rules.LEAGUES.length; j++) {
+                    if (Rules.LEAGUES[j].leagueDirectory.equals(args[i])) {
                         Rules.league = Rules.LEAGUES[j];
                         continue parsing;
                     }
@@ -95,10 +95,10 @@ public class Main
                 continue parsing;
             }
             String leagues = "";
-            for(Rules rules : Rules.LEAGUES) {
+            for (Rules rules : Rules.LEAGUES) {
                 leagues += (leagues.equals("") ? "" : " | ") + rules.leagueDirectory;
             }
-            if(leagues.contains("|")) {
+            if (leagues.contains("|")) {
                 leagues = "(" + leagues + ")";
             }
             System.out.printf(HELP_TEMPLATE, leagues, leagues.length() < 17
@@ -127,18 +127,18 @@ public class Main
 
         //collect the start parameters and put them into the first data.
         StartInput input = new StartInput(!windowMode);
-        while(!input.finished) {
+        while (!input.finished) {
             try{
             Thread.sleep(100);
-            } catch(Exception e) {}
+            } catch (Exception e) {}
         }
 
         AdvancedData data = new AdvancedData();
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             data.team[i].teamNumber = (byte)input.outTeam[i];
         }
         data.dropInPlayerMode = input.dropInPlayerMode;
-        if(data.dropInPlayerMode){
+        if (data.dropInPlayerMode) {
         	--SPL.league.teamSize; // Remove the coach for the drop-in player competition
         }
         data.colorChangeAuto = input.outAutoColorChange;

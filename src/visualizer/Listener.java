@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class receives the GameControlData from the GameController.
  */
@@ -52,11 +52,11 @@ public class Listener implements Runnable
                 socket.receive(packet);
                 buffer.rewind();
                 GameControlData data = new GameControlData();
-                if(data.fromByteArray(buffer)) {
+                if (data.fromByteArray(buffer)) {
                     gui.update(data);
                 }
-            } catch(Exception e) {
-                if(!closed) {
+            } catch (Exception e) {
+                if (!closed) {
                     Log.error("Error while listening to port "+PORT);
                 }
             }

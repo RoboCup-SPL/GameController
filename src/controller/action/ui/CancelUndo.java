@@ -6,7 +6,7 @@ import data.AdvancedData;
 
 
 /**
- * @author: Thomas Roefer
+ * @author Thomas Roefer
  * 
  * Cancels an undo action in progress.
  * This a dummy action, because the undo buttons track

@@ -5,7 +5,7 @@ import controller.action.ActionBoard;
 
 /**
  *
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  *
  * This class is no thread, it continous the main-thread and fires the action ClockTick.
  */
@@ -24,7 +24,7 @@ public class Clock
      */
     public void start()
     {   
-        while(true)
+        while (true)
         {
             ActionBoard.clock.actionPerformed(null);
             

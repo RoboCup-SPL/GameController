@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class is part of the data wich are send to the robots.
  * It just represents this data, reads and writes between C-structure and
@@ -79,7 +79,7 @@ public class GameControlData implements Serializable
      */
     public GameControlData()
     {
-        for(int i=0; i<team.length; i++) {
+        for (int i=0; i<team.length; i++) {
             team[i] = new TeamInfo();
         }
         team[0].teamColor = TEAM_RED;
@@ -133,7 +133,7 @@ public class GameControlData implements Serializable
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         byte[] header = new byte[4];
         buffer.get(header, 0, 4);
-        if(buffer.getInt() != GAMECONTROLLER_STRUCT_VERSION) {
+        if (buffer.getInt() != GAMECONTROLLER_STRUCT_VERSION) {
             return false;
         }
         playersPerTeam = buffer.get();
@@ -144,7 +144,7 @@ public class GameControlData implements Serializable
         dropInTeam = buffer.get();
         dropInTime = buffer.getShort();
         secsRemaining = buffer.getInt();
-        for(int i=0; i<team.length; i++) {
+        for (int i=0; i<team.length; i++) {
             team[i].fromByteArray(buffer);
         }
         /* Hack to have this in the package */
@@ -167,7 +167,7 @@ public class GameControlData implements Serializable
         out += "             Header: "+GAMECONTROLLER_STRUCT_HEADER+"\n";
         out += "            Version: "+GAMECONTROLLER_STRUCT_VERSION+"\n";
         out += "   Players per Team: "+playersPerTeam+"\n";
-        switch(gameState) {
+        switch (gameState) {
             case STATE_INITIAL:  temp = "initial"; break;
             case STATE_READY:    temp = "ready";   break;
             case STATE_SET:      temp = "set";     break;
@@ -176,26 +176,26 @@ public class GameControlData implements Serializable
             default: temp = "undefinied("+gameState+")";
         }
         out += "          gameState: "+temp+"\n";
-        switch(firstHalf) {
+        switch (firstHalf) {
             case C_TRUE:  temp = "true";  break;
             case C_FALSE: temp = "false"; break;
             default: temp = "undefinied("+firstHalf+")";
         }
         out += "          firstHalf: "+temp+"\n";
-        switch(kickOffTeam) {
+        switch (kickOffTeam) {
             case TEAM_BLUE: temp = "blue"; break;
             case TEAM_RED:  temp = "red";  break;
             default: temp = "undefinied("+kickOffTeam+")";
         }
         out += "        kickOffTeam: "+temp+"\n";
-        switch(secGameState) {
+        switch (secGameState) {
             case STATE2_NORMAL:       temp = "normal"; break;
             case STATE2_PENALTYSHOOT: temp = "penaltyshoot";  break;
             case STATE2_OVERTIME:     temp = "overtime";  break;
             default: temp = "undefinied("+secGameState+")";
         }
         out += "       secGameState: "+temp+"\n";
-        switch(dropInTeam) {
+        switch (dropInTeam) {
             case TEAM_BLUE: temp = "blue"; break;
             case TEAM_RED:  temp = "red";  break;
             default: temp = "undefinied("+dropInTeam+")";

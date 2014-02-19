@@ -16,7 +16,7 @@ public class RefereeTimeout extends GCAction {
 
 	@Override
 	public void perform(AdvancedData data) {
-		if(!data.refereeTimeout) {
+		if (!data.refereeTimeout) {
             data.timeOut = GameControlData.C_TRUE;
             data.refereeTimeout = true;
             Log.setNextMessage("Referee Timeout");
@@ -27,7 +27,7 @@ public class RefereeTimeout extends GCAction {
             data.timeOut = GameControlData.C_FALSE;
             data.refereeTimeout = false;
             Log.setNextMessage("End of Referee Timeout ");
-            if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 ActionBoard.ready.perform(data);
             }
         }

@@ -9,7 +9,7 @@ import data.Rules;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that some time has been passed.
  */
@@ -32,15 +32,15 @@ public class ClockTick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.gameState == GameControlData.STATE_READY
+        if (data.gameState == GameControlData.STATE_READY
                && data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime) {
             ActionBoard.set.perform(data);
-        } else if(data.gameState == GameControlData.STATE_FINISHED) {
+        } else if (data.gameState == GameControlData.STATE_FINISHED) {
             Integer remainingPauseTime = data.getRemainingPauseTime();
-            if(remainingPauseTime != null) {
-                if(data.firstHalf == GameControlData.C_TRUE && remainingPauseTime <= Rules.league.pauseTime / 2) {
+            if (remainingPauseTime != null) {
+                if (data.firstHalf == GameControlData.C_TRUE && remainingPauseTime <= Rules.league.pauseTime / 2) {
                     ActionBoard.secondHalf.perform(data);
-                } else if(data.firstHalf != GameControlData.C_TRUE && remainingPauseTime <= Rules.league.pausePenaltyShootOutTime / 2) {
+                } else if (data.firstHalf != GameControlData.C_TRUE && remainingPauseTime <= Rules.league.pausePenaltyShootOutTime / 2) {
                     ActionBoard.penaltyShoot.perform(data);
                 }
             }
@@ -61,11 +61,11 @@ public class ClockTick extends GCAction
     
     public boolean isClockRunning(AdvancedData data) {
         boolean halfNotStarted = data.timeBeforeCurrentGameState == 0 && data.gameState != GameControlData.STATE_PLAYING;
-        return ( !( (data.gameState == GameControlData.STATE_INITIAL)
+        return ( !((data.gameState == GameControlData.STATE_INITIAL)
          || (data.gameState == GameControlData.STATE_FINISHED)
          || (
-                ( (data.gameState == GameControlData.STATE_READY)
-               || (data.gameState == GameControlData.STATE_SET) )
+                ((data.gameState == GameControlData.STATE_READY)
+               || (data.gameState == GameControlData.STATE_SET))
                 && ((data.playoff && Rules.league.playOffTimeStop) || halfNotStarted)
                 )
          || data.manPause )

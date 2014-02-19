@@ -8,7 +8,7 @@ import data.GameControlData;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the half is to be set to the second half.
  */
@@ -31,10 +31,10 @@ public class SecondHalfOvertime extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.firstHalf != GameControlData.C_FALSE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_FALSE;
             data.secGameState = GameControlData.STATE2_OVERTIME;
-            if(data.colorChangeAuto) {
+            if (data.colorChangeAuto) {
                 data.team[0].teamColor = GameControlData.TEAM_BLUE;
                 data.team[1].teamColor = GameControlData.TEAM_RED;
             }
@@ -54,10 +54,10 @@ public class SecondHalfOvertime extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ( (data.firstHalf != GameControlData.C_TRUE)
-              && (data.secGameState == GameControlData.STATE2_OVERTIME) )
-            || ( (data.secGameState == GameControlData.STATE2_OVERTIME)
-              && (data.gameState == GameControlData.STATE_FINISHED) )
+        return ((data.firstHalf != GameControlData.C_TRUE)
+              && (data.secGameState == GameControlData.STATE2_OVERTIME))
+            || ((data.secGameState == GameControlData.STATE2_OVERTIME)
+              && (data.gameState == GameControlData.STATE_FINISHED))
             || (data.testmode);
     }
 }

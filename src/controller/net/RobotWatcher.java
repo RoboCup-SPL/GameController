@@ -7,7 +7,7 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author: Marcel Steinbeck, Michel Bartsch
+ * @author Marcel Steinbeck, Michel Bartsch
  * 
  * You can ask this class about the robots online-status.
  * 
@@ -35,7 +35,7 @@ public class RobotWatcher
      */
     private RobotWatcher()
     {
-        for(int i  = 0; i < 2; i++) {
+        for (int i  = 0; i < 2; i++) {
             for (int j = 0; j < Rules.league.teamSize; j++) {
                 robotsLastMessage[i][j] = PlayerInfo.PENALTY_NONE;
                 status[i][j] = RobotOnlineStatus.UNKNOWN;
@@ -52,23 +52,23 @@ public class RobotWatcher
     public static synchronized void update(GameControlReturnData gameControlReturnData)
     {
         int team, number;
-        if(gameControlReturnData.team == EventHandler.getInstance().data.team[0].teamNumber) {
+        if (gameControlReturnData.team == EventHandler.getInstance().data.team[0].teamNumber) {
             team = 0;
-        } else if(gameControlReturnData.team == EventHandler.getInstance().data.team[1].teamNumber) {
+        } else if (gameControlReturnData.team == EventHandler.getInstance().data.team[1].teamNumber) {
             team = 1;
         } else {
             return;
         }
         number = gameControlReturnData.player;
-        if(number <= 0 || number > Rules.league.teamSize) {
+        if (number <= 0 || number > Rules.league.teamSize) {
             return;
         }
         instance.robotsLastAnswer[team][number-1] = System.currentTimeMillis();
-        if(instance.robotsLastMessage[team][number-1] != gameControlReturnData.message) {
+        if (instance.robotsLastMessage[team][number-1] != gameControlReturnData.message) {
             instance.robotsLastMessage[team][number-1] = gameControlReturnData.message;
-            if(gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_PENALISE) {
+            if (gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_PENALISE) {
                 ActionBoard.manualPen[team][number-1].actionPerformed(null);
-            } else if(gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE) {
+            } else if (gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE) {
                 ActionBoard.manualUnpen[team][number-1].actionPerformed(null);
             }
         }
@@ -83,17 +83,17 @@ public class RobotWatcher
     {
         long currentTime = System.currentTimeMillis();
         int robotsOffline;
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             robotsOffline = 0;
-            for(int j=0; j < instance.status[i].length; j++) {
-                if(currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_IS_OFFLINE) {
+            for (int j=0; j < instance.status[i].length; j++) {
+                if (currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_IS_OFFLINE) {
                     instance.status[i][j] = RobotOnlineStatus.OFFLINE;
-                    if(++robotsOffline >= Rules.league.teamSize) {
-                        for(int k=0; k < Rules.league.teamSize; k++) {
+                    if (++robotsOffline >= Rules.league.teamSize) {
+                        for (int k=0; k < Rules.league.teamSize; k++) {
                             instance.status[i][k] = RobotOnlineStatus.UNKNOWN;
                         }
                     }
-                } else if(currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_HAS_HIGH_LATANCY) {
+                } else if (currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_HAS_HIGH_LATANCY) {
                     instance.status[i][j] = RobotOnlineStatus.HIGH_LATENCY;
                 } else {
                     instance.status[i][j] = RobotOnlineStatus.ONLINE;

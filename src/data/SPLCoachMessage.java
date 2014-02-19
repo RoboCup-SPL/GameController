@@ -22,11 +22,11 @@ public class SPLCoachMessage {
     private long timestamp;	// when the message was created
     private long sendTime; // time in ms that shows when the message should be send to the team
     
-    public SPLCoachMessage(){
+    public SPLCoachMessage() {
     	sendTime = generateSendIntervallForSPLCoachMessage();
     	timestamp = System.currentTimeMillis();
     }
-    public byte[] toByteArray(){
+    public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -58,11 +58,11 @@ public class SPLCoachMessage {
 		}
 	}
 	
-	public long getRemainingTimeToSend(){
+	public long getRemainingTimeToSend() {
 		long remainingTime = (sendTime - (System.currentTimeMillis() - timestamp)); 
 		return (remainingTime > 0) ? remainingTime : 0;
 	}
-	private long generateSendIntervallForSPLCoachMessage (){
+	private long generateSendIntervallForSPLCoachMessage () {
 		return (long)Math.random()*(SPLCoachMessage.SPL_COACH_MESSAGE_MAX_SEND_INTERVALL-SPLCoachMessage.SPL_COACH_MESSAGE_MIN_SEND_INTERVALL) + SPLCoachMessage.SPL_COACH_MESSAGE_MIN_SEND_INTERVALL ;
 	}
 }

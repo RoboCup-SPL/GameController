@@ -28,7 +28,7 @@ public abstract class Penalty extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(EventHandler.getInstance().lastUIEvent == this) {
+        if (EventHandler.getInstance().lastUIEvent == this) {
             EventHandler.getInstance().noLastUIEvent = true;
         }
     }

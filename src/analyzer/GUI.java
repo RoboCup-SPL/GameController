@@ -31,7 +31,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This window is shown to select log-files for analyzing.
  */
@@ -84,7 +84,7 @@ public class GUI extends JFrame implements ListSelectionListener
                     @Override
                     public void mouseClicked(MouseEvent event)
                     {
-                        if(event.getPoint().x > CHECKBOX_WIDTH) {
+                        if (event.getPoint().x > CHECKBOX_WIDTH) {
                             return;
                         }
                         JList list = (JList) event.getSource();
@@ -141,7 +141,7 @@ public class GUI extends JFrame implements ListSelectionListener
     {
         selection.clearSelection();
         list.removeAllElements();
-        for(LogInfo log: Main.logs) {
+        for (LogInfo log : Main.logs) {
             list.addElement(new CheckListItem(log+"", log.isRealLog()));
         }
     }
@@ -153,12 +153,12 @@ public class GUI extends JFrame implements ListSelectionListener
     private void clean()
     {
         File droppedDir = new File(Main.PATH_DROPPED);
-        if(!droppedDir.isDirectory()) {
+        if (!droppedDir.isDirectory()) {
             droppedDir.mkdir();
         }
         int i = 0;
-        for(LogInfo log: Main.logs) {
-            if(!((CheckListItem)list.getElementAt(i++)).selected) {
+        for (LogInfo log : Main.logs) {
+            if (!((CheckListItem)list.getElementAt(i++)).selected) {
                 log.file.renameTo(new File(Main.PATH_DROPPED+"/"+log.file.getName()));
             }
         }
@@ -173,7 +173,7 @@ public class GUI extends JFrame implements ListSelectionListener
     private void analyze()
     {
         JFileChooser fc = new JFileChooser();
-        if(fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+        if (fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }
         Main.stats = fc.getSelectedFile();
@@ -181,20 +181,20 @@ public class GUI extends JFrame implements ListSelectionListener
             Main.stats.createNewFile();
             Main.writer = new FileWriter(Main.stats);
             Main.writer.write("datetime,action,team,blue,red\n");
-        } catch(IOException e) {
+        } catch (IOException e) {
             Log.error("Cannot create and open/write to file "+Main.stats);
             return;
         }
         int i = 0;
-        for(LogInfo log: Main.logs) {
-            if(((CheckListItem)list.getElementAt(i++)).selected) {
+        for (LogInfo log : Main.logs) {
+            if (((CheckListItem)list.getElementAt(i++)).selected) {
                 Parser.statistic(log);
             }
         }
         try{
             Main.writer.flush();
             Main.writer.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             Log.error("cannot close file "+Main.stats);
         }
         JOptionPane.showMessageDialog(null, "Done");
@@ -204,7 +204,7 @@ public class GUI extends JFrame implements ListSelectionListener
     public void valueChanged(ListSelectionEvent e)
     {
         int i = selection.getMinSelectionIndex();
-        if(i >= 0) {
+        if (i >= 0) {
             info.setText(Main.logs.get(i).getInfo());
         } else {
             info.setText("");
@@ -247,7 +247,7 @@ public class GUI extends JFrame implements ListSelectionListener
             setEnabled(list.isEnabled());
             setSelected(((CheckListItem)value).selected);
             setFont(list.getFont());
-            if(!isSelected) {
+            if (!isSelected) {
                 setBackground(list.getBackground());
             } else {
                 setBackground(LIST_HIGHLIGHT);

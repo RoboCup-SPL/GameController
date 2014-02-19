@@ -30,7 +30,7 @@ import data.SPL;
 import data.Teams;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class displays the game-state
  */
@@ -81,7 +81,7 @@ public class GUI extends JFrame
         super(WINDOW_TITLE, devices[devices.length - 1].getDefaultConfiguration());
         
         setUndecorated(true);
-        if(IS_OSX && devices.length != 1) {
+        if (IS_OSX && devices.length != 1) {
             setSize(devices[devices.length-1].getDefaultConfiguration().getBounds().getSize());
         } else {
             devices[devices.length-1].setFullScreenWindow(this);
@@ -90,10 +90,10 @@ public class GUI extends JFrame
         for (String format : new String [] {".png", ".jpeg", ".jpg"}) {
             try {
                 background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND+format));
-            } catch(IOException e) {
+            } catch (IOException e) {
             }
         }
-        if(background == null) {
+        if (background == null) {
             Log.error("Unable to load background image");
         }
         float scaleFactor = (float)getWidth()/background.getWidth();
@@ -125,7 +125,7 @@ public class GUI extends JFrame
         {
             @Override
             public void run() {
-                while(true) {
+                while (true) {
                     update(data);
                     try {
                         Thread.sleep(DISPLAY_UPDATE_DELAY);
@@ -178,9 +178,9 @@ public class GUI extends JFrame
         g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(background, 0, 0, null);
         
-        if(data == null) {
+        if (data == null) {
             drawNoPackage(g);
-        } else if(testmode) {
+        } else if (testmode) {
             drawTestmode(g);
         } else {
             drawTeams(g);
@@ -218,24 +218,24 @@ public class GUI extends JFrame
         int x = getSizeToWidth(0.08);
         int y = getSizeToHeight(0.3);
         String[] out = data.toString().split("\n");
-        for(int i=0; i<out.length; i++) {
+        for (int i=0; i<out.length; i++) {
             g.drawString(out[i], x, y);
             y += testFont.getSize()*1.2;
         }
-        for(int j=0; j<2; j++) {
+        for (int j=0; j<2; j++) {
             out = data.team[j].toString().split("\n");
-            for(int i=0; i<out.length; i++) {
+            for (int i=0; i<out.length; i++) {
                 g.drawString(out[i], x, y);
                 y += testFont.getSize()*1.2;
             }
         }
         
         x = getSizeToWidth(0.35);
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             y = getSizeToHeight(0.2);
-            for(int j=0; j<data.team[i].player.length; j++) {
+            for (int j=0; j<data.team[i].player.length; j++) {
                 out = data.team[i].player[j].toString().split("\n");
-                for(int k=0; k<out.length; k++) {
+                for (int k=0; k<out.length; k++) {
                     g.drawString(out[k], x, y);
                     y += testFont.getSize()*1.2;
                 }
@@ -262,20 +262,20 @@ public class GUI extends JFrame
         g.setFont(standardSmalFont);
         int fontSize = g.getFont().getSize();
         boolean fittingSize = false;
-        while(!fittingSize) {
+        while (!fittingSize) {
             fittingSize = true;
-            for(int i=0; i<2; i++) {
-                if(g.getFontMetrics().stringWidth(Teams.getNames(false)[data.team[i].teamNumber]) > size) {
+            for (int i=0; i<2; i++) {
+                if (g.getFontMetrics().stringWidth(Teams.getNames(false)[data.team[i].teamNumber]) > size) {
                     fittingSize = false;
                     g.setFont(g.getFont().deriveFont(Font.PLAIN, --fontSize));
                 }
             }
         }*/
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             float scaleFactorX = 1f;
             float scaleFactorY = 1f;
-            if(icons[i].getWidth() * 1.2f > icons[i].getHeight()) {
+            if (icons[i].getWidth() * 1.2f > icons[i].getHeight()) {
                 scaleFactorY = icons[i].getHeight()/(float)icons[i].getWidth();
             } else {
                 scaleFactorX = icons[i].getWidth()/(float)icons[i].getHeight();
@@ -309,7 +309,7 @@ public class GUI extends JFrame
         int size = getSizeToWidth(0.12);
         g.setColor(Color.BLACK);
         drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             drawCenteredString(
                     g,
@@ -348,17 +348,17 @@ public class GUI extends JFrame
         int y = getSizeToHeight(0.74);
         int size = getSizeToWidth(0.2);
         String state;
-        if(data.timeOut == GameControlData.C_FALSE) {
-            switch(data.secGameState) {
+        if (data.timeOut == GameControlData.C_FALSE) {
+            switch (data.secGameState) {
                 case GameControlData.STATE2_NORMAL:
-                    if(data.firstHalf == GameControlData.C_TRUE) {
-                        if(data.gameState == GameControlData.STATE_FINISHED) {
+                    if (data.firstHalf == GameControlData.C_TRUE) {
+                        if (data.gameState == GameControlData.STATE_FINISHED) {
                             state = "Half Time";
                         } else {
                             state = "First Half";
                         }
                     } else {
-                        if(data.gameState == GameControlData.STATE_INITIAL) {
+                        if (data.gameState == GameControlData.STATE_INITIAL) {
                             state = "Half Time";
                         } else {
                             state = "Second Half";
@@ -388,7 +388,7 @@ public class GUI extends JFrame
         int y = getSizeToHeight(0.85);
         int size = getSizeToWidth(0.2);
         String state;
-        switch(data.gameState) {
+        switch (data.gameState) {
             case GameControlData.STATE_INITIAL:  state = "Initial"; break;
             case GameControlData.STATE_READY:    state = "Ready";   break;
             case GameControlData.STATE_SET:      state = "Set";     break;
@@ -406,7 +406,7 @@ public class GUI extends JFrame
      */
     private void drawSubTime(Graphics g)
     {
-        if(data.subTime == 0) {
+        if (data.subTime == 0) {
             return;
         }
         g.setColor(Color.BLACK);
@@ -428,10 +428,10 @@ public class GUI extends JFrame
         int x = getSizeToWidth(0.05);
         int y = getSizeToHeight(0.86);
         int size = getSizeToWidth(0.02);
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
-            for(int j=0; j<data.penaltyShot[i]; j++) {
-                if((data.penaltyTries[i] & (1<<j)) != 0) {
+            for (int j=0; j<data.penaltyShot[i]; j++) {
+                if ((data.penaltyTries[i] & (1<<j)) != 0) {
                     g.fillOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
                 } else {
                     g.drawOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
@@ -479,13 +479,13 @@ public class GUI extends JFrame
         g.drawString(s, x+offset, y);
     }
     
-    private void drawCoachMessages(Graphics g){
+    private void drawCoachMessages(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g; //need for setting the thickness of the line of the rectangles
     	String coachLabel = new String("Coach:");
     	
-    	for(int i = 0; i < 2; i++){
+    	for (int i = 0; i < 2; i++) {
     		double xOffset = 0.688;
-    		if(i == 1){
+    		if (i == 1) {
     			xOffset = 0;
     		}
     		
@@ -512,10 +512,10 @@ public class GUI extends JFrame
         	float thickness = 3.0f;
         	Stroke oldStroke = g2.getStroke();
         	g2.setStroke(new BasicStroke(thickness));
-        	if(screenWidth/gcd > 4){
+        	if (screenWidth/gcd > 4) {
         		g2.drawRect(getSizeToWidth(0.001+xOffset), getSizeToHeight(0.84), 6*coachMessageFont.getSize()+coachMessageFont.getSize()/4, 2*coachMessageFont.getSize());
         	}
-        	else{
+        	else {
         		g2.drawRect(getSizeToWidth(0.001+xOffset), getSizeToHeight(0.86), 6*coachMessageFont.getSize()+coachMessageFont.getSize()/4, 2*coachMessageFont.getSize());
         	}
         	g2.setStroke(oldStroke);
@@ -536,8 +536,8 @@ public class GUI extends JFrame
         return (seconds < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(seconds) * 1000));
     }
     
-    private int greatestCommonDivisor(int a, int b){
-    	if(b == 0){
+    private int greatestCommonDivisor(int a, int b) {
+    	if (b == 0) {
     		return a;
     	}
     	return greatestCommonDivisor(b, a%b);

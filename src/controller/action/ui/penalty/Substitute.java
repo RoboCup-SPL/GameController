@@ -6,7 +6,7 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the substitution player penalty has been selected.
  */

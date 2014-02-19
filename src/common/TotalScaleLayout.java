@@ -10,7 +10,7 @@ import javax.swing.JComponent;
 
 /**
  *
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This LayoutManager places components without any dependencies between each
  * other. Scaling the layouted container will make every component scaled
@@ -73,8 +73,8 @@ public class TotalScaleLayout implements LayoutManager
     @Override
     public void removeLayoutComponent(Component comp)
     {
-        for(TotalScaleComponent tscomp: comps) {
-            if(tscomp.comp == comp) {
+        for (TotalScaleComponent tscomp : comps) {
+            if (tscomp.comp == comp) {
                 comps.remove(tscomp);
                 break;
             }
@@ -121,7 +121,7 @@ public class TotalScaleLayout implements LayoutManager
     public void layoutContainer(Container parent)
     {
         Rectangle parentBounds = parent.getBounds();
-        for(TotalScaleComponent comp: comps) {
+        for (TotalScaleComponent comp : comps) {
             comp.comp.setBounds(
                     (int)(comp.x*parentBounds.width),
                     (int)(comp.y*parentBounds.height),

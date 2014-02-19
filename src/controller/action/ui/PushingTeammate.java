@@ -19,7 +19,7 @@ public class PushingTeammate extends GCAction {
 	}
 
 	@Override
-	public void performOn(AdvancedData data, PlayerInfo player, int side, int number){
+	public void performOn(AdvancedData data, PlayerInfo player, int side, int number) {
 		Log.state(data, "Pushing Teammate "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
@@ -32,7 +32,7 @@ public class PushingTeammate extends GCAction {
 
 	@Override
 	public void perform(AdvancedData data) {
-		if(EventHandler.getInstance().lastUIEvent == this) {
+		if (EventHandler.getInstance().lastUIEvent == this) {
             EventHandler.getInstance().noLastUIEvent = true;
         }
 	}

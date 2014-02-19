@@ -9,7 +9,7 @@ import java.awt.EventQueue;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * If the actionPerformed method of an action is called, it executes the register
  * method of this class. Later the action`s perform method will be called
@@ -56,7 +56,7 @@ public class EventHandler
      */
     public synchronized static EventHandler getInstance()
     {
-        if(instance == null) {
+        if (instance == null) {
             instance = new EventHandler();
         }
         return instance;
@@ -80,9 +80,9 @@ public class EventHandler
      * @param event     The action calling.
      */
     public void register(final GCAction event) {
-        if(EventQueue.isDispatchThread()) {
+        if (EventQueue.isDispatchThread()) {
             // current thread is dispatcher, no need to use EventQueue
-            if(event.isLegal(data)) {
+            if (event.isLegal(data)) {
                 event.perform(data);
                 update(event);
             }
@@ -92,7 +92,7 @@ public class EventHandler
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    if(event.isLegal(data)) {
+                    if (event.isLegal(data)) {
                         event.perform(data);
                         update(event);
                     }
@@ -109,15 +109,15 @@ public class EventHandler
      */
     private void update(GCAction event)
     {
-        if(event.type != ActionType.CLOCK) {
+        if (event.type != ActionType.CLOCK) {
             lastNonClockEvent = event;
-            if(event.type == ActionType.UI) {
+            if (event.type == ActionType.UI) {
                 lastUIEvent = event;
-            } else if(event.type == ActionType.NET) {
+            } else if (event.type == ActionType.NET) {
                 lastNetEvent = event;
             }
         }
-        if(noLastUIEvent) {
+        if (noLastUIEvent) {
             noLastUIEvent = false;
             lastUIEvent = null;
         }

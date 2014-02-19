@@ -44,7 +44,7 @@ import data.Rules;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class actually holds static every instance of an action to get these
  * actions where ever you want to execute or identify them.
@@ -117,16 +117,16 @@ public class ActionBoard
         quit = new Quit();
         testmode = new Testmode();
         undo = new Undo[MAX_NUM_UNDOS_AT_ONCE];
-        for(int i=0; i<undo.length; i++) {
+        for (int i=0; i<undo.length; i++) {
             undo[i] = new Undo(i);
         }
         cancelUndo = new CancelUndo();
       
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             goalDec[i] = new Goal(i, -1);
             goalInc[i] = new Goal(i, 1);
             kickOff[i] = new KickOff(i);
-            for(int j=0; j<robot[i].length; j++) {
+            for (int j=0; j<robot[i].length; j++) {
                 robot[i][j] = new Robot(i, j);
             }
             timeOut[i] = new TimeOut(i);
@@ -164,8 +164,8 @@ public class ActionBoard
         substitute = new Substitute();
         dropBall = new DropBall();
         
-        for(int i=0; i<2; i++) {
-            for(int j=0; j<Rules.league.teamSize; j++) {
+        for (int i=0; i<2; i++) {
+            for (int j=0; j<Rules.league.teamSize; j++) {
                 manualPen[i][j] = new Manual(i, j, false);
                 manualUnpen[i][j] = new Manual(i, j, true);
             }

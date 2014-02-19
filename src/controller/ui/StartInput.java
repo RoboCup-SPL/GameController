@@ -18,7 +18,7 @@ import javax.swing.*;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This is only to be on starting the programm to get starting input.
  */
@@ -108,7 +108,7 @@ public class StartInput extends JFrame implements Serializable
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, STANDARD_SPACE));
         
         String[] teams = getShortTeams();
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             teamContainer[i] = new ImagePanel((
                     new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
             teamContainer[i].setPreferredSize(new Dimension(WINDOW_WIDTH/2-STANDARD_SPACE, TEAMS_HEIGHT));
@@ -127,7 +127,7 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e)
                 {
                     Object selected = team[0].getSelectedItem();
-                    if(selected == null)
+                    if (selected == null)
                     {
                         return;
                     }
@@ -146,7 +146,7 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e)
                 {
                     Object selected = team[1].getSelectedItem();
-                    if(selected == null)
+                    if (selected == null)
                     {
                         return;
                     }
@@ -189,9 +189,9 @@ public class StartInput extends JFrame implements Serializable
         add(optionsRight);
         Dimension optionsDim = new Dimension(WINDOW_WIDTH/3-2*STANDARD_SPACE, OPTIONS_HEIGHT);
         league = new JComboBox();
-        for(int i=0; i < Rules.LEAGUES.length; i++) {
+        for (int i=0; i < Rules.LEAGUES.length; i++) {
             league.addItem(Rules.LEAGUES[i].leagueName);
-            if(Rules.LEAGUES[i] == Rules.league) {
+            if (Rules.LEAGUES[i] == Rules.league) {
                 league.setSelectedIndex(i);
             }
         }
@@ -201,18 +201,18 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    for(int i=0; i < Rules.LEAGUES.length; i++) {
-                        if(Rules.LEAGUES[i].leagueName.equals((String)league.getSelectedItem())) {
+                    for (int i=0; i < Rules.LEAGUES.length; i++) {
+                        if (Rules.LEAGUES[i].leagueName.equals((String)league.getSelectedItem())) {
                             Rules.league = Rules.LEAGUES[i];
                             break;
                         }
                     }
-                    for(int i=0; i < 2; i++) {
+                    for (int i=0; i < 2; i++) {
                         teamContainer[i].setImage((
                                 new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
                         team[i].removeAllItems();
                         String[] names = getShortTeams();
-                        for(int j=0; j < names.length; j++) {
+                        for (int j=0; j < names.length; j++) {
                             team[i].addItem(names[j]);
                         }
                         outTeam[i] = 0;
@@ -222,7 +222,7 @@ public class StartInput extends JFrame implements Serializable
                     }
                     teamsOK = false;
                     
-                    if(Rules.league instanceof SPL) {
+                    if (Rules.league instanceof SPL) {
                         nofulltime.setText(FULLTIME_LABEL_NO);
                         fulltime.setText(FULLTIME_LABEL_YES);
                         autoColorChange.setVisible(false);
@@ -245,7 +245,7 @@ public class StartInput extends JFrame implements Serializable
         dropInPlayerCompetition.setPreferredSize(optionsDim);
         fulltime = new JRadioButton();
         fulltime.setPreferredSize(optionsDim);
-        if(Rules.league instanceof SPL) {
+        if (Rules.league instanceof SPL) {
             nofulltime.setText(FULLTIME_LABEL_NO);
             fulltime.setText(FULLTIME_LABEL_YES);
             dropInPlayerCompetition.setText(DROP_IN_PLAYER_COMPETITION);
@@ -313,15 +313,15 @@ public class StartInput extends JFrame implements Serializable
     {
         String[] fullTeams = Teams.getNames(true);
         int k = 0;
-        for(int j=0; j<fullTeams.length; j++) {
-            if(fullTeams[j] != null) {
+        for (int j=0; j<fullTeams.length; j++) {
+            if (fullTeams[j] != null) {
                 k++;
             }
         }
         String[] out = new String[k];
         k = 0;
-        for(int j=0; j<fullTeams.length; j++) {
-            if(fullTeams[j] != null) {
+        for (int j=0; j<fullTeams.length; j++) {
+            if (fullTeams[j] != null) {
                 out[k++] = fullTeams[j];
             }
         }
@@ -338,7 +338,7 @@ public class StartInput extends JFrame implements Serializable
     {
         teamIcon[side] = new ImageIcon(Teams.getIcon(team));
         float scaleFactor;
-        if(teamIcon[side].getImage().getWidth(null) > teamIcon[side].getImage().getHeight(null)) {
+        if (teamIcon[side].getImage().getWidth(null) > teamIcon[side].getImage().getHeight(null)) {
             scaleFactor = (float)IMAGE_SIZE/teamIcon[side].getImage().getWidth(null);
         } else {
             scaleFactor = (float)IMAGE_SIZE/teamIcon[side].getImage().getHeight(null);
@@ -358,7 +358,7 @@ public class StartInput extends JFrame implements Serializable
     }
     
     /**
-     * @author: Michel Bartsch
+     * @author Michel Bartsch
      * 
      * This is a normal JPanel, but it has a background image.
      */
@@ -397,7 +397,7 @@ public class StartInput extends JFrame implements Serializable
         @Override
         public void paintComponent(Graphics g)
         {
-            if(super.isOpaque()) {
+            if (super.isOpaque()) {
                 g.setColor(Color.WHITE);
                 g.fillRect(0, 0, getWidth(), getHeight());
             }

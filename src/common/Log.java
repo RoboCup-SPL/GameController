@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class should be used to log into a log file. A new file will be created
  * every time the GameController is started.
@@ -57,7 +57,7 @@ public class Log
         }
         try{
             instance.file = new FileWriter(new File(path));
-        } catch(IOException e) {
+        } catch (IOException e) {
             error("cannot write to logfile "+path);
         }
         toFile(Main.version);
@@ -74,7 +74,7 @@ public class Log
         try{
             instance.file.write(instance.timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
             instance.file.flush();
-        } catch(IOException e) {
+        } catch (IOException e) {
             error("cannot write to logfile!");
         }
     }
@@ -104,7 +104,7 @@ public class Log
     public static void state(AdvancedData data, String message)
     {
         AdvancedData state = (AdvancedData) data.clone();
-        if(instance.message == null) {
+        if (instance.message == null) {
             state.message = message;
         } else {
             state.message = instance.message;
@@ -127,20 +127,20 @@ public class Log
      */
     public static String goBack(int states)
     {
-        if(states >= instance.states.size()) {
+        if (states >= instance.states.size()) {
             states = instance.states.size()-1;
         }
         
         long laterTimestamp = instance.states.getLast().whenCurrentGameStateBegan;
         long earlierTimestamp = 0;
         long timeInCurrentState = instance.states.getLast().getTime() - laterTimestamp;
-        for(int i=0; i<states; i++) {
+        for (int i=0; i<states; i++) {
             earlierTimestamp = instance.states.getLast().whenCurrentGameStateBegan;
             instance.states.removeLast();
         }
-        if(laterTimestamp != instance.states.getLast().whenCurrentGameStateBegan) {
+        if (laterTimestamp != instance.states.getLast().whenCurrentGameStateBegan) {
             long timeOffset = laterTimestamp - earlierTimestamp + timeInCurrentState;
-            for(AdvancedData data : instance.states) {
+            for (AdvancedData data : instance.states) {
                 data.whenCurrentGameStateBegan += timeOffset;
             }
         }
@@ -160,8 +160,8 @@ public class Log
     public static String[] getLast(int states)
     {
         String[] out = new String[states];
-        for(int i=0; i<states; i++) {
-            if(instance.states.size()-1-i >= 0) {
+        for (int i=0; i<states; i++) {
+            if (instance.states.size()-1-i >= 0) {
                 out[i] = instance.states.get(instance.states.size()-1-i).message;
             } else {
                 out[i] = "";
@@ -182,12 +182,12 @@ public class Log
     {
         System.err.println(s);
         try{
-            if(instance.errorFile == null) {
+            if (instance.errorFile == null) {
                 instance.errorFile = new FileWriter(new File(instance.errorPath));
             }
             instance.errorFile.write(instance.timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
             instance.errorFile.flush();
-        } catch(IOException e) {
+        } catch (IOException e) {
              System.err.println("cannot write to error file!");
         }
     }
@@ -198,7 +198,7 @@ public class Log
      * @throws IOException if an error occurred while trying to close the FileWriters
      */
     public static void close() throws IOException {
-        if(instance.errorFile != null) {
+        if (instance.errorFile != null) {
             instance.errorFile.close();
         }
         instance.file.close();

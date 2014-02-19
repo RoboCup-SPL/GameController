@@ -7,7 +7,7 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the player pushing penalty has been selected.
  */
@@ -27,10 +27,10 @@ public class Pushing extends Penalty
         player.penalty = PlayerInfo.PENALTY_SPL_PLAYER_PUSHING;
         data.whenPenalized[side][number] = data.getTime();
 
-        if(data.gameState == GameControlData.STATE_PLAYING) {
+        if (data.gameState == GameControlData.STATE_PLAYING) {
             data.pushes[side]++;
-            for(int pushes : Rules.league.pushesToEjection) {
-                if(data.pushes[side] == pushes) {
+            for (int pushes : Rules.league.pushesToEjection) {
+                if (data.pushes[side] == pushes) {
                     data.ejected[side][number] = true;
                 }
             }

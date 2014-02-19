@@ -9,7 +9,7 @@ import data.Rules;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that a penalty shoot is to be starting.
  */
@@ -32,13 +32,13 @@ public class PenaltyShoot extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
             data.secGameState = GameControlData.STATE2_PENALTYSHOOT;
             // Don't set data.whenCurrentGameStateBegan, because it's used to count the pause
             data.gameState = GameControlData.STATE_INITIAL;
             data.timeBeforeCurrentGameState = 0;
             data.resetPenalties();
-            if(Rules.league.timeOutPerHalf) {
+            if (Rules.league.timeOutPerHalf) {
                 data.timeOutTaken = new boolean[] {false, false};
             }
             Log.state(data, "Penalty Shoot-out");
@@ -55,13 +55,13 @@ public class PenaltyShoot extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return (data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
-          || ( (data.firstHalf != GameControlData.C_TRUE)
+          || ((data.firstHalf != GameControlData.C_TRUE)
             && (data.gameState == GameControlData.STATE_FINISHED)
             && !(Rules.league.overtime
                 && (data.playoff)
                 && (data.secGameState == GameControlData.STATE2_NORMAL)
                 && (data.team[0].score == data.team[1].score)
-                && (data.team[0].score > 0) ) )
+                && (data.team[0].score > 0)) )
           || (data.testmode);
     }
 }

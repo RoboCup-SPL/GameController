@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.util.LinkedList;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * The log-analyzer-programm starts in this class.
  * The main components are initialised here.
@@ -44,8 +44,8 @@ public class Main
         logs = new LinkedList<LogInfo>();
         File dir = new File(PATH);
         File[] files = dir.listFiles();
-        for(File file: files) {
-            if(file.isFile()) {
+        for (File file: files) {
+            if (file.isFile()) {
                 logs.add(new LogInfo(file));
             }
         }

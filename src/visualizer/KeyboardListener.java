@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class listens to the keyboard.
  */
@@ -35,12 +35,12 @@ public class KeyboardListener implements KeyEventDispatcher
      */
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
-        if(e.getID() == KeyEvent.KEY_RELEASED) {
+        if (e.getID() == KeyEvent.KEY_RELEASED) {
             pressing = 0;
-        } else if(e.getID() == KeyEvent.KEY_PRESSED) {
+        } else if (e.getID() == KeyEvent.KEY_PRESSED) {
             int key = e.getKeyCode();
         
-            if( (key == 0) || (key == pressing) ) {
+            if ((key == 0) || (key == pressing)) {
                 return false;
             }
             pressing = key;
@@ -63,7 +63,7 @@ public class KeyboardListener implements KeyEventDispatcher
      */
     private boolean pressed(int key)
     {
-        switch(key) {
+        switch (key) {
                 case KeyEvent.VK_F10:
                     Main.exit();
                     break;

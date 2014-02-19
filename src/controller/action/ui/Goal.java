@@ -10,7 +10,7 @@ import data.Teams;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that a team has scored or it`s score is to be decreased.
  */
@@ -45,8 +45,8 @@ public class Goal extends GCAction
     public void perform(AdvancedData data)
     {
         data.team[side].score += set;
-        if(set == 1) {
-            if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+        if (set == 1) {
+            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.kickOffTeam = data.team[side].teamColor == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
                 Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
                 ActionBoard.ready.perform(data);
@@ -69,10 +69,10 @@ public class Goal extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ( (set == 1)
+        return ((set == 1)
               && (data.gameState == GameControlData.STATE_PLAYING)
-              && ( (data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
-                || (data.kickOffTeam == data.team[side].teamColor) ) )
+              && ((data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
+                || (data.kickOffTeam == data.team[side].teamColor)) )
             || data.testmode;
     }
 }

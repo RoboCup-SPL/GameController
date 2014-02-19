@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class provides the icons and names including unique teamNumbers of all
  * teams written in the config file.
@@ -56,7 +56,7 @@ public class Teams
     {
         names = new String[Rules.LEAGUES.length][];
         icons = new BufferedImage[Rules.LEAGUES.length][];
-        for(int i=0; i < Rules.LEAGUES.length; i++) {
+        for (int i=0; i < Rules.LEAGUES.length; i++) {
             String dir = Rules.LEAGUES[i].leagueDirectory;
             int value;
             int maxValue = 0;
@@ -66,20 +66,20 @@ public class Teams
                 br = new BufferedReader(
                         new InputStreamReader(inStream, CHARSET));
                 String line;
-                while((line = br.readLine()) != null) {
+                while ((line = br.readLine()) != null) {
                     value = Integer.valueOf(line.split("=")[0]);
-                    if(value > maxValue) {
+                    if (value > maxValue) {
                         maxValue = value;
                     }
                 }
-            } catch(IOException e) {
+            } catch (IOException e) {
                 Log.error("cannot load "+PATH+dir+"/"+CONFIG);
             }
             finally {
-                if(br != null) {
+                if (br != null) {
                     try {
                         br.close();
-                    } catch(Exception e) {}
+                    } catch (Exception e) {}
                 }
             }
             names[i] = new String[maxValue+1];
@@ -94,8 +94,8 @@ public class Teams
      */
     private static int getLeagueIndex()
     {
-        for(int i=0; i < Rules.LEAGUES.length; i++) {
-            if(Rules.LEAGUES[i] == Rules.league) {
+        for (int i=0; i < Rules.LEAGUES.length; i++) {
+            if (Rules.LEAGUES[i] == Rules.league) {
                 return i;
             }
         }
@@ -118,18 +118,18 @@ public class Teams
             br = new BufferedReader(
                     new InputStreamReader(inStream, CHARSET));
             String line;
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 value = Integer.valueOf(line.split("=")[0]);
                 instance.names[getLeagueIndex()][value] = line.split("=")[0]+": "+line.split("=")[1];
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             Log.error("cannot load "+PATH+Rules.league.leagueDirectory+"/"+CONFIG);
         }
         finally {
-            if(br != null) {
+            if (br != null) {
                 try {
                     br.close();
-                } catch(Exception e) {}
+                } catch (Exception e) {}
             }
         }
     }
@@ -144,15 +144,15 @@ public class Teams
     public static String[] getNames(boolean withNumbers)
     {
         int leagueIndex = getLeagueIndex();
-        if(instance.names[leagueIndex][0] == null) {
+        if (instance.names[leagueIndex][0] == null) {
             readNames();
         }
-        if(withNumbers) {
+        if (withNumbers) {
             return instance.names[leagueIndex];
         } else {
             String[] out = new String[instance.names[leagueIndex].length];
-            for(int i=0; i<instance.names[leagueIndex].length; i++) {
-                if(instance.names[leagueIndex][i] != null) {
+            for (int i=0; i<instance.names[leagueIndex].length; i++) {
+                if (instance.names[leagueIndex][i] != null) {
                     out[i] = instance.names[leagueIndex][i].split(":")[1].substring(1);
                 }
             }
@@ -170,23 +170,23 @@ public class Teams
     {
         BufferedImage out = null;
         File file = null;
-        for(int i=0; i< PIC_ENDING.length; i++) {
+        for (int i=0; i< PIC_ENDING.length; i++) {
             file = new File(PATH+Rules.league.leagueDirectory+"/"+team+"."+PIC_ENDING[i]);
-            if(file.exists()) {
+            if (file.exists()) {
                 break;
             }
-            if(i == PIC_ENDING.length-1) {
+            if (i == PIC_ENDING.length-1) {
                 file = null;
             }
         }
-        if(file != null) {
+        if (file != null) {
             try{
                 out = ImageIO.read(file);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 Log.error("cannot load "+file);
             }
         }
-        if(out == null) {
+        if (out == null) {
             out = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
             Graphics graphics = out.getGraphics();
             graphics.setColor(new Color(0f, 0f, 0f, 0f));
@@ -205,7 +205,7 @@ public class Teams
     public static BufferedImage getIcon(int team)
     {
         int leagueIndex = getLeagueIndex();
-        if(instance.icons[leagueIndex][team] == null) {
+        if (instance.icons[leagueIndex][team] == null) {
             readIcon(team);
         }
         return instance.icons[leagueIndex][team];

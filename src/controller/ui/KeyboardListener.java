@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class listens to the keyboard. It does not depend on the GUI.
  */
@@ -38,12 +38,12 @@ public class KeyboardListener implements KeyEventDispatcher
      */
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
-        if(e.getID() == KeyEvent.KEY_RELEASED) {
+        if (e.getID() == KeyEvent.KEY_RELEASED) {
             pressing = 0;
-        } else if(e.getID() == KeyEvent.KEY_PRESSED) {
+        } else if (e.getID() == KeyEvent.KEY_PRESSED) {
             int key = e.getKeyCode();
         
-            if( (key == 0) || (key == pressing) ) {
+            if ((key == 0) || (key == pressing)) {
                 return false;
             }
             pressing = key;
@@ -68,13 +68,13 @@ public class KeyboardListener implements KeyEventDispatcher
     {
         GCAction event = null;
         
-        switch(key) {
+        switch (key) {
             case KeyEvent.VK_ESCAPE: event = ActionBoard.quit; break;
             case KeyEvent.VK_DELETE: event = ActionBoard.testmode; break;
             case KeyEvent.VK_BACK_SPACE: event = ActionBoard.undo[1]; break;
             default:
-                if(Rules.league instanceof SPL) {
-                    switch(key) {
+                if (Rules.league instanceof SPL) {
+                    switch (key) {
                         case KeyEvent.VK_B: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_BLUE ? 0 : 1]; break;
                         case KeyEvent.VK_R: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_RED ? 0 : 1]; break;
 
@@ -87,8 +87,8 @@ public class KeyboardListener implements KeyEventDispatcher
                         case KeyEvent.VK_H: event = ActionBoard.hands; break;
                         case KeyEvent.VK_U: event = ActionBoard.pickUp; break;
                     }
-                } else if(Rules.league instanceof HL) {
-                    switch(key) {
+                } else if (Rules.league instanceof HL) {
+                    switch (key) {
                         case KeyEvent.VK_C: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_BLUE ? 0 : 1]; break;
                         case KeyEvent.VK_M: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_RED ? 0 : 1]; break;
 
@@ -102,7 +102,7 @@ public class KeyboardListener implements KeyEventDispatcher
                 }
         }
         
-        if(event != null) {
+        if (event != null) {
             event.actionPerformed(null);
             return true;
         }

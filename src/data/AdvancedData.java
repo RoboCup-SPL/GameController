@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  *
  * This class extends the GameControlData that is send to the robots. It
  * contains all the additional informations the GameControler needs to
@@ -83,12 +83,12 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public AdvancedData()
     {
-        if(Rules.league.startWithPenalty) {
+        if (Rules.league.startWithPenalty) {
             secGameState = GameControlData.STATE2_PENALTYSHOOT;
         }
-        for(int i=0; i<2; i++) {
+        for (int i=0; i<2; i++) {
             for (int j=0; j < team[i].player.length; j++) {
-                if(j >= Rules.league.robotsPlaying) {
+                if (j >= Rules.league.robotsPlaying) {
                     team[i].player[j].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
                 }
             }
@@ -166,7 +166,7 @@ public class AdvancedData extends GameControlData implements Cloneable
         secsRemaining = getRemainingGameTime();
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         Integer subT = getSecondaryTime(0);
-        if(subT == null) {
+        if (subT == null) {
             subTime = 0;
         } else {
             subTime = (short)(int)subT;
@@ -217,11 +217,11 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public Integer getRemainingPauseTime()
     {
-        if(secGameState == GameControlData.STATE2_NORMAL
+        if (secGameState == GameControlData.STATE2_NORMAL
                 && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf == C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pauseTime);
-        } else if(Rules.league.pausePenaltyShootOutTime != 0 && playoff && team[0].score == team[1].score
+        } else if (Rules.league.pausePenaltyShootOutTime != 0 && playoff && team[0].score == team[1].score
                 && (gameState == STATE_INITIAL && secGameState == STATE2_PENALTYSHOOT && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf != C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pausePenaltyShootOutTime);
@@ -236,8 +236,8 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public void resetPenaltyTimes()
     {
-        for(long[] players : whenPenalized) {
-            for(int i = 0; i < players.length; ++i) {
+        for (long[] players : whenPenalized) {
+            for (int i = 0; i < players.length; ++i) {
                 players[i] = 0;
             }
         }
@@ -248,9 +248,9 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public void resetPenalties()
     {
-        for(int i = 0; i < team.length; ++i) {
+        for (int i = 0; i < team.length; ++i) {
             pushes[i] = 0;
-            for(int j = 0; j < Rules.league.teamSize; j++) {
+            for (int j = 0; j < Rules.league.teamSize; j++) {
                 team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
                 ejected[i][j] = false;
             }
@@ -282,8 +282,8 @@ public class AdvancedData extends GameControlData implements Cloneable
     public int getNumberOfRobotsInPlay(int side)
     {
         int count = 0;
-        for(int i=0; i<team[side].player.length; i++) {
-            if(team[side].player[i].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
+        for (int i=0; i<team[side].player.length; i++) {
+            if (team[side].player[i].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
                 count++;
             }
         }
@@ -301,15 +301,15 @@ public class AdvancedData extends GameControlData implements Cloneable
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
     {
         int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
-        if(gameState == STATE_INITIAL && (timeOutActive[0] || timeOutActive[1])) {
+        if (gameState == STATE_INITIAL && (timeOutActive[0] || timeOutActive[1])) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
         } 
-        else if(gameState == STATE_INITIAL && (refereeTimeout)){
+        else if (gameState == STATE_INITIAL && (refereeTimeout)) {
         	return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
         }
-        else if(gameState == STATE_READY) {
+        else if (gameState == STATE_READY) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
-        } else if(gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
+        } else if (gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
                 && timeKickOffBlocked >= -timeKickOffBlockedOvertime) {
             return timeKickOffBlocked;
         } else {

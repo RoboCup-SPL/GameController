@@ -3,7 +3,7 @@ package visualizer;
 import data.Rules;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * The game-state-visualizer-programm starts in this class.
  * The main components are initialised here.
@@ -28,15 +28,15 @@ public class Main
     public static void main(String[] args)
     {
         //commands
-        if( (args.length > 0)
-                && ( (args[0].equalsIgnoreCase(COMMAND_HELP_SHORT))
-                  || (args[0].equalsIgnoreCase(COMMAND_HELP)) ) ) {
+        if ((args.length > 0)
+                && ((args[0].equalsIgnoreCase(COMMAND_HELP_SHORT))
+                  || (args[0].equalsIgnoreCase(COMMAND_HELP))) ) {
             System.out.println(HELP);
             System.exit(0);
         }
-        if( (args.length >= 2) && ((args[0].equals(COMMAND_LEAGUE_SHORT)) || (args[0].equals(COMMAND_LEAGUE))) ) {
-            for(int i=0; i < Rules.LEAGUES.length; i++) {
-                if(Rules.LEAGUES[i].leagueDirectory.equals(args[1])) {
+        if ((args.length >= 2) && ((args[0].equals(COMMAND_LEAGUE_SHORT)) || (args[0].equals(COMMAND_LEAGUE)))) {
+            for (int i=0; i < Rules.LEAGUES.length; i++) {
+                if (Rules.LEAGUES[i].leagueDirectory.equals(args[1])) {
                     Rules.league = Rules.LEAGUES[i];
                     break;
                 }

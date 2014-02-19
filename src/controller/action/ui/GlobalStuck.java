@@ -10,7 +10,7 @@ import data.Rules;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that a global game stuck has occured.
  */
@@ -41,7 +41,7 @@ public class GlobalStuck extends GCAction
     public void perform(AdvancedData data)
     {
         data.kickOffTeam = data.team[side == 0 ? 1 : 0].teamColor;
-        if(data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0) {
+        if (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0) {
             Log.setNextMessage("Kickoff Goal "+Rules.league.teamColorName[data.team[side].teamColor]);
         } else {
             Log.setNextMessage("Global Game Stuck, Kickoff "+Rules.league.teamColorName[data.kickOffTeam]);

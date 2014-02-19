@@ -5,7 +5,7 @@ import java.nio.ByteOrder;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class is what robots send to the GameCOntroller.
  * It just represents this data, reads and writes between C-structure and
@@ -71,7 +71,7 @@ public class GameControlReturnData
             byte[] header = new byte[4];
             buffer.get(header, 0, 4);
             this.header = new String(header);
-            if(!this.header.equals(GAMECONTROLLER_RETURN_STRUCT_HEADER)) {
+            if (!this.header.equals(GAMECONTROLLER_RETURN_STRUCT_HEADER)) {
                 return false;
             } else {
                 version = buffer.getInt();

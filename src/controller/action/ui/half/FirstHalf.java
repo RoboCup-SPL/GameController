@@ -9,7 +9,7 @@ import data.Rules;
 import data.TeamInfo;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the half is to be set to the first half.
  */
@@ -32,10 +32,10 @@ public class FirstHalf extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
             data.secGameState = GameControlData.STATE2_NORMAL;
-            if(data.colorChangeAuto) {
+            if (data.colorChangeAuto) {
                 data.team[0].teamColor = GameControlData.TEAM_BLUE;
                 data.team[1].teamColor = GameControlData.TEAM_RED;
             }
@@ -56,8 +56,8 @@ public class FirstHalf extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ( (data.firstHalf == GameControlData.C_TRUE)
-                && (data.secGameState == GameControlData.STATE2_NORMAL) )
+        return ((data.firstHalf == GameControlData.C_TRUE)
+                && (data.secGameState == GameControlData.STATE2_NORMAL))
                 || (data.testmode);
     }
     
@@ -79,14 +79,14 @@ public class FirstHalf extends GCAction
         data.team[1].goalColor = color;
 
         // if necessary, swap back team colors
-        if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT
+        if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
                 && data.colorChangeAuto) {
             color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = color;
         }
         
-        if(Rules.league.timeOutPerHalf) {
+        if (Rules.league.timeOutPerHalf) {
             data.timeOutTaken = new boolean[] {false, false};
         } else {
             boolean timeOutTaken = data.timeOutTaken[0];

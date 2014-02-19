@@ -7,7 +7,7 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the inactive player penalty has been selected.
  */

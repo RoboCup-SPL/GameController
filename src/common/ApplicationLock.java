@@ -7,7 +7,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
 /**
- * @author: Marcel Steinbeck
+ * @author Marcel Steinbeck
  *
  * This class is used to ensure, that only one instance of an application exists.
  */

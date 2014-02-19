@@ -9,7 +9,7 @@ import data.GameControlData;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that a global game stuck has occured.
  */

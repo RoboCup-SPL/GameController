@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class contains all methods meant to parse logs.
  */
@@ -80,54 +80,54 @@ public class Parser
         Date kickoffTime = null;
         Date endTime = null;
         int i = 0;
-        for(String line: log.lines) {
+        for (String line : log.lines) {
             i++;
             int divPos = line.indexOf(": ");
             Date time = null;
             try{
                 time = Log.timestampFormat.parse(line.substring(0, divPos));
-            } catch(ParseException e) {
+            } catch (ParseException e) {
                 log.parseErrors += "error in line "+i+": Cannot parse timestamp" + GUI.HTML_LF;
             }
             String action = line.substring(divPos+2);
             
-            if(i == 1) {
+            if (i == 1) {
                 log.version = action;
-            } else if(action.startsWith("League = ")) {
+            } else if (action.startsWith("League = ")) {
                 String league = action.substring(9);
-                for(int j=0; j<Rules.LEAGUES.length; j++) {
-                    if(Rules.LEAGUES[j].leagueName.equals(league)) {
+                for (int j=0; j<Rules.LEAGUES.length; j++) {
+                    if (Rules.LEAGUES[j].leagueName.equals(league)) {
                         log.league = Rules.LEAGUES[j];
                     }
                 }
-            } else if(action.startsWith("Auto color change = false")) {
+            } else if (action.startsWith("Auto color change = false")) {
                 log.keepColors = true;
-            } else if(action.startsWith("Undo")) {
+            } else if (action.startsWith("Undo")) {
                 String[] splitted = action.split(" ");
-                if(splitted.length < 2) {
+                if (splitted.length < 2) {
                     log.parseErrors += "error in line "+i+": cannot parse undo";
                 } else {
                     int undos = Integer.valueOf(splitted[1]);
-                    for(int j=0; j<undos; j++) {
+                    for (int j=0; j<undos; j++) {
                         log.lines.set(i-2-j, UNDONE_PREFIX+log.lines.get(i-2-j));
                     }
                 }
-            } else if(action.contains(" vs ")) {
+            } else if (action.contains(" vs ")) {
                 String[] teams = action.split(" vs ");
-                if(teams.length == 2) {
+                if (teams.length == 2) {
                     log.team[0] = teams[0];
                     log.team[1] = teams[1];
                 } else {
                     log.parseErrors += "error in line "+i+": Found vs but not 2 teams" + GUI.HTML_LF;
                 }
-            } else if( (kickoffTime == null) && (action.startsWith("Ready")) ) {
+            } else if ((kickoffTime == null) && (action.startsWith("Ready"))) {
                 kickoffTime = time;
-            } else if(action.startsWith("Finished")) {
+            } else if (action.startsWith("Finished")) {
                 endTime = time;
             }
         }
         log.start = kickoffTime;
-        if( (kickoffTime != null) && (endTime != null) ) {
+        if ((kickoffTime != null) && (endTime != null)) {
             log.duration = (int)((endTime.getTime()-kickoffTime.getTime())/1000);
         }
     }
@@ -145,7 +145,7 @@ public class Parser
         String raw, action = "";
         String team;
         String[] teams = new String[2];
-        if(log.team.length >= 2) {
+        if (log.team.length >= 2) {
             teams[0] = log.team[0];
             teams[1] = log.team[1];
         } else {
@@ -154,15 +154,15 @@ public class Parser
         }
         
         int i=0;
-        for(String line: log.lines) {
+        for (String line : log.lines) {
             i++;
-            if(line.startsWith(UNDONE_PREFIX)) {
+            if (line.startsWith(UNDONE_PREFIX)) {
                 continue;
             }
             int divPos = line.indexOf(": ")+2;
             try{
                 rawTime = Log.timestampFormat.parse(line.substring(0, divPos-2));
-            } catch(ParseException e) {
+            } catch (ParseException e) {
                 Log.error("Cannot parse time in line "+i+" of "+log.file);
                 return;
             }
@@ -170,9 +170,9 @@ public class Parser
             
             time = timeFormat.format(rawTime);
             
-            if(!log.keepColors) {
-                for(String ca: colorChangeActions) {
-                    if(raw.startsWith(ca)) {
+            if (!log.keepColors) {
+                for (String ca : colorChangeActions) {
+                    if (raw.startsWith(ca)) {
                         String tmp = teams[0];
                         teams[0] = teams[1];
                         teams[1] = tmp;
@@ -182,20 +182,20 @@ public class Parser
             }
             
             boolean actionMatch = false;
-            for(String a: actions) {
-                if(raw.startsWith(a)) {
+            for (String a : actions) {
+                if (raw.startsWith(a)) {
                     action = a;
                     actionMatch = true;
                     break;
                 }
             }
-            if(!actionMatch) {
+            if (!actionMatch) {
                 continue;
             }
             
-            if(raw.contains(log.league.teamColorName[0])) {
+            if (raw.contains(log.league.teamColorName[0])) {
                 team = teams[0];
-            } else if(raw.contains(log.league.teamColorName[1])) {
+            } else if (raw.contains(log.league.teamColorName[1])) {
                 team = teams[1];
             } else {
                 team = "";
@@ -203,7 +203,7 @@ public class Parser
             
             try{
                 Main.writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
-            } catch(IOException e) {
+            } catch (IOException e) {
                 Log.error("cannot write to file "+Main.stats);
             }
         }

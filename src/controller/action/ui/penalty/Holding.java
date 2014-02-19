@@ -7,7 +7,7 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the ball holding penalty has been selected.
  */

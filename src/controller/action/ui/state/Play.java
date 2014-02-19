@@ -8,7 +8,7 @@ import data.GameControlData;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the state is to be set to play.
  */
@@ -31,7 +31,7 @@ public class Play extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.gameState == GameControlData.STATE_PLAYING) {
+        if (data.gameState == GameControlData.STATE_PLAYING) {
             return;
         }
         if (!data.playoff && data.timeBeforeCurrentGameState != 0) {

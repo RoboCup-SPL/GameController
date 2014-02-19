@@ -9,7 +9,7 @@ import data.Rules;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that a team get kickoff.
  */
@@ -39,14 +39,14 @@ public class KickOff extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.kickOffTeam == data.team[side].teamColor) {
+        if (data.kickOffTeam == data.team[side].teamColor) {
             return;
         }
         data.kickOffTeam = data.team[side].teamColor;
-        if( (Rules.league.kickoffChoice)
+        if ((Rules.league.kickoffChoice)
                 && (data.secGameState == GameControlData.STATE2_NORMAL)
                 && (data.firstHalf == GameControlData.C_TRUE)
-                && (data.gameState == GameControlData.STATE_INITIAL) ) {
+                && (data.gameState == GameControlData.STATE_INITIAL)) {
             data.leftSideKickoff = (side == 0);
         }
         Log.state(data, "Kickoff "+
@@ -63,10 +63,10 @@ public class KickOff extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return (data.kickOffTeam == data.team[side].teamColor)
-                || ( (Rules.league.kickoffChoice)
+                || ((Rules.league.kickoffChoice)
                     && (data.secGameState == GameControlData.STATE2_NORMAL)
                     && (data.firstHalf == GameControlData.C_TRUE)
-                    && (data.gameState == GameControlData.STATE_INITIAL) )
+                    && (data.gameState == GameControlData.STATE_INITIAL))
                 || data.testmode;
     }
 }

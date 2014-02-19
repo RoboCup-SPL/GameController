@@ -7,7 +7,7 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the playing with hands penalty has been selected.
  */

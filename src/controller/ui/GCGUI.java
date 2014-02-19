@@ -5,7 +5,7 @@ import data.AdvancedData;
 
 /**
  *
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  *
  * This inteface is for a GUI.
  * Evertimes the model changes the update method will be called with the new

@@ -8,7 +8,7 @@ import data.AdvancedData;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the clock is to be paused.
  */
@@ -31,8 +31,8 @@ public class ClockPause extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(ActionBoard.clock.isClockRunning(data)) {
-            if(data.manPlay) {
+        if (ActionBoard.clock.isClockRunning(data)) {
+            if (data.manPlay) {
                 data.manRemainingGameTimeOffset += data.getTime() - data.manWhenClockChanged;
                 data.manPlay = false;
             } else {
@@ -41,7 +41,7 @@ public class ClockPause extends GCAction
             }
             Log.state(data, "Time manual paused");
         } else {
-            if(data.manPause) {
+            if (data.manPause) {
                 data.manPause = false;
                 data.manTimeOffset -= data.getTime() - data.manWhenClockChanged;
             } else {

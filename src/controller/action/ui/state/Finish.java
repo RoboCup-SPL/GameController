@@ -9,7 +9,7 @@ import data.Rules;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the state is to be set to finish.
  */
@@ -32,10 +32,10 @@ public class Finish extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.gameState == GameControlData.STATE_FINISHED) {
+        if (data.gameState == GameControlData.STATE_FINISHED) {
             return;
         }
-        if(Rules.league.returnRobotsInGameStoppages) {
+        if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
         data.addTimeInCurrentState();

@@ -52,10 +52,10 @@ public class GameControlReturnDataReceiver extends Thread
      */
     public synchronized static GameControlReturnDataReceiver getInstance()
     {
-        if(instance == null) {
+        if (instance == null) {
             try {
                 instance = new GameControlReturnDataReceiver();
-            } catch(SocketException e) {
+            } catch (SocketException e) {
                 throw new IllegalStateException("fatal: Error while setting up Receiver.", e);
             }
         }
@@ -64,7 +64,7 @@ public class GameControlReturnDataReceiver extends Thread
 
     @Override
     public void run() {
-       while(!isInterrupted()) {
+       while (!isInterrupted()) {
            final ByteBuffer buffer = ByteBuffer.wrap(new byte[GameControlReturnData.SIZE]);
            final GameControlReturnData player = new GameControlReturnData();
            
@@ -73,10 +73,10 @@ public class GameControlReturnDataReceiver extends Thread
             try {
                 datagramSocket.receive(packet);
                 buffer.rewind();
-                if(player.fromByteArray(buffer)) {
+                if (player.fromByteArray(buffer)) {
                     RobotWatcher.update(player);
                 }
-            } catch(IOException e) {
+            } catch (IOException e) {
                 Log.error("something went wrong while receiving : " + e.getMessage());
             }
         }

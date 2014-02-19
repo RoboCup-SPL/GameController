@@ -9,7 +9,7 @@ import data.Rules;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the state is to be set to ready.
  */
@@ -32,10 +32,10 @@ public class Ready extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.gameState == GameControlData.STATE_READY) {
+        if (data.gameState == GameControlData.STATE_READY) {
             return;
         }
-        if(Rules.league.returnRobotsInGameStoppages) {
+        if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
         if (data.gameState == GameControlData.STATE_PLAYING) {
@@ -55,11 +55,11 @@ public class Ready extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ( (data.gameState == GameControlData.STATE_INITIAL)
+        return ((data.gameState == GameControlData.STATE_INITIAL)
               && !data.timeOutActive[0] 
               && !data.timeOutActive[1]
               && !data.refereeTimeout
-              && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) )
+              && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT))
             || (data.gameState == GameControlData.STATE_READY)
             || data.testmode;
     }

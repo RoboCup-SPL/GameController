@@ -7,7 +7,7 @@ import data.AdvancedData;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the operator tries to close the GameController.
  */
@@ -30,7 +30,7 @@ public class Quit extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(EventHandler.getInstance().lastUIEvent == this) {
+        if (EventHandler.getInstance().lastUIEvent == this) {
             System.exit(0);
         }
     }

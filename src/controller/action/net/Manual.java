@@ -8,7 +8,7 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that a player has been penalised or unpenalised manually
  * via the chest button.
@@ -47,7 +47,7 @@ public class Manual extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(!unpen) {
+        if (!unpen) {
             data.team[side].player[number].penalty = PlayerInfo.PENALTY_MANUAL;
             data.whenPenalized[side][number] = data.getTime();
             Log.state(data, "Manually Penalised "+

@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class is part of the data wich are send to the robots.
  * It just represents this data, reads and writes between C-structure and
@@ -78,8 +78,8 @@ public class PlayerInfo implements Serializable
         String out = "----------------------------------------\n";
         String temp;
         
-        if(Rules.league instanceof SPL) {
-            switch(penalty) {
+        if (Rules.league instanceof SPL) {
+            switch (penalty) {
                 case PENALTY_NONE:                   temp = "none"; break;
                 case PENALTY_SPL_BALL_HOLDING:       temp = "ball holding"; break;
                 case PENALTY_SPL_PLAYER_PUSHING:     temp = "pushing"; break;
@@ -94,7 +94,7 @@ public class PlayerInfo implements Serializable
                 default: temp = "undefinied("+penalty+")";
             }
         } else {
-            switch(penalty) {
+            switch (penalty) {
                 case PENALTY_NONE:
                 case PENALTY_HL_BALL_MANIPULATION:   temp = "none"; break;
                 case PENALTY_HL_PHYSICAL_CONTACT:    temp = "pushing"; break;

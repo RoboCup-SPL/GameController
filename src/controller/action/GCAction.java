@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This is an abstract class every action needs to extend to provide the
  * basic features. By extending this it also becomes an ActionListener,

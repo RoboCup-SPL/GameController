@@ -1,7 +1,7 @@
 package controller.net;
 
 /**
- * @author: Marcel Steinbeck
+ * @author Marcel Steinbeck
  *
  * These enum provides all online status of a robot
  */

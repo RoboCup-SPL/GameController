@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * Instances of this class represent a log file. It can analyze some basic
  * information of it´s log to guess, if it was made by a real game.
@@ -66,17 +66,17 @@ public class LogInfo
             InputStream inStream = new FileInputStream(log);
             br = new BufferedReader(new InputStreamReader(inStream, CHARSET));
             String currentLine;
-            while((currentLine = br.readLine()) != null) {
+            while ((currentLine = br.readLine()) != null) {
                 lines.add(currentLine);
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             Log.error("cannot load "+log);
         }
         finally {
-            if(br != null) {
+            if (br != null) {
                 try {
                     br.close();
-                } catch(Exception e) {}
+                } catch (Exception e) {}
             }
         }
         Parser.info(this);

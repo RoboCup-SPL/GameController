@@ -8,7 +8,7 @@ import data.GameControlData;
 import data.Rules;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the state is to be set to initial.
  */
@@ -31,10 +31,10 @@ public class Initial extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(data.gameState == GameControlData.STATE_INITIAL) {
+        if (data.gameState == GameControlData.STATE_INITIAL) {
             return;
         }
-        if(Rules.league.returnRobotsInGameStoppages) {
+        if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
         data.whenCurrentGameStateBegan = data.getTime();

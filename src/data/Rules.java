@@ -4,7 +4,7 @@ import java.awt.Color;
 
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This class holds attributes defining rules.
  */

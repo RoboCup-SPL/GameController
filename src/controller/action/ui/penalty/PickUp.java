@@ -7,7 +7,7 @@ import data.Rules;
 import data.SPL;
 
 /**
- * @author: Michel Bartsch
+ * @author Michel Bartsch
  * 
  * This action means that the request for pickup penalty has been selected.
  */
@@ -24,16 +24,16 @@ public class PickUp extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if(player.penalty == PlayerInfo.PENALTY_NONE) {
+        if (player.penalty == PlayerInfo.PENALTY_NONE) {
             data.whenPenalized[side][number] = data.getTime();
         }
-        if((data.dropInPlayerMode) || (number < SPL.league.teamSize-1)){
+        if ((data.dropInPlayerMode) || (number < SPL.league.teamSize-1)) {
         	player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
             Log.state(data, "Request for PickUp "+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         }
-        else{ //A request for pickup is send to the coach => Coach Motion penalty
+        else { //A request for pickup is send to the coach => Coach Motion penalty
         	player.penalty = PlayerInfo.PENALTY_SPL_COACH_MOTION;
         	Log.state(data, "Coach Motion "+
                     Rules.league.teamColorName[data.team[side].teamColor]
