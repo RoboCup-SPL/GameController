@@ -46,7 +46,7 @@ public class StartInput extends JFrame implements Serializable
                                                         "robot_right_blue.png"};
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
-    private static final String DROP_IN_PLAYER_COMPETITION = "Drop-In Player Modus";
+    private static final String DROP_IN_PLAYER_COMPETITION = "Drop-In Player Game";
     private static final String FULLTIME_LABEL_HL_NO = "Normal Game";
     private static final String FULLTIME_LABEL_HL_YES = "Knock-Out Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
