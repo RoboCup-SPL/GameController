@@ -21,7 +21,7 @@ public class SPLCoachMessageReceiver extends Thread {
 	private boolean isRedCoachPackageReceived = false;
 	private long timestampBlueCoachPackage;
 	private long timestampRedCoachPackage;
-	private ArrayList<SPLCoachMessage> splCoachMessagQueue = new ArrayList<>();
+	private ArrayList<SPLCoachMessage> splCoachMessagQueue = new ArrayList<SPLCoachMessage>();
 
 	private SPLCoachMessageReceiver() throws SocketException {
 		datagramSocket = new DatagramSocket(null);
