@@ -1,18 +1,13 @@
 package controller.action.ui.penalty;
 
 import common.Log;
-
 import data.AdvancedData;
+import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
 
-/**
- * @author Michel Bartsch
- * 
- * This action means that the request for pickup penalty has been selected.
- */
-public class PickUp extends Penalty
-{
+public class LocalGameStuck extends Penalty {
+    
     /**
      * Performs this action`s penalty on a selected player.
      * 
@@ -24,12 +19,11 @@ public class PickUp extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (player.penalty == PlayerInfo.PENALTY_NONE) {
-            data.whenPenalized[side][number] = data.getTime();
-        }
-        
-        player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
-        Log.state(data, "Request for PickUp "+ Rules.league.teamColorName[data.team[side].teamColor]+ " " + (number+1));
+        player.penalty = PlayerInfo.PENALTY_SPL_LOCAL_GAME_STUCK;
+        data.whenPenalized[side][number] = data.getTime();
+        Log.state(data, "Local Game Stuck "+
+                Rules.league.teamColorName[data.team[side].teamColor]
+                + " " + (number+1));
     }
     
     /**
@@ -41,6 +35,9 @@ public class PickUp extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return true;
+        return (data.gameState == GameControlData.STATE_READY)
+            || (data.gameState == GameControlData.STATE_PLAYING)
+            || (data.testmode);
     }
+
 }

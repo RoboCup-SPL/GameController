@@ -10,7 +10,7 @@ import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
 import controller.action.ui.KickOff;
 import controller.action.ui.Out;
-import controller.action.ui.PushingTeammate;
+import controller.action.ui.TeammatePushing;
 import controller.action.ui.Quit;
 import controller.action.ui.RefereeTimeout;
 import controller.action.ui.Robot;
@@ -24,6 +24,7 @@ import controller.action.ui.half.SecondHalf;
 import controller.action.ui.half.SecondHalfOvertime;
 import controller.action.ui.penalty.Attack;
 import controller.action.ui.penalty.BallManipulation;
+import controller.action.ui.penalty.CoachMotion;
 import controller.action.ui.penalty.Defender;
 import controller.action.ui.penalty.Defense;
 import controller.action.ui.penalty.Fallen;
@@ -31,6 +32,7 @@ import controller.action.ui.penalty.Hands;
 import controller.action.ui.penalty.Holding;
 import controller.action.ui.penalty.Inactive;
 import controller.action.ui.penalty.Leaving;
+import controller.action.ui.penalty.LocalGameStuck;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.Pushing;
@@ -74,7 +76,7 @@ public class ActionBoard
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static Out[] out = new Out[2];
-    public static PushingTeammate[] pushingTeammate = new PushingTeammate[2];
+    public static TeammatePushing teammatePushing = new TeammatePushing();
     public static ClockReset clockReset;
     public static ClockPause clockPause;
     public static FirstHalf firstHalf;
@@ -101,6 +103,8 @@ public class ActionBoard
     public static PickUpHL pickUpHL;
     public static Substitute substitute;
     public static DropBall dropBall;
+    public static LocalGameStuck localGameStuck;
+    public static CoachMotion coachMotion;
     
     public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
@@ -132,8 +136,9 @@ public class ActionBoard
             timeOut[i] = new TimeOut(i);
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
-            pushingTeammate[i] = new PushingTeammate(i);
+            
         }
+        teammatePushing = new TeammatePushing();
         refereeTimeout = new RefereeTimeout();
         clockReset = new ClockReset();
         clockPause = new ClockPause();
@@ -163,6 +168,8 @@ public class ActionBoard
         pickUpHL = new PickUpHL();
         substitute = new Substitute();
         dropBall = new DropBall();
+        localGameStuck = new LocalGameStuck();
+        coachMotion = new CoachMotion();
         
         for (int i=0; i<2; i++) {
             for (int j=0; j<Rules.league.teamSize; j++) {

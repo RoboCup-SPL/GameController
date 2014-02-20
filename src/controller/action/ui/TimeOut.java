@@ -40,8 +40,8 @@ public class TimeOut extends GCAction
     public void perform(AdvancedData data)
     {
         if(!data.timeOutActive[side]) {
-        	previousSecGameState = data.secGameState;
-			data.secGameState = GameControlData.STATE2_TIMEOUT;
+            previousSecGameState = data.secGameState;
+            data.secGameState = GameControlData.STATE2_TIMEOUT;
             data.timeOutActive[side] = true;
             data.timeOutTaken[side] = true;
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {

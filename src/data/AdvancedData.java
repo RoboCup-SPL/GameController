@@ -321,4 +321,5 @@ public class AdvancedData extends GameControlData implements Cloneable
             return getRemainingPauseTime();
         }
     }
+    
 }

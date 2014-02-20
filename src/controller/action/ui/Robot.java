@@ -4,6 +4,7 @@ import common.Log;
 import controller.EventHandler;
 import controller.action.ActionType;
 import controller.action.GCAction;
+import controller.action.ui.penalty.CoachMotion;
 import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
@@ -52,7 +53,7 @@ public class Robot extends GCAction
         if (EventHandler.getInstance().lastUIEvent instanceof Penalty) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         }
-        else if (EventHandler.getInstance().lastUIEvent instanceof PushingTeammate) {
+        else if (EventHandler.getInstance().lastUIEvent instanceof TeammatePushing) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         } 
         else if (player.penalty != PlayerInfo.PENALTY_NONE) {
@@ -85,9 +86,21 @@ public class Robot extends GCAction
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
                 || EventHandler.getInstance().lastUIEvent instanceof Substitute
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
+                || (EventHandler.getInstance().lastUIEvent instanceof CoachMotion)
+                    && (isCoach(data))
                 || data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
-                    && EventHandler.getInstance().lastUIEvent instanceof Penalty
-                || (EventHandler.getInstance().lastUIEvent instanceof PushingTeammate && ((PushingTeammate)EventHandler.getInstance().lastUIEvent).side == side) 
+                    && (EventHandler.getInstance().lastUIEvent instanceof Penalty)
+                    && !(EventHandler.getInstance().lastUIEvent instanceof CoachMotion)
+                    && (!isCoach(data))
+                || (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE ) 
+                    &&(EventHandler.getInstance().lastUIEvent instanceof TeammatePushing)
                 || data.testmode;
+    }
+    
+    public boolean isCoach(AdvancedData data){
+        if((Rules.league instanceof SPL) && !data.dropInPlayerMode && (number == SPL.league.teamSize-1)){
+            return true;
+        }
+        return false;
     }
 }

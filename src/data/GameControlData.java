@@ -69,8 +69,7 @@ public class GameControlData implements Serializable
     public short secsRemaining = Rules.league.halfTime;        // estimate of number of seconds remaining in the half
     public short secondaryTime = 0;                  // sub-time (remaining in ready state etc.) in seconds
     public TeamInfo[] team = new TeamInfo[2];
-    // hacked into the package
-    public byte timeOut = 0;                   // if currently there is a timeout, maybe another secState in the future
+    
     
     
     
