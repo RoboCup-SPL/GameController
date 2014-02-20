@@ -347,30 +347,28 @@ public class GUI extends JFrame
         int x = getSizeToWidth(0.4);
         int y = getSizeToHeight(0.74);
         int size = getSizeToWidth(0.2);
-        String state;
-        if (data.timeOut == GameControlData.C_FALSE) {
-            switch (data.secGameState) {
-                case GameControlData.STATE2_NORMAL:
-                    if (data.firstHalf == GameControlData.C_TRUE) {
-                        if (data.gameState == GameControlData.STATE_FINISHED) {
-                            state = "Half Time";
-                        } else {
-                            state = "First Half";
-                        }
+        String state = "";
+        
+        switch(data.secGameState) {
+            case GameControlData.STATE2_NORMAL:
+                if(data.firstHalf == GameControlData.C_TRUE) {
+                    if(data.gameState == GameControlData.STATE_FINISHED) {
+                        state = "Half Time";
                     } else {
-                        if (data.gameState == GameControlData.STATE_INITIAL) {
-                            state = "Half Time";
-                        } else {
-                            state = "Second Half";
-                        }
+                        state = "First Half";
                     }
-                    break;
-                case GameControlData.STATE2_OVERTIME:     state = "Overtime";   break;
-                case GameControlData.STATE2_PENALTYSHOOT: state = "Penalty Shoot";     break;
-                default: state = "";
-            }
-        } else {
-            state = "Time Out";
+                } else {
+                    if(data.gameState == GameControlData.STATE_INITIAL) {
+                        state = "Half Time";
+                    } else {
+                        state = "Second Half";
+                    }
+                }
+                break;
+            case GameControlData.STATE2_OVERTIME:     state = "Overtime";   break;
+            case GameControlData.STATE2_PENALTYSHOOT: state = "Penalty Shoot";     break;
+            case GameControlData.STATE2_TIMEOUT: state = "Time Out"; break; 
+            default: state = "";
         }
         drawCenteredString(g, state, x, y, size);
     }
@@ -406,7 +404,8 @@ public class GUI extends JFrame
      */
     private void drawSubTime(Graphics g)
     {
-        if (data.subTime == 0) {
+
+        if(data.secondaryTime == 0) {
             return;
         }
         g.setColor(Color.BLACK);
@@ -414,7 +413,7 @@ public class GUI extends JFrame
         int x = getSizeToWidth(0.4);
         int y = getSizeToHeight(0.96);
         int size = getSizeToWidth(0.2);
-        drawCenteredString(g, formatTime(data.subTime), x, y, size);
+        drawCenteredString(g, formatTime(data.secondaryTime), x, y, size);
     }
     
     /**
@@ -430,8 +429,8 @@ public class GUI extends JFrame
         int size = getSizeToWidth(0.02);
         for (int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
-            for (int j=0; j<data.penaltyShot[i]; j++) {
-                if ((data.penaltyTries[i] & (1<<j)) != 0) {
+            for(int j=0; j<data.team[i].penaltyShot; j++) {
+                if((data.team[i].singleShots & (1<<j)) != 0) {
                     g.fillOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
                 } else {
                     g.drawOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);

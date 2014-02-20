@@ -909,7 +909,7 @@ public class GUI extends JFrame implements GCGUI
                 }
             } else {
                 pushes[i].setText((i == 0 && (data.gameState == GameControlData.STATE_SET
-                        || data.gameState == GameControlData.STATE_PLAYING) ? SHOT : SHOTS)+": "+data.penaltyShot[i]);
+                        || data.gameState == GameControlData.STATE_PLAYING) ? SHOT : SHOTS)+": "+data.team[i].penaltyShot);
             }
         }
     }

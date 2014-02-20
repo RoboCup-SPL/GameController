@@ -15,37 +15,37 @@ import java.nio.ByteOrder;
 public class PlayerInfo implements Serializable
 {
     /** What type of penalty a player may have. */
-    public static final short PENALTY_NONE = 0;
+    public static final byte PENALTY_NONE = 0;
     
-    public static final short PENALTY_SPL_BALL_HOLDING = 1;
-    public static final short PENALTY_SPL_PLAYER_PUSHING = 2;
-    public static final short PENALTY_SPL_OBSTRUCTION = 3;
-    public static final short PENALTY_SPL_INACTIVE_PLAYER = 4;
-    public static final short PENALTY_SPL_ILLEGAL_DEFENDER = 5;
-    public static final short PENALTY_SPL_LEAVING_THE_FIELD = 6;
-    public static final short PENALTY_SPL_PLAYING_WITH_HANDS = 7;
-    public static final short PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
-    public static final short PENALTY_SPL_COACH_MOTION = 9;
+    public static final byte PENALTY_SPL_BALL_HOLDING = 1;
+    public static final byte PENALTY_SPL_PLAYER_PUSHING = 2;
+    public static final byte PENALTY_SPL_OBSTRUCTION = 3;
+    public static final byte PENALTY_SPL_INACTIVE_PLAYER = 4;
+    public static final byte PENALTY_SPL_ILLEGAL_DEFENDER = 5;
+    public static final byte PENALTY_SPL_LEAVING_THE_FIELD = 6;
+    public static final byte PENALTY_SPL_PLAYING_WITH_HANDS = 7;
+    public static final byte PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
+    public static final byte PENALTY_SPL_COACH_MOTION = 9;
     
-    public static final short PENALTY_HL_BALL_MANIPULATION = 1;
-    public static final short PENALTY_HL_PHYSICAL_CONTACT = 2;
-    public static final short PENALTY_HL_ILLEGAL_ATTACK = 3;
-    public static final short PENALTY_HL_ILLEGAL_DEFENSE = 4;
-    public static final short PENALTY_HL_REQUEST_FOR_PICKUP = 5;
-    public static final short PENALTY_HL_REQUEST_FOR_SERVICE = 6;
-    public static final short PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE = 7;
+    public static final byte PENALTY_HL_BALL_MANIPULATION = 1;
+    public static final byte PENALTY_HL_PHYSICAL_CONTACT = 2;
+    public static final byte PENALTY_HL_ILLEGAL_ATTACK = 3;
+    public static final byte PENALTY_HL_ILLEGAL_DEFENSE = 4;
+    public static final byte PENALTY_HL_REQUEST_FOR_PICKUP = 5;
+    public static final byte PENALTY_HL_REQUEST_FOR_SERVICE = 6;
+    public static final byte PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE = 7;
     
-    public static final short PENALTY_SUBSTITUTE = 14;
-    public static final short PENALTY_MANUAL = 15;
+    public static final byte PENALTY_SUBSTITUTE = 14;
+    public static final byte PENALTY_MANUAL = 15;
     
     /** The size in bytes this class has packed. */
     public static final int SIZE =
-            2 + // penalty
-            2; // secsToUnpen
+            1 + // penalty
+            1; // secsToUnpen
     
     //this is streamed
-    public short penalty = PENALTY_NONE;    // penalty state of the player
-    protected short secsTillUnpenalised;    // estimate of time till unpenalised
+    public byte penalty = PENALTY_NONE;    // penalty state of the player
+    protected byte secsTillUnpenalised;    // estimate of time till unpenalised
     
     /**
      * Packing this Java class to the C-structure to be send.
@@ -55,8 +55,8 @@ public class PlayerInfo implements Serializable
     {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.putShort(penalty);
-        buffer.putShort(secsTillUnpenalised);
+        buffer.put(penalty);
+        buffer.put(secsTillUnpenalised);
         return buffer.array();
     }
     
@@ -68,8 +68,8 @@ public class PlayerInfo implements Serializable
     public void fromByteArray(ByteBuffer buffer)
     {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-        penalty = buffer.getShort();
-        secsTillUnpenalised = buffer.getShort();
+        penalty = buffer.get();
+        secsTillUnpenalised = buffer.get();
     }
     
     @Override

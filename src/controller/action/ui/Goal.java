@@ -51,7 +51,7 @@ public class Goal extends GCAction
                 Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
                 ActionBoard.ready.perform(data);
             } else {
-                data.penaltyTries[side] += (1<<(data.penaltyShot[side]-1));
+            	data.team[side].singleShots += (1<<(data.team[side].penaltyShot-1));
                 Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side == 0 ? 1 : 0].teamNumber]);
                 ActionBoard.finish.perform(data);
             }
@@ -71,8 +71,9 @@ public class Goal extends GCAction
     {
         return ((set == 1)
               && (data.gameState == GameControlData.STATE_PLAYING)
-              && ((data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
-                || (data.kickOffTeam == data.team[side].teamColor)) )
+              && ( (data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
+                || (data.kickOffTeam == data.team[side].teamColor)
+                || (data.secGameState != GameControlData.STATE2_TIMEOUT)) )
             || data.testmode;
     }
 }

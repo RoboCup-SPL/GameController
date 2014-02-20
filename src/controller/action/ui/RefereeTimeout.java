@@ -9,23 +9,25 @@ import data.AdvancedData;
 import data.GameControlData;
 
 public class RefereeTimeout extends GCAction {
+	private byte previousSecGameState = GameControlData.STATE2_NORMAL;
+	
+	public RefereeTimeout() {
+		super(ActionType.UI);
+	}
 
-    public RefereeTimeout() {
-        super(ActionType.UI);
-    }
-
-    @Override
-    public void perform(AdvancedData data) {
-        if (!data.refereeTimeout) {
-            data.timeOut = GameControlData.C_TRUE;
+	@Override
+	public void perform(AdvancedData data) {
+		if(!data.refereeTimeout) {
+			previousSecGameState = data.secGameState;
+			data.secGameState = GameControlData.STATE2_TIMEOUT;
             data.refereeTimeout = true;
             Log.setNextMessage("Referee Timeout");
             data.gameState = -1; //something impossible to force execution of next call
             data.addTimeInCurrentState();
             ActionBoard.initial.perform(data);
         } else {
-            data.timeOut = GameControlData.C_FALSE;
-            data.refereeTimeout = false;
+            data.secGameState = previousSecGameState;
+        	data.refereeTimeout = false;
             Log.setNextMessage("End of Referee Timeout ");
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 ActionBoard.ready.perform(data);

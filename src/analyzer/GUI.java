@@ -61,7 +61,7 @@ public class GUI extends JFrame implements ListSelectionListener
     private JLabel info;
     private JButton clean;
     private JButton analyze;
-    
+
     /**
      * Creates a new GUI.
      */

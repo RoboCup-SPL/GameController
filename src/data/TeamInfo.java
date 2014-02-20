@@ -25,16 +25,18 @@ public class TeamInfo implements Serializable
     public static final int SIZE =
             1 + // teamNumber
             1 + // teamColor
-            1 + // goalColor
             1 + // score
+            1 + // penaltyShot
+            2 + // singleShots
             SPLCoachMessage.SPL_COACH_MESSAGE_SIZE + // coach's message
             MAX_NUM_PLAYERS * PlayerInfo.SIZE;
     
     //this is streamed
     public byte teamNumber;                                         // unique team number
     public byte teamColor;                                          // colour of the team
-    public byte goalColor;                                          // colour of the goal
     public byte score;                                              // team's score
+    public byte penaltyShot = 0; 										// penalty shot counter
+    public short singleShots = 0;										// bits represent penalty shot success
     public byte[] coachMessage = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
     
@@ -58,8 +60,9 @@ public class TeamInfo implements Serializable
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(teamNumber);
         buffer.put(teamColor);
-        buffer.put(goalColor);
         buffer.put(score);
+        buffer.put(penaltyShot);
+        buffer.putShort(singleShots);
         buffer.put(coachMessage);
         
         for (int i=0; i<MAX_NUM_PLAYERS; i++) {
@@ -79,8 +82,9 @@ public class TeamInfo implements Serializable
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         teamNumber = buffer.get();
         teamColor = buffer.get();
-        goalColor = buffer.get();
         score = buffer.get();
+        penaltyShot = buffer.get();
+        singleShots = buffer.getShort();
         buffer.get(coachMessage);
         for (int i=0; i<player.length; i++) {
             player[i].fromByteArray(buffer);
@@ -100,13 +104,10 @@ public class TeamInfo implements Serializable
             default: temp = "undefinied("+teamColor+")";
         }
         out += "          teamColor: "+temp+"\n";
-        switch (goalColor) {
-            case GameControlData.GOAL_BLUE:   temp = "blue";   break;
-            case GameControlData.GOAL_YELLOW: temp = "yellow"; break;
-            default: temp = "undefinied("+goalColor+")";
-        }
-        out += "          goalColor: "+temp+"\n";
         out += "              score: "+score+"\n";
+        out += "              penaltyShot: "+penaltyShot+"\n";
+        out += "              singleShots: "+singleShots+"\n";
+        out += "              coachMessage: "+new String(coachMessage)+"\n";
         return out;
     }
 }

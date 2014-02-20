@@ -166,16 +166,17 @@ public class AdvancedData extends GameControlData implements Cloneable
         secsRemaining = getRemainingGameTime();
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         Integer subT = getSecondaryTime(0);
-        if (subT == null) {
-            subTime = 0;
+
+        if(subT == null) {
+            secondaryTime = 0;
         } else {
-            subTime = (short)(int)subT;
+            secondaryTime = (short)(int)subT;
         }
         for (int side = 0; side < team.length; ++side) {
             for (int number = 0; number < team[side].player.length; ++number) {
                 PlayerInfo player = team[side].player[number];
                 player.secsTillUnpenalised = player.penalty == PlayerInfo.PENALTY_NONE
-                        ? 0 : (short) getRemainingPenaltyTime(side, number);
+                        ? 0 : (byte) getRemainingPenaltyTime(side, number);
             }
         }
     }
@@ -194,12 +195,16 @@ public class AdvancedData extends GameControlData implements Cloneable
      * This is what the primary clock will show.
      * @return The remaining number of seconds.
      */
-    public int getRemainingGameTime()
+    public short getRemainingGameTime()
     {
+    	if(secGameState == STATE2_TIMEOUT){
+    		return secsRemaining;
+    	}
+    	
         int regularNumberOfPenaltyShots = playoff ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
         int duration = secGameState == STATE2_NORMAL ? Rules.league.halfTime
                 : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
-                : Math.max(penaltyShot[0], penaltyShot[1]) > regularNumberOfPenaltyShots
+                : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
                 ? Rules.league.penaltyShotTimeSuddenDeath
                 : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL // during timeouts
@@ -208,7 +213,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                 || gameState == STATE_FINISHED
         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
                 : getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset);
-        return duration - timePlayed;
+        return (short)(duration - timePlayed);
     }
     
     /**

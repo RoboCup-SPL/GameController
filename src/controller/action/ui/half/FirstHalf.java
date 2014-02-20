@@ -73,15 +73,10 @@ public class FirstHalf extends GCAction
         data.team[0] = data.team[1];
         data.team[1] = team;
         
-        // swap back goal colors
-        byte color = data.team[0].goalColor;
-        data.team[0].goalColor = data.team[1].goalColor;
-        data.team[1].goalColor = color;
-
         // if necessary, swap back team colors
         if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
                 && data.colorChangeAuto) {
-            color = data.team[0].teamColor;
+        	byte color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = color;
         }
@@ -94,12 +89,12 @@ public class FirstHalf extends GCAction
             data.timeOutTaken[1] = timeOutTaken;
         }
         
-        byte penaltyShot = data.penaltyShot[0];
-        data.penaltyShot[0] = data.penaltyShot[1];
-        data.penaltyShot[1] = penaltyShot;
-        short penaltyTries = data.penaltyTries[0];
-        data.penaltyTries[0] = data.penaltyTries[1];
-        data.penaltyTries[1] = penaltyTries;
+        byte penaltyShot = data.team[0].penaltyShot;
+        data.team[0].penaltyShot = data.team[1].penaltyShot;
+        data.team[1].penaltyShot = penaltyShot;
+        short singleShots = data.team[0].singleShots;
+        data.team[0].singleShots = data.team[1].singleShots;
+        data.team[1].singleShots = singleShots;
         
         data.timeBeforeCurrentGameState = 0;
         data.whenDropIn = 0;

@@ -50,8 +50,9 @@ public class Set extends GCAction
                 data.kickOffTeam = data.kickOffTeam == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
                 FirstHalf.changeSide(data);
             }
-            if (data.gameState != GameControlData.STATE_PLAYING) {
-                data.penaltyShot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]++;
+
+            if(data.gameState != GameControlData.STATE_PLAYING) {
+            	data.team[data.kickOffTeam == data.team[0].teamColor ? 0 : 1].penaltyShot++;
             }
         }
         data.gameState = GameControlData.STATE_SET;
