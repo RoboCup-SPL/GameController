@@ -52,7 +52,7 @@ public class Set extends GCAction
             }
 
             if(data.gameState != GameControlData.STATE_PLAYING) {
-            	data.team[data.kickOffTeam == data.team[0].teamColor ? 0 : 1].penaltyShot++;
+                data.team[data.team[0].teamColor == data.kickOffTeam ? 0 : 1].penaltyShot++;
             }
         }
         data.gameState = GameControlData.STATE_SET;

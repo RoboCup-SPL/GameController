@@ -12,7 +12,7 @@ public class SPLCoachMessage {
     public static final String SPL_COACH_PACKAGE_HEADER = "SPLC";
     public static final int SIZE = 4 //header size
                                    + 1 //byte for the team version
-                                   + 1 //team number
+                                   + 1 //team number (0 = red, 1 = blue)
                                    + SPL_COACH_MESSAGE_SIZE;
 
     public String header;   // header to identify the structure
@@ -50,6 +50,9 @@ public class SPLCoachMessage {
             } else {
                 version = buffer.get();
                 team = buffer.get();
+                if((team > 1) || (team < 0)){
+                    return false;
+                }
                 message = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
                 buffer.get(message);
                 return true;

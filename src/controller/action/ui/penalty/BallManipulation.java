@@ -31,7 +31,7 @@ public class BallManipulation extends Penalty
         data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Ball Manipulation "+
                 Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+                + " " + (number));
     }
     
     /**

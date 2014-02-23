@@ -28,7 +28,7 @@ public class Leaving extends Penalty
         data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Leaving the Field "+
                 Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+                + " " + number);
     }
     
     /**

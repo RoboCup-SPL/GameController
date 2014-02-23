@@ -27,12 +27,12 @@ public class PickUpHL extends PickUp
             player.penalty = PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE;
             Log.state(data, "Request for Service "+
                     Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
+                    + " " + number);
         } else {
             player.penalty = PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE;
             Log.state(data, "Additional Request for Service "+
                     Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
+                    + " " + number);
         }
     }
 }

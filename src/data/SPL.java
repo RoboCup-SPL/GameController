@@ -17,7 +17,7 @@ public class SPL extends Rules
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "spl";
         /** How many robots are in a team. */
-        teamSize = 6; //5 Field player & 1 coach
+        teamSize = 8; //5 Field player + 1 coach + 2 subs
         /** How many robots of each team may play at one time. */
         robotsPlaying = 6; //5 Field player & 1 coach
         /** The Java Colors the left and the right team starts with. */
@@ -41,9 +41,9 @@ public class SPL extends Rules
         /** Time in seconds before a global game stuck can be called. */
         minDurationBeforeStuck = 15;
         /** If there is an overtime before penalty-shoot in a play-off game. */
-        overtime = false;
+        overtime = true;
         /** Time in seconds one overtime half is long. */
-        overtimeTime = 0;
+        overtimeTime = 60*10;
         /** If the game starts with penalty-shoots. */
         startWithPenalty = false;
        /** Time in seconds between second half and penalty shoot. */
@@ -61,7 +61,7 @@ public class SPL extends Rules
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
-        penaltyTime = new int[] {-1, 45, 45, 45, 45, 45, 45, 45, 45, 45, -1};
+        penaltyTime = new int[] {-1, 45, 45, 45, 45, 45, 45, 45, 45, 45, 0, 60};
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */
@@ -74,5 +74,9 @@ public class SPL extends Rules
         timeOutPerHalf = false;
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
+        /** Defines if coach is available **/
+        isCoachAvailable = true;
+        /** Defines the number which is used to identify the coach **/
+        coachNumber = 0;
     }
 }

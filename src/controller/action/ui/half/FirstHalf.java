@@ -35,10 +35,6 @@ public class FirstHalf extends GCAction
         if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
             data.secGameState = GameControlData.STATE2_NORMAL;
-            if (data.colorChangeAuto) {
-                data.team[0].teamColor = GameControlData.TEAM_BLUE;
-                data.team[1].teamColor = GameControlData.TEAM_RED;
-            }
             changeSide(data);
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamColor : data.team[1].teamColor);
             data.gameState = GameControlData.STATE_INITIAL;
@@ -72,7 +68,6 @@ public class FirstHalf extends GCAction
         TeamInfo team = data.team[0];
         data.team[0] = data.team[1];
         data.team[1] = team;
-        
         // if necessary, swap back team colors
         if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
                 && data.colorChangeAuto) {
@@ -88,13 +83,6 @@ public class FirstHalf extends GCAction
             data.timeOutTaken[0] = data.timeOutTaken[1];
             data.timeOutTaken[1] = timeOutTaken;
         }
-        
-        byte penaltyShot = data.team[0].penaltyShot;
-        data.team[0].penaltyShot = data.team[1].penaltyShot;
-        data.team[1].penaltyShot = penaltyShot;
-        short singleShots = data.team[0].singleShots;
-        data.team[0].singleShots = data.team[1].singleShots;
-        data.team[1].singleShots = singleShots;
         
         data.timeBeforeCurrentGameState = 0;
         data.whenDropIn = 0;

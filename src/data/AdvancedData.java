@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import controller.action.ActionBoard;
+
 /**
  * @author Michel Bartsch
  *
@@ -197,22 +199,20 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public short getRemainingGameTime()
     {
-    	if(secGameState == STATE2_TIMEOUT){
-    		return secsRemaining;
-    	}
-    	
         int regularNumberOfPenaltyShots = playoff ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
-        int duration = secGameState == STATE2_NORMAL ? Rules.league.halfTime
+        int duration = secGameState == STATE2_TIMEOUT ? secsRemaining : 
+                secGameState == STATE2_NORMAL ? Rules.league.halfTime
                 : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
                 ? Rules.league.penaltyShotTimeSuddenDeath
                 : Rules.league.penaltyShotTime;
-        int timePlayed = gameState == STATE_INITIAL // during timeouts
+        int timePlayed = gameState == STATE_INITIAL// during timeouts
                 || (gameState == STATE_READY || gameState == STATE_SET)
                 && (playoff && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
                 : getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset);
+        
         return (short)(duration - timePlayed);
     }
     
@@ -256,8 +256,10 @@ public class AdvancedData extends GameControlData implements Cloneable
         for (int i = 0; i < team.length; ++i) {
             pushes[i] = 0;
             for (int j = 0; j < Rules.league.teamSize; j++) {
-                team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
-                ejected[i][j] = false;
+                if(!ActionBoard.robot[i][j].isCoach(this) && team[i].player[j].penalty != PlayerInfo.PENALTY_SUBSTITUTE){
+                    team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
+                    ejected[i][j] = false;
+                }
             }
         }
         resetPenaltyTimes();

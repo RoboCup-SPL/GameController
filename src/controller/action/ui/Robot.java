@@ -59,7 +59,7 @@ public class Robot extends GCAction
         else if (player.penalty != PlayerInfo.PENALTY_NONE) {
             Log.state(data, (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE ? "Substituted by Player " : "Unpenalised ")+
                 Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+                + " " + number);
             player.penalty = PlayerInfo.PENALTY_NONE;
         }
     }
@@ -86,6 +86,7 @@ public class Robot extends GCAction
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
                 || EventHandler.getInstance().lastUIEvent instanceof Substitute
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
+                && !isCoach(data)
                 || (EventHandler.getInstance().lastUIEvent instanceof CoachMotion)
                     && (isCoach(data))
                 || data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
@@ -98,7 +99,7 @@ public class Robot extends GCAction
     }
     
     public boolean isCoach(AdvancedData data){
-        if((Rules.league instanceof SPL) && !data.dropInPlayerMode && (number == SPL.league.teamSize-1)){
+        if((Rules.league.isCoachAvailable) && (number == Rules.league.coachNumber)){
             return true;
         }
         return false;

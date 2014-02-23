@@ -331,22 +331,30 @@ public class GUI extends JFrame implements GCGUI
         robotTime = new JProgressBar[2][Rules.league.teamSize];
         for (int i=0; i<2; i++) {
             robots[i] = new JPanel();
-            robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, 10));
+            if(Rules.league.isCoachAvailable){
+                robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, 10));
+            }
+            else{
+                robots[i].setLayout(new GridLayout(robot[i].length-1, 1, 0, 10));
+            }
             robots[i].setOpaque(false);
+            
             for (int j=0; j<robot[i].length; j++) {
-                robot[i][j] = new Button();
-                robotLabel[i][j] = new JLabel();
-                robotLabel[i][j].setHorizontalAlignment(JLabel.CENTER);
-                lanIcon[i][j] = lanUnknown;
-                robotLabel[i][j].setIcon(lanIcon[i][j]);
-                robotTime[i][j] = new JProgressBar();
-                robotTime[i][j].setMaximum(1000);
-                robotTime[i][j].setVisible(false);
-                TotalScaleLayout robotLayout = new TotalScaleLayout(robot[i][j]);
-                robot[i][j].setLayout(robotLayout);
-                robotLayout.add(.1, .1, .8, .5, robotLabel[i][j]);
-                robotLayout.add(.1, .7, .8, .2, robotTime[i][j]);
-                robots[i].add(robot[i][j]);
+                if(Rules.league.isCoachAvailable || (j != Rules.league.coachNumber)){
+                    robot[i][j] = new Button();
+                    robotLabel[i][j] = new JLabel();
+                    robotLabel[i][j].setHorizontalAlignment(JLabel.CENTER);
+                    lanIcon[i][j] = lanUnknown;
+                    robotLabel[i][j].setIcon(lanIcon[i][j]);
+                    robotTime[i][j] = new JProgressBar();
+                    robotTime[i][j].setMaximum(1000);
+                    robotTime[i][j].setVisible(false);
+                    TotalScaleLayout robotLayout = new TotalScaleLayout(robot[i][j]);
+                    robot[i][j].setLayout(robotLayout);
+                    robotLayout.add(.1, .1, .8, .5, robotLabel[i][j]);
+                    robotLayout.add(.1, .7, .8, .2, robotTime[i][j]);
+                    robots[i].add(robot[i][j]);
+                }
             }
         }
         //  team
@@ -426,7 +434,7 @@ public class GUI extends JFrame implements GCGUI
         stateGroup.add(finish);
         //  penalties
         if (Rules.league instanceof SPL) {
-            pen = new JToggleButton[10];
+            pen = new JToggleButton[11];
             
             pen[0] = new ToggleButton(PEN_PUSHING);
             pen[1] = new ToggleButton(PEN_LEAVING);
@@ -443,6 +451,7 @@ public class GUI extends JFrame implements GCGUI
             else{
                 pen[9] = new ToggleButton(PEN_COACH_MOTION);
             }
+            pen[10] = new ToggleButton(PEN_SUBSTITUTE);
         } else if (Rules.league instanceof HL) {
             pen = new JToggleButton[6];
             pen[0] = new ToggleButton(PEN_MANIPULATION);
@@ -539,16 +548,17 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.5425, .26, .07, .08, play);
         layout.add(.62, .26, .07, .08, finish);
         if (Rules.league instanceof SPL) {
-            layout.add(.31, .37, .185, .09, pen[0]);
-            layout.add(.505, .37, .185, .09, pen[1]);
-            layout.add(.31, .47, .185, .09, pen[2]);
-            layout.add(.505, .47, .185, .09, pen[3]);
-            layout.add(.31, .57, .185, .09, pen[4]);
-            layout.add(.505, .57, .185, .09, pen[5]);
-            layout.add(.31, .67, .185, .09, pen[6]);
-            layout.add(.505, .67, .185, .09, pen[7]);
-            layout.add(.31, .77, .185, .09, pen[8]);
-            layout.add(.505, .77, .185, .09, pen[9]);
+            layout.add(.31, .37, .185, .07, pen[0]);
+            layout.add(.505, .37, .185, .07, pen[1]);
+            layout.add(.31, .45, .185, .07, pen[2]);
+            layout.add(.505, .45, .185, .07, pen[3]);
+            layout.add(.31, .53, .185, .07, pen[4]);
+            layout.add(.505, .53, .185, .07, pen[5]);
+            layout.add(.31, .61, .185, .07, pen[6]);
+            layout.add(.505, .61, .185, .07, pen[7]);
+            layout.add(.31, .69, .185, .07, pen[8]);
+            layout.add(.505, .69, .185, .07, pen[9]);
+            layout.add(.31, .77, .380, .07, pen[10]);
         } else if (Rules.league instanceof HL) {
             layout.add(.31, .38, .185, .11, pen[0]);
             layout.add(.505, .38, .185, .11, pen[1]);
@@ -571,7 +581,10 @@ public class GUI extends JFrame implements GCGUI
             goalInc[i].addActionListener(ActionBoard.goalInc[i]);
             kickOff[i].addActionListener(ActionBoard.kickOff[i]);
             for (int j=0; j<robot[i].length; j++) {
-                robot[i][j].addActionListener(ActionBoard.robot[i][j]);
+                if(Rules.league.isCoachAvailable || (j != Rules.league.coachNumber)){
+                    robot[i][j].addActionListener(ActionBoard.robot[i][j]);
+                }
+                
             }
             timeOut[i].addActionListener(ActionBoard.timeOut[i]);
             out[i].addActionListener(ActionBoard.out[i]);
@@ -610,6 +623,7 @@ public class GUI extends JFrame implements GCGUI
             else{
                 pen[9].addActionListener(ActionBoard.coachMotion);
             }
+            pen[10].addActionListener(ActionBoard.substitute);
         } else if (Rules.league instanceof HL) {
             pen[0].addActionListener(ActionBoard.ballManipulation);
             pen[1].addActionListener(ActionBoard.pushing);
@@ -949,74 +963,76 @@ public class GUI extends JFrame implements GCGUI
     {
         RobotOnlineStatus[][] onlineStatus = RobotWatcher.updateRobotOnlineStatus();
         for (int i=0; i<robot.length; i++) {
-            for (int j=0; j<robot[i].length; j++) {            
-                if (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
-                    if (!data.ejected[i][j]) {
-                        int seconds = data.getRemainingPenaltyTime(i, j);
-                        boolean pickup = ((Rules.league instanceof SPL &&
-                                    data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
-                               || (Rules.league instanceof HL &&
-                                   ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_PICKUP
-                                  || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE
-                                  || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE ))
-                                );
-                        if (seconds == 0) {
-                            if (pickup) {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
-                                highlight(robot[i][j], true);
-                            } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
-                                highlight(robot[i][j], false);
-                            } else if (!(Rules.league instanceof SPL) ||
-                                    !(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION)) {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
+            for (int j=0; j<robot[i].length; j++) {
+                if(Rules.league.isCoachAvailable || (j != Rules.league.coachNumber)){
+                    if (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
+                        if (!data.ejected[i][j]) {
+                            int seconds = data.getRemainingPenaltyTime(i, j);
+                            boolean pickup = ((Rules.league instanceof SPL &&
+                                        data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
+                                   || (Rules.league instanceof HL &&
+                                       ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_PICKUP
+                                      || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE
+                                      || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE ))
+                                    );
+                            if (seconds == 0) {
+                                if (pickup) {
+                                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+j+" ("+PEN_PICKUP+")");
+                                    highlight(robot[i][j], true);
+                                } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
+                                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+j+" ("+PEN_SUBSTITUTE_SHORT+")");
+                                    highlight(robot[i][j], false);
+                                } else if (!(Rules.league instanceof SPL) ||
+                                        !(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION)) {
+                                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+j+": "+formatTime(seconds));
+                                    highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
+                                }
+                            }  else {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+j+": "+formatTime(seconds)+(pickup ? "(P)" : ""));
                                 highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                             }
-                        }  else {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? "(P)" : ""));
-                            highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
+                            int penTime = (seconds + data.getSecondsSince(data.whenPenalized[i][j]));
+                            if (seconds != 0) {
+                                robotTime[i][j].setValue(1000 * seconds / penTime);
+                            }
+                            robotTime[i][j].setVisible(seconds != 0);
+                        } else {
+                            robotLabel[i][j].setText(EJECTED);
+                            robotTime[i][j].setVisible(false);
+                            highlight(robot[i][j], false);
                         }
-                        int penTime = (seconds + data.getSecondsSince(data.whenPenalized[i][j]));
-                        if (seconds != 0) {
-                            robotTime[i][j].setValue(1000 * seconds / penTime);
-                        }
-                        robotTime[i][j].setVisible(seconds != 0);
                     } else {
-                        robotLabel[i][j].setText(EJECTED);
+                        if (ActionBoard.robot[i][j].isCoach(data)) {
+                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+COACH);
+                        }
+                        else {
+                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+j);
+                        }
                         robotTime[i][j].setVisible(false);
                         highlight(robot[i][j], false);
                     }
-                } else {
-                    if ((Rules.league instanceof SPL) && (!data.dropInPlayerMode) && (j == SPL.league.teamSize - 1)) {
-                        robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+COACH);
+                    //A Coach who got a coach motion penalty is banned for the whole game
+                    if (Rules.league instanceof SPL &&
+                        data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION) {
+                        robot[i][j].setEnabled(false);
+                        robotLabel[i][j].setText(EJECTED);
                     }
                     else {
-                        robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1));
+                        robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
                     }
-                    robotTime[i][j].setVisible(false);
-                    highlight(robot[i][j], false);
+                    
+                    ImageIcon currentLanIcon;
+                    if (onlineStatus[i][j] == RobotOnlineStatus.ONLINE) {
+                        currentLanIcon = lanOnline;
+                    } else if (onlineStatus[i][j] == RobotOnlineStatus.HIGH_LATENCY) {
+                        currentLanIcon = lanHighLatency;
+                    } else if (onlineStatus[i][j] == RobotOnlineStatus.OFFLINE) {
+                        currentLanIcon = lanOffline;
+                    } else {
+                        currentLanIcon = lanUnknown;
+                    }
+                    robotLabel[i][j].setIcon(currentLanIcon);
                 }
-                //A Coach who gets a coach motion penalty is banned for the whole game
-                if (Rules.league instanceof SPL &&
-                    data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION) {
-                    robot[i][j].setEnabled(false);
-                    robotLabel[i][j].setText(EJECTED);
-                }
-                else {
-                    robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
-                }
-                
-                ImageIcon currentLanIcon;
-                if (onlineStatus[i][j] == RobotOnlineStatus.ONLINE) {
-                    currentLanIcon = lanOnline;
-                } else if (onlineStatus[i][j] == RobotOnlineStatus.HIGH_LATENCY) {
-                    currentLanIcon = lanHighLatency;
-                } else if (onlineStatus[i][j] == RobotOnlineStatus.OFFLINE) {
-                    currentLanIcon = lanOffline;
-                } else {
-                    currentLanIcon = lanUnknown;
-                }
-                robotLabel[i][j].setIcon(currentLanIcon);
             }
         }
     }
@@ -1044,6 +1060,7 @@ public class GUI extends JFrame implements GCGUI
     
     private void updateRefereeTimeout(AdvancedData data) {
         refereeTimeout.setSelected(data.refereeTimeout);
+        refereeTimeout.setEnabled(ActionBoard.refereeTimeout.isLegal(data));
     }
     
     /**
@@ -1120,6 +1137,7 @@ public class GUI extends JFrame implements GCGUI
         else{
             pen[9].setEnabled(ActionBoard.coachMotion.isLegal(data));
         }
+        pen[10].setEnabled(ActionBoard.substitute.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
         pen[0].setSelected(hightlightEvent == ActionBoard.pushing);
@@ -1131,13 +1149,13 @@ public class GUI extends JFrame implements GCGUI
         pen[6].setSelected(hightlightEvent == ActionBoard.hands);
         pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
         pen[8].setSelected(hightlightEvent == ActionBoard.localGameStuck);
-        
         if(data.dropInPlayerMode){
             pen[9].setSelected(hightlightEvent == ActionBoard.teammatePushing);
         }
         else{
             pen[9].setSelected(hightlightEvent == ActionBoard.coachMotion);
         }
+        pen[10].setSelected(hightlightEvent == ActionBoard.substitute);
     }
     
         /**
@@ -1216,7 +1234,9 @@ public class GUI extends JFrame implements GCGUI
             goals[i].setFont(goalsFont);
             pushes[i].setFont(standardFont);
             for (int j=0; j<robot[i].length; j++) {
-                robotLabel[i][j].setFont(titleFont);
+                if(Rules.league.isCoachAvailable || (j != Rules.league.coachNumber)){
+                    robotLabel[i][j].setFont(titleFont);
+                }
             }
             timeOut[i].setFont(timeoutFont);
             out[i].setFont(timeoutFont);

@@ -38,7 +38,7 @@ public class Pushing extends Penalty
         
         Log.state(data, "Player Pushing "+
                     Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
+                    + " " + number);
     }
     
     /**

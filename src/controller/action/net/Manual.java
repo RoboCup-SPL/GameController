@@ -52,12 +52,12 @@ public class Manual extends GCAction
             data.whenPenalized[side][number] = data.getTime();
             Log.state(data, "Manually Penalised "+
                     Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
+                    + " " + number);
         } else {
             data.team[side].player[number].penalty = PlayerInfo.PENALTY_NONE;
             Log.state(data, "Manually Unpenalised "+
                     Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
+                    + " " + number);
         }
     }
     

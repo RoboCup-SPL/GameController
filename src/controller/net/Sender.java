@@ -3,6 +3,7 @@ package controller.net;
 import common.Log;
 import data.AdvancedData;
 import data.GameControlData;
+
 import java.io.IOException;
 import java.net.*;
 
@@ -21,7 +22,8 @@ import java.net.*;
 public class Sender extends Thread {
     /** The instance of the singleton. */
     private static Sender instance;
-
+    private static byte packetNumber = 0;
+    
     /** The socket, which is used to send the current game-state */
     private final DatagramSocket datagramSocket;
 
@@ -43,6 +45,7 @@ public class Sender extends Thread {
     private Sender(final String broadcastAddress) throws SocketException, UnknownHostException {
         instance = this;
 
+        //this.datagramSocket = new DatagramSocket(3839,InetAddress.getByName("10.0.5.30"));
         this.datagramSocket = new DatagramSocket();
         this.group = InetAddress.getByName(broadcastAddress);
     }
@@ -91,12 +94,13 @@ public class Sender extends Thread {
         while (!isInterrupted()) {
             if (data != null) {
                 data.updateTimes();
+                data.packetNumber = packetNumber;
                 byte[] arr = data.toByteArray().array();
                 DatagramPacket packet = new DatagramPacket(arr, arr.length, group, port);
 
                 try {
                     datagramSocket.send(packet);
-                    data.packetNumber++;
+                    packetNumber++;
                 } catch (IOException e) {
                     Log.error("Error while sending");
                     e.printStackTrace();

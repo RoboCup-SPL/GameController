@@ -27,7 +27,7 @@ public class Attack extends Penalty
         data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Illegal Attack "+
                 Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+                + " " + (number));
     }
     
     /**

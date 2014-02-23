@@ -153,7 +153,7 @@ public class GameControlData implements Serializable
         
         out += "             Header: "+GAMECONTROLLER_STRUCT_HEADER+"\n";
         out += "            Version: "+GAMECONTROLLER_STRUCT_VERSION+"\n";
-        out += "            Packet Number: "+packetNumber+"\n";
+        out += "            Packet Number: "+(packetNumber & 0xFF)+"\n";
         out += "   Players per Team: "+playersPerTeam+"\n";
         switch (gameState) {
             case STATE_INITIAL:  temp = "initial"; break;

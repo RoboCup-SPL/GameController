@@ -76,7 +76,8 @@ public class TimeOut extends GCAction
                   data.gameState == GameControlData.STATE_READY ||
                   data.gameState == GameControlData.STATE_SET)
                 && !data.timeOutTaken[side]
-                && !data.timeOutActive[side == 0 ? 1 : 0])
+                && !data.timeOutActive[side == 0 ? 1 : 0]
+                && !(data.secGameState == GameControlData.STATE2_TIMEOUT))
             || data.testmode;
     }
 }

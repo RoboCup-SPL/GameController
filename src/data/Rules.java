@@ -76,10 +76,14 @@ public abstract class Rules
     public int timeOutTime;
     /** Time in seconds of a referee timeout*/
     public int refereeTimeout;
-    /** Defines if the option for a referee timeout is available */ 
+    /** Defines if the option for a referee timeout is available. */ 
     public boolean isRefereeTimeoutAvailable;
     /** One time-out per half? */
     public boolean timeOutPerHalf;
     /** On how many pushings is a robot ejected. */
     public int[] pushesToEjection;
+    /** Defines if coach is available **/
+    public boolean isCoachAvailable;
+    /** Defines the number which is used to identify the coach **/
+    public int coachNumber;
 }

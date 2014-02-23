@@ -22,8 +22,10 @@ public class RefereeTimeout extends GCAction {
             data.secGameState = GameControlData.STATE2_TIMEOUT;
             data.refereeTimeout = true;
             Log.setNextMessage("Referee Timeout");
+            if (data.gameState == GameControlData.STATE_PLAYING) {
+                data.addTimeInCurrentState();
+            }
             data.gameState = -1; //something impossible to force execution of next call
-            data.addTimeInCurrentState();
             ActionBoard.initial.perform(data);
         } else {
             data.secGameState = previousSecGameState;
@@ -37,8 +39,8 @@ public class RefereeTimeout extends GCAction {
 
     @Override
     public boolean isLegal(AdvancedData data) {
-        //refree can make referee timeout at any time of the game
-        return true;
+        return data.gameState != GameControlData.STATE_FINISHED
+                && !data.timeOutActive[0] && !data.timeOutActive[1];
     }
 
 }

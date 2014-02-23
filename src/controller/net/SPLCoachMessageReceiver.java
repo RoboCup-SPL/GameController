@@ -17,12 +17,8 @@ import data.SPLCoachMessage;
 public class SPLCoachMessageReceiver extends Thread {
     private static SPLCoachMessageReceiver instance;
     private final DatagramSocket datagramSocket;
-    private boolean isBlueCoachPackageReceived = false;
-    private boolean isRedCoachPackageReceived = false;
     private boolean isCoachPackageReceived[] = {false,false};
     private long timestampCoachPackage[] = {0,0};
-    private long timestampBlueCoachPackage;
-    private long timestampRedCoachPackage;
     private ArrayList<SPLCoachMessage> splCoachMessageQueue = new ArrayList<SPLCoachMessage>();
 
     private SPLCoachMessageReceiver() throws SocketException {
@@ -30,8 +26,6 @@ public class SPLCoachMessageReceiver extends Thread {
         datagramSocket.setReuseAddress(true);
         datagramSocket.bind(new InetSocketAddress(
                 GameControlData.GAMECONTROLLER_PORT));
-        timestampBlueCoachPackage = 0;
-        timestampRedCoachPackage = 0;
     }
 
     public synchronized static SPLCoachMessageReceiver getInstance() {
@@ -69,38 +63,25 @@ public class SPLCoachMessageReceiver extends Thread {
 
             final DatagramPacket packet = new DatagramPacket(buffer.array(),
                     buffer.array().length);
-
-            if (isBlueCoachPackageReceived) {
-                if ((System.currentTimeMillis() - timestampBlueCoachPackage) >= SPLCoachMessage.SPL_COACH_MESSAGE_RECEIVE_INTERVALL) {
-                    isBlueCoachPackageReceived = false;
+            
+            for(i = 0; i < 2; i++){
+                if(isCoachPackageReceived[i]){
+                    if ((System.currentTimeMillis() - timestampCoachPackage[i]) >= SPLCoachMessage.SPL_COACH_MESSAGE_RECEIVE_INTERVALL){
+                        isCoachPackageReceived[i] = false;
+                    }  
                 }
             }
-
-            if (isRedCoachPackageReceived) {
-                if ((System.currentTimeMillis() - timestampRedCoachPackage) >= SPLCoachMessage.SPL_COACH_MESSAGE_RECEIVE_INTERVALL) {
-                    isRedCoachPackageReceived = false;
-                }
-            }
-
+            
             try {
                 datagramSocket.receive(packet);
                 buffer.rewind();
 
                 if (coach.fromByteArray(buffer)) {
-                    if (coach.team == GameControlData.TEAM_BLUE) {
-                        if (!isBlueCoachPackageReceived) {
-                            isBlueCoachPackageReceived = true;
-                            timestampBlueCoachPackage = System
-                                    .currentTimeMillis();
-                            splCoachMessageQueue.add(coach);
-                        }
-                    } else {
-                        if (!isRedCoachPackageReceived) {
-                            isRedCoachPackageReceived = true;
-                            timestampRedCoachPackage = System
-                                    .currentTimeMillis();
-                            splCoachMessageQueue.add(coach);
-                        }
+                    if(!isCoachPackageReceived[coach.team]){
+                        isCoachPackageReceived[coach.team] = true;
+                        timestampCoachPackage[coach.team] = System
+                                .currentTimeMillis();
+                        splCoachMessageQueue.add(coach);
                     }
                 }
             } catch (IOException e) {

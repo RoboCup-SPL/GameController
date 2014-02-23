@@ -17,13 +17,13 @@ public class HL extends Rules
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_kid";
         /** How many robots are in a team. */
-        teamSize = 6;
+        teamSize = 6+1; //+1 for a potential coach
         /** How many robots of each team may play at one time. */
-        robotsPlaying = 4;
+        robotsPlaying = 4+1; //+1 for a potential coach
         /** The Java Colors the left and the right team starts with. */
-        teamColor = new Color[] {new Color(0, 192, 192), Color.MAGENTA};
+        teamColor = new Color[] {Color.MAGENTA, new Color(0, 192, 192)};
         /** The name of the colors. */
-        teamColorName = new String[] {"Cyan", "Magenta"};
+        teamColorName = new String[] {"Magenta", "Cyan"};
         /** If the colors change automatically. */
         colorChangeAuto = false;
         /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
@@ -72,5 +72,7 @@ public class HL extends Rules
         pushesToEjection = new int[] {};
         /** Defines if the option for a referee timeout is available */
         isRefereeTimeoutAvailable = false;
+        /** Defines if coach is available **/
+        isCoachAvailable = false;
     }
 }

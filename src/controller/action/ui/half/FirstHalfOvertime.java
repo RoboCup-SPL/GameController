@@ -36,11 +36,11 @@ public class FirstHalfOvertime extends GCAction
             data.firstHalf = GameControlData.C_TRUE;
             data.secGameState = GameControlData.STATE2_OVERTIME;
             if (data.colorChangeAuto) {
-                data.team[0].teamColor = GameControlData.TEAM_BLUE;
-                data.team[1].teamColor = GameControlData.TEAM_RED;
+                data.team[0].teamColor = GameControlData.TEAM_RED;
+                data.team[1].teamColor = GameControlData.TEAM_BLUE;
             }
             FirstHalf.changeSide(data);
-            data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamColor : data.team[1].teamColor);
+            data.kickOffTeam = (data.leftSideKickoff ? data.team[1].teamColor : data.team[0].teamColor);
             data.gameState = GameControlData.STATE_INITIAL;
             Log.state(data, "1st Half Extra Time");
         }
