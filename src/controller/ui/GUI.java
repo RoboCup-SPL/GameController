@@ -53,12 +53,13 @@ import data.Teams;
 public class GUI extends JFrame implements GCGUI
 {
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
-    private static final Insets insets = IS_OSX ? new Insets (2, -30, 2, -30) : null;
-    private static final String BUTTON_MASK = IS_OSX
+    private static final boolean IS_APPLE_JAVA = IS_OSX && System.getProperty("java.version").compareTo("1.7") < 0;
+    private static final Insets insets = IS_APPLE_JAVA ? new Insets (2, -30, 2, -30) : null;
+    private static final String BUTTON_MASK = IS_APPLE_JAVA
             ? "<html><div style=\"padding: 0px 12px\"><center>%s</center></div></html>"
             : "<html><center>%s</center></html>";
     
-    /** Fix button centering for OSX. */
+    /** Fix button centering for Apple Java. */
     private class Button extends JButton
     {
         public Button()
@@ -78,7 +79,7 @@ public class GUI extends JFrame implements GCGUI
         }
     }
     
-    /** Fix button centering for OSX. */
+    /** Fix button centering for Apple Java. */
     private class ToggleButton extends JToggleButton
     {
         public ToggleButton()
