@@ -21,9 +21,9 @@ public class HL extends Rules
         /** How many robots of each team may play at one time. */
         robotsPlaying = 4+1; //+1 for a potential coach
         /** The Java Colors the left and the right team starts with. */
-        teamColor = new Color[] {Color.MAGENTA, new Color(0, 192, 192)};
+        teamColor = new Color[] {new Color(0, 192, 192),Color.MAGENTA};
         /** The name of the colors. */
-        teamColorName = new String[] {"Magenta", "Cyan"};
+        teamColorName = new String[] {"Cyan","Magenta"};
         /** If the colors change automatically. */
         colorChangeAuto = false;
         /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
