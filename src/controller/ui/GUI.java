@@ -117,10 +117,10 @@ public class GUI extends JFrame implements GCGUI
     private static final int STATE_FONT_SIZE = 12;
     private static final String WINDOW_TITLE = "GameController";
     private static final String ICONS_PATH = "config/icons/";
-    private static final String[][] BACKGROUND_SIDE = {{"robot_left_red.png",
-                                                        "robot_left_blue.png"},
-                                                       {"robot_right_red.png",
-                                                        "robot_right_blue.png"}};
+    private static final String[][] BACKGROUND_SIDE = {{"robot_left_blue.png",
+                                                        "robot_left_red.png"},
+                                                       {"robot_right_blue.png",
+                                                        "robot_right_red.png"}};
     private static final String BACKGROUND_MID = "field.png";
     private static final String BACKGROUND_CLOCK = "time_ground.png";
     private static final String KICKOFF = "Kickoff";
