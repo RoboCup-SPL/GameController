@@ -157,8 +157,8 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
     private static final String PEN_FALLEN = "Fallen Robot";
-    private static final String PEN_INACTIVE = "Inactive Player";
     private static final String PEN_LOCAL_GAME_STUCK = "Local Game Stuck";
+    private static final String PEN_INACTIVE = "Inactive / " + PEN_LOCAL_GAME_STUCK;
     private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_HOLDING = "Ball Holding";
     private static final String PEN_HANDS = "Hands";
@@ -242,7 +242,6 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton penaltyShoot;
     private ButtonGroup halfGroup;
     private JToggleButton[] pen;
-    private JToggleButton teammatePushing;
     private JButton dropBall;
     private ImagePanel bottom;
     private JPanel log;
@@ -439,7 +438,7 @@ public class GUI extends JFrame implements GCGUI
         stateGroup.add(finish);
         //  penalties
         if (Rules.league instanceof SPL) {
-            pen = new JToggleButton[11];
+            pen = new JToggleButton[10];
             
             pen[0] = new ToggleButton(PEN_PUSHING);
             pen[1] = new ToggleButton(PEN_LEAVING);
@@ -449,14 +448,13 @@ public class GUI extends JFrame implements GCGUI
             pen[5] = new ToggleButton(PEN_HOLDING);
             pen[6] = new ToggleButton(PEN_HANDS);
             pen[7] = new ToggleButton(PEN_PICKUP);
-            pen[8] = new ToggleButton(PEN_LOCAL_GAME_STUCK);
             if(data.dropInPlayerMode){
-                pen[9] = new ToggleButton(TEAMMATE_PUSHING);
+                pen[8] = new ToggleButton(TEAMMATE_PUSHING);
             }
             else{
-                pen[9] = new ToggleButton(PEN_COACH_MOTION);
+                pen[8] = new ToggleButton(PEN_COACH_MOTION);
             }
-            pen[10] = new ToggleButton(PEN_SUBSTITUTE);
+            pen[9] = new ToggleButton(PEN_SUBSTITUTE);
         } else if (Rules.league instanceof HL) {
             pen = new JToggleButton[6];
             pen[0] = new ToggleButton(PEN_MANIPULATION);
@@ -556,17 +554,16 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.5425, .26, .07, .08, play);
         layout.add(.62, .26, .07, .08, finish);
         if (Rules.league instanceof SPL) {
-            layout.add(.31, .37, .185, .07, pen[0]);
-            layout.add(.505, .37, .185, .07, pen[1]);
-            layout.add(.31, .45, .185, .07, pen[2]);
-            layout.add(.505, .45, .185, .07, pen[3]);
-            layout.add(.31, .53, .185, .07, pen[4]);
-            layout.add(.505, .53, .185, .07, pen[5]);
-            layout.add(.31, .61, .185, .07, pen[6]);
-            layout.add(.505, .61, .185, .07, pen[7]);
-            layout.add(.31, .69, .185, .07, pen[8]);
-            layout.add(.505, .69, .185, .07, pen[9]);
-            layout.add(.31, .77, .380, .07, pen[10]);
+            layout.add(.31, .37, .185, .08, pen[0]);
+            layout.add(.505, .37, .185, .08, pen[1]);
+            layout.add(.31, .47, .185, .08, pen[2]);
+            layout.add(.505, .47, .185, .08, pen[3]);
+            layout.add(.31, .57, .185, .08, pen[4]);
+            layout.add(.505, .57, .185, .08, pen[5]);
+            layout.add(.31, .67, .185, .08, pen[6]);
+            layout.add(.505, .67, .185, .08, pen[7]);
+            layout.add(.31, .77, .185, .08, pen[8]);
+            layout.add(.505, .77, .185, .08, pen[9]);
         } else if (Rules.league instanceof HL) {
             layout.add(.31, .38, .185, .11, pen[0]);
             layout.add(.505, .38, .185, .11, pen[1]);
@@ -626,14 +623,13 @@ public class GUI extends JFrame implements GCGUI
             pen[5].addActionListener(ActionBoard.holding);
             pen[6].addActionListener(ActionBoard.hands);
             pen[7].addActionListener(ActionBoard.pickUp);
-            pen[8].addActionListener(ActionBoard.localGameStuck);
             if(data.dropInPlayerMode){
-                pen[9].addActionListener(ActionBoard.teammatePushing);
+                pen[8].addActionListener(ActionBoard.teammatePushing);
             }
             else{
-                pen[9].addActionListener(ActionBoard.coachMotion);
+                pen[8].addActionListener(ActionBoard.coachMotion);
             }
-            pen[10].addActionListener(ActionBoard.substitute);
+            pen[9].addActionListener(ActionBoard.substitute);
         } else if (Rules.league instanceof HL) {
             pen[0].addActionListener(ActionBoard.ballManipulation);
             pen[1].addActionListener(ActionBoard.pushing);
@@ -1140,14 +1136,13 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setEnabled(ActionBoard.holding.isLegal(data));
         pen[6].setEnabled(ActionBoard.hands.isLegal(data));
         pen[7].setEnabled(ActionBoard.pickUp.isLegal(data));
-        pen[8].setEnabled(ActionBoard.localGameStuck.isLegal(data));
         if(data.dropInPlayerMode){
-            pen[9].setEnabled(ActionBoard.teammatePushing.isLegal(data));
+            pen[8].setEnabled(ActionBoard.teammatePushing.isLegal(data));
         }
         else{
-            pen[9].setEnabled(ActionBoard.coachMotion.isLegal(data));
+            pen[8].setEnabled(ActionBoard.coachMotion.isLegal(data));
         }
-        pen[10].setEnabled(ActionBoard.substitute.isLegal(data));
+        pen[9].setEnabled(ActionBoard.substitute.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
         pen[0].setSelected(hightlightEvent == ActionBoard.pushing);
@@ -1158,14 +1153,13 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setSelected(hightlightEvent == ActionBoard.holding);
         pen[6].setSelected(hightlightEvent == ActionBoard.hands);
         pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
-        pen[8].setSelected(hightlightEvent == ActionBoard.localGameStuck);
         if(data.dropInPlayerMode){
-            pen[9].setSelected(hightlightEvent == ActionBoard.teammatePushing);
+            pen[8].setSelected(hightlightEvent == ActionBoard.teammatePushing);
         }
         else{
-            pen[9].setSelected(hightlightEvent == ActionBoard.coachMotion);
+            pen[8].setSelected(hightlightEvent == ActionBoard.coachMotion);
         }
-        pen[10].setSelected(hightlightEvent == ActionBoard.substitute);
+        pen[9].setSelected(hightlightEvent == ActionBoard.substitute);
     }
     
         /**
