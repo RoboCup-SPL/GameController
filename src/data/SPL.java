@@ -17,9 +17,9 @@ public class SPL extends Rules
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "spl";
         /** How many robots are in a team. */
-        teamSize = 8; //5 Field player + 1 coach + 2 subs
+        teamSize = 7; //5 Field player + 1 coach + 1 subs
         /** How many robots of each team may play at one time. */
-        robotsPlaying = 6; //5 Field player & 1 coach
+        robotsPlaying = 6; //5 Field player + 1 coach
         /** The Java Colors the left and the right team starts with. */
         teamColor = new Color[] {Color.RED, Color.BLUE};
         /** The name of the colors. */
@@ -41,9 +41,9 @@ public class SPL extends Rules
         /** Time in seconds before a global game stuck can be called. */
         minDurationBeforeStuck = 15;
         /** If there is an overtime before penalty-shoot in a play-off game. */
-        overtime = true;
+        overtime = false;
         /** Time in seconds one overtime half is long. */
-        overtimeTime = 60*10;
+        overtimeTime = 0;
         /** If the game starts with penalty-shoots. */
         startWithPenalty = false;
        /** Time in seconds between second half and penalty shoot. */

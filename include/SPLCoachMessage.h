@@ -10,7 +10,7 @@ struct SPLCoachMessage
 {
   char header[4];        // "SPLC"
   uint8 version;       // SPL_COACH_MESSAGE_STRUCT_VERSION
-  uint8 team;          // 0 is red 1 is blue
+  uint8 team;          // 0 is blue 1 is red
 
   // buffer for message
   uint8 message[SPL_COACH_MESSAGE_SIZE];

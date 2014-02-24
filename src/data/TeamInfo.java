@@ -29,7 +29,7 @@ public class TeamInfo implements Serializable
             1 + // penaltyShot
             2 + // singleShots
             SPLCoachMessage.SPL_COACH_MESSAGE_SIZE + // coach's message
-            MAX_NUM_PLAYERS * PlayerInfo.SIZE;
+            (MAX_NUM_PLAYERS + 1) * PlayerInfo.SIZE; // +1 for the coach
     
     //this is streamed
     public byte teamNumber;                                         // unique team number
@@ -38,6 +38,7 @@ public class TeamInfo implements Serializable
     public byte penaltyShot = 0; 										// penalty shot counter
     public short singleShots = 0;										// bits represent penalty shot success
     public byte[] coachMessage = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
+    public PlayerInfo coach = new PlayerInfo();
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
     
     /**
@@ -64,7 +65,7 @@ public class TeamInfo implements Serializable
         buffer.put(penaltyShot);
         buffer.putShort(singleShots);
         buffer.put(coachMessage);
-        
+        buffer.put(coach.toByteArray());
         for (int i=0; i<MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray());
         }
@@ -86,6 +87,7 @@ public class TeamInfo implements Serializable
         penaltyShot = buffer.get();
         singleShots = buffer.getShort();
         buffer.get(coachMessage);
+        coach.fromByteArray(buffer);
         for (int i=0; i<player.length; i++) {
             player[i].fromByteArray(buffer);
         }

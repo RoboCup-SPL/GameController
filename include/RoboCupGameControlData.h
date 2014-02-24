@@ -39,8 +39,7 @@ typedef unsigned int   uint32;
 #define PENALTY_SPL_LEAVING_THE_FIELD       6
 #define PENALTY_SPL_PLAYING_WITH_HANDS      7
 #define PENALTY_SPL_REQUEST_FOR_PICKUP      8
-#define PENALTY_SPL_LOCAL_GAME_STUCK        9
-#define PENALTY_SPL_COACH_MOTION           10
+#define PENALTY_SPL_COACH_MOTION            9
 // HL Kid Size
 #define PENALTY_HL_KID_BALL_MANIPULATION    1
 #define PENALTY_HL_KID_PHYSICAL_CONTACT     2
@@ -71,12 +70,13 @@ struct TeamInfo {
     uint8 teamColour;          // colour of the team
     uint8 score;               // team's score
     uint8 coachMessage[SPL_COACH_MESSAGE_SIZE]; // the coach's message to the team
+    RobotInfo coach;
     RobotInfo players[MAX_NUM_PLAYERS];       // the team's players
 };
 
 struct RoboCupGameControlData {
     char   header[4];           // header to identify the structure
-    uint32 version;             // version of the data structure
+    uint8 version;             // version of the data structure
     uint8 packetNumber;
     uint8 playersPerTeam;       // The number of players on a team
     uint8 state;                // state of the game (STATE_READY, STATE_PLAYING, etc)
@@ -103,6 +103,6 @@ struct RoboCupGameControlReturnData {
     char    header[4];
     uint32  version;
     uint16  team;
-    uint16  player;
+    uint16  player; //player number starts with 0
     uint32  message;
 };

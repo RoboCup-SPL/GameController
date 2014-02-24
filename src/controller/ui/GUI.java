@@ -232,6 +232,8 @@ public class GUI extends JFrame implements GCGUI
     private ImagePanel clockContainer;
     private JLabel clock;
     private JLabel clockSub;
+    private JButton incGameClock;
+    private JButton decGameClock;
     private ImageButton clockPause;
     private JToggleButton firstHalf;
     private JToggleButton secondHalf;
@@ -387,6 +389,8 @@ public class GUI extends JFrame implements GCGUI
         clockPause.setBorder(null);
         clockSub = new JLabel("0:00");
         clockSub.setHorizontalAlignment(JLabel.CENTER);
+        incGameClock = new JButton("+");
+        decGameClock = new JButton("-");
         if (!Rules.league.overtime) {
             firstHalf = new ToggleButton(FIRST_HALF);
             firstHalf.setSelected(true);
@@ -514,6 +518,9 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.4, .0, .2, .11, clockContainer);
         layout.add(.61, .0, .08, .11, clockPause);
         layout.add(.4, .11, .2, .07, clockSub);
+        //layout.add(.31, .1, .05, .05, decGameClock);
+        //TODO Add inc game button 
+        //layout.add(.61, .1, .05, .05, incGameClock);
         if (!Rules.league.overtime) {
             if (Rules.league.isRefereeTimeoutAvailable) {
                 layout.add(.31, .19, .09, .06, firstHalf);
@@ -601,6 +608,8 @@ public class GUI extends JFrame implements GCGUI
         finish.addActionListener(ActionBoard.finish);
         clockReset.addActionListener(ActionBoard.clockReset);
         clockPause.addActionListener(ActionBoard.clockPause);
+        incGameClock.addActionListener(ActionBoard.incGameClock);
+        decGameClock.addActionListener(ActionBoard.decGameClock);
         firstHalf.addActionListener(ActionBoard.firstHalf);
         secondHalf.addActionListener(ActionBoard.secondHalf);
         if (Rules.league.overtime) {

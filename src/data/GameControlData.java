@@ -18,7 +18,7 @@ public class GameControlData implements Serializable
     public static final int GAMECONTROLLER_PORT = 3838;
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
-    public static final int GAMECONTROLLER_STRUCT_VERSION = 8;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 8;
 
     public static final byte TEAM_RED = 0;
     public static final byte TEAM_BLUE = 1;
@@ -42,7 +42,7 @@ public class GameControlData implements Serializable
     /** The size in bytes this class has packed. */
     public static final int SIZE =
             4 + // header
-            4 + // version
+            1 + // version
             1 + // packet number
             1 + // numPlayers
             1 + // gameState
@@ -66,8 +66,8 @@ public class GameControlData implements Serializable
     public byte secGameState = STATE2_NORMAL;                   // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     public byte dropInTeam;                                     // team that caused last drop in
     protected short dropInTime = -1;                            // number of seconds passed since the last drop in. -1 before first dropin
-    public short secsRemaining = Rules.league.halfTime;        // estimate of number of seconds remaining in the half
-    public short secondaryTime = 0;                  // sub-time (remaining in ready state etc.) in seconds
+    public short secsRemaining = Rules.league.halfTime;         // estimate of number of seconds remaining in the half
+    public short secondaryTime = 0;                             // sub-time (remaining in ready state etc.) in seconds
     public TeamInfo[] team = new TeamInfo[2];
     
     
@@ -95,7 +95,7 @@ public class GameControlData implements Serializable
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(GAMECONTROLLER_STRUCT_HEADER.getBytes(), 0, 4);
-        buffer.putInt(GAMECONTROLLER_STRUCT_VERSION);
+        buffer.put(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
         buffer.put(gameState);
@@ -125,7 +125,7 @@ public class GameControlData implements Serializable
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         byte[] header = new byte[4];
         buffer.get(header, 0, 4);
-        if (buffer.getInt() != GAMECONTROLLER_STRUCT_VERSION) {
+        if (buffer.get() != GAMECONTROLLER_STRUCT_VERSION) {
             return false;
         }
         packetNumber = buffer.get(); 

@@ -57,12 +57,10 @@ public class RobotWatcher
         } else if (gameControlReturnData.team == EventHandler.getInstance().data.team[1].teamNumber) {
             team = 1;
         } else {
-            System.out.println(" 1: :(");
             return;
         }
         number = gameControlReturnData.player;
         if (number <= 0 || number > Rules.league.teamSize) {
-            System.out.println("2: :(");
             return;
         }
         instance.robotsLastAnswer[team][number-1] = System.currentTimeMillis();
