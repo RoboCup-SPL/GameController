@@ -9,9 +9,10 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import common.Log;
-
 import controller.EventHandler;
 import data.GameControlData;
+import data.PlayerInfo;
+import data.Rules;
 import data.SPLCoachMessage;
 
 public class SPLCoachMessageReceiver extends Thread {
@@ -77,11 +78,14 @@ public class SPLCoachMessageReceiver extends Thread {
                 buffer.rewind();
 
                 if (coach.fromByteArray(buffer)) {
-                    if(!isCoachPackageReceived[coach.team]){
+                    byte team = (EventHandler.getInstance().data.team[0].teamColor == coach.team)? (byte)0 : (byte)1;
+                    RobotWatcher.updateCoach(team);
+                    if(!isCoachPackageReceived[coach.team] && (EventHandler.getInstance().data.team[team].coach.penalty != PlayerInfo.PENALTY_SPL_COACH_MOTION)){
                         isCoachPackageReceived[coach.team] = true;
                         timestampCoachPackage[coach.team] = System
                                 .currentTimeMillis();
                         splCoachMessageQueue.add(coach);
+                        Log.setNextMessage("Coach message  " + Rules.league.teamColorName[team] + ": " + new String(coach.message));
                     }
                 }
             } catch (IOException e) {

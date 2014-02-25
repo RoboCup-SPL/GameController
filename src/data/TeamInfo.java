@@ -106,10 +106,11 @@ public class TeamInfo implements Serializable
             default: temp = "undefinied("+teamColor+")";
         }
         out += "          teamColor: "+temp+"\n";
-        out += "              score: "+score+"\n";
-        out += "              penaltyShot: "+penaltyShot+"\n";
-        out += "              singleShots: "+singleShots+"\n";
-        out += "              coachMessage: "+new String(coachMessage)+"\n";
+        out += "          score: "+score+"\n";
+        out += "          penaltyShot: "+penaltyShot+"\n";
+        out += "          singleShots: "+singleShots+"\n";
+        out += "          coachMessage: "+new String(coachMessage)+"\n";
+        out += "          coachStatus\n" + coach.toString() +"\n";
         return out;
     }
 }

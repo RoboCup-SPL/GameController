@@ -45,6 +45,7 @@ import controller.action.ui.state.Play;
 import controller.action.ui.state.Ready;
 import controller.action.ui.state.Set;
 import data.Rules;
+import data.SPL;
 
 
 /**
@@ -73,7 +74,7 @@ public class ActionBoard
     public static Goal[] goalDec = new Goal[2];
     public static Goal[] goalInc = new Goal[2];
     public static KickOff[] kickOff = new KickOff[2];
-    public static Robot[][] robot = new Robot[2][Rules.league.teamSize];
+    public static Robot[][] robot;
     public static RefereeTimeout refereeTimeout;
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
@@ -110,8 +111,8 @@ public class ActionBoard
     public static LocalGameStuck localGameStuck;
     public static CoachMotion coachMotion;
     
-    public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
-    public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
+    public static Manual[][] manualPen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
+    public static Manual[][] manualUnpen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
     
     
     /**
@@ -129,7 +130,14 @@ public class ActionBoard
             undo[i] = new Undo(i);
         }
         cancelUndo = new CancelUndo();
-      
+        
+        if(SPL.league.isCoachAvailable){
+            robot = new Robot[2][Rules.league.teamSize+1];
+        }
+        else{
+            robot = new Robot[2][Rules.league.teamSize];
+        }
+        
         for (int i=0; i<2; i++) {
             goalDec[i] = new Goal(i, -1);
             goalInc[i] = new Goal(i, 1);
@@ -142,6 +150,7 @@ public class ActionBoard
             out[i] = new Out(i);
             
         }
+        
         teammatePushing = new TeammatePushing();
         refereeTimeout = new RefereeTimeout();
         clockReset = new ClockReset();

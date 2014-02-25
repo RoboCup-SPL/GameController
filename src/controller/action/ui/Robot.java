@@ -59,7 +59,7 @@ public class Robot extends GCAction
         else if (player.penalty != PlayerInfo.PENALTY_NONE) {
             Log.state(data, (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE ? "Substituted by Player " : "Unpenalised ")+
                 Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + number);
+                + " " + (number+1));
             player.penalty = PlayerInfo.PENALTY_NONE;
         }
     }
@@ -88,7 +88,7 @@ public class Robot extends GCAction
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
                 && !isCoach(data)
                 || (EventHandler.getInstance().lastUIEvent instanceof CoachMotion)
-                    && (isCoach(data))
+                    && (isCoach(data) && (data.team[side].coach.penalty != PlayerInfo.PENALTY_SPL_COACH_MOTION))
                 || data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
                     && (EventHandler.getInstance().lastUIEvent instanceof Penalty)
                     && !(EventHandler.getInstance().lastUIEvent instanceof CoachMotion)

@@ -34,10 +34,10 @@ public class AdvancedData extends GameControlData implements Cloneable
     public long whenDropIn;
     
     /** When was each player penalized last (ms, 0 = never)? */
-    public long[][] whenPenalized = new long[2][Rules.league.teamSize];
+    public long[][] whenPenalized = SPL.league.isCoachAvailable ? new long[2][Rules.league.teamSize+1] : new long[2][Rules.league.teamSize];
 
     /** Which players were already ejected? */
-    public boolean [][] ejected = new boolean[2][Rules.league.teamSize];
+    public boolean [][] ejected = SPL.league.isCoachAvailable ? new boolean[2][Rules.league.teamSize+1] : new boolean[2][Rules.league.teamSize];
     
     /** Pushing counters for each team, 0:left side, 1:right side. */
     public int[] pushes = {0, 0};

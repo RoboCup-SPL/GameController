@@ -29,7 +29,7 @@ public class PickUp extends Penalty
         }
         
         player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
-        Log.state(data, "Request for PickUp "+ Rules.league.teamColorName[data.team[side].teamColor]+ " " + number);
+        Log.state(data, "Request for PickUp "+ Rules.league.teamColorName[data.team[side].teamColor]+ " " + (number+1));
     }
     
     /**

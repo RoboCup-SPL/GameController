@@ -19,7 +19,7 @@ public class TeammatePushing extends GCAction {
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number) {
         Log.state(data, "Teammate Pushing  "+
                 Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + number);
+                + " " + (number+1));
     }
 
     @Override

@@ -141,6 +141,7 @@ public class Main
         if (data.dropInPlayerMode) {
             SPL.league.isCoachAvailable = false; // Remove the coach for the drop-in player competition
         }
+        
         data.colorChangeAuto = input.outAutoColorChange;
         data.playoff = input.outFulltime;
 

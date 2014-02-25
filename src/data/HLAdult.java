@@ -15,9 +15,9 @@ public class HLAdult extends HL
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_adult";
         /** How many robots are in a team. */
-        teamSize = 2+1; //+1 for a potential coach
+        teamSize = 2; 
         /** How many robots of each team may play at one time. */
-        robotsPlaying = 1+1; //+1 for a potential coach
+        robotsPlaying = 1;
         /** If the game starts with penalty-shoots. */
         startWithPenalty = true;
        /** Time in seconds one penalty shoot is long. */

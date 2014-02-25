@@ -23,7 +23,7 @@ public class LocalGameStuck extends Penalty {
         data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Local Game Stuck "+
                 Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + number);
+                + " " + (number+1));
     }
     
     /**

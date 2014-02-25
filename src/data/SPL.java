@@ -17,9 +17,9 @@ public class SPL extends Rules
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "spl";
         /** How many robots are in a team. */
-        teamSize = 7; //5 Field player + 1 coach + 1 subs
+        teamSize = 6; //5 Field player + 1 subs
         /** How many robots of each team may play at one time. */
-        robotsPlaying = 6; //5 Field player + 1 coach
+        robotsPlaying = 5; //5 Field player + 1 coach
         /** The Java Colors the left and the right team starts with. */
         teamColor = new Color[] {Color.BLUE,Color.RED };
         /** The name of the colors. */
@@ -61,7 +61,7 @@ public class SPL extends Rules
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
-        penaltyTime = new int[] {-1, 45, 45, 45, 45, 45, 45, 45, 45, 45, 0, 60};
+        penaltyTime = new int[] {-1, 45, 45, 45, 45, 45, 45, 45, 45, 45, 60};
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */
@@ -76,7 +76,7 @@ public class SPL extends Rules
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
         /** Defines if coach is available **/
         isCoachAvailable = true;
-        /** Defines the number which is used to identify the coach **/
-        coachNumber = 0;
+        /** Defines the number which is used to identify the coach in GC **/
+        coachNumber = teamSize;
     }
 }

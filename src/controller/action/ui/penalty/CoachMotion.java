@@ -19,10 +19,11 @@ public class CoachMotion extends Penalty {
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
+        
         data.whenPenalized[side][number] = data.getTime();
-        player.penalty = PlayerInfo.PENALTY_SPL_COACH_MOTION;
+        data.team[side].coach.penalty = PlayerInfo.PENALTY_SPL_COACH_MOTION;
         data.ejected[side][number] = true;
-        Log.state(data, "Coach Motion "+ Rules.league.teamColorName[data.team[side].teamColor]+ " " + number);
+        Log.state(data, "Coach Motion: Coach "+ Rules.league.teamColorName[data.team[side].teamColor]);
     }
     
     /**
