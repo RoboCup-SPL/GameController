@@ -22,7 +22,7 @@
 #pragma clang diagnostic pop
 #endif
 
-#include "RoboCupGameControlData.h"
+#include <RoboCupGameControlData.h>
 #include "UdpComm.h"
 
 static const int BUTTON_DELAY = 30; /**< Button state changes are ignored when happening in less than 30 ms. */
