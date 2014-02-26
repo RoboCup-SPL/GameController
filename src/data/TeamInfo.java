@@ -35,8 +35,8 @@ public class TeamInfo implements Serializable
     public byte teamNumber;                                         // unique team number
     public byte teamColor;                                          // colour of the team
     public byte score;                                              // team's score
-    public byte penaltyShot = 0; 										// penalty shot counter
-    public short singleShots = 0;										// bits represent penalty shot success
+    public byte penaltyShot = 0;                                    // penalty shot counter
+    public short singleShots = 0;                                   // bits represent penalty shot success
     public byte[] coachMessage = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
     public PlayerInfo coach = new PlayerInfo();
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players

@@ -71,7 +71,7 @@ public class FirstHalf extends GCAction
         // if necessary, swap back team colors
         if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
                 && data.colorChangeAuto) {
-        	byte color = data.team[0].teamColor;
+            byte color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = color;
         }
