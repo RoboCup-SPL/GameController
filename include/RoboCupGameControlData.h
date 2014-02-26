@@ -70,6 +70,8 @@ struct TeamInfo
   uint8_t teamNumber;           // unique team number
   uint8_t teamColour;           // colour of the team
   uint8_t score;                // team's score
+  uint8_t penaltyShot;          // penalty shot counter
+  uint16_t singleShots;         // bits represent penalty shot success
   uint8_t coachMessage[SPL_COACH_MESSAGE_SIZE]; // the coach's message to the team
   RobotInfo coach;
   RobotInfo players[MAX_NUM_PLAYERS]; // the team's players
@@ -90,16 +92,6 @@ struct RoboCupGameControlData
   uint16_t secsRemaining;       // estimate of number of seconds remaining in the half
   uint16_t secondaryTime;       // number of seconds shown as secondary time (remaining ready, until free ball, etc)
   TeamInfo teams[2];
-
-  // constructor
-  RoboCupGameControlData()
-  {
-    header[0] = 'R';
-    header[1] = 'G';
-    header[2] = 'm';
-    header[3] = 'e';
-    version = GAMECONTROLLER_STRUCT_VERSION;
-  }
 };
 
 // data structure header
