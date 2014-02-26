@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-static const uint8_t SPL_STANDARD_MESSAGE_STRUCT_VERSION = 3;
-static const uint16_t SPL_STANDARD_MESSAGE_DATA_SIZE = 800;
+#define SPL_STANDARD_MESSAGE_STRUCT_VERSION 3
+#define SPL_STANDARD_MESSAGE_DATA_SIZE 800
 
 
 struct SPLStandardMessage 
