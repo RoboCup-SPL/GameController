@@ -149,10 +149,10 @@ const char* UdpComm::getWifiBroadcastAddress()
 {
   struct ifaddrs* ifAddrStruct = NULL;
   struct ifaddrs* ifa = NULL;
-  
+
   //determine ip address
   getifaddrs(&ifAddrStruct);
-  for(ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) 
+  for(ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
   {
        // manpage getifaddrs    // check it is IP4
     if(ifa->ifa_addr != NULL && ifa->ifa_addr->sa_family == AF_INET)
@@ -163,12 +163,12 @@ const char* UdpComm::getWifiBroadcastAddress()
         in_addr_t mask = ((struct sockaddr_in *) ifa->ifa_netmask)->sin_addr.s_addr;
         in_addr_t addr = ((struct sockaddr_in *) ifa->ifa_addr)->sin_addr.s_addr;
         in_addr_t bcastAddr = ~mask | addr;
-        
+
         struct in_addr bcast_addr;
         bcast_addr.s_addr = bcastAddr;
         static char buffer[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, 
-                  &bcast_addr, 
+        inet_ntop(AF_INET,
+                  &bcast_addr,
                   buffer,
                   INET_ADDRSTRLEN);
         return buffer;

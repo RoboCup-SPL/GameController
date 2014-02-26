@@ -70,7 +70,7 @@ public:
   * @return The wifi broadcast address.
   */
   static const char* getWifiBroadcastAddress();
-  
+
 private:
   struct sockaddr* target;
   int sock;
