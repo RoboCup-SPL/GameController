@@ -1,20 +1,21 @@
 #ifndef SPLCOACHMESSAGE_H
 #define SPLCOACHMESSAGE_H
 
-typedef unsigned char uint8;
+#include <stdint.h>
 
-static const int SPL_COACH_MESSAGE_STRUCT_VERSION = 1;
-static const int SPL_COACH_MESSAGE_SIZE = 20;
+static const int SPL_COACH_MESSAGE_STRUCT_VERSION = 2;
+static const int SPL_COACH_MESSAGE_SIZE = 40;
 
 struct SPLCoachMessage 
 {
   char header[4];        // "SPLC"
-  uint8 version;       // SPL_COACH_MESSAGE_STRUCT_VERSION
-  uint8 team;          // 0 is blue 1 is red
+  uint8_t version;       // SPL_COACH_MESSAGE_STRUCT_VERSION
+  uint8_t team;          // 0 is blue 1 red
 
   // buffer for message
-  uint8 message[SPL_COACH_MESSAGE_SIZE];
-               
+  uint8_t message[SPL_COACH_MESSAGE_SIZE];
+
+#ifdef __cplusplus
   // constructor
   SPLCoachMessage()
   {
@@ -24,6 +25,7 @@ struct SPLCoachMessage
     header[3] = 'C';
     version = SPL_COACH_MESSAGE_STRUCT_VERSION;
   }
+#endif
 };
 
 #endif // SPLCOACHMESSAGE_H

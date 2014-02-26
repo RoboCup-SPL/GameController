@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class SPLCoachMessage {
-    public static final int SPL_COACH_MESSAGE_STRUCT_VERSION = 1;
-    public static final int SPL_COACH_MESSAGE_SIZE = 20;
+    public static final int SPL_COACH_MESSAGE_STRUCT_VERSION = 2;
+    public static final int SPL_COACH_MESSAGE_SIZE = 40;
     public static final long SPL_COACH_MESSAGE_RECEIVE_INTERVALL = 10000; //in ms
     public static final long SPL_COACH_MESSAGE_MIN_SEND_INTERVALL = 8000; //in ms
     public static final long SPL_COACH_MESSAGE_MAX_SEND_INTERVALL = 12000; //in ms
