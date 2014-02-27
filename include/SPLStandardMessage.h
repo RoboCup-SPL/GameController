@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 
+#define SPL_STANDARD_MESSAGE_STRUCT_HEADER  "SPL "
 #define SPL_STANDARD_MESSAGE_STRUCT_VERSION 3
-#define SPL_STANDARD_MESSAGE_DATA_SIZE 800
-
+#define SPL_STANDARD_MESSAGE_DATA_SIZE      800
 
 struct SPLStandardMessage 
 {
@@ -56,10 +56,7 @@ struct SPLStandardMessage
   // constructor
   SPLStandardMessage()
   {
-    header[0] = 'S';
-    header[1] = 'P';
-    header[2] = 'L';
-    header[3] = ' ';
+    *(uint32_t*) header = *(const uint32_t*) SPL_STANDARD_MESSAGE_STRUCT_HEADER;
     version = SPL_STANDARD_MESSAGE_STRUCT_VERSION;
     playerNum = 0;
     team = 0;

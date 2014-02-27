@@ -3,11 +3,10 @@
 
 #include "SPLCoachMessage.h"
 
-#define GAMECONTROLLER_PORT             3838
+#define GAMECONTROLLER_PORT            3838
 
-#define GAMECONTROLLER_STRUCT_VERSION   8
-
-#define GAMECONTROLLER_STRUCT_HEADER    "RGme"
+#define GAMECONTROLLER_STRUCT_HEADER   "RGme"
+#define GAMECONTROLLER_STRUCT_VERSION  8
 
 #define MAX_NUM_PLAYERS             11
 
@@ -95,30 +94,26 @@ struct RoboCupGameControlData
 };
 
 // data structure header
-#define GAMECONTROLLER_RETURN_STRUCT_HEADER    "RGrt"
+#define GAMECONTROLLER_RETURN_STRUCT_HEADER      "RGrt"
+#define GAMECONTROLLER_RETURN_STRUCT_VERSION     2
 
-#define GAMECONTROLLER_RETURN_STRUCT_VERSION   2
-
-#define GAMECONTROLLER_RETURN_MSG_MAN_PENALISE 0
+#define GAMECONTROLLER_RETURN_MSG_MAN_PENALISE   0
 #define GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE 1
-#define GAMECONTROLLER_RETURN_MSG_ALIVE 2
+#define GAMECONTROLLER_RETURN_MSG_ALIVE          2
 
 struct RoboCupGameControlReturnData
 {
   char header[4];
   uint8_t version;
   uint8_t team;
-  uint8_t player;               // player number starts with 0
+  uint8_t player; // player number starts with 0
   uint8_t message;
 
 #ifdef __cplusplus
   // constructor
   RoboCupGameControlReturnData()
   {
-    header[0] = 'R';
-    header[1] = 'G';
-    header[2] = 'r';
-    header[3] = 't';
+    *(uint32_t*) header = *(const uint32_t*) GAMECONTROLLER_RETURN_STRUCT_HEADER;
     version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
   }
 #endif
