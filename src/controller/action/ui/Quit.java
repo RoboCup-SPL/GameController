@@ -1,5 +1,6 @@
 package controller.action.ui;
 
+import controller.Clock;
 import controller.EventHandler;
 import controller.action.ActionType;
 import controller.action.GCAction;
@@ -31,7 +32,7 @@ public class Quit extends GCAction
     public void perform(AdvancedData data)
     {
         if (EventHandler.getInstance().lastUIEvent == this) {
-            System.exit(0);
+            Clock.getInstance().interrupt();
         }
     }
     
