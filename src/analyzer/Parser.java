@@ -45,6 +45,7 @@ public class Parser
         "Goal decrease for Team",
         "Out by",
         "Substituted by Player",
+        "Referee Timeout",
         "Timeout",
         "Illegal Attack",
         "Ball Manipulation",
@@ -59,6 +60,8 @@ public class Parser
         "Request for Service",
         "Additional Request for Service",
         "Player Pushing",
+        "Coach Motion",
+        "Teammate Pushing",
         "Substitute Player",
         "Finished",
         "Initial",
@@ -83,6 +86,12 @@ public class Parser
         for (String line : log.lines) {
             i++;
             int divPos = line.indexOf(": ");
+
+            if(divPos < 0) {
+                log.parseErrors += "error in line "+i+": colon missing" + GUI.HTML_LF;
+                continue;
+            }
+
             Date time = null;
             try{
                 time = Log.timestampFormat.parse(line.substring(0, divPos));

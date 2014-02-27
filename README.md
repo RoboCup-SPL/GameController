@@ -178,6 +178,8 @@ used in 2013 in several ways:
 - Because of the substitute, playersPerTeam is 6 now in the SPL.
 
 - The new PENALTY_SPL_COACH_MOTION was added.
+
+- There is a new secondary game state STATE2_TIMEOUT.
   
 - The custom types uint8, uint16, and uint32 were replaced by the official standard
   types uint8_t, uint16_t, and uint32_t defined in <stdint.h> (or <cstdint>). Please
@@ -199,8 +201,6 @@ There are still a number of issues left:
 - The goal keeper can still be substituted.
 
 - SPL: The game time cannot be increased when the referee decides that time was lost.
-
-- The LogAnalyzer does not know the new penalties yet.
 
 - All teams can be selected for the drop-in player competition.
 

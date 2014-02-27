@@ -148,7 +148,7 @@ public class LogInfo
     {
         return GUI.HTML
                 + (isRealVersion() ? version : GUI.HTML_RED + version + GUI.HTML_END) + GUI.HTML_LF
-                + (isRealVersion() ? league.leagueName : GUI.HTML_RED + league + GUI.HTML_END) + GUI.HTML_LF
+                + (isRealLeague() ? league.leagueName : GUI.HTML_RED + league + GUI.HTML_END) + GUI.HTML_LF
                 + (isRealTeam(true) ? team[0] : GUI.HTML_RED + team[0] + GUI.HTML_END)
                 + " vs "
                 + (isRealTeam(false) ? team[1] : GUI.HTML_RED + team[1] + GUI.HTML_END) + GUI.HTML_LF

@@ -45,7 +45,7 @@ public class Main
         File dir = new File(PATH);
         File[] files = dir.listFiles();
         for (File file: files) {
-            if (file.isFile()) {
+            if (file.isFile() && file.getName().startsWith("log_")) {
                 logs.add(new LogInfo(file));
             }
         }
