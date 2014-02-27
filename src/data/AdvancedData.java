@@ -165,7 +165,7 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public void updateTimes()
     {
-        secsRemaining = getRemainingGameTime();
+        secsRemaining = (short) getRemainingGameTime();
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         Integer subT = getSecondaryTime(0);
 
@@ -197,7 +197,7 @@ public class AdvancedData extends GameControlData implements Cloneable
      * This is what the primary clock will show.
      * @return The remaining number of seconds.
      */
-    public short getRemainingGameTime()
+    public int getRemainingGameTime()
     {
         int regularNumberOfPenaltyShots = playoff ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
         int duration = secGameState == STATE2_TIMEOUT ? secsRemaining : 
@@ -213,7 +213,7 @@ public class AdvancedData extends GameControlData implements Cloneable
         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
                 : getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset);
         
-        return (short)(duration - timePlayed);
+        return duration - timePlayed;
     }
     
     /**
@@ -323,5 +323,4 @@ public class AdvancedData extends GameControlData implements Cloneable
             return getRemainingPauseTime();
         }
     }
-    
 }

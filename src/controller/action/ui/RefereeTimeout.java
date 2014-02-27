@@ -8,15 +8,18 @@ import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 
-public class RefereeTimeout extends GCAction {
+public class RefereeTimeout extends GCAction
+{
     private byte previousSecGameState = GameControlData.STATE2_NORMAL;
     
-    public RefereeTimeout() {
+    public RefereeTimeout()
+    {
         super(ActionType.UI);
     }
 
     @Override
-    public void perform(AdvancedData data) {
+    public void perform(AdvancedData data)
+    {
         if(!data.refereeTimeout) {
             previousSecGameState = data.secGameState;
             data.secGameState = GameControlData.STATE2_TIMEOUT;
@@ -38,7 +41,8 @@ public class RefereeTimeout extends GCAction {
     }
 
     @Override
-    public boolean isLegal(AdvancedData data) {
+    public boolean isLegal(AdvancedData data)
+    {
         return data.gameState != GameControlData.STATE_FINISHED
                 && !data.timeOutActive[0] && !data.timeOutActive[1];
     }

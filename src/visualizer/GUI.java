@@ -348,28 +348,35 @@ public class GUI extends JFrame
         int x = getSizeToWidth(0.4);
         int y = getSizeToHeight(0.74);
         int size = getSizeToWidth(0.2);
-        String state = "";
+        String state;
         
-        switch(data.secGameState) {
+        switch (data.secGameState) {
             case GameControlData.STATE2_NORMAL:
-                if(data.firstHalf == GameControlData.C_TRUE) {
-                    if(data.gameState == GameControlData.STATE_FINISHED) {
+                if (data.firstHalf == GameControlData.C_TRUE) {
+                    if (data.gameState == GameControlData.STATE_FINISHED) {
                         state = "Half Time";
                     } else {
                         state = "First Half";
                     }
                 } else {
-                    if(data.gameState == GameControlData.STATE_INITIAL) {
+                    if (data.gameState == GameControlData.STATE_INITIAL) {
                         state = "Half Time";
                     } else {
                         state = "Second Half";
                     }
                 }
                 break;
-            case GameControlData.STATE2_OVERTIME:     state = "Overtime";   break;
-            case GameControlData.STATE2_PENALTYSHOOT: state = "Penalty Shoot";     break;
-            case GameControlData.STATE2_TIMEOUT: state = "Time Out"; break; 
-            default: state = "";
+            case GameControlData.STATE2_OVERTIME:
+                state = "Overtime";
+                break;
+            case GameControlData.STATE2_PENALTYSHOOT:
+                state = "Penalty Shootout";
+                break;
+            case GameControlData.STATE2_TIMEOUT:
+                state = "Time Out";
+                break;
+            default:
+                state = "";
         }
         drawCenteredString(g, state, x, y, size);
     }
@@ -406,7 +413,7 @@ public class GUI extends JFrame
     private void drawSubTime(Graphics g)
     {
 
-        if(data.secondaryTime == 0) {
+        if (data.secondaryTime == 0) {
             return;
         }
         g.setColor(Color.BLACK);

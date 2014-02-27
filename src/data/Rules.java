@@ -37,7 +37,7 @@ public abstract class Rules
     /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
     public boolean playOffTimeStop;
     /** Time in seconds one half is long. */
-    public short halfTime;
+    public int halfTime;
     /** Time in seconds the ready state is long. */
     public int readyTime;
     /** Time in seconds between first and second half. */

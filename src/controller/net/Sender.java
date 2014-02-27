@@ -19,7 +19,8 @@ import java.net.*;
  *
  * This class is a singleton!
  */
-public class Sender extends Thread {
+public class Sender extends Thread
+{
     /** The instance of the singleton. */
     private static Sender instance;
 
@@ -32,9 +33,6 @@ public class Sender extends Thread {
     /** The used inet-address (the broadcast address). */
     private final InetAddress group;
 
-    /** The used port. */
-    private final int port = GameControlData.GAMECONTROLLER_PORT;
-
     /** The current deep copy of the game-state. */
     private AdvancedData data;
 
@@ -44,10 +42,10 @@ public class Sender extends Thread {
      * @throws SocketException      if an error occurs while creating the socket
      * @throws UnknownHostException if the used inet-address is not valid
      */
-    private Sender(final String broadcastAddress) throws SocketException, UnknownHostException {
+    private Sender(final String broadcastAddress) throws SocketException, UnknownHostException
+    {
         instance = this;
 
-        //this.datagramSocket = new DatagramSocket(3839,InetAddress.getByName("10.0.5.30"));
         this.datagramSocket = new DatagramSocket();
         this.group = InetAddress.getByName(broadcastAddress);
     }
@@ -59,7 +57,8 @@ public class Sender extends Thread {
      * @throws UnknownHostException     if the used inet-address is not valid
      * @throws IllegalStateException    if the sender is already initialized
      */
-    public synchronized static void initialize(final String broadcastAddress) throws SocketException, UnknownHostException {
+    public synchronized static void initialize(final String broadcastAddress) throws SocketException, UnknownHostException
+    {
         if (null != instance) {
             throw new IllegalStateException("sender is already initialized");
         } else {
@@ -73,7 +72,8 @@ public class Sender extends Thread {
      * @return  The instance of the Sender
      * @throws  IllegalStateException if the Sender is not initialized yet
      */
-    public synchronized static Sender getInstance() {
+    public synchronized static Sender getInstance()
+    {
         if (null == instance) {
             throw new IllegalStateException("sender is not initialized yet");
         } else {
@@ -87,18 +87,20 @@ public class Sender extends Thread {
      *
      * @param data the current game-state to send to all robots
      */
-    public void send(AdvancedData data) {
+    public void send(AdvancedData data)
+    {
         this.data = (AdvancedData) data.clone();
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
         while (!isInterrupted()) {
             if (data != null) {
                 data.updateTimes();
                 data.packetNumber = packetNumber;
                 byte[] arr = data.toByteArray().array();
-                DatagramPacket packet = new DatagramPacket(arr, arr.length, group, port);
+                DatagramPacket packet = new DatagramPacket(arr, arr.length, group, GameControlData.GAMECONTROLLER_PORT);
 
                 try {
                     datagramSocket.send(packet);
