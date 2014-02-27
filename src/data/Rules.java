@@ -84,4 +84,6 @@ public abstract class Rules
     public int[] pushesToEjection;
     /** Defines if coach is available **/
     public boolean isCoachAvailable;
+    /** Allowed to compensate for lost time? */
+    public boolean lostTime;
 }

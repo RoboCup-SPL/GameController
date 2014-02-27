@@ -74,5 +74,7 @@ public class HL extends Rules
         isRefereeTimeoutAvailable = false;
         /** Defines if coach is available **/
         isCoachAvailable = false;
+        /** Allowed to compensate for lost time? */
+        lostTime = false;
     }
 }

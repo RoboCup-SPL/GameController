@@ -515,8 +515,10 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.4, .0, .2, .11, clockContainer);
         layout.add(.61, .0, .08, .11, clockPause);
         layout.add(.4, .11, .2, .07, clockSub);
-        //TODO Add inc game button 
-        //layout.add(.61, .1, .05, .05, incGameClock);
+        if (Rules.league.lostTime) {
+            //TODO Add inc game button and activate it in SPL rules
+            layout.add(.61, .1, .05, .05, incGameClock);
+        }
         if (!Rules.league.overtime) {
             if (Rules.league.isRefereeTimeoutAvailable) {
                 layout.add(.31, .19, .09, .06, firstHalf);
@@ -600,7 +602,9 @@ public class GUI extends JFrame implements GCGUI
         finish.addActionListener(ActionBoard.finish);
         clockReset.addActionListener(ActionBoard.clockReset);
         clockPause.addActionListener(ActionBoard.clockPause);
-        incGameClock.addActionListener(ActionBoard.incGameClock);
+        if (Rules.league.lostTime) {
+          incGameClock.addActionListener(ActionBoard.incGameClock);
+        }
         firstHalf.addActionListener(ActionBoard.firstHalf);
         secondHalf.addActionListener(ActionBoard.secondHalf);
         if (Rules.league.overtime) {
@@ -818,6 +822,9 @@ public class GUI extends JFrame implements GCGUI
         clockPause.setImage(tmp.getImage());
         clockReset.setVisible(ActionBoard.clockReset.isLegal(data));
         clockPause.setVisible(ActionBoard.clockPause.isLegal(data));
+        if (Rules.league.lostTime) {
+            incGameClock.setEnabled(ActionBoard.incGameClock.isLegal(data));
+        }
     }
     
     /**

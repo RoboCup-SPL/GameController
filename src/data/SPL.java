@@ -76,5 +76,7 @@ public class SPL extends Rules
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
         /** Defines if coach is available **/
         isCoachAvailable = true;
+        /** Allowed to compensate for lost time? */
+        lostTime = false; // TODO activate when button is ready
     }
 }
