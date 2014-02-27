@@ -1,6 +1,9 @@
 package controller.action.ui.penalty;
 
+import java.util.ArrayList;
+
 import common.Log;
+import controller.EventHandler;
 import data.AdvancedData;
 import data.PlayerInfo;
 import data.Rules;
@@ -10,6 +13,8 @@ import data.Rules;
  * 
  * This action means that the substitution player penalty has been selected.
  */
+
+
 public class Substitute extends Penalty
 {
     /**
@@ -20,12 +25,17 @@ public class Substitute extends Penalty
      * @param side      The side the player is playing on (0:left, 1:right).
      * @param number    The player`s number, beginning with 0!
      */
+    
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
+        if(player.penalty != PlayerInfo.PENALTY_NONE){
+            data.penaltyQueueForSubPlayers.get(side).add(data.whenPenalized[side][number]);
+        }
+        
         player.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Substitute Player "+
+        Log.state(data, "Player out of game: "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
     }

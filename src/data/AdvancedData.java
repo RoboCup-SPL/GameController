@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import controller.action.ActionBoard;
 
@@ -83,6 +84,8 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** Used to backup the secondary game state during a timeout. */
     public byte previousSecGameState = STATE2_NORMAL;
 
+    /** Keeps the penalties for the players if there are substituted */
+    public ArrayList<ArrayList<Long>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<Long>>();
     /**
      * Creates a new AdvancedData.
      */
@@ -97,6 +100,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                     team[i].player[j].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
                 }
             }
+            penaltyQueueForSubPlayers.add(new ArrayList<Long>());
         }
     }
     
@@ -266,6 +270,9 @@ public class AdvancedData extends GameControlData implements Cloneable
             }
         }
         resetPenaltyTimes();
+        for(int i = 0; i < 2; i++){
+            penaltyQueueForSubPlayers.get(i).clear();
+        }
     }
     
     /**

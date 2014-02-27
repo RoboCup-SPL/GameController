@@ -24,7 +24,7 @@ public class PickUp extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (player.penalty == PlayerInfo.PENALTY_NONE) {
+        if (player.penalty == PlayerInfo.PENALTY_NONE ) {
             data.whenPenalized[side][number] = data.getTime();
         }
         
