@@ -13,8 +13,6 @@ import data.Rules;
  * 
  * This action means that the substitution player penalty has been selected.
  */
-
-
 public class Substitute extends Penalty
 {
     /**
@@ -25,7 +23,6 @@ public class Substitute extends Penalty
      * @param side      The side the player is playing on (0:left, 1:right).
      * @param number    The player`s number, beginning with 0!
      */
-    
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
@@ -35,7 +32,7 @@ public class Substitute extends Penalty
         
         player.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Player out of game: "+
+        Log.state(data, "Leaving Player "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
     }
