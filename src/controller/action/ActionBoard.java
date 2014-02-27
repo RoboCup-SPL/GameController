@@ -73,11 +73,9 @@ public class ActionBoard
     public static Goal[] goalInc = new Goal[2];
     public static KickOff[] kickOff = new KickOff[2];
     public static Robot[][] robot;
-    public static RefereeTimeout refereeTimeout;
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static Out[] out = new Out[2];
-    public static TeammatePushing teammatePushing = new TeammatePushing();
     public static ClockReset clockReset;
     public static ClockPause clockPause;
     public static IncGameClock incGameClock;
@@ -86,6 +84,7 @@ public class ActionBoard
     public static FirstHalfOvertime firstHalfOvertime;
     public static SecondHalfOvertime secondHalfOvertime;
     public static PenaltyShoot penaltyShoot;
+    public static RefereeTimeout refereeTimeout;
     public static Initial initial;
     public static Ready ready;
     public static Set set;
@@ -103,10 +102,11 @@ public class ActionBoard
     public static Attack attack;
     public static Defense defense;
     public static PickUpHL pickUpHL;
+    public static CoachMotion coachMotion;
+    public static TeammatePushing teammatePushing;
     public static Substitute substitute;
     public static DropBall dropBall;
-    public static CoachMotion coachMotion;
-    
+
     public static Manual[][] manualPen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
     
@@ -147,8 +147,6 @@ public class ActionBoard
             
         }
         
-        teammatePushing = new TeammatePushing();
-        refereeTimeout = new RefereeTimeout();
         clockReset = new ClockReset();
         clockPause = new ClockPause();
         incGameClock = new IncGameClock();
@@ -157,6 +155,7 @@ public class ActionBoard
         firstHalfOvertime = new FirstHalfOvertime();
         secondHalfOvertime = new SecondHalfOvertime();
         penaltyShoot = new PenaltyShoot();
+        refereeTimeout = new RefereeTimeout();
 
         initial = new Initial();
         ready = new Ready();
@@ -176,10 +175,11 @@ public class ActionBoard
         attack = new Attack();
         defense = new Defense();
         pickUpHL = new PickUpHL();
+        coachMotion = new CoachMotion();
+        teammatePushing = new TeammatePushing();
         substitute = new Substitute();
         dropBall = new DropBall();
-        coachMotion = new CoachMotion();
-        
+
         for (int i=0; i<2; i++) {
             for (int j=0; j<Rules.league.teamSize; j++) {
                 manualPen[i][j] = new Manual(i, j, false);

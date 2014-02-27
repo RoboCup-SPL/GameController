@@ -3,7 +3,6 @@ package controller.action.ui.state;
 import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
-import controller.action.ui.RefereeTimeout;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
@@ -38,9 +37,7 @@ public class Initial extends GCAction
         if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
-        
         data.whenCurrentGameStateBegan = data.getTime();
-        
         data.gameState = GameControlData.STATE_INITIAL;
         Log.state(data, "Initial");
     }
