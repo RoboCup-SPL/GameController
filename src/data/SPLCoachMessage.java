@@ -6,25 +6,23 @@ import java.nio.ByteOrder;
 public class SPLCoachMessage {
     public static final int SPL_COACH_MESSAGE_STRUCT_VERSION = 2;
     public static final int SPL_COACH_MESSAGE_SIZE = 40;
-    public static final long SPL_COACH_MESSAGE_RECEIVE_INTERVALL = 10000; //in ms
-    public static final long SPL_COACH_MESSAGE_MIN_SEND_INTERVALL = 8000; //in ms
-    public static final long SPL_COACH_MESSAGE_MAX_SEND_INTERVALL = 12000; //in ms
+    public static final long SPL_COACH_MESSAGE_RECEIVE_INTERVALL = 10000; // in ms
+    public static final long SPL_COACH_MESSAGE_MIN_SEND_INTERVALL = 8000; // in ms
+    public static final long SPL_COACH_MESSAGE_MAX_SEND_INTERVALL = 12000; // in ms
     public static final String SPL_COACH_PACKAGE_HEADER = "SPLC";
-    public static final int SIZE = 4 //header size
-                                   + 1 //byte for the team version
-                                   + 1 //team number (0 = red, 1 = blue)
+    public static final int SIZE = 4 // header size
+                                   + 1 // byte for the version
+                                   + 1 // team number (0 = blue, 1 = red)
                                    + SPL_COACH_MESSAGE_SIZE;
 
     public String header;   // header to identify the structure
     public byte version;    // version of the data structure
     public byte team;       // unique team number
     public byte[] message;  // what the coach says
-    private long timestamp; // when the message was created
-    private long sendTime;  // time in ms that shows when the message should be send to the team
+    private long sendTime;  // delay in ms that the message will be held back
 
     public SPLCoachMessage() {
-        sendTime = generateSendIntervallForSPLCoachMessage();
-        timestamp = System.currentTimeMillis();
+        sendTime = generateSendIntervallForSPLCoachMessage() + System.currentTimeMillis();
     }
 
     public byte[] toByteArray() {
@@ -63,8 +61,8 @@ public class SPLCoachMessage {
     }
 
     public long getRemainingTimeToSend() {
-        long remainingTime = (sendTime - (System.currentTimeMillis() - timestamp));
-        return (remainingTime > 0) ? remainingTime : 0;
+        long remainingTime = sendTime - System.currentTimeMillis();
+        return remainingTime > 0 ? remainingTime : 0;
     }
 
     private long generateSendIntervallForSPLCoachMessage () {
