@@ -27,7 +27,7 @@ public class SPLCoachMessageReceiver extends Thread
     {
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
-        datagramSocket.bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_PORT));
+        datagramSocket.bind(new InetSocketAddress(SPLCoachMessage.SPL_COACH_MESSAGE_PORT));
     }
 
     public synchronized static SPLCoachMessageReceiver getInstance()

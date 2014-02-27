@@ -3,13 +3,16 @@ package data;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class SPLCoachMessage {
+public class SPLCoachMessage
+{
+    /** Some constants from the C-structure. */
+    public static final int SPL_COACH_MESSAGE_PORT = 3839;
+    public static final String SPL_COACH_MESSAGE_STRUCT_HEADER = "SPLC";
     public static final int SPL_COACH_MESSAGE_STRUCT_VERSION = 2;
     public static final int SPL_COACH_MESSAGE_SIZE = 40;
     public static final long SPL_COACH_MESSAGE_RECEIVE_INTERVALL = 10000; // in ms
     public static final long SPL_COACH_MESSAGE_MIN_SEND_INTERVALL = 8000; // in ms
     public static final long SPL_COACH_MESSAGE_MAX_SEND_INTERVALL = 12000; // in ms
-    public static final String SPL_COACH_PACKAGE_HEADER = "SPLC";
     public static final int SIZE = 4 // header size
                                    + 1 // byte for the version
                                    + 1 // team number (0 = blue, 1 = red)
@@ -21,11 +24,13 @@ public class SPLCoachMessage {
     public byte[] message;  // what the coach says
     private long sendTime;  // delay in ms that the message will be held back
 
-    public SPLCoachMessage() {
+    public SPLCoachMessage()
+    {
         sendTime = generateSendIntervallForSPLCoachMessage() + System.currentTimeMillis();
     }
 
-    public byte[] toByteArray() {
+    public byte[] toByteArray()
+    {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -37,13 +42,14 @@ public class SPLCoachMessage {
         return buffer.array();
     }
 
-    public boolean fromByteArray(ByteBuffer buffer) {
+    public boolean fromByteArray(ByteBuffer buffer)
+    {
         try {
             buffer.order(ByteOrder.LITTLE_ENDIAN);
             byte[] header = new byte[4];
             buffer.get(header);
             this.header = new String(header);
-            if (!this.header.equals(SPL_COACH_PACKAGE_HEADER)) {
+            if (!this.header.equals(SPL_COACH_MESSAGE_STRUCT_HEADER)) {
                 return false;
             } else {
                 version = buffer.get();
@@ -60,12 +66,14 @@ public class SPLCoachMessage {
         }
     }
 
-    public long getRemainingTimeToSend() {
+    public long getRemainingTimeToSend()
+    {
         long remainingTime = sendTime - System.currentTimeMillis();
         return remainingTime > 0 ? remainingTime : 0;
     }
 
-    private long generateSendIntervallForSPLCoachMessage () {
+    private long generateSendIntervallForSPLCoachMessage()
+    {
         return (long) (Math.random() * (SPLCoachMessage.SPL_COACH_MESSAGE_MAX_SEND_INTERVALL
                 - SPLCoachMessage.SPL_COACH_MESSAGE_MIN_SEND_INTERVALL))
                 + SPLCoachMessage.SPL_COACH_MESSAGE_MIN_SEND_INTERVALL;
