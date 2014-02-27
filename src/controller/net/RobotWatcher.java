@@ -42,7 +42,7 @@ public class RobotWatcher
                 status[i][j] = RobotOnlineStatus.UNKNOWN;
             }
             if(SPL.league.isCoachAvailable){
-                status[i][SPL.league.coachNumber] = RobotOnlineStatus.UNKNOWN; 
+                status[i][SPL.league.teamSize] = RobotOnlineStatus.UNKNOWN;
             }
         }
     }
@@ -97,7 +97,7 @@ public class RobotWatcher
                             instance.status[i][k] = RobotOnlineStatus.UNKNOWN;
                         }
                         if(SPL.league.isCoachAvailable){
-                            instance.status[i][SPL.league.coachNumber] = RobotOnlineStatus.UNKNOWN;
+                            instance.status[i][SPL.league.teamSize] = RobotOnlineStatus.UNKNOWN;
                         }
                     }
                 } else if (currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_HAS_HIGH_LATANCY) {
@@ -111,6 +111,6 @@ public class RobotWatcher
     }
     
     public static synchronized void updateCoach(byte team){
-        instance.robotsLastAnswer[team][SPL.league.coachNumber] = System.currentTimeMillis();
+        instance.robotsLastAnswer[team][SPL.league.teamSize] = System.currentTimeMillis();
     }
 }

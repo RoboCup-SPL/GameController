@@ -99,7 +99,7 @@ public class Robot extends GCAction
     }
     
     public boolean isCoach(AdvancedData data){
-        if((Rules.league.isCoachAvailable) && (number == Rules.league.coachNumber)){
+        if((Rules.league.isCoachAvailable) && (number == Rules.league.teamSize)){
             return true;
         }
         return false;

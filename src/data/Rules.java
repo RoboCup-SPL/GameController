@@ -84,6 +84,4 @@ public abstract class Rules
     public int[] pushesToEjection;
     /** Defines if coach is available **/
     public boolean isCoachAvailable;
-    /** Defines the number which is used to identify the coach for the GameController**/
-    public int coachNumber;
 }
