@@ -123,6 +123,7 @@ public class GUI extends JFrame implements GCGUI
                                                        {"robot_right_blue.png",
                                                         "robot_right_red.png"}};
     private static final String BACKGROUND_MID = "field.png";
+    private static final String BACKGROUND_CLOCK_SMALL = "time_ground_small.png";
     private static final String BACKGROUND_CLOCK = "time_ground.png";
     private static final String KICKOFF = "Kickoff";
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
@@ -147,6 +148,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String CLOCK_RESET = "reset.png";
     private static final String CLOCK_PAUSE = "pause.png";
     private static final String CLOCK_PLAY = "play.png";
+    private static final String CLOCK_PLUS = "plus.png";
     private static final String FIRST_HALF = "First Half";
     private static final String SECOND_HALF = "Second Half";
     private static final String FIRST_HALF_SHORT = "1st Half";
@@ -196,6 +198,7 @@ public class GUI extends JFrame implements GCGUI
     private ImageIcon clockImgReset;
     private ImageIcon clockImgPlay;
     private ImageIcon clockImgPause;
+    private ImageIcon clockImgPlus;
     private ImageIcon lanOnline;
     private ImageIcon lanHighLatency;
     private ImageIcon lanOffline;
@@ -231,7 +234,7 @@ public class GUI extends JFrame implements GCGUI
     private ImagePanel clockContainer;
     private JLabel clock;
     private JLabel clockSub;
-    private JButton incGameClock;
+    private ImageButton incGameClock;
     private ImageButton clockPause;
     private JToggleButton firstHalf;
     private JToggleButton secondHalf;
@@ -274,6 +277,7 @@ public class GUI extends JFrame implements GCGUI
         clockImgReset = new ImageIcon(ICONS_PATH+CLOCK_RESET);
         clockImgPlay = new ImageIcon(ICONS_PATH+CLOCK_PLAY);
         clockImgPause = new ImageIcon(ICONS_PATH+CLOCK_PAUSE);
+        clockImgPlus = new ImageIcon(ICONS_PATH+CLOCK_PLUS);
         lanOnline = new ImageIcon(ICONS_PATH+ONLINE);
         lanHighLatency = new ImageIcon(ICONS_PATH+HIGH_LATENCY);
         lanOffline = new ImageIcon(ICONS_PATH+OFFLINE);
@@ -376,7 +380,12 @@ public class GUI extends JFrame implements GCGUI
         clockReset = new ImageButton(clockImgReset.getImage());
         clockReset.setOpaque(false);
         clockReset.setBorder(null);
-        clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_CLOCK).getImage());
+        if(Rules.league.lostTime){
+            clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_CLOCK_SMALL).getImage());
+        }
+        else{
+            clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_CLOCK).getImage());
+        }
         clockContainer.setOpaque(false);
         clock = new JLabel("10:00");
         clock.setForeground(Color.WHITE);
@@ -386,7 +395,9 @@ public class GUI extends JFrame implements GCGUI
         clockPause.setBorder(null);
         clockSub = new JLabel("0:00");
         clockSub.setHorizontalAlignment(JLabel.CENTER);
-        incGameClock = new JButton("+");
+        incGameClock = new ImageButton(clockImgPlus.getImage());
+        incGameClock.setOpaque(false);
+        incGameClock.setBorder(null);
         if (!Rules.league.overtime) {
             firstHalf = new ToggleButton(FIRST_HALF);
             firstHalf.setSelected(true);
@@ -503,13 +514,15 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.71, .77, .135, .09, out[1]);
         }
         layout.add(.31, .0, .08, .11, clockReset);
-        layout.add(.4, .012, .2, .10, clock);
-        layout.add(.4, .0, .2, .11, clockContainer);
+        layout.add(.4, .012, .195, .10, clock);
         layout.add(.61, .0, .08, .11, clockPause);
         layout.add(.4, .11, .2, .07, clockSub);
         if (Rules.league.lostTime) {
-            //TODO Add inc game button and activate it in SPL rules
-            layout.add(.61, .1, .05, .05, incGameClock);
+            layout.add(.590, .0, .03, .11, incGameClock);
+            layout.add(.4, .0, .195, .11, clockContainer);
+        }
+        else{
+            layout.add(.4, .0, .2, .11, clockContainer);
         }
         if (!Rules.league.overtime) {
             if (Rules.league.isRefereeTimeoutAvailable) {

@@ -77,6 +77,6 @@ public class SPL extends Rules
         /** Defines if coach is available **/
         isCoachAvailable = true;
         /** Allowed to compensate for lost time? */
-        lostTime = false; // TODO activate when button is ready
+        lostTime = true;
     }
 }
