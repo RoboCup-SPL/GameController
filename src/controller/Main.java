@@ -38,7 +38,7 @@ public class Main
      * Actually there are no dependencies, but this should be the first thing
      * to be written into the log file.
      */
-    public static final String version = "GC2 1.1";
+    public static final String version = "GC2 1.2";
     
     /** Relative directory of where logs are stored */
     private final static String LOG_DIRECTORY = "logs";
@@ -198,29 +198,25 @@ public class Main
         //input dispose
         input.dispose();
 
-        //shutdown hook, to release resources
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                Log.toFile("Shutdown GameController");
-                try {
-                    applicationLock.release();
-                } catch (IOException e) {
-                    Log.error("Error while trying to release the application lock.");
-                }
-                Sender.getInstance().interrupt();
-                GameControlReturnDataReceiver.getInstance().interrupt();
-                SPLCoachMessageReceiver.getInstance().interrupt();
-                try {
-                    Log.close();
-                } catch (IOException e) {
-                    Log.error("Error while trying to close the log.");
-                }
-            }
-        });
+        //clock runs until window is closed
+        Clock.getInstance().start();
 
-        //clock
-        Clock clock = new Clock();
-        clock.start();
+        // shutdown
+        Log.toFile("Shutdown GameController");
+        try {
+            applicationLock.release();
+        } catch (IOException e) {
+            Log.error("Error while trying to release the application lock.");
+        }
+        Sender.getInstance().interrupt();
+        GameControlReturnDataReceiver.getInstance().interrupt();
+        SPLCoachMessageReceiver.getInstance().interrupt();
+        try {
+            Log.close();
+        } catch (IOException e) {
+            Log.error("Error while trying to close the log.");
+        }
+
+        System.exit(0);
     }
 }

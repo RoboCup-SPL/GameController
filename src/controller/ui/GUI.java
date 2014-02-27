@@ -28,6 +28,7 @@ import javax.swing.JToggleButton;
 
 import common.Log;
 import common.TotalScaleLayout;
+import controller.Clock;
 
 import controller.EventHandler;
 import controller.action.ActionBoard;
@@ -269,7 +270,7 @@ public class GUI extends JFrame implements GCGUI
         {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.exit(0);
+                Clock.getInstance().interrupt();
             }
         });
         
@@ -999,7 +1000,7 @@ public class GUI extends JFrame implements GCGUI
                                     highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                                 }
                             }  else {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? "(P)" : ""));
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
                                 highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                             }
                             int penTime = (seconds + data.getSecondsSince(data.whenPenalized[i][j]));

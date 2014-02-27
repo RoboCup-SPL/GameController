@@ -16,21 +16,46 @@ public class Clock
      * on the performance.
      */
     public static final int HEARTBEAT = 500; // 2Hz
+
+    /** The instance of the singleton. */
+    private static Clock instance;
+
+    /** The thread of this clock. */
+    private Thread thread;
     
+    /**
+     * Returns the instance of the singleton. If the Clock wasn't initialized once before, a new instance will
+     * be created and returned (lazy instantiation)
+     *
+     * @return  The instance of the Clock
+     */
+    public static Clock getInstance()
+    {
+        if (instance == null) {
+            instance = new Clock();
+        }
+        return instance;
+    }
     /**
      * Lets the Clock start to run.
      */
     public void start()
-    {   
-        while (!Thread.currentThread().isInterrupted())
+    {
+        thread = Thread.currentThread();
+        while (!thread.isInterrupted())
         {
             ActionBoard.clock.actionPerformed(null);
             
             try {
                 Thread.sleep(HEARTBEAT);
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                thread.interrupt();
             }
         }
+    }
+
+    public void interrupt()
+    {
+        thread.interrupt();
     }
 }
