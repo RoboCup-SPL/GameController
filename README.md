@@ -193,15 +193,6 @@ used in 2013 in several ways:
 
 There are still a number of issues left:
 
-- Substitution zeroes the penalty timer when a penalized robot is substituted.
-  Substituting an unpenalized robot does not result in any penalty. Please note
-  that the substitution procedure will change: first the player that will be
-  removed from play has to be selected, then the substitute that will replace it.
-  
-- The goal keeper can still be substituted.
-
-- SPL: The game time cannot be increased when the referee decides that time was lost.
-
 - All teams can be selected for the drop-in player competition.
 
 - When running on the same PC, the GameStateVisualizer sometimes does not
