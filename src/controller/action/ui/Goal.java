@@ -72,8 +72,7 @@ public class Goal extends GCAction
         return ((set == 1)
               && (data.gameState == GameControlData.STATE_PLAYING)
               && ( (data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
-                || (data.kickOffTeam == data.team[side].teamColor)
-                || (data.secGameState != GameControlData.STATE2_TIMEOUT)) )
+                || (data.kickOffTeam == data.team[side].teamColor)) )
             || data.testmode;
     }
 }
