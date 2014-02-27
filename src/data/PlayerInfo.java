@@ -25,8 +25,7 @@ public class PlayerInfo implements Serializable
     public static final byte PENALTY_SPL_LEAVING_THE_FIELD = 6;
     public static final byte PENALTY_SPL_PLAYING_WITH_HANDS = 7;
     public static final byte PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
-    public static final byte PENALTY_SPL_LOCAL_GAME_STUCK = 9;
-    public static final byte PENALTY_SPL_COACH_MOTION = 10;
+    public static final byte PENALTY_SPL_COACH_MOTION = 9;
     
     public static final byte PENALTY_HL_BALL_MANIPULATION = 1;
     public static final byte PENALTY_HL_PHYSICAL_CONTACT = 2;
@@ -42,7 +41,7 @@ public class PlayerInfo implements Serializable
     /** The size in bytes this class has packed. */
     public static final int SIZE =
             1 + // penalty
-            1; // secsToUnpen
+            1;  // secsToUnpen
     
     //this is streamed
     public byte penalty = PENALTY_NONE;    // penalty state of the player

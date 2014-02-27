@@ -34,7 +34,6 @@ import controller.action.ui.penalty.Hands;
 import controller.action.ui.penalty.Holding;
 import controller.action.ui.penalty.Inactive;
 import controller.action.ui.penalty.Leaving;
-import controller.action.ui.penalty.LocalGameStuck;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.Pushing;
@@ -108,7 +107,6 @@ public class ActionBoard
     public static PickUpHL pickUpHL;
     public static Substitute substitute;
     public static DropBall dropBall;
-    public static LocalGameStuck localGameStuck;
     public static CoachMotion coachMotion;
     
     public static Manual[][] manualPen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
@@ -183,7 +181,6 @@ public class ActionBoard
         pickUpHL = new PickUpHL();
         substitute = new Substitute();
         dropBall = new DropBall();
-        localGameStuck = new LocalGameStuck();
         coachMotion = new CoachMotion();
         
         for (int i=0; i<2; i++) {
