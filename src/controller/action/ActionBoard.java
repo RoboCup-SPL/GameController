@@ -5,7 +5,6 @@ import controller.action.net.Manual;
 import controller.action.ui.CancelUndo;
 import controller.action.ui.ClockPause;
 import controller.action.ui.ClockReset;
-import controller.action.ui.DecGameClock;
 import controller.action.ui.DropBall;
 import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
@@ -82,7 +81,6 @@ public class ActionBoard
     public static ClockReset clockReset;
     public static ClockPause clockPause;
     public static IncGameClock incGameClock;
-    public static DecGameClock decGameClock;
     public static FirstHalf firstHalf;
     public static SecondHalf secondHalf;
     public static FirstHalfOvertime firstHalfOvertime;
@@ -154,7 +152,6 @@ public class ActionBoard
         clockReset = new ClockReset();
         clockPause = new ClockPause();
         incGameClock = new IncGameClock();
-        decGameClock = new DecGameClock();
         firstHalf = new FirstHalf();
         secondHalf = new SecondHalf();
         firstHalfOvertime = new FirstHalfOvertime();
