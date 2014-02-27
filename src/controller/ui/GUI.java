@@ -135,7 +135,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String HIGH_LATENCY = "wlan_status_yellow.png";
     private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
     private static final String TIMEOUT = "Timeout";
-    private static final String REFEREE_TIMEOUT = "Referee Timeout";
+    private static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
     private static final String STUCK = "Global <br/> Game Stuck";
     private static final String KICKOFF_GOAL = "Kickoff Goal";
     private static final String OUT = "Out";
@@ -158,8 +158,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
     private static final String PEN_FALLEN = "Fallen Robot";
-    private static final String PEN_LOCAL_GAME_STUCK = "Local Game Stuck";
-    private static final String PEN_INACTIVE = "Inactive / " + PEN_LOCAL_GAME_STUCK;
+    private static final String PEN_INACTIVE = "Inactive / Local Game Stuck";
     private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_HOLDING = "Ball Holding";
     private static final String PEN_HANDS = "Hands";
@@ -193,7 +192,6 @@ public class GUI extends JFrame implements GCGUI
     private Font timeSubFont;
     private Font timeoutFont;
     private Font stateFont;
-    private Font refereeTimeoutFont;
     private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
     private ImageIcon clockImgReset;
     private ImageIcon clockImgPlay;
@@ -327,12 +325,12 @@ public class GUI extends JFrame implements GCGUI
         
         //  robots
         robots = new JPanel[2];
-        if(Rules.league.isCoachAvailable){
+        if (Rules.league.isCoachAvailable){
             robot = new JButton[2][Rules.league.teamSize+1];
             robotLabel = new JLabel[2][Rules.league.teamSize+1];
             lanIcon = new ImageIcon[2][Rules.league.teamSize+1];
             robotTime = new JProgressBar[2][Rules.league.teamSize+1];
-        }else{
+        } else {
             robot = new JButton[2][Rules.league.teamSize];
             robotLabel = new JLabel[2][Rules.league.teamSize];
             lanIcon = new ImageIcon[2][Rules.league.teamSize];
@@ -447,12 +445,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5] = new ToggleButton(PEN_HOLDING);
             pen[6] = new ToggleButton(PEN_HANDS);
             pen[7] = new ToggleButton(PEN_PICKUP);
-            if(data.dropInPlayerMode){
-                pen[8] = new ToggleButton(TEAMMATE_PUSHING);
-            }
-            else{
-                pen[8] = new ToggleButton(PEN_COACH_MOTION);
-            }
+            pen[8] = new ToggleButton(data.dropInPlayerMode ? TEAMMATE_PUSHING : PEN_COACH_MOTION);
             pen[9] = new ToggleButton(PEN_SUBSTITUTE);
         } else if (Rules.league instanceof HL) {
             pen = new JToggleButton[6];
@@ -478,7 +471,6 @@ public class GUI extends JFrame implements GCGUI
         cancelUndo = new Button(CANCEL);
         cancelUndo.setVisible(false);
       
-        
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
@@ -603,7 +595,7 @@ public class GUI extends JFrame implements GCGUI
         clockReset.addActionListener(ActionBoard.clockReset);
         clockPause.addActionListener(ActionBoard.clockPause);
         if (Rules.league.lostTime) {
-          incGameClock.addActionListener(ActionBoard.incGameClock);
+            incGameClock.addActionListener(ActionBoard.incGameClock);
         }
         firstHalf.addActionListener(ActionBoard.firstHalf);
         secondHalf.addActionListener(ActionBoard.secondHalf);
@@ -621,12 +613,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5].addActionListener(ActionBoard.holding);
             pen[6].addActionListener(ActionBoard.hands);
             pen[7].addActionListener(ActionBoard.pickUp);
-            if(data.dropInPlayerMode){
-                pen[8].addActionListener(ActionBoard.teammatePushing);
-            }
-            else{
-                pen[8].addActionListener(ActionBoard.coachMotion);
-            }
+            pen[8].addActionListener(data.dropInPlayerMode ? ActionBoard.teammatePushing : ActionBoard.coachMotion);
             pen[9].addActionListener(ActionBoard.substitute);
         } else if (Rules.league instanceof HL) {
             pen[0].addActionListener(ActionBoard.ballManipulation);
@@ -972,10 +959,10 @@ public class GUI extends JFrame implements GCGUI
         for (int i=0; i<robot.length; i++) {
             for (int j=0; j<robot[i].length; j++) {
                 if (ActionBoard.robot[i][j].isCoach(data)) {
-                   if(data.team[i].coach.penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION){
+                   if (data.team[i].coach.penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION){
                       robot[i][j].setEnabled(false);
                       robotLabel[i][j].setText(EJECTED);
-                  }else{
+                  } else {
                       robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+COACH);
                   }
                 }
@@ -1092,7 +1079,7 @@ public class GUI extends JFrame implements GCGUI
         }
     }
     
-        /**
+    /**
      * Updates the dropped-ball button.
      * 
      * @param data     The current data (model) the GUI should view.
@@ -1113,8 +1100,7 @@ public class GUI extends JFrame implements GCGUI
             out[i].setEnabled(ActionBoard.out[i].isLegal(data));
         }
     }
-    
-    
+
     /**
      * Updates the SPL penalties.
      * 
@@ -1133,12 +1119,8 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setEnabled(ActionBoard.holding.isLegal(data));
         pen[6].setEnabled(ActionBoard.hands.isLegal(data));
         pen[7].setEnabled(ActionBoard.pickUp.isLegal(data));
-        if(data.dropInPlayerMode){
-            pen[8].setEnabled(ActionBoard.teammatePushing.isLegal(data));
-        }
-        else{
-            pen[8].setEnabled(ActionBoard.coachMotion.isLegal(data));
-        }
+        pen[8].setEnabled(data.dropInPlayerMode ? ActionBoard.teammatePushing.isLegal(data)
+                : ActionBoard.coachMotion.isLegal(data));
         pen[9].setEnabled(ActionBoard.substitute.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
@@ -1150,16 +1132,12 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setSelected(hightlightEvent == ActionBoard.holding);
         pen[6].setSelected(hightlightEvent == ActionBoard.hands);
         pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
-        if(data.dropInPlayerMode){
-            pen[8].setSelected(hightlightEvent == ActionBoard.teammatePushing);
-        }
-        else{
-            pen[8].setSelected(hightlightEvent == ActionBoard.coachMotion);
-        }
+        pen[8].setSelected(data.dropInPlayerMode ? hightlightEvent == ActionBoard.teammatePushing
+                : hightlightEvent == ActionBoard.coachMotion);
         pen[9].setSelected(hightlightEvent == ActionBoard.substitute);
     }
     
-        /**
+    /**
      * Updates the HL penalties.
      * 
      * @param data     The current data (model) the GUI should view.
@@ -1225,8 +1203,7 @@ public class GUI extends JFrame implements GCGUI
         timeSubFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIME_SUB_FONT_SIZE*(size)));
         timeoutFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIMEOUT_FONT_SIZE*(size)));
         stateFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STATE_FONT_SIZE*(size)));
-        refereeTimeoutFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STATE_FONT_SIZE*(size)));
-        
+
         for (int i=0; i<=1; i++) {
             name[i].setFont(titleFont);
             goalInc[i].setFont(standardFont);
@@ -1246,27 +1223,17 @@ public class GUI extends JFrame implements GCGUI
         clock.setFont(timeFont);
         clockSub.setFont(timeSubFont);
         
+        firstHalf.setFont(timeoutFont);
+        secondHalf.setFont(timeoutFont);
         if (Rules.league.overtime) {
-            firstHalf.setFont(timeoutFont);
-            
-            secondHalf.setFont(timeoutFont);
-            secondHalf.setMargin(new Insets(0, 0, 0, 0));
-            
-            refereeTimeout.setFont(refereeTimeoutFont);
-            refereeTimeout.setMargin(new Insets(0, 0, 0, 0));
-            
             firstHalfOvertime.setFont(timeoutFont);
             secondHalfOvertime.setFont(timeoutFont);
-            
-            penaltyShoot.setFont(timeoutFont);
-            penaltyShoot.setMargin(new Insets(0, 0, 0, 0));
         }
-        else {
-            firstHalf.setFont(timeoutFont);
-            secondHalf.setFont(timeoutFont);
-            refereeTimeout.setFont(refereeTimeoutFont);
-            penaltyShoot.setFont(timeoutFont);
+        penaltyShoot.setFont(timeoutFont);
+        if (Rules.league.isRefereeTimeoutAvailable) {
+            refereeTimeout.setFont(timeoutFont);
         }
+
         initial.setFont(stateFont);
         ready.setFont(stateFont);
         set.setFont(stateFont);
