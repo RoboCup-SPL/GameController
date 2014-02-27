@@ -17,8 +17,7 @@ public class TimeOut extends GCAction
 {
     /** On which side (0:left, 1:right) */
     private int side;
-    private byte previousSecGameState = GameControlData.STATE2_NORMAL;
-    
+
     /**
      * Creates a new TimeOut action.
      * Look at the ActionBoard before using this.
@@ -40,7 +39,7 @@ public class TimeOut extends GCAction
     public void perform(AdvancedData data)
     {
         if(!data.timeOutActive[side]) {
-            previousSecGameState = data.secGameState;
+            data.previousSecGameState = data.secGameState;
             data.secGameState = GameControlData.STATE2_TIMEOUT;
             data.timeOutActive[side] = true;
             data.timeOutTaken[side] = true;
@@ -53,7 +52,7 @@ public class TimeOut extends GCAction
             data.gameState = -1; // something impossible to force execution of next call
             ActionBoard.initial.perform(data);
         } else {
-            data.secGameState = previousSecGameState;
+            data.secGameState = data.previousSecGameState;
             data.timeOutActive[side] = false;
             Log.setNextMessage("End of Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {

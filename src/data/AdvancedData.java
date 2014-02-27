@@ -79,7 +79,10 @@ public class AdvancedData extends GameControlData implements Cloneable
     
     /** Time offset resulting from starting the clock when it should be stopped. */
     public long manRemainingGameTimeOffset;
-    
+
+    /** Used to backup the secondary game state during a timeout. */
+    public byte previousSecGameState = STATE2_NORMAL;
+
     /**
      * Creates a new AdvancedData.
      */
