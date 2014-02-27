@@ -380,10 +380,9 @@ public class GUI extends JFrame implements GCGUI
         clockReset = new ImageButton(clockImgReset.getImage());
         clockReset.setOpaque(false);
         clockReset.setBorder(null);
-        if(Rules.league.lostTime){
+        if(Rules.league.lostTime) {
             clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_CLOCK_SMALL).getImage());
-        }
-        else{
+        } else {
             clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_CLOCK).getImage());
         }
         clockContainer.setOpaque(false);

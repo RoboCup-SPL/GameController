@@ -44,7 +44,7 @@ public class PlayerInfo implements Serializable
             1;  // secsToUnpen
     
     //this is streamed
-    public byte penalty = PENALTY_NONE;    // penalty state of the player
+    public byte penalty = PENALTY_NONE; // penalty state of the player
     public byte secsTillUnpenalised;    // estimate of time till unpenalised
     
     /**
