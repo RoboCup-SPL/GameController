@@ -2,7 +2,6 @@ package controller;
 
 import controller.action.ActionBoard;
 
-
 /**
  *
  * @author Michel Bartsch
@@ -18,19 +17,20 @@ public class Clock
      */
     public static final int HEARTBEAT = 500; // 2Hz
     
-    
     /**
      * Lets the Clock start to run.
      */
     public void start()
     {   
-        while (true)
+        while (!Thread.currentThread().isInterrupted())
         {
             ActionBoard.clock.actionPerformed(null);
             
             try {
                 Thread.sleep(HEARTBEAT);
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
