@@ -22,7 +22,9 @@ import java.net.*;
 public class Sender extends Thread {
     /** The instance of the singleton. */
     private static Sender instance;
-    private static byte packetNumber = 0;
+
+    /** The packet number that is increased with each packet sent. */
+    private byte packetNumber = 0;
     
     /** The socket, which is used to send the current game-state */
     private final DatagramSocket datagramSocket;
