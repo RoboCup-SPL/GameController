@@ -23,7 +23,7 @@ public class CoachMotion extends Penalty {
         data.whenPenalized[side][number] = data.getTime();
         data.team[side].coach.penalty = PlayerInfo.PENALTY_SPL_COACH_MOTION;
         data.ejected[side][number] = true;
-        Log.state(data, "Coach Motion: Coach "+ Rules.league.teamColorName[data.team[side].teamColor]);
+        Log.state(data, "Coach Motion "+ Rules.league.teamColorName[data.team[side].teamColor]);
     }
     
     /**
