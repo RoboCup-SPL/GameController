@@ -208,6 +208,6 @@ There are still a number of issues left:
   receive the GameController packets anymore. This error is hard to reproduce,
   but it happened quite often in Eindhoven.
   
-- There is no makefile to build libgamectrl from the source files.
+- The qibuild file for libgamectrl is untested.
 
 - The alignment of button labels is bad if the buttons are small.
