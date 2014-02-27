@@ -43,7 +43,6 @@ public class EventHandler
      */
     public boolean noLastUIEvent = false;
 
-    
     /**
      * Creates a new EventHandler.
      */
@@ -79,7 +78,8 @@ public class EventHandler
      * 
      * @param event     The action calling.
      */
-    public void register(final GCAction event) {
+    public void register(final GCAction event)
+    {
         if (EventQueue.isDispatchThread()) {
             // current thread is dispatcher, no need to use EventQueue
             if (event.isLegal(data)) {
