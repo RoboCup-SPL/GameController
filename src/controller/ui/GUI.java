@@ -570,7 +570,9 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.31, .67, .185, .08, pen[6]);
             layout.add(.505, .67, .185, .08, pen[7]);
             layout.add(.31, .77, .185, .08, pen[8]);
-            layout.add(.505, .77, .185, .08, pen[9]);
+            if (Rules.league.teamSize > Rules.league.robotsPlaying) {
+                layout.add(.505, .77, .185, .08, pen[9]);
+            }
         } else if (Rules.league instanceof HL) {
             layout.add(.31, .38, .185, .11, pen[0]);
             layout.add(.505, .38, .185, .11, pen[1]);

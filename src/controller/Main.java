@@ -140,6 +140,7 @@ public class Main
         data.dropInPlayerMode = input.dropInPlayerMode;
         if (data.dropInPlayerMode) {
             Rules.league.isCoachAvailable = false; // Remove the coach for the drop-in player competition
+            Rules.league.teamSize = Rules.league.robotsPlaying; // No substitutes
         }
         
         data.colorChangeAuto = input.outAutoColorChange;
