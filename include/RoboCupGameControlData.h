@@ -105,9 +105,9 @@ struct RoboCupGameControlReturnData
 {
   char header[4];
   uint8_t version;
-  uint8_t team;
-  uint8_t player; // player number starts with 0
-  uint8_t message;
+  uint8_t team;    // team number
+  uint8_t player;  // player number starts with 0
+  uint8_t message; // one of the three messages defined above
 
 #ifdef __cplusplus
   // constructor
