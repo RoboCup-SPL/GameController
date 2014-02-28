@@ -75,11 +75,15 @@ public class GameControlReturnData
                 return false;
             } else {
                 version = buffer.get();
-                team = buffer.get();
-                player = buffer.get();
-                message = buffer.get();
+                if(version != GAMECONTROLLER_RETURN_STRUCT_VERSION) {
+                    return false;
+                } else {
+                    team = buffer.get();
+                    player = buffer.get();
+                    message = buffer.get();
 
-                return true;
+                    return true;
+                }
             }
         } catch (RuntimeException e) {
             return false;

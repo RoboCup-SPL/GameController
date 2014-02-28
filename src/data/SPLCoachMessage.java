@@ -56,13 +56,17 @@ public class SPLCoachMessage implements Serializable
                 return false;
             } else {
                 version = buffer.get();
-                team = buffer.get();
-                if((team != EventHandler.getInstance().data.team[0].teamNumber) && (team != EventHandler.getInstance().data.team[1].teamNumber)){
+                if (version != SPL_COACH_MESSAGE_STRUCT_VERSION) {
                     return false;
+                } else {
+                    team = buffer.get();
+                    if ((team != EventHandler.getInstance().data.team[0].teamNumber) && (team != EventHandler.getInstance().data.team[1].teamNumber)) {
+                        return false;
+                    }
+                    message = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
+                    buffer.get(message);
+                    return true;
                 }
-                message = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
-                buffer.get(message);
-                return true;
             }
         } catch (RuntimeException e) {
             return false;
