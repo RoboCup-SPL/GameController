@@ -109,8 +109,8 @@ public class ActionBoard
     public static DropBall dropBall;
     public static SPLCoachMessageReceived splCoachMessageReceived;
 
-    public static Manual[][] manualPen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
-    public static Manual[][] manualUnpen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
+    public static Manual[][] manualPen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
+    public static Manual[][] manualUnpen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
     
     
     /**
@@ -129,7 +129,7 @@ public class ActionBoard
         }
         cancelUndo = new CancelUndo();
         
-        if(SPL.league.isCoachAvailable){
+        if(Rules.league.isCoachAvailable){
             robot = new Robot[2][Rules.league.teamSize+1];
         }
         else{

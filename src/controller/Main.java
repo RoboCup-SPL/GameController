@@ -139,7 +139,7 @@ public class Main
         }
         data.dropInPlayerMode = input.dropInPlayerMode;
         if (data.dropInPlayerMode) {
-            SPL.league.isCoachAvailable = false; // Remove the coach for the drop-in player competition
+            Rules.league.isCoachAvailable = false; // Remove the coach for the drop-in player competition
         }
         
         data.colorChangeAuto = input.outAutoColorChange;
