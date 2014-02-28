@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import common.Log;
 import controller.EventHandler;
 import controller.action.ActionBoard;
+import controller.action.net.SPLCoachMessageReceived;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
@@ -52,8 +53,7 @@ public class SPLCoachMessageReceiver extends Thread
 
                 final SPLCoachMessage coach = new SPLCoachMessage();
                 if (coach.fromByteArray(buffer)) {
-                    ActionBoard.splCoachMessageReceived.message = coach;
-                    ActionBoard.splCoachMessageReceived.actionPerformed(null);
+                    new SPLCoachMessageReceived(coach).actionPerformed(null);
                 }
             } catch (IOException e) {
                 Log.error("something went wrong while receiving the coach packages : " + e.getMessage());

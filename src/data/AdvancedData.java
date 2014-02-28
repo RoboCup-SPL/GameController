@@ -86,8 +86,6 @@ public class AdvancedData extends GameControlData implements Cloneable
 
     /** Keeps the penalties for the players if there are substituted */
     public ArrayList<ArrayList<Long>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<Long>>();
-    /** Keeps the information that the coach message should be rejected*/
-    public boolean rejectCoachMessage[] = {false, false};
     /** Keep the timestamp when a coach message was received*/
     public long timestampCoachPackage[] = {0, 0};
     /** Keep the coach messages*/
@@ -369,12 +367,6 @@ public class AdvancedData extends GameControlData implements Cloneable
                 }
             } else {
                 i++;
-            }
-        }
-
-        for (i = 0; i < 2; i++) {
-            if (System.currentTimeMillis() - timestampCoachPackage[i] >= SPLCoachMessage.SPL_COACH_MESSAGE_RECEIVE_INTERVALL) {
-                rejectCoachMessage[i] = false;
             }
         }
     }
