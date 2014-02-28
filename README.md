@@ -6,6 +6,9 @@ If there are any questions, please contact seba@informatik.uni-bremen.de .
 
 Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
 
+The sources mentioned in some sections of this document are available at
+https://github.com/bhuman/GameController .
+
 
 ## 1. Building from Source
 
@@ -43,9 +46,11 @@ Select your league. The default can be specified as a command line parameter (se
 Pick the two teams that are playing. They have to be different teams. If you are 
 practicing alone, use the "Invisibles" as second team.
 
-SPL: You also have to select whether you play a game in the preliminaries or a play-off
-game. In the preliminaries the clock will continue to run during game stoppages and
-there will be no penalties shootout in case of a draw.
+SPL: You also have to select whether you play a game in the preliminaries, a play-off
+game, or a drop-in player game. In the preliminaries and in drop-player games the clock
+will continue to run during game stoppages and there will be no penalty shootout in case
+of a draw. In drop-in player games, there are no coaches, teams cannot call a timeout,
+and there are no substitutes.
 
 HL: You also have to select whether you play a normal game or a knock-out game. A
 knock-out game will continue after a draw with two halves of extra time (if goals were
@@ -71,20 +76,27 @@ decision again to actually undo it together with all decisions that followed.
 
 To penalize a robot, first press the penalty button, then the robot button. For
 unpenalizing a robot, just press the robot button. A robot can only be unpenalized, when
-its penalty time is over or when the game state changes (SPL only). Five seconds before
+its penalty time is over or when the game state changes (SPL only). Ten seconds before
 the penalty time is over, the robot's button starts flashing yellow. For regular penalties,
 it continues to flash until the button is pressed. Only buttons of robots that were
-requested for pickup stop flashing after five seconds and simply stay yellow until they are
+requested for pickup stop flashing after ten seconds and simply stay yellow until they are
 pressed, as a reminder that the robot can return as soon as it is ready.
 
 Before unpenalizing a robot, please make sure that it was put back on the field by the
 assistant referees. For that reason, robots are never unpenalized automatically.
 
 To substitute a robot, press "Substitute" and then the robot that should leave the field.
-Afterwards, any of the substitutes can be be activated.
+Afterwards, any of the substitutes can be be activated. If the robot that is replaced is
+already penalized, its substitute inherits the penalty. If it is not, the substitute gets
+a "request for pickup" penalty before it can enter the field.
 
-When pressing "+" (goal), "Timeout", "Kickoff Goal", or "Global Game Stuck", the other team
-gets the next kick-off. "Kickoff Goal" and "Global Game Stuck" share the same button.
+When pressing the big "+" (goal), "Timeout", "Kickoff Goal", or "Global Game Stuck", the
+other team gets the next kick-off. "Kickoff Goal" and "Global Game Stuck" share the same
+button.
+
+SPL: When the referee decides that too much game time has been lost, use the thin "+" next
+to the clock to increase the game time in one-minute steps. This is only available during
+stoppages of play.
 
 
 ## 4. Shortcuts
@@ -181,9 +193,13 @@ The coach broadcasts messages as defined in SPLCoachMessage.h to the UDP port
 SPL_COACH_MESSAGE_PORT through the wireless network. Players are not permitted
 to listen to this port. The GameController will integrate the coach messages
 into the RoboCupGameControlData packet with a delay and forward them to the
-players according to the SPL rules.
+players according to the SPL rules. Since coach messages must be human readable,
+it is assumed that they are a zero-terminated string and all data after the
+first zero character is zeroed, too.
 
-The GameStateVisualizer will also display the coach messages.
+The GameStateVisualizer also displays the coach messages.
+
+Please note that the field "team" now contains the team number, not its color.
 
 
 ## 7. Misc
@@ -207,14 +223,15 @@ from the version used in 2013 in several ways:
   substitute. Player number 6 is penalized this way right from the beginning,
   waiting for being substituted for another player.
 
-- Because of the substitute, playersPerTeam is 6 now in the SPL.
+- Because of the substitute, playersPerTeam is 6 now in regular SPL games, but
+  not in drop-in player games.
 
 - The new PENALTY_SPL_COACH_MOTION was added.
 
 - There is a new secondary game state STATE2_TIMEOUT.
   
-- The custom types uint8, uint16, and uint32 were replaced by the official standard
-  types uint8_t, uint16_t, and uint32_t defined in <stdint.h> (or <cstdint>). Please
+- The custom types uint8, uint16, and uint32 were replaced by the standard types
+  uint8_t, uint16_t, and uint32_t defined in <stdint.h> (or <cstdint>). Please
   note that including RoboCupGameControlData.h inside a namespace now has strange
   effects. They can avoided by including <stdint.h> before opening the namespace.
   
@@ -226,6 +243,8 @@ from the version used in 2013 in several ways:
 There are still a number of issues left:
 
 - All teams can be selected for the drop-in player competition.
+
+- Coach messages are currently not logged.
 
 - When running on the same PC, the GameStateVisualizer sometimes does not
   receive the GameController packets anymore. This error is hard to reproduce,
