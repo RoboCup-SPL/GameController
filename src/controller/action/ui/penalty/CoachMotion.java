@@ -34,6 +34,6 @@ public class CoachMotion extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return true;
+        return Rules.league.isCoachAvailable;
     }
 }
