@@ -337,27 +337,28 @@ public class AdvancedData extends GameControlData implements Cloneable
             return getRemainingPauseTime();
         }
     }
-    
-    public void updateCoachMessages(){
+
+    /**
+     * Dispatch the coach messages. Since coach messages are texts, the messages are zeroed
+     * after the first zero character, to avoid the transport of information the
+     * GameStateVisualizer would not show.
+     */
+    public void updateCoachMessages()
+    {
         int i = 0;
         while (i < splCoachMessageQueue.size()) {
             if (splCoachMessageQueue.get(i).getRemainingTimeToSend() == 0) {
                 for (int j = 0; j < 2; j++) {
-                    if (team[j].teamNumber == splCoachMessageQueue.get(i).team ) {
+                    if (team[j].teamNumber == splCoachMessageQueue.get(i).team) {
                         byte[] message = splCoachMessageQueue.get(i).message;
                         
-                        //All other chars after the null-terminated char will be replaced by zeros 
+                        // All chars after the first zero are zeroed, too
                         int k = 0;
-                        while (k < message.length){
-                            if(message[k] != 0){
-                                k++;
-                            }
-                            else{
-                                while(k < message.length){
-                                    message[k] = 0;
-                                    k++;
-                                }
-                            }
+                        while (k < message.length && message[k] != 0) {
+                            k++;
+                        }
+                        while (k < message.length) {
+                            message[k++] = 0;
                         }
                         
                         team[j].coachMessage = message;

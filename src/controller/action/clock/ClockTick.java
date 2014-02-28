@@ -60,16 +60,17 @@ public class ClockTick extends GCAction
         return true;
     }
     
-    public boolean isClockRunning(AdvancedData data) {
+    public boolean isClockRunning(AdvancedData data)
+    {
         boolean halfNotStarted = data.timeBeforeCurrentGameState == 0 && data.gameState != GameControlData.STATE_PLAYING;
-        return ( !((data.gameState == GameControlData.STATE_INITIAL)
+        return !((data.gameState == GameControlData.STATE_INITIAL)
          || (data.gameState == GameControlData.STATE_FINISHED)
          || (
                 ((data.gameState == GameControlData.STATE_READY)
                || (data.gameState == GameControlData.STATE_SET))
                 && ((data.playoff && Rules.league.playOffTimeStop) || halfNotStarted)
                 )
-         || data.manPause )
-         || data.manPlay       );
+         || data.manPause)
+         || data.manPlay;
     }
 }
