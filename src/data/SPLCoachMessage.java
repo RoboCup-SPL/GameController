@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import controller.EventHandler;
+
 public class SPLCoachMessage implements Serializable
 {
     /** Some constants from the C-structure. */
@@ -16,7 +18,7 @@ public class SPLCoachMessage implements Serializable
     public static final long SPL_COACH_MESSAGE_MAX_SEND_INTERVALL = 12000; // in ms
     public static final int SIZE = 4 // header size
                                    + 1 // byte for the version
-                                   + 1 // team number (0 = blue, 1 = red)
+                                   + 1 // team number
                                    + SPL_COACH_MESSAGE_SIZE;
 
     public String header;   // header to identify the structure
@@ -55,7 +57,7 @@ public class SPLCoachMessage implements Serializable
             } else {
                 version = buffer.get();
                 team = buffer.get();
-                if((team > 1) || (team < 0)){
+                if((team != EventHandler.getInstance().data.team[0].teamNumber) && (team != EventHandler.getInstance().data.team[1].teamNumber)){
                     return false;
                 }
                 message = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];

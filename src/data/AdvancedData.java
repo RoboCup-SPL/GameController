@@ -345,7 +345,7 @@ public class AdvancedData extends GameControlData implements Cloneable
         while (i < splCoachMessageQueue.size()) {
             if (splCoachMessageQueue.get(i).getRemainingTimeToSend() == 0) {
                 for (int j = 0; j < 2; j++) {
-                    if (team[j].teamColor == splCoachMessageQueue.get(i).team ) {
+                    if (team[j].teamNumber == splCoachMessageQueue.get(i).team ) {
                         byte[] message = splCoachMessageQueue.get(i).message;
                         
                         //All other chars after the null-terminated char will be replaced by zeros 

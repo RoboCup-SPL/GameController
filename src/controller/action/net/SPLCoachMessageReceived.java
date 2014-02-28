@@ -16,11 +16,11 @@ public class SPLCoachMessageReceived extends GCAction {
     
     @Override
     public void perform(AdvancedData data) {
-        byte team = (data.team[0].teamColor == message.team)? (byte)0 : (byte)1;
+        byte team = (data.team[0].teamNumber == message.team)? (byte)0 : (byte)1;
         RobotWatcher.updateCoach(team);
-        if (!data.rejectCoachMessage[message.team] && (data.team[team].coach.penalty != PlayerInfo.PENALTY_SPL_COACH_MOTION)) {
-            data.rejectCoachMessage[message.team] = true;
-            data.timestampCoachPackage[message.team] = System.currentTimeMillis();
+        if (!data.rejectCoachMessage[team] && (data.team[team].coach.penalty != PlayerInfo.PENALTY_SPL_COACH_MOTION)) {
+            data.rejectCoachMessage[team] = true;
+            data.timestampCoachPackage[team] = System.currentTimeMillis();
             data.splCoachMessageQueue.add(message);
         }
     }
