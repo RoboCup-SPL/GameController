@@ -29,7 +29,6 @@ import javax.swing.JToggleButton;
 import common.Log;
 import common.TotalScaleLayout;
 import controller.Clock;
-
 import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
@@ -41,6 +40,7 @@ import data.HL;
 import data.PlayerInfo;
 import data.Rules;
 import data.SPL;
+import data.SPLCoachMessage;
 import data.Teams;
 
 

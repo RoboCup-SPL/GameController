@@ -1,9 +1,10 @@
 package data;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class SPLCoachMessage
+public class SPLCoachMessage implements Serializable
 {
     /** Some constants from the C-structure. */
     public static final int SPL_COACH_MESSAGE_PORT = 3839;

@@ -86,6 +86,12 @@ public class AdvancedData extends GameControlData implements Cloneable
 
     /** Keeps the penalties for the players if there are substituted */
     public ArrayList<ArrayList<Long>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<Long>>();
+    /** Keeps the information that the coach message should be rejected*/
+    public boolean rejectCoachMessage[] = {false, false};
+    /** Keep the timestamp when a coach message was received*/
+    public long timestampCoachPackage[] = {0, 0};
+    /** Keep the coach messages*/
+    public  ArrayList<SPLCoachMessage> splCoachMessageQueue = new ArrayList<SPLCoachMessage>();
     /**
      * Creates a new AdvancedData.
      */
@@ -331,6 +337,45 @@ public class AdvancedData extends GameControlData implements Cloneable
             return timeKickOffBlocked;
         } else {
             return getRemainingPauseTime();
+        }
+    }
+    
+    public void updateCoachMessages(){
+        int i = 0;
+        while (i < splCoachMessageQueue.size()) {
+            if (splCoachMessageQueue.get(i).getRemainingTimeToSend() == 0) {
+                for (int j = 0; j < 2; j++) {
+                    if (team[j].teamColor == splCoachMessageQueue.get(i).team ) {
+                        byte[] message = splCoachMessageQueue.get(i).message;
+                        
+                        //All other chars after the null-terminated char will be replaced by zeros 
+                        int k = 0;
+                        while (k < message.length){
+                            if(message[k] != 0){
+                                k++;
+                            }
+                            else{
+                                while(k < message.length){
+                                    message[k] = 0;
+                                    k++;
+                                }
+                            }
+                        }
+                        
+                        team[j].coachMessage = message;
+                        splCoachMessageQueue.remove(i);
+                        break;
+                    }
+                }
+            } else {
+                i++;
+            }
+        }
+
+        for (i = 0; i < 2; i++) {
+            if (System.currentTimeMillis() - timestampCoachPackage[i] >= SPLCoachMessage.SPL_COACH_MESSAGE_RECEIVE_INTERVALL) {
+                rejectCoachMessage[i] = false;
+            }
         }
     }
 }

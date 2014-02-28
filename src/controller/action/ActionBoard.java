@@ -2,6 +2,7 @@ package controller.action;
 
 import controller.action.clock.ClockTick;
 import controller.action.net.Manual;
+import controller.action.net.SPLCoachMessageReceived;
 import controller.action.ui.CancelUndo;
 import controller.action.ui.ClockPause;
 import controller.action.ui.ClockReset;
@@ -106,6 +107,7 @@ public class ActionBoard
     public static TeammatePushing teammatePushing;
     public static Substitute substitute;
     public static DropBall dropBall;
+    public static SPLCoachMessageReceived splCoachMessageReceived;
 
     public static Manual[][] manualPen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = SPL.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
@@ -179,7 +181,8 @@ public class ActionBoard
         teammatePushing = new TeammatePushing();
         substitute = new Substitute();
         dropBall = new DropBall();
-
+        splCoachMessageReceived = new SPLCoachMessageReceived();
+        
         for (int i=0; i<2; i++) {
             for (int j=0; j<Rules.league.teamSize; j++) {
                 manualPen[i][j] = new Manual(i, j, false);
