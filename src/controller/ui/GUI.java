@@ -499,7 +499,7 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.71, .16, .08, .04, pushes[1]);
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
-        if (Rules.league instanceof SPL) {
+        if (Rules.league instanceof SPL && !data.dropInPlayerMode) {
             layout.add(.01, .77, .09, .09, timeOut[0]);
             layout.add(.9, .77, .09, .09, timeOut[1]);
             layout.add(.11, .77, .08, .09, stuck[0]);
@@ -507,8 +507,13 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.20, .77, .09, .09, out[0]);
             layout.add(.71, .77, .09, .09, out[1]);
         } else {
-            layout.add(.01, .77, .135, .09, timeOut[0]);
-            layout.add(.855, .77, .135, .09, timeOut[1]);
+            if (Rules.league instanceof SPL) {
+                layout.add(.01, .77, .135, .09, stuck[0]);
+                layout.add(.855, .77, .135, .09, stuck[1]);
+            } else {
+                layout.add(.01, .77, .135, .09, timeOut[0]);
+                layout.add(.855, .77, .135, .09, timeOut[1]);
+            }
             layout.add(.155, .77, .135, .09, out[0]);
             layout.add(.71, .77, .135, .09, out[1]);
         }
@@ -524,16 +529,15 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.4, .0, .2, .11, clockContainer);
         }
         if (!Rules.league.overtime) {
-            if (Rules.league.isRefereeTimeoutAvailable) {
+            if (Rules.league.isRefereeTimeoutAvailable && !data.dropInPlayerMode) {
                 layout.add(.31, .19, .09, .06, firstHalf);
                 layout.add(.407, .19, .09, .06, secondHalf);
                 layout.add(.503, .19, .09, .06, penaltyShoot);
                 layout.add(.60, .19, .09, .06, refereeTimeout);
-            }
-            else {
+            } else { // no referee timeout in dropInPlayerMode is not supported!
                 layout.add(.31, .19, .12, .06, firstHalf);
                 layout.add(.44, .19, .12, .06, secondHalf);
-                layout.add(.57, .19, .12, .06, penaltyShoot);
+                layout.add(.57, .19, .12, .06, data.dropInPlayerMode ? refereeTimeout : penaltyShoot);
             }
         } else {
             if (Rules.league.isRefereeTimeoutAvailable) {
@@ -543,8 +547,7 @@ public class GUI extends JFrame implements GCGUI
                 layout.add(.501, .19, .06, .06, secondHalfOvertime);
                 layout.add(.565, .19, .06, .06, penaltyShoot);
                 layout.add(.63, .19, .06, .06, refereeTimeout);
-            }
-            else {
+            } else {
                 layout.add(.31, .19, .07, .06, firstHalf);
                 layout.add(.3875, .19, .07, .06, secondHalf);
                 layout.add(.465, .19, .07, .06, firstHalfOvertime);
