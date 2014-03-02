@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import controller.action.ActionBoard;
@@ -85,7 +86,8 @@ public class AdvancedData extends GameControlData implements Cloneable
     public byte previousSecGameState = STATE2_NORMAL;
 
     /** Keeps the penalties for the players if there are substituted */
-    public ArrayList<ArrayList<Long>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<Long>>();
+    public ArrayList<ArrayList<PenaltyQueueData>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<PenaltyQueueData>>();
+
     /** Keep the timestamp when a coach message was received*/
     public long timestampCoachPackage[] = {0, 0};
     /** Keep the coach messages*/
@@ -104,10 +106,10 @@ public class AdvancedData extends GameControlData implements Cloneable
                     team[i].player[j].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
                 }
             }
-            penaltyQueueForSubPlayers.add(new ArrayList<Long>());
+            penaltyQueueForSubPlayers.add(new ArrayList<PenaltyQueueData>());
         }
     }
-    
+
     /**
      * Generically clone this object. Everything referenced must be Serializable.
      * @return A deep copy of this object.
@@ -371,4 +373,19 @@ public class AdvancedData extends GameControlData implements Cloneable
             }
         }
     }
+
+    public class PenaltyQueueData  implements Serializable {
+        public long whenPenalized;
+        public byte penalty;
+
+        public PenaltyQueueData(long whenPenalized, byte penalty) {
+            this.whenPenalized = whenPenalized;
+            this.penalty = penalty;
+        }
+    }
+
+    public void addToPenaltyQueue(int side, long whenPenalized, byte penalty) {
+        penaltyQueueForSubPlayers.get(side).add(new PenaltyQueueData(whenPenalized, penalty));
+    }
+
 }
