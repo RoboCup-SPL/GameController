@@ -7,9 +7,9 @@ import data.Rules;
 
 /**
  *
- * @author Michel-Zen
+ * @author Daniel Seifert
  */
-public class PickUpHL extends Penalty
+public class ServiceHL extends PickUp
 {
     /**
      * Performs this action`s penalty on a selected player.
@@ -24,21 +24,15 @@ public class PickUpHL extends Penalty
     {
         if (player.penalty == PlayerInfo.PENALTY_NONE) {
             data.whenPenalized[side][number] = data.getTime();
+            player.penalty = PlayerInfo.PENALTY_HL_SERVICE;
+            Log.state(data, "Request for Service " +
+                    Rules.league.teamColorName[data.team[side].teamColor]
+                    + " " + (number+1));
+        } else {
+            player.penalty = PlayerInfo.PENALTY_HL_SERVICE;
+            Log.state(data, "Additional Request for Service " +
+                    Rules.league.teamColorName[data.team[side].teamColor]
+                    + " " + (number+1));
         }
-
-        player.penalty = PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE;
-        Log.state(data, "Request for PickUp / Incapable Player "+ Rules.league.teamColorName[data.team[side].teamColor]+ " " + (number+1));
-    }
-
-    /**
-     * Checks if this action is legal with the given data (model).
-     * Illegal actions are not performed by the EventHandler.
-     *
-     * @param data      The current data to check with.
-     */
-    @Override
-    public boolean isLegal(AdvancedData data)
-    {
-        return true;
     }
 }

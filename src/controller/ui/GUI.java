@@ -170,7 +170,8 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_PHYSICAL = "Physical Contact";
     private static final String PEN_DEFENSE = "Illegal Defense";
     private static final String PEN_ATTACK = "Illegal Attack";
-    private static final String PEN_SERVICE = "Service/Incapable";
+    private static final String PEN_PICKUP_INCAPABLE = "Pickup/Incapable";
+    private static final String PEN_SERVICE = "Service";
     private static final String PEN_SUBSTITUTE = "Substitute";
     private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String DROP_BALL = "Dropped Ball";
@@ -458,13 +459,14 @@ public class GUI extends JFrame implements GCGUI
             pen[8] = new ToggleButton(data.dropInPlayerMode ? TEAMMATE_PUSHING : PEN_COACH_MOTION);
             pen[9] = new ToggleButton(PEN_SUBSTITUTE);
         } else if (Rules.league instanceof HL) {
-            pen = new JToggleButton[6];
+            pen = new JToggleButton[7];
             pen[0] = new ToggleButton(PEN_MANIPULATION);
             pen[1] = new ToggleButton(PEN_PHYSICAL);
             pen[2] = new ToggleButton(PEN_ATTACK);
             pen[3] = new ToggleButton(PEN_DEFENSE);
-            pen[4] = new ToggleButton(PEN_SERVICE);
-            pen[5] = new ToggleButton(PEN_SUBSTITUTE);
+            pen[4] = new ToggleButton(PEN_PICKUP_INCAPABLE);
+            pen[5] = new ToggleButton(PEN_SERVICE);
+            pen[6] = new ToggleButton(PEN_SUBSTITUTE);
             dropBall = new Button(DROP_BALL);
         }
         //--bottom--
@@ -574,13 +576,14 @@ public class GUI extends JFrame implements GCGUI
                 layout.add(.505, .77, .185, .08, pen[9]);
             }
         } else if (Rules.league instanceof HL) {
-            layout.add(.31, .38, .185, .11, pen[0]);
-            layout.add(.505, .38, .185, .11, pen[1]);
-            layout.add(.31, .50, .185, .11, pen[2]);
-            layout.add(.505, .50, .185, .11, pen[3]);
-            layout.add(.31, .62, .185, .11, pen[4]);
-            layout.add(.505, .62, .185, .11, pen[5]);
-            layout.add(.31, .77, .38, .09, dropBall);
+            layout.add(.31,  .38, .185, .08, pen[0]);
+            layout.add(.505, .38, .185, .08, pen[1]);
+            layout.add(.31,  .48, .185, .08, pen[2]);
+            layout.add(.505, .48, .185, .08, pen[3]);
+            layout.add(.31,  .58, .185, .08, pen[4]);
+            layout.add(.505, .58, .185, .08, pen[5]);
+            layout.add(.31,  .68, .185, .08, pen[6]);
+            layout.add(.31,  .78, .38,  .08, dropBall);
         }
         layout.add(.08, .88, .84, .11, log);
         layout.add(.925, .88, .07, .11, cancelUndo);
@@ -638,7 +641,8 @@ public class GUI extends JFrame implements GCGUI
             pen[2].addActionListener(ActionBoard.attack);
             pen[3].addActionListener(ActionBoard.defense);
             pen[4].addActionListener(ActionBoard.pickUpHL);
-            pen[5].addActionListener(ActionBoard.substitute);
+            pen[5].addActionListener(ActionBoard.serviceHL);
+            pen[6].addActionListener(ActionBoard.substitute);
             dropBall.addActionListener(ActionBoard.dropBall);
         }
         for (int i=0; i<undo.length; i++) {
@@ -990,9 +994,8 @@ public class GUI extends JFrame implements GCGUI
                             boolean pickup = ((Rules.league instanceof SPL &&
                                         data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
                                    || (Rules.league instanceof HL &&
-                                       ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_PICKUP
-                                      || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_REQUEST_FOR_SERVICE
-                                      || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE ))
+                                       ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE
+                                      || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_SERVICE ))
                                     );
                             if (seconds == 0) {
                                 if (pickup) {
@@ -1166,15 +1169,17 @@ public class GUI extends JFrame implements GCGUI
         pen[2].setEnabled(ActionBoard.attack.isLegal(data));
         pen[3].setEnabled(ActionBoard.defense.isLegal(data));
         pen[4].setEnabled(ActionBoard.pickUpHL.isLegal(data));
-        pen[5].setEnabled(ActionBoard.substitute.isLegal(data));
-        
+        pen[5].setEnabled(ActionBoard.serviceHL.isLegal(data));
+        pen[6].setEnabled(ActionBoard.substitute.isLegal(data));
+
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
         pen[0].setSelected(hightlightEvent == ActionBoard.ballManipulation);
         pen[1].setSelected(hightlightEvent == ActionBoard.pushing);
         pen[2].setSelected(hightlightEvent == ActionBoard.attack);
         pen[3].setSelected(hightlightEvent == ActionBoard.defense);
         pen[4].setSelected(hightlightEvent == ActionBoard.pickUpHL);
-        pen[5].setSelected(hightlightEvent == ActionBoard.substitute);
+        pen[5].setSelected(hightlightEvent == ActionBoard.serviceHL);
+        pen[6].setSelected(hightlightEvent == ActionBoard.substitute);
     }
     
     /**
