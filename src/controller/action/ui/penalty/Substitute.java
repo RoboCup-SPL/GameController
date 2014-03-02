@@ -27,7 +27,7 @@ public class Substitute extends Penalty
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         if(player.penalty != PlayerInfo.PENALTY_NONE){
-            data.penaltyQueueForSubPlayers.get(side).add(data.whenPenalized[side][number]);
+            data.addToPenaltyQueue(side, data.whenPenalized[side][number], player.penalty);
         }
         
         player.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
