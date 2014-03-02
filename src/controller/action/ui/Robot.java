@@ -14,6 +14,7 @@ import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.ServiceHL;
 import controller.action.ui.penalty.Substitute;
 import data.AdvancedData;
+import data.AdvancedData.PenaltyQueueData;
 import data.HL;
 import data.PlayerInfo;
 import data.Rules;
@@ -55,7 +56,7 @@ public class Robot extends GCAction
     {
         PlayerInfo player = data.team[side].player[number];
         if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
-            ArrayList<Long> playerInfoList = data.penaltyQueueForSubPlayers.get(side); 
+            ArrayList<PenaltyQueueData> playerInfoList = data.penaltyQueueForSubPlayers.get(side);
             if (playerInfoList.isEmpty()){
                 if (Rules.league instanceof HL) {
                     player.penalty = PlayerInfo.PENALTY_NONE;
@@ -64,14 +65,14 @@ public class Robot extends GCAction
                 }
                 data.whenPenalized[side][number] = data.getTime();
             } else {
-                Long playerInfo = playerInfoList.get(0);
+                PenaltyQueueData playerInfo = playerInfoList.get(0);
                 if (Rules.league instanceof HL) {
-                    player.penalty = PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE;
+                    player.penalty = playerInfo.penalty;
                 } else {
                     player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
                 }
-                
-                data.whenPenalized[side][number] = playerInfo;
+
+                data.whenPenalized[side][number] = playerInfo.whenPenalized;
                 playerInfoList.remove(0);
             }
             Log.state(data, "Entering Player " + Rules.league.teamColorName[data.team[side].teamColor]
