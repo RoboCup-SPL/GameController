@@ -36,6 +36,7 @@ import controller.action.ui.penalty.Leaving;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.Pushing;
+import controller.action.ui.penalty.ServiceHL;
 import controller.action.ui.penalty.Substitute;
 import controller.action.ui.state.Finish;
 import controller.action.ui.state.Initial;
@@ -102,6 +103,7 @@ public class ActionBoard
     public static Attack attack;
     public static Defense defense;
     public static PickUpHL pickUpHL;
+    public static ServiceHL serviceHL;
     public static CoachMotion coachMotion;
     public static TeammatePushing teammatePushing;
     public static Substitute substitute;
@@ -175,6 +177,7 @@ public class ActionBoard
         attack = new Attack();
         defense = new Defense();
         pickUpHL = new PickUpHL();
+        serviceHL = new ServiceHL();
         coachMotion = new CoachMotion();
         teammatePushing = new TeammatePushing();
         substitute = new Substitute();
