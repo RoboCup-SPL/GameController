@@ -181,9 +181,11 @@ public class StartInput extends JFrame implements Serializable
         autoColorChange.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         autoColorChange.setState(Rules.league.colorChangeAuto);
         autoColorChangePanel.add(autoColorChange);
-        autoColorChange.setVisible(false);
+        if (Rules.league instanceof SPL) {
+            autoColorChange.setVisible(false);
+        }
         autoColorChange.setState(Rules.league.colorChangeAuto);
-        
+
         optionsRight = new JPanel();
         optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT + 30));
         add(optionsRight);
@@ -221,11 +223,12 @@ public class StartInput extends JFrame implements Serializable
                         teamIconLabel[i].repaint();
                     }
                     teamsOK = false;
-                    
+
                     if (Rules.league instanceof SPL) {
                         nofulltime.setText(FULLTIME_LABEL_NO);
                         fulltime.setText(FULLTIME_LABEL_YES);
                         autoColorChange.setVisible(false);
+                        dropInPlayerGame.setText(DROP_IN_PLAYER_GAME);
                         dropInPlayerGame.setVisible(true);
                     } else {
                         nofulltime.setText(FULLTIME_LABEL_HL_NO);
@@ -252,12 +255,13 @@ public class StartInput extends JFrame implements Serializable
         } else {
             nofulltime.setText(FULLTIME_LABEL_HL_NO);
             fulltime.setText(FULLTIME_LABEL_HL_YES);
+            dropInPlayerGame.setVisible(false);
         }
         fulltimeGroup = new ButtonGroup();
         fulltimeGroup.add(nofulltime);
         fulltimeGroup.add(fulltime);
         fulltimeGroup.add(dropInPlayerGame);
-        
+
         optionsRight.add(nofulltime);
         optionsRight.add(fulltime);
         optionsRight.add(dropInPlayerGame);
