@@ -61,7 +61,7 @@ public class HL extends Rules
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty. */
-        penaltyTime = new int[] {-1, 30, 30, 30, 30, -1, 30, 60};
+        penaltyTime = new int[] {-1, 30, 30, 30, 30, 30, 60 };
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = false;
         /** Time in seconds one team has as timeOut. */

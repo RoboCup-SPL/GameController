@@ -31,10 +31,9 @@ public class PlayerInfo implements Serializable
     public static final byte PENALTY_HL_PHYSICAL_CONTACT = 2;
     public static final byte PENALTY_HL_ILLEGAL_ATTACK = 3;
     public static final byte PENALTY_HL_ILLEGAL_DEFENSE = 4;
-    public static final byte PENALTY_HL_REQUEST_FOR_PICKUP = 5;
-    public static final byte PENALTY_HL_REQUEST_FOR_SERVICE = 6;
-    public static final byte PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE = 7;
-    
+    public static final byte PENALTY_HL_PICKUP_OR_INCAPABLE = 5;
+    public static final byte PENALTY_HL_SERVICE = 6;
+
     public static final byte PENALTY_SUBSTITUTE = 14;
     public static final byte PENALTY_MANUAL = 15;
     
@@ -92,7 +91,7 @@ public class PlayerInfo implements Serializable
                 case PENALTY_SPL_COACH_MOTION:       temp = "coach motion"; break;
                 case PENALTY_SUBSTITUTE:             temp = "substitute"; break;
                 case PENALTY_MANUAL:                 temp = "manual"; break;
-                default: temp = "undefinied("+penalty+")";
+                default: temp = "undefined("+penalty+")";
             }
         } else {
             switch (penalty) {
@@ -101,12 +100,11 @@ public class PlayerInfo implements Serializable
                 case PENALTY_HL_PHYSICAL_CONTACT:    temp = "pushing"; break;
                 case PENALTY_HL_ILLEGAL_ATTACK:      temp = "illegal attack"; break;
                 case PENALTY_HL_ILLEGAL_DEFENSE:     temp = "illegal defender"; break;
-                case PENALTY_HL_REQUEST_FOR_PICKUP:  temp = "request for pickup"; break;
-                case PENALTY_HL_REQUEST_FOR_SERVICE: temp = "request for service"; break;
-                case PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE: temp = "request for pickup to service"; break;
-                case PENALTY_MANUAL:                temp = "manual"; break;
-                case PENALTY_SUBSTITUTE:            temp = "substitute"; break;
-                default: temp = "undefinied("+penalty+")";
+                case PENALTY_HL_PICKUP_OR_INCAPABLE: temp = "pickup/incapable"; break;
+                case PENALTY_HL_SERVICE:             temp = "service"; break;
+                case PENALTY_MANUAL:                 temp = "manual"; break;
+                case PENALTY_SUBSTITUTE:             temp = "substitute"; break;
+                default: temp = "undefined("+penalty+")";
             }
         }
         out += "            penalty: "+temp+"\n";
