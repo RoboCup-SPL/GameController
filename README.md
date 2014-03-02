@@ -126,14 +126,14 @@ only SPL
 
 only Humanoid-League
 
-    C	- out by cyan
-    M	- out by magenta
+    B	- out by blue
+    R	- out by red
 
-    B	- ball manipulation
+    M	- ball manipulation
     P	- physical contact
     A	- illegal attack
     D	- illegal defense
-    R	- service / incapable
+    I	- service / incapable
     S	- substitute
 
 
