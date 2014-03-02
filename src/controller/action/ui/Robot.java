@@ -58,7 +58,7 @@ public class Robot extends GCAction
             ArrayList<Long> playerInfoList = data.penaltyQueueForSubPlayers.get(side); 
             if (playerInfoList.isEmpty()){
                 if (Rules.league instanceof HL) {
-                    player.penalty = PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE;
+                    player.penalty = PlayerInfo.PENALTY_NONE;
                 } else {
                     player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
                 }
