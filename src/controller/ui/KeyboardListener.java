@@ -92,13 +92,13 @@ public class KeyboardListener implements KeyEventDispatcher
                     }
                 } else if (Rules.league instanceof HL) {
                     switch (key) {
-                        case KeyEvent.VK_C: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_BLUE ? 0 : 1]; break;
-                        case KeyEvent.VK_M: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_RED ? 0 : 1]; break;
+                        case KeyEvent.VK_B: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_BLUE ? 0 : 1]; break;
+                        case KeyEvent.VK_R: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_RED ? 0 : 1]; break;
 
                         case KeyEvent.VK_P: event = ActionBoard.pushing; break;
                         case KeyEvent.VK_D: event = ActionBoard.defense; break;
-                        case KeyEvent.VK_B: event = ActionBoard.ballManipulation; break;
-                        case KeyEvent.VK_R: event = ActionBoard.pickUpHL; break;
+                        case KeyEvent.VK_M: event = ActionBoard.ballManipulation; break;
+                        case KeyEvent.VK_I: event = ActionBoard.pickUpHL; break;
                         case KeyEvent.VK_A: event = ActionBoard.attack; break;
                         case KeyEvent.VK_S: event = ActionBoard.substitute; break;
                     }
