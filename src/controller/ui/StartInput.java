@@ -310,11 +310,10 @@ public class StartInput extends JFrame implements Serializable
                     new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
             team[i].removeAllItems();
             String[] names = getShortTeams();
-            if(dropInPlayerMode){
+            if (dropInPlayerMode) {
                 team[i].addItem(names[0]);
                 team[i].addItem(names[i == 0 ?  1 : 2]);
-            }
-            else{
+            } else {
                 for (int j=0; j < names.length; j++) {
                     team[i].addItem(names[j]);
                 }
@@ -347,8 +346,7 @@ public class StartInput extends JFrame implements Serializable
                     out[fullTeams[i].matches(patternDropInTeam[1]) ? 2 : fullTeams[i].matches(patternDropInTeam[0]) ? 1 : 0] = fullTeams[i]; 
                 }
             }
-        }
-        else{
+        } else {
             int k = 0;
             for (int j=0; j<fullTeams.length; j++) {
                 if (fullTeams[j] != null) {

@@ -78,6 +78,8 @@ public class SPL extends Rules
         isCoachAvailable = true;
         /** Allowed to compensate for lost time? */
         lostTime = true;
+        /** If true, the drop-in player competition is active*/
+        dropInPlayerMode = false;
         /** Defines the drop-in team numbers. First element should be drop-in team blue*/
         dropInTeamNumber = new byte[] {98, 99};
     }

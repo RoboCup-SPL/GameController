@@ -86,6 +86,8 @@ public abstract class Rules
     public boolean isCoachAvailable;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
+    /** If true, the drop-in player competition is active*/
+    public boolean dropInPlayerMode;
     /** Defines the drop-in team numbers. First element should be drop-in team blue*/
     public byte[] dropInTeamNumber;
 }

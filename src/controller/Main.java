@@ -137,8 +137,8 @@ public class Main
         for (int i=0; i<2; i++) {
             data.team[i].teamNumber = (byte)input.outTeam[i];
         }
-        data.dropInPlayerMode = input.dropInPlayerMode;
-        if (data.dropInPlayerMode) {
+        Rules.league.dropInPlayerMode = input.dropInPlayerMode;
+        if (Rules.league.dropInPlayerMode) {
             Rules.league.isCoachAvailable = false; // Remove the coach for the drop-in player competition
             Rules.league.teamSize = Rules.league.robotsPlaying; // No substitutes
         }

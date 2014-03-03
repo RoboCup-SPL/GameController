@@ -24,7 +24,7 @@ public class TeammatePushing extends GCAction {
 
     @Override
     public boolean isLegal(AdvancedData data) {
-        return data.dropInPlayerMode
+        return Rules.league.dropInPlayerMode
                && (data.gameState == GameControlData.STATE_READY
                 || data.gameState == GameControlData.STATE_PLAYING)
                || data.testmode;
