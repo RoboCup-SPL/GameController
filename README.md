@@ -33,7 +33,7 @@ Usage: `java -jar GameController.jar {options}`
 
     (-h | --help)                   display help
     (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)
-    (-l | --league) (spl | hl_kid | hl_teen | hl_adult)
+    (-l | --league) (spl | spl_dropin | hl_kid | hl_teen | hl_adult)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
 
