@@ -243,8 +243,6 @@ from the version used in 2013 in several ways:
 
 There are still a number of issues left:
 
-- All teams can be selected for the drop-in player competition.
-
 - Coach messages are currently not logged.
 
 - When running on the same PC, the GameStateVisualizer sometimes does not

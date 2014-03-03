@@ -84,7 +84,7 @@ public class StartInput extends JFrame implements Serializable
     private JComboBox league;
     private JRadioButton nofulltime;
     private JRadioButton fulltime;
-    private JRadioButton dropInPlayerGame;
+    private JRadioButton dropInPlayerGame = new JRadioButton();
     private ButtonGroup fulltimeGroup;
     private Checkbox fullscreen;
     private Checkbox autoColorChange;
@@ -209,34 +209,25 @@ public class StartInput extends JFrame implements Serializable
                             break;
                         }
                     }
-                    for (int i=0; i < 2; i++) {
-                        teamContainer[i].setImage((
-                                new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
-                        team[i].removeAllItems();
-                        String[] names = getShortTeams();
-                        for (int j=0; j < names.length; j++) {
-                            team[i].addItem(names[j]);
-                        }
-                        outTeam[i] = 0;
-                        setTeamIcon(i, outTeam[i]);
-                        teamIconLabel[i].setIcon(teamIcon[i]);
-                        teamIconLabel[i].repaint();
-                    }
-                    teamsOK = false;
-
                     if (Rules.league instanceof SPL) {
                         nofulltime.setText(FULLTIME_LABEL_NO);
                         fulltime.setText(FULLTIME_LABEL_YES);
                         autoColorChange.setVisible(false);
                         dropInPlayerGame.setText(DROP_IN_PLAYER_GAME);
                         dropInPlayerGame.setVisible(true);
+                        if(dropInPlayerGame.isSelected()){
+                            dropInPlayerMode = true;
+                        }
                     } else {
                         nofulltime.setText(FULLTIME_LABEL_HL_NO);
                         fulltime.setText(FULLTIME_LABEL_HL_YES);
                         dropInPlayerGame.setVisible(false);
+                        dropInPlayerMode = false;
                         autoColorChange.setState(Rules.league.colorChangeAuto);
                         autoColorChange.setVisible(true);
                     }
+                    showAvailableTeams();
+                    teamsOK = false;
                     startEnabling();
                 }
             }
@@ -244,7 +235,6 @@ public class StartInput extends JFrame implements Serializable
         optionsRight.add(league);
         nofulltime = new JRadioButton();
         nofulltime.setPreferredSize(optionsDim);
-        dropInPlayerGame = new JRadioButton();
         dropInPlayerGame.setPreferredSize(optionsDim);
         fulltime = new JRadioButton();
         fulltime.setPreferredSize(optionsDim);
@@ -271,6 +261,7 @@ public class StartInput extends JFrame implements Serializable
                 outFulltime = false;
                 dropInPlayerMode = true;
                 fulltimeOK = true;
+                showAvailableTeams();
                 startEnabling();
             }
         });
@@ -279,7 +270,10 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = false;
                     fulltimeOK = true;
-                    dropInPlayerMode = false;
+                    if(dropInPlayerMode){
+                        dropInPlayerMode = false;
+                        showAvailableTeams();
+                    }
                     startEnabling();
                 }});
         fulltime.addActionListener(new ActionListener() {
@@ -287,7 +281,10 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = true;
                     fulltimeOK = true;
-                    dropInPlayerMode = false;
+                    if(dropInPlayerMode){
+                        dropInPlayerMode = false;
+                        showAvailableTeams();
+                    }
                     startEnabling();
                 }});
         
@@ -305,6 +302,23 @@ public class StartInput extends JFrame implements Serializable
                 
         setVisible(true);
     }
+    /** Show in the combo box which teams are available for the selected league and competition*/
+    private void showAvailableTeams() 
+    {
+        for (int i=0; i < 2; i++) {
+            teamContainer[i].setImage((
+                    new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
+            team[i].removeAllItems();
+            String[] names = getShortTeams();
+            for (int j=0; j < names.length; j++) {
+                team[i].addItem(names[j]);
+            }
+            outTeam[i] = 0;
+            setTeamIcon(i, outTeam[i]);
+            teamIconLabel[i].setIcon(teamIcon[i]);
+            teamIconLabel[i].repaint();
+        }
+    }
     
     /**
      * Calculates an array that contains only the existing Teams of the
@@ -315,19 +329,35 @@ public class StartInput extends JFrame implements Serializable
     private String[] getShortTeams()
     {
         String[] fullTeams = Teams.getNames(true);
-        int k = 0;
-        for (int j=0; j<fullTeams.length; j++) {
-            if (fullTeams[j] != null) {
-                k++;
+        String[] out;
+        if(dropInPlayerMode){
+            out = new String[3];
+            String pattern = "^\\s*(0|"+Rules.league.dropInTeamNumber[0]+"|"+Rules.league.dropInTeamNumber[1]+"):.+";
+            String patternDropInTeam[] = new String[]{"^\\s*"+Rules.league.dropInTeamNumber[0]+":.+",
+                                                      "^\\s*"+Rules.league.dropInTeamNumber[1]+":.+"};
+            
+            for(int i=0; i<fullTeams.length; i++){
+                if((fullTeams[i] != null) && fullTeams[i].matches(pattern)){
+                    out[fullTeams[i].matches(patternDropInTeam[1]) ? 2 : fullTeams[i].matches(patternDropInTeam[0]) ? 1 : 0] = fullTeams[i]; 
+                }
             }
         }
-        String[] out = new String[k];
-        k = 0;
-        for (int j=0; j<fullTeams.length; j++) {
-            if (fullTeams[j] != null) {
-                out[k++] = fullTeams[j];
+        else{
+            int k = 0;
+            for (int j=0; j<fullTeams.length; j++) {
+                if (fullTeams[j] != null) {
+                    k++;
+                }
+            }
+            out = new String[k];
+            k = 0;
+            for (int j=0; j<fullTeams.length; j++) {
+                if (fullTeams[j] != null) {
+                    out[k++] = fullTeams[j];
+                }
             }
         }
+        
         return out;
     }
     
