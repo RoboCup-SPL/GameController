@@ -2,6 +2,7 @@ package controller.ui;
 
 import data.Rules;
 import data.SPL;
+import data.SPLDropIn;
 import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
@@ -32,7 +33,7 @@ public class StartInput extends JFrame implements Serializable
      */
     private static final String WINDOW_TITLE = "GameController";
     private static final int WINDOW_WIDTH = 600;
-    private static final int WINDOW_HEIGHT = 510;
+    private static final int WINDOW_HEIGHT = 480;
     private static final int STANDARD_SPACE = 10;
     private static final int TEAMS_HEIGHT = 300;
     private static final int IMAGE_SIZE = 250;
@@ -46,7 +47,6 @@ public class StartInput extends JFrame implements Serializable
                                                         "robot_right_red.png"};
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
-    private static final String DROP_IN_PLAYER_GAME = "Drop-In Player Game";
     private static final String FULLTIME_LABEL_HL_NO = "Normal Game";
     private static final String FULLTIME_LABEL_HL_YES = "Knock-Out Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
@@ -55,25 +55,13 @@ public class StartInput extends JFrame implements Serializable
     
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
-    
-    /**
-     * This is true, if the teams chosen are legal. They are not legal, if
-     * they are the same.
-     */
-    private boolean teamsOK = false;
-    /**
-     * This is true, if a time-mode has manually be set. Manually setting this
-     * is recommended.
-     */
-    private boolean fulltimeOK = false;
-    
+
     /** The inputs that can be read from this GUI when it has finished. */
     public int[] outTeam = {0, 0};
     public boolean outFulltime;
     public boolean outFullscreen;
     public boolean outAutoColorChange;
-    public boolean dropInPlayerMode = false;
-    
+
     /** All the components of this GUI. */
     private ImagePanel[] teamContainer = new ImagePanel[2];
     private ImageIcon[] teamIcon = new ImageIcon[2];
@@ -84,13 +72,11 @@ public class StartInput extends JFrame implements Serializable
     private JComboBox league;
     private JRadioButton nofulltime;
     private JRadioButton fulltime;
-    private JRadioButton dropInPlayerGame = new JRadioButton();
     private ButtonGroup fulltimeGroup;
     private Checkbox fullscreen;
     private Checkbox autoColorChange;
     private JButton start;
-    
-    
+
     /**
      * Creates a new StartInput.
      * @param args The parameters that the jar file was started with.
@@ -135,7 +121,6 @@ public class StartInput extends JFrame implements Serializable
                     setTeamIcon(0, outTeam[0]);
                     teamIconLabel[0].setIcon(teamIcon[0]);
                     teamIconLabel[0].repaint();
-                    teamsOK = outTeam[0] != outTeam[1];
                     startEnabling();
                 }
             }
@@ -154,7 +139,6 @@ public class StartInput extends JFrame implements Serializable
                     setTeamIcon(1, outTeam[1]);
                     teamIconLabel[1].setIcon(teamIcon[1]);
                     teamIconLabel[1].repaint();
-                    teamsOK = outTeam[1] != outTeam[0];
                     startEnabling();
                 }
             }
@@ -187,7 +171,7 @@ public class StartInput extends JFrame implements Serializable
         autoColorChange.setState(Rules.league.colorChangeAuto);
 
         optionsRight = new JPanel();
-        optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT + 30));
+        optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
         add(optionsRight);
         Dimension optionsDim = new Dimension(WINDOW_WIDTH/3-2*STANDARD_SPACE, OPTIONS_HEIGHT);
         league = new JComboBox();
@@ -203,31 +187,32 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    for (int i=0; i < Rules.LEAGUES.length; i++) {
-                        if (Rules.LEAGUES[i].leagueName.equals((String)league.getSelectedItem())) {
-                            Rules.league = Rules.LEAGUES[i];
-                            break;
+                    if (e != null) { // not initial setup
+                        for (int i=0; i < Rules.LEAGUES.length; i++) {
+                            if (Rules.LEAGUES[i].leagueName.equals((String)league.getSelectedItem())) {
+                                Rules.league = Rules.LEAGUES[i];
+                                break;
+                            }
                         }
                     }
-                    if (Rules.league instanceof SPL) {
-                        nofulltime.setText(FULLTIME_LABEL_NO);
-                        fulltime.setText(FULLTIME_LABEL_YES);
-                        autoColorChange.setVisible(false);
-                        dropInPlayerGame.setText(DROP_IN_PLAYER_GAME);
-                        dropInPlayerGame.setVisible(true);
-                        if(dropInPlayerGame.isSelected()){
-                            dropInPlayerMode = true;
-                        }
+                    if (Rules.league instanceof SPLDropIn) {
+                        nofulltime.setVisible(false);
+                        fulltime.setVisible(false);
                     } else {
-                        nofulltime.setText(FULLTIME_LABEL_HL_NO);
-                        fulltime.setText(FULLTIME_LABEL_HL_YES);
-                        dropInPlayerGame.setVisible(false);
-                        dropInPlayerMode = false;
-                        autoColorChange.setState(Rules.league.colorChangeAuto);
-                        autoColorChange.setVisible(true);
+                        nofulltime.setVisible(true);
+                        fulltime.setVisible(true);
+                        if (Rules.league instanceof SPL) {
+                            nofulltime.setText(FULLTIME_LABEL_NO);
+                            fulltime.setText(FULLTIME_LABEL_YES);
+                            autoColorChange.setVisible(false);
+                        } else {
+                            nofulltime.setText(FULLTIME_LABEL_HL_NO);
+                            fulltime.setText(FULLTIME_LABEL_HL_YES);
+                            autoColorChange.setState(Rules.league.colorChangeAuto);
+                            autoColorChange.setVisible(true);
+                        }
                     }
                     showAvailableTeams();
-                    teamsOK = false;
                     startEnabling();
                 }
             }
@@ -235,59 +220,25 @@ public class StartInput extends JFrame implements Serializable
         optionsRight.add(league);
         nofulltime = new JRadioButton();
         nofulltime.setPreferredSize(optionsDim);
-        dropInPlayerGame.setPreferredSize(optionsDim);
         fulltime = new JRadioButton();
         fulltime.setPreferredSize(optionsDim);
-        if (Rules.league instanceof SPL) {
-            nofulltime.setText(FULLTIME_LABEL_NO);
-            fulltime.setText(FULLTIME_LABEL_YES);
-            dropInPlayerGame.setText(DROP_IN_PLAYER_GAME);
-        } else {
-            nofulltime.setText(FULLTIME_LABEL_HL_NO);
-            fulltime.setText(FULLTIME_LABEL_HL_YES);
-            dropInPlayerGame.setVisible(false);
-        }
         fulltimeGroup = new ButtonGroup();
         fulltimeGroup.add(nofulltime);
         fulltimeGroup.add(fulltime);
-        fulltimeGroup.add(dropInPlayerGame);
-
         optionsRight.add(nofulltime);
         optionsRight.add(fulltime);
-        optionsRight.add(dropInPlayerGame);
-        dropInPlayerGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                outFulltime = false;
-                dropInPlayerMode = true;
-                fulltimeOK = true;
-                showAvailableTeams();
-                startEnabling();
-            }
-        });
         nofulltime.addActionListener(new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = false;
-                    fulltimeOK = true;
-                    if(dropInPlayerMode){
-                        dropInPlayerMode = false;
-                        showAvailableTeams();
-                    }
                     startEnabling();
                 }});
         fulltime.addActionListener(new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = true;
-                    fulltimeOK = true;
-                    if(dropInPlayerMode){
-                        dropInPlayerMode = false;
-                        showAvailableTeams();
-                    }
                     startEnabling();
                 }});
-        
         start = new JButton(START_LABEL);
         start.setPreferredSize(new Dimension(WINDOW_WIDTH/3-2*STANDARD_SPACE, START_HEIGHT));
         start.setEnabled(false);
@@ -300,6 +251,7 @@ public class StartInput extends JFrame implements Serializable
                     finished = true;
                 }});
                 
+        league.getActionListeners()[league.getActionListeners().length - 1].actionPerformed(null);
         setVisible(true);
     }
     /** Show in the combo box which teams are available for the selected league and competition*/
@@ -310,7 +262,7 @@ public class StartInput extends JFrame implements Serializable
                     new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
             team[i].removeAllItems();
             String[] names = getShortTeams();
-            if (dropInPlayerMode) {
+            if (Rules.league.dropInPlayerMode) {
                 team[i].addItem(names[0]);
                 team[i].addItem(names[i == 0 ?  1 : 2]);
             } else {
@@ -335,33 +287,20 @@ public class StartInput extends JFrame implements Serializable
     {
         String[] fullTeams = Teams.getNames(true);
         String[] out;
-        if(dropInPlayerMode){
-            out = new String[3];
-            String pattern = "^\\s*(0|"+Rules.league.dropInTeamNumber[0]+"|"+Rules.league.dropInTeamNumber[1]+"):.+";
-            String patternDropInTeam[] = new String[]{"^\\s*"+Rules.league.dropInTeamNumber[0]+":.+",
-                                                      "^\\s*"+Rules.league.dropInTeamNumber[1]+":.+"};
-            
-            for(int i=0; i<fullTeams.length; i++){
-                if((fullTeams[i] != null) && fullTeams[i].matches(pattern)){
-                    out[fullTeams[i].matches(patternDropInTeam[1]) ? 2 : fullTeams[i].matches(patternDropInTeam[0]) ? 1 : 0] = fullTeams[i]; 
-                }
-            }
-        } else {
-            int k = 0;
-            for (int j=0; j<fullTeams.length; j++) {
-                if (fullTeams[j] != null) {
-                    k++;
-                }
-            }
-            out = new String[k];
-            k = 0;
-            for (int j=0; j<fullTeams.length; j++) {
-                if (fullTeams[j] != null) {
-                    out[k++] = fullTeams[j];
-                }
+        int k = 0;
+        for (int j=0; j<fullTeams.length; j++) {
+            if (fullTeams[j] != null) {
+                k++;
             }
         }
-        
+        out = new String[k];
+        k = 0;
+        for (int j=0; j<fullTeams.length; j++) {
+            if (fullTeams[j] != null) {
+                out[k++] = fullTeams[j];
+            }
+        }
+
         return out;
     }
     
@@ -391,7 +330,8 @@ public class StartInput extends JFrame implements Serializable
      */
     private void startEnabling()
     {
-        start.setEnabled(teamsOK && fulltimeOK);
+        start.setEnabled(outTeam[0] != outTeam[1] &&
+                (fulltime.isSelected() || nofulltime.isSelected() || !fulltime.isVisible()));
     }
     
     /**

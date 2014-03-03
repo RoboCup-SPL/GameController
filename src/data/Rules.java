@@ -13,6 +13,7 @@ public abstract class Rules
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
+        new SPLDropIn(),
         new HL(),
         new HLTeen(),
         new HLAdult()
@@ -88,6 +89,4 @@ public abstract class Rules
     public boolean lostTime;
     /** If true, the drop-in player competition is active*/
     public boolean dropInPlayerMode;
-    /** Defines the drop-in team numbers. First element should be drop-in team blue*/
-    public byte[] dropInTeamNumber;
 }
