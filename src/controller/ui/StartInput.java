@@ -165,9 +165,6 @@ public class StartInput extends JFrame implements Serializable
         autoColorChange.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         autoColorChange.setState(Rules.league.colorChangeAuto);
         autoColorChangePanel.add(autoColorChange);
-        if (Rules.league instanceof SPL) {
-            autoColorChange.setVisible(false);
-        }
         autoColorChange.setState(Rules.league.colorChangeAuto);
 
         optionsRight = new JPanel();
@@ -198,6 +195,7 @@ public class StartInput extends JFrame implements Serializable
                     if (Rules.league instanceof SPLDropIn) {
                         nofulltime.setVisible(false);
                         fulltime.setVisible(false);
+                        autoColorChange.setVisible(false);
                     } else {
                         nofulltime.setVisible(true);
                         fulltime.setVisible(true);
@@ -230,13 +228,11 @@ public class StartInput extends JFrame implements Serializable
         nofulltime.addActionListener(new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
-                    outFulltime = false;
                     startEnabling();
                 }});
         fulltime.addActionListener(new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
-                    outFulltime = true;
                     startEnabling();
                 }});
         start = new JButton(START_LABEL);
@@ -246,6 +242,7 @@ public class StartInput extends JFrame implements Serializable
         start.addActionListener(new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
+                    outFulltime = fulltime.isSelected() && fulltime.isVisible();
                     outFullscreen = fullscreen.getState();
                     outAutoColorChange = autoColorChange.getState();
                     finished = true;
