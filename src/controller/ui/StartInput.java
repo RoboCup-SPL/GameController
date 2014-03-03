@@ -310,8 +310,14 @@ public class StartInput extends JFrame implements Serializable
                     new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i])).getImage());
             team[i].removeAllItems();
             String[] names = getShortTeams();
-            for (int j=0; j < names.length; j++) {
-                team[i].addItem(names[j]);
+            if(dropInPlayerMode){
+                team[i].addItem(names[0]);
+                team[i].addItem(names[i == 0 ?  1 : 2]);
+            }
+            else{
+                for (int j=0; j < names.length; j++) {
+                    team[i].addItem(names[j]);
+                }
             }
             outTeam[i] = 0;
             setTeamIcon(i, outTeam[i]);

@@ -86,6 +86,6 @@ public abstract class Rules
     public boolean isCoachAvailable;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
-    /** Defines the drop-in team numbers*/
+    /** Defines the drop-in team numbers. First element should be drop-in team blue*/
     public byte[] dropInTeamNumber;
 }

@@ -78,7 +78,7 @@ public class SPL extends Rules
         isCoachAvailable = true;
         /** Allowed to compensate for lost time? */
         lostTime = true;
-        /** Defines the drop-in team numbers*/
+        /** Defines the drop-in team numbers. First element should be drop-in team blue*/
         dropInTeamNumber = new byte[] {98, 99};
     }
 }
