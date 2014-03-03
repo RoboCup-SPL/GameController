@@ -66,12 +66,7 @@ public class Robot extends GCAction
                 data.whenPenalized[side][number] = data.getTime();
             } else {
                 PenaltyQueueData playerInfo = playerInfoList.get(0);
-                if (Rules.league instanceof HL) {
-                    player.penalty = playerInfo.penalty;
-                } else {
-                    player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
-                }
-
+                player.penalty = playerInfo.penalty;
                 data.whenPenalized[side][number] = playerInfo.whenPenalized;
                 playerInfoList.remove(0);
             }
