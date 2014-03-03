@@ -15,14 +15,12 @@ import java.nio.ByteBuffer;
  * 
  * This class receives the GameControlData from the GameController.
  */
-public class Listener implements Runnable
+public class Listener extends Thread
 {
     /** The GUI to listen for, its update method will be called. */
     private GUI gui;
     /** Some attributes for receiving. */
     private DatagramSocket datagramSocket;
-    /** This will be set true by the method close to stop receiving. */
-    private boolean closed = false;
 
     /**
      * Creates a new Listener.
@@ -44,7 +42,7 @@ public class Listener implements Runnable
     @Override
     public void run()
     {
-        while (!closed) {
+        while (!isInterrupted()) {
             final ByteBuffer buffer = ByteBuffer.wrap(new byte[GameControlData.SIZE]);
             final GameControlData data = new GameControlData();
 
@@ -61,13 +59,5 @@ public class Listener implements Runnable
                 Log.error("Error while listening to port " + GameControlData.GAMECONTROLLER_PORT);
             }
         }
-    }
-    
-    /**
-     * Closes the socket and stops receiving.
-     */
-    public void close()
-    {
-        closed = true;
     }
 }
