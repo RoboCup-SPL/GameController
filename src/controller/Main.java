@@ -212,6 +212,14 @@ public class Main
         Sender.getInstance().interrupt();
         GameControlReturnDataReceiver.getInstance().interrupt();
         SPLCoachMessageReceiver.getInstance().interrupt();
+        Thread.interrupted(); // clean interrupted status
+        try {
+            Sender.getInstance().join();
+            GameControlReturnDataReceiver.getInstance().join();
+            SPLCoachMessageReceiver.getInstance().join();
+        } catch (InterruptedException e) {
+            Log.error("Waiting for threads to shutdown was interrupted.");
+        }
         try {
             Log.close();
         } catch (IOException e) {

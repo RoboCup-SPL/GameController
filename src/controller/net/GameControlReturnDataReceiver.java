@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 
 import common.Log;
@@ -40,6 +41,7 @@ public class GameControlReturnDataReceiver extends Thread
     {
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
+        datagramSocket.setSoTimeout(500);
         datagramSocket.bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_PORT));
     }
 
@@ -76,6 +78,7 @@ public class GameControlReturnDataReceiver extends Thread
                 if (player.fromByteArray(buffer)) {
                     RobotWatcher.update(player);
                 }
+            } catch (SocketTimeoutException e) { // ignore, because we set a timeout
             } catch (IOException e) {
                 Log.error("something went wrong while receiving : " + e.getMessage());
             }

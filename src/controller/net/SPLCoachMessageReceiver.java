@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ public class SPLCoachMessageReceiver extends Thread
     {
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
+        datagramSocket.setSoTimeout(500);
         datagramSocket.bind(new InetSocketAddress(SPLCoachMessage.SPL_COACH_MESSAGE_PORT));
     }
 
@@ -55,6 +57,7 @@ public class SPLCoachMessageReceiver extends Thread
                 if (coach.fromByteArray(buffer)) {
                     new SPLCoachMessageReceived(coach).actionPerformed(null);
                 }
+            } catch (SocketTimeoutException e) { // ignore, because we set a timeout
             } catch (IOException e) {
                 Log.error("something went wrong while receiving the coach packages : " + e.getMessage());
             }

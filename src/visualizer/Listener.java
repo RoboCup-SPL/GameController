@@ -2,9 +2,12 @@ package visualizer;
 
 import common.Log;
 import data.GameControlData;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 
 /**
@@ -14,15 +17,10 @@ import java.nio.ByteBuffer;
  */
 public class Listener implements Runnable
 {
-    /** This is the port on which to listen. */
-    private static final int PORT = 3838;
-    
-    /** The GUI to listen for, it´s update method will be called. */
+    /** The GUI to listen for, its update method will be called. */
     private GUI gui;
     /** Some attributes for receiving. */
-    private DatagramSocket socket;
-    private ByteBuffer buffer;
-    private DatagramPacket packet;
+    private DatagramSocket datagramSocket;
     /** This will be set true by the method close to stop receiving. */
     private boolean closed = false;
 
@@ -33,13 +31,12 @@ public class Listener implements Runnable
     {
         this.gui = gui;
         try {
-            socket = new DatagramSocket(null);
-            socket.setReuseAddress(true);
-            socket.bind(new InetSocketAddress(PORT));
-            buffer = ByteBuffer.wrap(new byte[GameControlData.SIZE]);
-            packet = new DatagramPacket(buffer.array(), buffer.array().length);
-        } catch (Exception e) {
-            Log.error("Error on start listening to port "+PORT);
+            datagramSocket = new DatagramSocket(null);
+            datagramSocket.setReuseAddress(true);
+            datagramSocket.setSoTimeout(500);
+            datagramSocket.bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_PORT));
+        } catch (SocketException e) {
+            Log.error("Error on start listening to port " + GameControlData.GAMECONTROLLER_PORT);
             System.exit(1);
         }
     }
@@ -48,17 +45,20 @@ public class Listener implements Runnable
     public void run()
     {
         while (!closed) {
+            final ByteBuffer buffer = ByteBuffer.wrap(new byte[GameControlData.SIZE]);
+            final GameControlData data = new GameControlData();
+
+            final DatagramPacket packet = new DatagramPacket(buffer.array(), buffer.array().length);
+
             try {
-                socket.receive(packet);
+                datagramSocket.receive(packet);
                 buffer.rewind();
-                GameControlData data = new GameControlData();
                 if (data.fromByteArray(buffer)) {
                     gui.update(data);
                 }
-            } catch (Exception e) {
-                if (!closed) {
-                    Log.error("Error while listening to port "+PORT);
-                }
+            } catch (SocketTimeoutException e) { // ignore, because we set a timeout
+            } catch (IOException e) {
+                Log.error("Error while listening to port " + GameControlData.GAMECONTROLLER_PORT);
             }
         }
     }
@@ -69,10 +69,5 @@ public class Listener implements Runnable
     public void close()
     {
         closed = true;
-        try {
-            socket.close();
-        } catch (Exception e) {
-            Log.error("Error while closing port "+PORT);
-        }
     }
 }
