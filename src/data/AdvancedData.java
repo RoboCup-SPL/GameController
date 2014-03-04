@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import common.Log;
 import controller.action.ActionBoard;
 
 /**
@@ -364,6 +365,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                         }
                         
                         team[j].coachMessage = message;
+                        Log.toFile("Coach Message Team "+  Rules.league.teamColorName[team[j].teamColor]+" "+ new String(message));
                         splCoachMessageQueue.remove(i);
                         break;
                     }

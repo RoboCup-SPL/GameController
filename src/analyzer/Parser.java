@@ -1,11 +1,15 @@
 package analyzer;
 
-import common.Log;
-import data.Rules;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import common.Log;
+
+import data.Rules;
 
 /**
  * @author Michel Bartsch
@@ -68,7 +72,8 @@ public class Parser
         "Initial",
         "Playing",
         "Ready",
-        "Set"
+        "Set",
+        "Coach Message"
     };
     
     
@@ -154,6 +159,7 @@ public class Parser
         String time;
         String raw, action = "";
         String team;
+        String player;
         String[] teams = new String[2];
         if (log.team.length >= 2) {
             teams[0] = log.team[0];
@@ -162,7 +168,6 @@ public class Parser
             teams[0] = "unknown";
             teams[1] = "unknown";
         }
-        
         int i=0;
         for (String line : log.lines) {
             i++;
@@ -211,8 +216,16 @@ public class Parser
                 team = "";
             }
             
+            player = "";
+            String pattern = "("+log.league.teamColorName[0]+"|"+log.league.teamColorName[1]+")\\s*(\\d+)\\s*$";
+            Matcher matcher = Pattern.compile(pattern).matcher(raw);
+            if(matcher.find()){
+                if(matcher.groupCount() == 2){
+                    player = matcher.group(2);
+                }
+            }
             try{
-                Main.writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
+                Main.writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+player+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
             } catch (IOException e) {
                 Log.error("cannot write to file "+Main.stats);
             }

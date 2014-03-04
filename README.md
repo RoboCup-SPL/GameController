@@ -243,8 +243,6 @@ from the version used in 2013 in several ways:
 
 There are still a number of issues left:
 
-- Coach messages are currently not logged.
-
 - When running on the same PC, the GameStateVisualizer sometimes does not
   receive the GameController packets anymore. This error is hard to reproduce,
   but it happened quite often in Eindhoven.
