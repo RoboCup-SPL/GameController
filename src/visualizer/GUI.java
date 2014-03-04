@@ -100,7 +100,7 @@ public class GUI extends JFrame
         Image tmp = (new ImageIcon(background).getImage()).getScaledInstance(
                 (int)(background.getWidth()*scaleFactor),
                 (int)(background.getHeight()*scaleFactor),
-                Image.SCALE_DEFAULT);
+                Image.SCALE_SMOOTH);
         background = new BufferedImage((int) (background.getWidth() * scaleFactor), (int) (background.getWidth() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
         background.getGraphics().drawImage(tmp, 0, 0, null);
         
