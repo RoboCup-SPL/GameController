@@ -14,6 +14,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -99,7 +100,7 @@ public class GUI extends JFrame
         Image tmp = (new ImageIcon(background).getImage()).getScaledInstance(
                 (int)(background.getWidth()*scaleFactor),
                 (int)(background.getHeight()*scaleFactor),
-                Image.SCALE_DEFAULT);
+                Image.SCALE_SMOOTH);
         background = new BufferedImage((int) (background.getWidth() * scaleFactor), (int) (background.getWidth() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
         background.getGraphics().drawImage(tmp, 0, 0, null);
         
@@ -469,7 +470,12 @@ public class GUI extends JFrame
         Graphics2D g2 = (Graphics2D) g; //need for setting the thickness of the line of the rectangles
 
         for (int i = 0; i < 2; i++) {
-            String coachMessage = new String(data.team[i].coachMessage);
+            String coachMessage;
+            try {
+                coachMessage = new String(data.team[i].coachMessage, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                coachMessage = new String(data.team[i].coachMessage);
+            }
             int p = coachMessage.indexOf(0);
             if (p != -1) {
                 coachMessage = coachMessage.substring(0, p);

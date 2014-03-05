@@ -456,7 +456,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5] = new ToggleButton(PEN_HOLDING);
             pen[6] = new ToggleButton(PEN_HANDS);
             pen[7] = new ToggleButton(PEN_PICKUP);
-            pen[8] = new ToggleButton(data.dropInPlayerMode ? TEAMMATE_PUSHING : PEN_COACH_MOTION);
+            pen[8] = new ToggleButton(Rules.league.dropInPlayerMode ? TEAMMATE_PUSHING : PEN_COACH_MOTION);
             pen[9] = new ToggleButton(PEN_SUBSTITUTE);
         } else if (Rules.league instanceof HL) {
             pen = new JToggleButton[7];
@@ -501,7 +501,7 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.71, .16, .08, .04, pushes[1]);
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
-        if (Rules.league instanceof SPL && !data.dropInPlayerMode) {
+        if (Rules.league instanceof SPL && !Rules.league.dropInPlayerMode) {
             layout.add(.01, .77, .09, .09, timeOut[0]);
             layout.add(.9, .77, .09, .09, timeOut[1]);
             layout.add(.11, .77, .08, .09, stuck[0]);
@@ -531,7 +531,7 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.4, .0, .2, .11, clockContainer);
         }
         if (!Rules.league.overtime) {
-            if (Rules.league.isRefereeTimeoutAvailable && !data.dropInPlayerMode) {
+            if (Rules.league.isRefereeTimeoutAvailable && !Rules.league.dropInPlayerMode) {
                 layout.add(.31, .19, .09, .06, firstHalf);
                 layout.add(.407, .19, .09, .06, secondHalf);
                 layout.add(.503, .19, .09, .06, penaltyShoot);
@@ -539,7 +539,7 @@ public class GUI extends JFrame implements GCGUI
             } else { // no referee timeout in dropInPlayerMode is not supported!
                 layout.add(.31, .19, .12, .06, firstHalf);
                 layout.add(.44, .19, .12, .06, secondHalf);
-                layout.add(.57, .19, .12, .06, data.dropInPlayerMode ? refereeTimeout : penaltyShoot);
+                layout.add(.57, .19, .12, .06, Rules.league.dropInPlayerMode ? refereeTimeout : penaltyShoot);
             }
         } else {
             if (Rules.league.isRefereeTimeoutAvailable) {
@@ -633,7 +633,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5].addActionListener(ActionBoard.holding);
             pen[6].addActionListener(ActionBoard.hands);
             pen[7].addActionListener(ActionBoard.pickUp);
-            pen[8].addActionListener(data.dropInPlayerMode ? ActionBoard.teammatePushing : ActionBoard.coachMotion);
+            pen[8].addActionListener(Rules.league.dropInPlayerMode ? ActionBoard.teammatePushing : ActionBoard.coachMotion);
             pen[9].addActionListener(ActionBoard.substitute);
         } else if (Rules.league instanceof HL) {
             pen[0].addActionListener(ActionBoard.ballManipulation);
@@ -862,7 +862,7 @@ public class GUI extends JFrame implements GCGUI
            secondHalfOvertime.setSelected((data.secGameState == GameControlData.STATE2_OVERTIME)
                             && (data.firstHalf != GameControlData.C_TRUE)); 
         }
-        penaltyShoot.setSelected(data.secGameState == GameControlData.STATE2_PENALTYSHOOT);
+        penaltyShoot.setSelected(data.secGameState == GameControlData.STATE2_PENALTYSHOOT || data.previousSecGameState == GameControlData.STATE2_PENALTYSHOOT);
     }
     
     /**
@@ -940,7 +940,8 @@ public class GUI extends JFrame implements GCGUI
         }
         for (int i=0; i<2; i++) {
             kickOff[i].setEnabled(ActionBoard.kickOff[i].isLegal(data));
-            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
+                && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 kickOff[i].setText(KICKOFF);
             } else {
                 kickOff[i].setText(KICKOFF_PENALTY_SHOOTOUT);
@@ -956,7 +957,7 @@ public class GUI extends JFrame implements GCGUI
     private void updatePushes(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 if (Rules.league.pushesToEjection == null || Rules.league.pushesToEjection.length == 0) {
                     pushes[i].setText("");
                 } else {
@@ -1139,7 +1140,7 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setEnabled(ActionBoard.holding.isLegal(data));
         pen[6].setEnabled(ActionBoard.hands.isLegal(data));
         pen[7].setEnabled(ActionBoard.pickUp.isLegal(data));
-        pen[8].setEnabled(data.dropInPlayerMode ? ActionBoard.teammatePushing.isLegal(data)
+        pen[8].setEnabled(Rules.league.dropInPlayerMode ? ActionBoard.teammatePushing.isLegal(data)
                 : ActionBoard.coachMotion.isLegal(data));
         pen[9].setEnabled(ActionBoard.substitute.isLegal(data));
         
@@ -1152,7 +1153,7 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setSelected(hightlightEvent == ActionBoard.holding);
         pen[6].setSelected(hightlightEvent == ActionBoard.hands);
         pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
-        pen[8].setSelected(data.dropInPlayerMode ? hightlightEvent == ActionBoard.teammatePushing
+        pen[8].setSelected(Rules.league.dropInPlayerMode ? hightlightEvent == ActionBoard.teammatePushing
                 : hightlightEvent == ActionBoard.coachMotion);
         pen[9].setSelected(hightlightEvent == ActionBoard.substitute);
     }

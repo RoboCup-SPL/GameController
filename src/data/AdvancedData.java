@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import common.Log;
 import controller.action.ActionBoard;
 
 /**
@@ -46,6 +47,7 @@ public class AdvancedData extends GameControlData implements Cloneable
     
     /** If true, the referee set a timeout */
     public boolean refereeTimeout = false;
+
     /** If true, this team is currently taking a timeOut, 0:left side, 1:right side. */
     public boolean[] timeOutActive = {false, false};
     
@@ -57,9 +59,6 @@ public class AdvancedData extends GameControlData implements Cloneable
     
     /** If true, the game auto-pauses the game for full 10minutes playing. */
     public boolean playoff;
-    
-    /** If true, the drop-in player competition is active*/
-    public boolean dropInPlayerMode = false;
     
     /** If true, the colors change automatically. */
     public boolean colorChangeAuto;
@@ -90,8 +89,10 @@ public class AdvancedData extends GameControlData implements Cloneable
 
     /** Keep the timestamp when a coach message was received*/
     public long timestampCoachPackage[] = {0, 0};
+
     /** Keep the coach messages*/
     public  ArrayList<SPLCoachMessage> splCoachMessageQueue = new ArrayList<SPLCoachMessage>();
+
     /**
      * Creates a new AdvancedData.
      */
@@ -364,6 +365,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                         }
                         
                         team[j].coachMessage = message;
+                        Log.toFile("Coach Message Team "+  Rules.league.teamColorName[team[j].teamColor]+" "+ new String(message));
                         splCoachMessageQueue.remove(i);
                         break;
                     }

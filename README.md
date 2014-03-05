@@ -33,7 +33,7 @@ Usage: `java -jar GameController.jar {options}`
 
     (-h | --help)                   display help
     (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)
-    (-l | --league) (spl | hl_kid | hl_teen | hl_adult)
+    (-l | --league) (spl | spl_dropin | hl_kid | hl_teen | hl_adult)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
 
@@ -87,8 +87,9 @@ assistant referees. For that reason, robots are never unpenalized automatically.
 
 To substitute a robot, press "Substitute" and then the robot that should leave the field.
 Afterwards, any of the substitutes can be be activated. If the robot that is replaced is
-already penalized, its substitute inherits the penalty. If it is not, the substitute gets
-a "request for pickup" penalty before it can enter the field.
+already penalized, its substitute inherits the penalty. If it is not, the substitute can
+immediately enter the field in the HL, but gets a "request for pickup" penalty before it
+can enter the field in the SPL.
 
 When pressing the big "+" (goal), "Timeout", "Kickoff Goal", or "Global Game Stuck", the
 other team gets the next kick-off. "Kickoff Goal" and "Global Game Stuck" share the same
@@ -241,10 +242,6 @@ from the version used in 2013 in several ways:
 ## 8. Known Issues
 
 There are still a number of issues left:
-
-- All teams can be selected for the drop-in player competition.
-
-- Coach messages are currently not logged.
 
 - When running on the same PC, the GameStateVisualizer sometimes does not
   receive the GameController packets anymore. This error is hard to reproduce,

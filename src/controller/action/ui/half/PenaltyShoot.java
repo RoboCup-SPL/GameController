@@ -55,6 +55,7 @@ public class PenaltyShoot extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return (data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
+          || (data.previousSecGameState == GameControlData.STATE2_PENALTYSHOOT)      
           || ((data.firstHalf != GameControlData.C_TRUE)
             && (data.gameState == GameControlData.STATE_FINISHED)
             && !(Rules.league.overtime

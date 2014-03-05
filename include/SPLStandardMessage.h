@@ -13,7 +13,7 @@ struct SPLStandardMessage
   uint8_t version;       // has to be set to SPL_STANDARD_MESSAGE_STRUCT_VERSION
   uint8_t playerNum;     // 1-5
   uint8_t team;          // 0 is blue, 1 is red 
-  uint8_t fallen;        // 0 means that the robot is fallen, 1 means that the robot can play
+  uint8_t fallen;        // 1 means that the robot is fallen, 0 means that the robot can play
 
   // position and orientation of robot
   // coordinates in millimeters

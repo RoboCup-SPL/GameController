@@ -128,21 +128,18 @@ public class Main
         //collect the start parameters and put them into the first data.
         StartInput input = new StartInput(!windowMode);
         while (!input.finished) {
-            try{
-            Thread.sleep(100);
-            } catch (Exception e) {}
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                System.exit(0);
+            }
         }
 
         AdvancedData data = new AdvancedData();
         for (int i=0; i<2; i++) {
             data.team[i].teamNumber = (byte)input.outTeam[i];
         }
-        data.dropInPlayerMode = input.dropInPlayerMode;
-        if (data.dropInPlayerMode) {
-            Rules.league.isCoachAvailable = false; // Remove the coach for the drop-in player competition
-            Rules.league.teamSize = Rules.league.robotsPlaying; // No substitutes
-        }
-        
+
         data.colorChangeAuto = input.outAutoColorChange;
         data.playoff = input.outFulltime;
 

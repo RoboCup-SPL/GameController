@@ -78,5 +78,7 @@ public class SPL extends Rules
         isCoachAvailable = true;
         /** Allowed to compensate for lost time? */
         lostTime = true;
+        /** If true, the drop-in player competition is active*/
+        dropInPlayerMode = false;
     }
 }

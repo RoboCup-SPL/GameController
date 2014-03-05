@@ -180,7 +180,7 @@ public class GUI extends JFrame implements ListSelectionListener
         try {
             Main.stats.createNewFile();
             Main.writer = new FileWriter(Main.stats);
-            Main.writer.write("datetime,action,team,blue,red\n");
+            Main.writer.write("datetime,action,team,player,blue,red\n");
         } catch (IOException e) {
             Log.error("Cannot create and open/write to file "+Main.stats);
             return;

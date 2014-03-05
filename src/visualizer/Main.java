@@ -20,8 +20,7 @@ public class Main
     private final static String COMMAND_LEAGUE_SHORT = "-l";
     
     private static Listener listener;
-    private static Thread network;
-    
+
     /**
      * The programm starts here.
      * 
@@ -48,8 +47,7 @@ public class Main
         GUI gui = new GUI();
         new KeyboardListener(gui);
         listener = new Listener(gui);
-        network = new Thread(listener);
-        network.start();
+        listener.start();
     }
     
     /**
@@ -58,9 +56,9 @@ public class Main
      */
     public static void exit()
     {
-        listener.close();
+        listener.interrupt();
         try {
-            network.join();
+            listener.join();
         } catch (InterruptedException e) {
             Log.error("Waiting for listener to shutdown was interrupted.");
         }

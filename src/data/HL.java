@@ -76,5 +76,7 @@ public class HL extends Rules
         isCoachAvailable = false;
         /** Allowed to compensate for lost time? */
         lostTime = false;
+        /** If true, the drop-in player competition is active*/
+        dropInPlayerMode = false;
     }
 }
