@@ -325,9 +325,12 @@ public class AdvancedData extends GameControlData implements Cloneable
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
     {
         int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
+        if (kickOffTeam == DROPBALL) {
+            timeKickOffBlocked = 0;
+        }
         if (gameState == STATE_INITIAL && (timeOutActive[0] || timeOutActive[1])) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
-        } 
+        }
         else if (gameState == STATE_INITIAL && (refereeTimeout)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
         }
@@ -335,7 +338,11 @@ public class AdvancedData extends GameControlData implements Cloneable
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
         } else if (gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
                 && timeKickOffBlocked >= -timeKickOffBlockedOvertime) {
-            return timeKickOffBlocked;
+            if (timeKickOffBlocked > 0) {
+                return timeKickOffBlocked;
+            } else {
+                return null;
+            }
         } else {
             return getRemainingPauseTime();
         }
