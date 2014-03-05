@@ -862,7 +862,7 @@ public class GUI extends JFrame implements GCGUI
            secondHalfOvertime.setSelected((data.secGameState == GameControlData.STATE2_OVERTIME)
                             && (data.firstHalf != GameControlData.C_TRUE)); 
         }
-        penaltyShoot.setSelected(data.secGameState == GameControlData.STATE2_PENALTYSHOOT);
+        penaltyShoot.setSelected(data.secGameState == GameControlData.STATE2_PENALTYSHOOT || data.previousSecGameState == GameControlData.STATE2_PENALTYSHOOT);
     }
     
     /**
@@ -940,7 +940,8 @@ public class GUI extends JFrame implements GCGUI
         }
         for (int i=0; i<2; i++) {
             kickOff[i].setEnabled(ActionBoard.kickOff[i].isLegal(data));
-            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
+                && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 kickOff[i].setText(KICKOFF);
             } else {
                 kickOff[i].setText(KICKOFF_PENALTY_SHOOTOUT);
@@ -956,7 +957,7 @@ public class GUI extends JFrame implements GCGUI
     private void updatePushes(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 if (Rules.league.pushesToEjection == null || Rules.league.pushesToEjection.length == 0) {
                     pushes[i].setText("");
                 } else {
