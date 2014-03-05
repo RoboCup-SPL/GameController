@@ -68,6 +68,9 @@ public class FirstHalf extends GCAction
         TeamInfo team = data.team[0];
         data.team[0] = data.team[1];
         data.team[1] = team;
+        boolean[] ejected = data.ejected[0];
+        data.ejected[0] = data.ejected[1];
+        data.ejected[1] = ejected;
         // if necessary, swap back team colors
         if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT 
                 && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT

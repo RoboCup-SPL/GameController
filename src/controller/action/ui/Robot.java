@@ -55,7 +55,7 @@ public class Robot extends GCAction
     public void perform(AdvancedData data)
     {
         PlayerInfo player = data.team[side].player[number];
-        if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
+        if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && !isCoach(data)) {
             ArrayList<PenaltyQueueData> playerInfoList = data.penaltyQueueForSubPlayers.get(side);
             if (playerInfoList.isEmpty()){
                 if (Rules.league instanceof HL) {
