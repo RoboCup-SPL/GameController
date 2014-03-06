@@ -73,14 +73,13 @@ public class FirstHalf extends GCAction
         data.ejected[1] = ejected;
         // if necessary, swap back team colors
         if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT 
-                && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT
                 && data.colorChangeAuto) {
             byte color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = color;
         }
         
-        if (Rules.league.timeOutPerHalf) {
+        if (Rules.league.timeOutPerHalf && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT)) {
             data.timeOutTaken = new boolean[] {false, false};
         } else {
             boolean timeOutTaken = data.timeOutTaken[0];
