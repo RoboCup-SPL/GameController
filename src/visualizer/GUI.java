@@ -118,7 +118,10 @@ public class GUI extends JFrame
             }
         });
         
-        setVisible(false); // without this, keyboard input is missing on OS X
+        if(IS_OSX){
+            setVisible(false); // without this, keyboard input is missing on OS X
+        }
+        
         setVisible(true);
         createBufferStrategy(2);
         bufferStrategy = getBufferStrategy();
