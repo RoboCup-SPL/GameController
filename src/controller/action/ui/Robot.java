@@ -57,7 +57,7 @@ public class Robot extends GCAction
         PlayerInfo player = data.team[side].player[number];
         if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && !isCoach(data)) {
             ArrayList<PenaltyQueueData> playerInfoList = data.penaltyQueueForSubPlayers.get(side);
-            if (playerInfoList.isEmpty()){
+            if (playerInfoList.isEmpty()) {
                 if (Rules.league instanceof HL) {
                     player.penalty = PlayerInfo.PENALTY_NONE;
                 } else {
@@ -123,7 +123,8 @@ public class Robot extends GCAction
                 || data.testmode;
     }
     
-    public boolean isCoach(AdvancedData data){
+    public boolean isCoach(AdvancedData data)
+    {
         return Rules.league.isCoachAvailable && number == Rules.league.teamSize;
     }
 }

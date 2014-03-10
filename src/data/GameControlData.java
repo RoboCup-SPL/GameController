@@ -138,7 +138,7 @@ public class GameControlData implements Serializable
         dropInTime = buffer.getShort();
         secsRemaining = buffer.getShort();
         secondaryTime = buffer.getShort();
-        for(int i=0; i<team.length; i++) {
+        for (int i=0; i<team.length; i++) {
             team[i].fromByteArray(buffer);
         }
         

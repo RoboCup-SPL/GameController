@@ -93,7 +93,7 @@ public class Parser
             i++;
             int divPos = line.indexOf(": ");
 
-            if(divPos < 0) {
+            if (divPos < 0) {
                 log.parseErrors += "error in line "+i+": colon missing" + GUI.HTML_LF;
                 continue;
             }
@@ -219,8 +219,8 @@ public class Parser
             player = "";
             String pattern = "("+log.league.teamColorName[0]+"|"+log.league.teamColorName[1]+")\\s*(\\d+)\\s*$";
             Matcher matcher = Pattern.compile(pattern).matcher(raw);
-            if(matcher.find()){
-                if(matcher.groupCount() == 2){
+            if (matcher.find()) {
+                if (matcher.groupCount() == 2) {
                     player = matcher.group(2);
                 }
             }

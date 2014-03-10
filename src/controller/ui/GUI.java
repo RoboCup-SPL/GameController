@@ -330,7 +330,7 @@ public class GUI extends JFrame implements GCGUI
         
         //  robots
         robots = new JPanel[2];
-        if (Rules.league.isCoachAvailable){
+        if (Rules.league.isCoachAvailable) {
             robot = new JButton[2][Rules.league.teamSize+1];
             robotLabel = new JLabel[2][Rules.league.teamSize+1];
             lanIcon = new ImageIcon[2][Rules.league.teamSize+1];
@@ -381,7 +381,7 @@ public class GUI extends JFrame implements GCGUI
         clockReset = new ImageButton(clockImgReset.getImage());
         clockReset.setOpaque(false);
         clockReset.setBorder(null);
-        if(Rules.league.lostTime) {
+        if (Rules.league.lostTime) {
             clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_CLOCK_SMALL).getImage());
         } else {
             clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_CLOCK).getImage());
@@ -981,7 +981,7 @@ public class GUI extends JFrame implements GCGUI
         for (int i=0; i<robot.length; i++) {
             for (int j=0; j<robot[i].length; j++) {
                 if (ActionBoard.robot[i][j].isCoach(data)) {
-                   if (data.team[i].coach.penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION){
+                   if (data.team[i].coach.penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION) {
                       robot[i][j].setEnabled(false);
                       robotLabel[i][j].setText(EJECTED);
                   } else {

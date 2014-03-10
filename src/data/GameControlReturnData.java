@@ -75,7 +75,7 @@ public class GameControlReturnData
                 return false;
             } else {
                 version = buffer.get();
-                if(version != GAMECONTROLLER_RETURN_STRUCT_VERSION) {
+                if (version != GAMECONTROLLER_RETURN_STRUCT_VERSION) {
                     return false;
                 } else {
                     team = buffer.get();

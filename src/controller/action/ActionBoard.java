@@ -129,10 +129,9 @@ public class ActionBoard
         }
         cancelUndo = new CancelUndo();
         
-        if(Rules.league.isCoachAvailable){
+        if (Rules.league.isCoachAvailable) {
             robot = new Robot[2][Rules.league.teamSize+1];
-        }
-        else{
+        } else {
             robot = new Robot[2][Rules.league.teamSize];
         }
         
@@ -146,7 +145,6 @@ public class ActionBoard
             timeOut[i] = new TimeOut(i);
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
-            
         }
         
         clockReset = new ClockReset();

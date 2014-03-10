@@ -118,7 +118,7 @@ public class GUI extends JFrame
             }
         });
         
-        if(IS_OSX){
+        if (IS_OSX) {
             setVisible(false); // without this, keyboard input is missing on OS X
         }
         
@@ -420,8 +420,8 @@ public class GUI extends JFrame
         int size = getSizeToWidth(0.02);
         for (int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
-            for(int j=0; j<data.team[i].penaltyShot; j++) {
-                if((data.team[i].singleShots & (1<<j)) != 0) {
+            for (int j=0; j<data.team[i].penaltyShot; j++) {
+                if ((data.team[i].singleShots & (1<<j)) != 0) {
                     g.fillOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
                 } else {
                     g.drawOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);

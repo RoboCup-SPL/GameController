@@ -18,7 +18,7 @@ public class RefereeTimeout extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if(!data.refereeTimeout) {
+        if (!data.refereeTimeout) {
             data.previousSecGameState = data.secGameState;
             data.secGameState = GameControlData.STATE2_TIMEOUT;
             data.refereeTimeout = true;
@@ -26,7 +26,7 @@ public class RefereeTimeout extends GCAction
             if (data.gameState == GameControlData.STATE_PLAYING) {
                 data.addTimeInCurrentState();
             }
-            if(data.previousSecGameState == GameControlData.STATE2_PENALTYSHOOT 
+            if (data.previousSecGameState == GameControlData.STATE2_PENALTYSHOOT 
                     && (data.gameState == GameControlData.STATE_SET || data.gameState == GameControlData.STATE_PLAYING)) {
                 data.team[data.kickOffTeam == data.team[0].teamColor ? 0 : 1].penaltyShot--;
             }

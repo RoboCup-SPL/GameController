@@ -41,7 +41,7 @@ public class RobotWatcher
                 robotsLastMessage[i][j] = PlayerInfo.PENALTY_NONE;
                 status[i][j] = RobotOnlineStatus.UNKNOWN;
             }
-            if(Rules.league.isCoachAvailable){
+            if (Rules.league.isCoachAvailable) {
                 status[i][Rules.league.teamSize] = RobotOnlineStatus.UNKNOWN;
             }
         }
@@ -96,7 +96,7 @@ public class RobotWatcher
                         for (int k=0; k < Rules.league.teamSize; k++) {
                             instance.status[i][k] = RobotOnlineStatus.UNKNOWN;
                         }
-                        if(Rules.league.isCoachAvailable){
+                        if (Rules.league.isCoachAvailable) {
                             instance.status[i][Rules.league.teamSize] = RobotOnlineStatus.UNKNOWN;
                         }
                     }
@@ -110,7 +110,8 @@ public class RobotWatcher
         return instance.status;
     }
     
-    public static synchronized void updateCoach(byte team){
+    public static synchronized void updateCoach(byte team)
+    {
         instance.robotsLastAnswer[team][Rules.league.teamSize] = System.currentTimeMillis();
     }
 }

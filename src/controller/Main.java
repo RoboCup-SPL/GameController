@@ -157,7 +157,7 @@ public class Main
             GameControlReturnDataReceiver receiver = GameControlReturnDataReceiver.getInstance();
             receiver.start();
             
-            if(Rules.league.isCoachAvailable){
+            if (Rules.league.isCoachAvailable) {
                 SPLCoachMessageReceiver spl = SPLCoachMessageReceiver.getInstance();
                 spl.start();
             }

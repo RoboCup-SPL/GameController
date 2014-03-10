@@ -183,7 +183,7 @@ public class AdvancedData extends GameControlData implements Cloneable
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         Integer subT = getSecondaryTime(0);
 
-        if(subT == null) {
+        if (subT == null) {
             secondaryTime = 0;
         } else {
             secondaryTime = (short)(int)subT;
@@ -270,7 +270,7 @@ public class AdvancedData extends GameControlData implements Cloneable
         for (int i = 0; i < team.length; ++i) {
             pushes[i] = 0;
             for (int j = 0; j < Rules.league.teamSize; j++) {
-                if(!ActionBoard.robot[i][j].isCoach(this) && team[i].player[j].penalty != PlayerInfo.PENALTY_SUBSTITUTE){
+                if (!ActionBoard.robot[i][j].isCoach(this) && team[i].player[j].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
                     team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
                     ejected[i][j] = false;
                 }

@@ -173,7 +173,7 @@ You can receive the current GameController packet with:
 
     RoboCupGameControlData gameCtrlData; // should probably zero it the first time it is used
     AL::ALValue value = memory->getData("GameCtrl/RoboCupGameControlData");
-    if(value.isBinary() && value.getSize() == sizeof(RoboCupGameControlData))
+    if (value.isBinary() && value.getSize() == sizeof(RoboCupGameControlData))
         memcpy(&gameCtrlData, value, sizeof(RoboCupGameControlData));
 
 
