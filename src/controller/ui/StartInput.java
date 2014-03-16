@@ -86,7 +86,6 @@ public class StartInput extends JFrame implements Serializable
     {
         super(WINDOW_TITLE);
 
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         Dimension desktop = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((desktop.width-WINDOW_WIDTH)/2, (desktop.height-WINDOW_HEIGHT)/2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -249,6 +248,12 @@ public class StartInput extends JFrame implements Serializable
                 }});
                 
         league.getActionListeners()[league.getActionListeners().length - 1].actionPerformed(null);
+
+        int size = teamContainer[0].getPreferredSize().width + teamContainer[1].getPreferredSize().width;
+        size = Math.max(size, team[0].getPreferredSize().width + team[1].getPreferredSize().width);
+
+        getContentPane().setPreferredSize(new Dimension(size, WINDOW_HEIGHT));
+        pack();
         setVisible(true);
     }
     /** Show in the combo box which teams are available for the selected league and competition*/
