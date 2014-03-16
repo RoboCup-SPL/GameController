@@ -33,7 +33,7 @@ public class StartInput extends JFrame implements Serializable
      */
     private static final String WINDOW_TITLE = "GameController";
     private static final int WINDOW_WIDTH = 600;
-    private static final int WINDOW_HEIGHT = 480;
+    private static final int WINDOW_HEIGHT = 450;
     private static final int STANDARD_SPACE = 10;
     private static final int TEAMS_HEIGHT = 300;
     private static final int IMAGE_SIZE = 250;
@@ -249,10 +249,7 @@ public class StartInput extends JFrame implements Serializable
                 
         league.getActionListeners()[league.getActionListeners().length - 1].actionPerformed(null);
 
-        int size = teamContainer[0].getPreferredSize().width + teamContainer[1].getPreferredSize().width;
-        size = Math.max(size, team[0].getPreferredSize().width + team[1].getPreferredSize().width);
-
-        getContentPane().setPreferredSize(new Dimension(size, WINDOW_HEIGHT));
+        getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
         setVisible(true);
     }
