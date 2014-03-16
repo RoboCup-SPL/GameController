@@ -249,10 +249,7 @@ public class StartInput extends JFrame implements Serializable
                 
         league.getActionListeners()[league.getActionListeners().length - 1].actionPerformed(null);
 
-        int size = teamContainer[0].getPreferredSize().width + teamContainer[1].getPreferredSize().width;
-        size = Math.max(size, team[0].getPreferredSize().width + team[1].getPreferredSize().width);
-
-        getContentPane().setPreferredSize(new Dimension(size, WINDOW_HEIGHT));
+        getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
         setVisible(true);
     }
