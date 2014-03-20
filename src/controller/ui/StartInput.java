@@ -14,6 +14,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import javax.swing.*;
 
@@ -318,10 +319,21 @@ public class StartInput extends JFrame implements Serializable
         } else {
             scaleFactor = (float)IMAGE_SIZE/teamIcon[side].getImage().getHeight(null);
         }
-        teamIcon[side].setImage(teamIcon[side].getImage().getScaledInstance(
+
+        // getScaledInstance/SCALE_SMOOTH does not work with all color models, so we need to convert image
+        BufferedImage image = (BufferedImage) teamIcon[side].getImage();
+        if (image.getType() != BufferedImage.TYPE_INT_ARGB) {
+            BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics g = temp.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            image = temp;
+        }
+
+        teamIcon[side].setImage(image.getScaledInstance(
                 (int)(teamIcon[side].getImage().getWidth(null)*scaleFactor),
                 (int)(teamIcon[side].getImage().getHeight(null)*scaleFactor),
-                Image.SCALE_DEFAULT));
+                Image.SCALE_SMOOTH));
     }
     
     /**

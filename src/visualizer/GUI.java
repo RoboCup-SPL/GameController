@@ -261,6 +261,7 @@ public class GUI extends JFrame
         BufferedImage[] icons = new BufferedImage[] {
             Teams.getIcon(data.team[0].teamNumber),
             Teams.getIcon(data.team[1].teamNumber)};
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         for (int i=0; i<2; i++) {
             g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             float scaleFactorX = 1f;
