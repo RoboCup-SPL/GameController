@@ -11,7 +11,7 @@ import java.net.*;
  * @author Marcel Steinbeck
  *
  * This class is used to send the current {@link GameControlData} (game-state) to all robots every 500 ms.
- * The package will be send via UDP on port {@link GameControlData#GAMECONTROLLER_PORT} over broadcast.
+ * The package will be send via UDP on port {@link GameControlData#GAMECONTROLLER_GAMEDATA_PORT} over broadcast.
  *
  * To prevent race-conditions (the sender is executed in its thread-context), the sender will hold a deep copy
  * of {@link GameControlData} (have a closer look to the copy-constructor
@@ -100,7 +100,7 @@ public class Sender extends Thread
                 data.updateTimes();
                 data.packetNumber = packetNumber;
                 byte[] arr = data.toByteArray().array();
-                DatagramPacket packet = new DatagramPacket(arr, arr.length, group, GameControlData.GAMECONTROLLER_PORT);
+                DatagramPacket packet = new DatagramPacket(arr, arr.length, group, GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
 
                 try {
                     datagramSocket.send(packet);

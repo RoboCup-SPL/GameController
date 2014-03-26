@@ -32,9 +32,9 @@ public class Listener extends Thread
             datagramSocket = new DatagramSocket(null);
             datagramSocket.setReuseAddress(true);
             datagramSocket.setSoTimeout(500);
-            datagramSocket.bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_PORT));
+            datagramSocket.bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_GAMEDATA_PORT));
         } catch (SocketException e) {
-            Log.error("Error on start listening to port " + GameControlData.GAMECONTROLLER_PORT);
+            Log.error("Error on start listening to port " + GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
             System.exit(1);
         }
     }
@@ -56,7 +56,7 @@ public class Listener extends Thread
                 }
             } catch (SocketTimeoutException e) { // ignore, because we set a timeout
             } catch (IOException e) {
-                Log.error("Error while listening to port " + GameControlData.GAMECONTROLLER_PORT);
+                Log.error("Error while listening to port " + GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
             }
         }
     }

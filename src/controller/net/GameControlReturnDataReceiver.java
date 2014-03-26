@@ -17,7 +17,7 @@ import data.GameControlReturnData;
  *
  * @author Marcel Steinbeck
  *
- * This class is used to receive a packe send by a robot on port {@link GameControlData#GAMECONTROLLER_PORT} via UDP
+ * This class is used to receive a packet send by a robot on port {@link GameControlData#GAMECONTROLLER_RETURNDATA_PORT} via UDP
  * over broadcast.
  * If a package was received, this class will invoke {@link RobotWatcher#update(data.GameControlReturnData)} to update
  * the robots online status.
@@ -42,7 +42,7 @@ public class GameControlReturnDataReceiver extends Thread
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
         datagramSocket.setSoTimeout(500);
-        datagramSocket.bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_PORT));
+        datagramSocket.bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_RETURNDATA_PORT));
     }
 
     /**
