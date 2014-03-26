@@ -156,14 +156,14 @@ public class Main
             //receiver
             GameControlReturnDataReceiver receiver = GameControlReturnDataReceiver.getInstance();
             receiver.start();
-            
+
             if (Rules.league.isCoachAvailable) {
                 SPLCoachMessageReceiver spl = SPLCoachMessageReceiver.getInstance();
                 spl.start();
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
-                    "Error while setting up GameController on port: " + GameControlData.GAMECONTROLLER_PORT + ".",
+                    "Error while setting up GameController on port: " + GameControlData.GAMECONTROLLER_RETURNDATA_PORT + ".",
                     "Error on configured port",
                     JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
