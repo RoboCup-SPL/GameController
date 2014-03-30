@@ -5,6 +5,8 @@ import common.TotalScaleLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,8 +70,10 @@ public class GUI extends JFrame implements ListSelectionListener
     public GUI()
     {
         super(TITLE);
-        Dimension desktop = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation((desktop.width-WINDOW_WIDTH)/2, (desktop.height-WINDOW_HEIGHT)/2);
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int width = gd.getDisplayMode().getWidth();
+        int height = gd.getDisplayMode().getHeight();
+        setLocation((width-WINDOW_WIDTH)/2, (height-WINDOW_HEIGHT)/2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         TotalScaleLayout layout = new TotalScaleLayout(this);
