@@ -264,8 +264,10 @@ public class GUI extends JFrame implements GCGUI
         super(WINDOW_TITLE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(true);
-        Dimension desktop = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation((desktop.width-WINDOW_WIDTH)/2, (desktop.height-WINDOW_HEIGHT)/2);
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int width = gd.getDisplayMode().getWidth();
+        int height = gd.getDisplayMode().getHeight();
+        setLocation((width-WINDOW_WIDTH)/2, (height-WINDOW_HEIGHT)/2);
         
         addWindowListener(new WindowAdapter()
         {
