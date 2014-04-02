@@ -334,6 +334,8 @@ public class StartInput extends JFrame implements Serializable
                 (int)(teamIcon[side].getImage().getWidth(null)*scaleFactor),
                 (int)(teamIcon[side].getImage().getHeight(null)*scaleFactor),
                 Image.SCALE_SMOOTH));
+        if (team != 0)
+            teamContainer[side].setImage(null);
     }
     
     /**
@@ -385,11 +387,10 @@ public class StartInput extends JFrame implements Serializable
         @Override
         public void paintComponent(Graphics g)
         {
-            if (super.isOpaque()) {
-                g.setColor(Color.WHITE);
-                g.fillRect(0, 0, getWidth(), getHeight());
-            }
-            g.drawImage(image, (getWidth()-image.getWidth(null))/2, 0, image.getWidth(null), image.getHeight(null), null);
+            g.clearRect(0, 0, getWidth(), getHeight());
+
+            if (image != null)
+                g.drawImage(image, (getWidth()-image.getWidth(null))/2, 0, image.getWidth(null), image.getHeight(null), null);
         }
     }
 }
