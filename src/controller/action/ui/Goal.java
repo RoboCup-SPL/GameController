@@ -6,6 +6,7 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
+import data.Rules;
 import data.Teams;
 
 
@@ -48,15 +49,15 @@ public class Goal extends GCAction
         if (set == 1) {
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.kickOffTeam = data.team[side].teamColor == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
-                Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
+                Log.setNextMessage("Goal for Team "+Rules.league.teamColorName[data.team[side].teamColor]);
                 ActionBoard.ready.perform(data);
             } else {
                 data.team[side].singleShots += (1<<(data.team[side].penaltyShot-1));
-                Log.setNextMessage("Goal for Team "+Teams.getNames(false)[data.team[side == 0 ? 1 : 0].teamNumber]);
+                Log.setNextMessage("Goal for Team "+Rules.league.teamColorName[data.team[side].teamColor]);
                 ActionBoard.finish.perform(data);
             }
         } else {
-            Log.state(data, "Goal decrease for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
+            Log.state(data, "Goal decrease for Team "+Rules.league.teamColorName[data.team[side].teamColor]);
         }
     }
     
