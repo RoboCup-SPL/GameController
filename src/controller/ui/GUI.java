@@ -137,7 +137,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
     private static final String TIMEOUT = "Timeout";
     private static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
-    private static final String STUCK = "Global <br/> Game Stuck";
+    private static final String STUCK = "Global <br/> Game <br/> Stuck";
     private static final String KICKOFF_GOAL = "Kickoff Goal";
     private static final String OUT = "Out";
     private static final String STATE_INITIAL = "Initial";
@@ -662,8 +662,6 @@ public class GUI extends JFrame implements GCGUI
             }
         }
         
-        updateFonts();
-        
         setVisible(true);
     }
     
@@ -799,10 +797,21 @@ public class GUI extends JFrame implements GCGUI
             updateDropBall(data);
         }
         updateUndo(data);
-        updateFonts();
         repaint();
     }
-    
+
+    /**
+     * Always update fonts before drawing.
+     *
+     * @param g     The graphics context to draw to.
+     */
+    @Override
+    public void paint(Graphics g)
+    {
+        updateFonts();
+        super.paint(g);
+    }
+
     /**
      * Updates the clock.
      * 
