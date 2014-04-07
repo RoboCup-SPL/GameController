@@ -108,7 +108,7 @@ public class GUI extends JFrame implements GCGUI
      */
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
-    private static final int STANDARD_FONT_SIZE = 18;
+    private static final int STANDARD_FONT_SIZE = 17;
     private static final int TITLE_FONT_SIZE = 24;
     private static final String STANDARD_FONT = "Helvetica";
     private static final int GOALS_FONT_SIZE = 60;
