@@ -70,9 +70,11 @@ public class RobotWatcher
         instance.robotsLastAnswer[team][number-1] = System.currentTimeMillis();
         if (instance.robotsLastMessage[team][number-1] != gameControlReturnData.message) {
             instance.robotsLastMessage[team][number-1] = gameControlReturnData.message;
-            if (gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_PENALISE) {
+            if ((gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_PENALISE)
+                    && (EventHandler.getInstance().data.team[team].player[number-1].penalty == PlayerInfo.PENALTY_NONE)) {
                 ActionBoard.manualPen[team][number-1].actionPerformed(null);
-            } else if (gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE) {
+            } else if ((gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE)
+                    && (EventHandler.getInstance().data.team[team].player[number-1].penalty != PlayerInfo.PENALTY_NONE)) {
                 ActionBoard.manualUnpen[team][number-1].actionPerformed(null);
             }
         }
