@@ -42,6 +42,7 @@ public class Fallen extends Penalty
     {
         return (data.gameState == GameControlData.STATE_READY)
             || (data.gameState == GameControlData.STATE_PLAYING)
+            || (data.gameState == GameControlData.STATE_SET)
             || (data.testmode);
     }
 }
