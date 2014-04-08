@@ -12,8 +12,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.TimeZone;
-
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -194,7 +192,6 @@ public class GUI extends JFrame implements GCGUI
     private Font timeSubFont;
     private Font timeoutFont;
     private Font stateFont;
-    private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
     private ImageIcon clockImgReset;
     private ImageIcon clockImgPlay;
     private ImageIcon clockImgPause;
@@ -263,9 +260,6 @@ public class GUI extends JFrame implements GCGUI
         super(WINDOW_TITLE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(true);
-
-        // set timezone of formatter to UTC
-        clockFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int width = gd.getDisplayMode().getWidth();
