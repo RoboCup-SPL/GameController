@@ -12,8 +12,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.TimeZone;
 
 import javax.swing.AbstractButton;
@@ -1307,8 +1305,10 @@ public class GUI extends JFrame implements GCGUI
             button.setBorderPainted(!highlight);
         }
     }
-    
+
     private String formatTime(int seconds) {
-        return (seconds < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(seconds) * 1000));
+        int displaySeconds = seconds % 60;
+        int displayMinutes = seconds / 60;
+        return (seconds < 0 ? "-" : "") + displayMinutes + ":" + displaySeconds;
     }
 }
