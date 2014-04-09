@@ -67,9 +67,8 @@ public class GUI extends JFrame
     private Font standardSmallFont;
     private Font scoreFont;
     private Font coachMessageFont;
-    private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
-    
-    
+
+
     /**
      * Creates a new GUI.
      */
