@@ -527,8 +527,8 @@ public class GUI extends JFrame
      * @return Time formated.
      */
     private String formatTime(int seconds) {
-        int displaySeconds = seconds % 60;
-        int displayMinutes = seconds / 60;
-        return (seconds < 0 ? "-" : "") + displayMinutes + ":" + displaySeconds;
+        int displaySeconds = Math.abs(seconds) % 60;
+        int displayMinutes = Math.abs(seconds) / 60;
+        return (seconds < 0 ? "-" : "") + String.format("%02d:%02d", displayMinutes, displaySeconds);
     }
 }
