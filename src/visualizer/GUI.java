@@ -15,9 +15,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -70,9 +67,8 @@ public class GUI extends JFrame
     private Font standardSmallFont;
     private Font scoreFont;
     private Font coachMessageFont;
-    private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
-    
-    
+
+
     /**
      * Creates a new GUI.
      */
@@ -522,15 +518,17 @@ public class GUI extends JFrame
             }
         }
     }
-    
+
     /**
      * Formats a time in seconds to a usual looking minutes and seconds time as string.
-     * 
+     *
      * @param seconds   Time to format in seconds.
-     * 
+     *
      * @return Time formated.
      */
     private String formatTime(int seconds) {
-        return (seconds < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(seconds) * 1000));
+        int displaySeconds = seconds % 60;
+        int displayMinutes = seconds / 60;
+        return (seconds < 0 ? "-" : "") + displayMinutes + ":" + displaySeconds;
     }
 }
