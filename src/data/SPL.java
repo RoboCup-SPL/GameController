@@ -78,6 +78,8 @@ public class SPL extends Rules
         isCoachAvailable = true;
         /** Allowed to compensate for lost time? */
         lostTime = true;
+        /** Whether compatibility mode (version 7) is supported **/
+        compatibilityToVersion7 = false;
         /** If true, the drop-in player competition is active*/
         dropInPlayerMode = false;
     }
