@@ -30,7 +30,15 @@ public class TeamInfo implements Serializable
             2 + // singleShots
             SPLCoachMessage.SPL_COACH_MESSAGE_SIZE + // coach's message
             (MAX_NUM_PLAYERS + 1) * PlayerInfo.SIZE; // +1 for the coach
-    
+
+    /** The size in bytes this class has packed for version 7. */
+    public static final int SIZE7 =
+            1 + // teamNumber
+            1 + // teamColor
+            1 + // goal color
+            1 + // score
+            (MAX_NUM_PLAYERS) * PlayerInfo.SIZE7;
+
     //this is streamed
     public byte teamNumber;                                         // unique team number
     public byte teamColor;                                          // colour of the team
@@ -69,7 +77,27 @@ public class TeamInfo implements Serializable
         for (int i=0; i<MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray());
         }
-        
+
+        return buffer.array();
+    }
+
+    /**
+     * Packing this Java class to the C-structure to be send, using version 7
+     * of the protocol.
+     * @return Byte array representing the C-structure.
+     */
+    public byte[] toByteArray7()
+    {
+        ByteBuffer buffer = ByteBuffer.allocate(SIZE7);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        buffer.put(teamNumber);
+        buffer.put(teamColor);
+        buffer.put((byte) 1); // goal color is always yellow
+        buffer.put(score);
+        for (int i=0; i<MAX_NUM_PLAYERS; i++) {
+            buffer.put(player[i].toByteArray7());
+        }
+
         return buffer.array();
     }
     

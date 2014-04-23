@@ -17,7 +17,8 @@ public class GameControlReturnData
     public static final String GAMECONTROLLER_RETURN_STRUCT_HEADER = "RGrt";
     /** The version of the data structure. */
     public static final byte GAMECONTROLLER_RETURN_STRUCT_VERSION = 2;
-    
+    public static final byte GAMECONTROLLER_RETURN_STRUCT_VERSION1 = 1;
+
     /** What a player may say. */
     public static final byte GAMECONTROLLER_RETURN_MSG_MAN_PENALISE = 0;
     public static final byte GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE = 1;
@@ -32,6 +33,14 @@ public class GameControlReturnData
             1 + // player
             1; // message
     
+    /** The size in bytes this class has packed for version 1 */
+    public static final int SIZE1 =
+            4 + // header
+            4 + // version
+            2 + // team
+            2 + // player
+            4; // message
+
     //this is streamed
     String header;          // header to identify the structure
     byte version;            // version of the data structure
@@ -75,15 +84,30 @@ public class GameControlReturnData
                 return false;
             } else {
                 version = buffer.get();
-                if (version != GAMECONTROLLER_RETURN_STRUCT_VERSION) {
-                    return false;
-                } else {
+                switch (version) {
+                case GAMECONTROLLER_RETURN_STRUCT_VERSION:
                     team = buffer.get();
                     player = buffer.get();
                     message = buffer.get();
-
                     return true;
+
+                case GAMECONTROLLER_RETURN_STRUCT_VERSION1:
+                    if (   Rules.league.compatibilityToVersion7
+                        && buffer.get() == 0
+                        && buffer.getShort() == 0)
+                    {
+                        team = (byte)buffer.getShort();
+                        player = (byte)buffer.getShort();
+                        message = (byte)buffer.getInt();
+                        return true;
+                    }
+                    break;
+
+                default:
+                    break;
                 }
+
+                return false;
             }
         } catch (RuntimeException e) {
             return false;

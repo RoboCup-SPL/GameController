@@ -87,6 +87,8 @@ public abstract class Rules
     public boolean isCoachAvailable;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
+    /** Whether compatibility mode (version 7) is supported **/
+    public boolean compatibilityToVersion7;
     /** If true, the drop-in player competition is active*/
     public boolean dropInPlayerMode;
 }

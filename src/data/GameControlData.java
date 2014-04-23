@@ -56,6 +56,20 @@ public class GameControlData implements Serializable
             2 + // secondaryTime
             2 * TeamInfo.SIZE;
     
+    /** The size in bytes this class has packed for protocol version 7. */
+    public static final int SIZE7 =
+            4 + // header
+            4 + // version
+            1 + // numPlayers
+            1 + // gameState
+            1 + // firstHalf
+            1 + // kickOffTeam
+            1 + // secGameState
+            1 + // dropInTeam
+            2 + // dropInTime
+            4 + // secsRemaining
+            2 * TeamInfo.SIZE7;
+
     //this is streamed
     // GAMECONTROLLER_STRUCT_HEADER                             // header to identify the structure
     // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
@@ -111,6 +125,39 @@ public class GameControlData implements Serializable
             buffer.put(aTeam.toByteArray());
         }
        
+        return buffer;
+    }
+
+    /**
+     * Returns the corresponding byte-stream of the state of this object in
+     * the format of protocol version 7.
+     *
+     * @return  the corresponding byte-stream of the state of this object
+     */
+    public ByteBuffer toByteArray7()
+    {
+        ByteBuffer buffer = ByteBuffer.allocate(SIZE7);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        buffer.put(GAMECONTROLLER_STRUCT_HEADER.getBytes(), 0, 4);
+        buffer.putInt(7); // version = 7
+        buffer.put(playersPerTeam);
+        buffer.put(gameState);
+        buffer.put(firstHalf);
+        buffer.put(kickOffTeam);
+        buffer.put(secGameState);
+        buffer.put(dropInTeam);
+        buffer.putShort(dropInTime);
+        buffer.putInt(secsRemaining);
+
+        // in version 7, the broadcasted team data was sorted by team color
+        if (team[0].teamColor == TEAM_BLUE) {
+            buffer.put(team[0].toByteArray7());
+            buffer.put(team[1].toByteArray7());
+        } else {
+            buffer.put(team[1].toByteArray7());
+            buffer.put(team[0].toByteArray7());
+        }
+
         return buffer;
     }
     

@@ -67,7 +67,7 @@ public class GameControlReturnDataReceiver extends Thread
     @Override
     public void run() {
        while (!isInterrupted()) {
-           final ByteBuffer buffer = ByteBuffer.wrap(new byte[GameControlReturnData.SIZE]);
+           final ByteBuffer buffer = ByteBuffer.wrap(new byte[Math.max(GameControlReturnData.SIZE, GameControlReturnData.SIZE1)]);
            final GameControlReturnData player = new GameControlReturnData();
            
            final DatagramPacket packet = new DatagramPacket(buffer.array(), buffer.array().length);
