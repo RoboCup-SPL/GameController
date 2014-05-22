@@ -4,15 +4,15 @@
 #include <stdint.h>
 
 #define SPL_STANDARD_MESSAGE_STRUCT_HEADER  "SPL "
-#define SPL_STANDARD_MESSAGE_STRUCT_VERSION 4
-#define SPL_STANDARD_MESSAGE_DATA_SIZE      802
+#define SPL_STANDARD_MESSAGE_STRUCT_VERSION 5
+#define SPL_STANDARD_MESSAGE_DATA_SIZE      800
 
 struct SPLStandardMessage 
 {
   char header[4];        // "SPL "
   uint8_t version;       // has to be set to SPL_STANDARD_MESSAGE_STRUCT_VERSION
   uint8_t playerNum;     // 1-5
-  uint8_t team;          // 0 is blue, 1 is red 
+  uint8_t teamColor;     // 0 is blue, 1 is red 
   uint8_t fallen;        // 1 means that the robot is fallen, 0 means that the robot can play
 
   // position and orientation of robot
@@ -46,10 +46,19 @@ struct SPLStandardMessage
   // velocity of the ball (same coordinate system as above)
   float ballVel[2];
 
+  // describes what the robot intends to do:
+  // 0 - nothing particular (default)
+  // 1 - wants to be keeper
+  // 2 - wants to play defense
+  // 3 - wants to play the ball
+  // 4 - robot is lost
+  // (the second byte is a padding byte)
+  uint16_t intention;
+  
   // number of bytes that is actually used by the data array
   uint16_t numOfDataBytes;
 
-  // buffer for arbitrary data
+  // buffer for arbitrary data, teams do not need to send more than specified in numOfDataBytes
   uint8_t data[SPL_STANDARD_MESSAGE_DATA_SIZE];
 
 #ifdef __cplusplus
@@ -59,7 +68,7 @@ struct SPLStandardMessage
     *(uint32_t*) header = *(const uint32_t*) SPL_STANDARD_MESSAGE_STRUCT_HEADER;
     version = SPL_STANDARD_MESSAGE_STRUCT_VERSION;
     playerNum = 0;
-    team = 0;
+    teamColor = 0;
     fallen = 0;
     pose[0] = 0.f;
     pose[1] = 0.f;
@@ -73,6 +82,7 @@ struct SPLStandardMessage
     ball[1] = 0.f;
     ballVel[0] = 0.f;
     ballVel[1] = 0.f;
+    intention = 0;
     numOfDataBytes = 0;
   }
 #endif
