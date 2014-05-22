@@ -17,6 +17,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.io.Serializable;
 import javax.swing.*;
 
@@ -121,7 +122,7 @@ public class StartInput extends JFrame implements Serializable
                     {
                         return;
                     }
-                    outTeam[0] = Integer.valueOf(((String)selected).split(": ")[0]);
+                    outTeam[0] = Integer.valueOf(((String)selected).split(" \\(")[1].split("\\)")[0]);
                     setTeamIcon(0, outTeam[0]);
                     teamIconLabel[0].setIcon(teamIcon[0]);
                     teamIconLabel[0].repaint();
@@ -139,7 +140,7 @@ public class StartInput extends JFrame implements Serializable
                     {
                         return;
                     }
-                    outTeam[1] = Integer.valueOf(((String)selected).split(": ")[0]);
+                    outTeam[1] = Integer.valueOf(((String)selected).split(" \\(")[1].split("\\)")[0]);
                     setTeamIcon(1, outTeam[1]);
                     teamIconLabel[1].setIcon(teamIcon[1]);
                     teamIconLabel[1].repaint();
@@ -304,6 +305,8 @@ public class StartInput extends JFrame implements Serializable
                 out[k++] = fullTeams[j];
             }
         }
+
+        Arrays.sort(out, 1, out.length, String.CASE_INSENSITIVE_ORDER);
 
         return out;
     }

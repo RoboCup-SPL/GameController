@@ -120,7 +120,7 @@ public class Teams
             String line;
             while ((line = br.readLine()) != null) {
                 value = Integer.valueOf(line.split("=")[0]);
-                instance.names[getLeagueIndex()][value] = line.split("=")[0]+": "+line.split("=")[1];
+                instance.names[getLeagueIndex()][value] = line.split("=")[1];
             }
         } catch (IOException e) {
             Log.error("cannot load "+PATH+Rules.league.leagueDirectory+"/"+CONFIG);
@@ -148,15 +148,16 @@ public class Teams
             readNames();
         }
         if (withNumbers) {
-            return instance.names[leagueIndex];
-        } else {
             String[] out = new String[instance.names[leagueIndex].length];
             for (int i=0; i<instance.names[leagueIndex].length; i++) {
                 if (instance.names[leagueIndex][i] != null) {
-                    out[i] = instance.names[leagueIndex][i].split(":")[1].substring(1);
+                    out[i] = instance.names[leagueIndex][i] + " (" + i + ")";
+                    System.out.println(out[i]);
                 }
             }
             return out;
+        } else {
+            return instance.names[leagueIndex];
         }
     }
     
