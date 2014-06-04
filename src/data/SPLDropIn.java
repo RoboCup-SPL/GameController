@@ -22,5 +22,7 @@ public class SPLDropIn extends SPL
         isCoachAvailable = false;
         /** If true, the drop-in player competition is active*/
         dropInPlayerMode = true;
+        /** On how many pushings is a robot ejected. */
+        pushesToEjection = new int[] {};
     }
 }
