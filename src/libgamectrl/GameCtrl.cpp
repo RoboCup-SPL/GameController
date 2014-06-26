@@ -11,9 +11,8 @@
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wconversion"
+#pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-#include <alcore/altypes.h>
-#include <alcore/alerror.h>
 #include <alcommon/albroker.h>
 #include <alcommon/alproxy.h>
 #include <alproxies/dcmproxy.h>
