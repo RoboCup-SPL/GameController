@@ -1,15 +1,6 @@
-*.class
-build/*
-nbproject/*
-config/*
-logs/*
-error.txt
-# Package Files #
-*.jar
-*.war
-*.ear
+/build
+/nbproject
 *~
-/bin
 .classpath
 .project
 .settings
