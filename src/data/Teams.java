@@ -152,7 +152,6 @@ public class Teams
             for (int i=0; i<instance.names[leagueIndex].length; i++) {
                 if (instance.names[leagueIndex][i] != null) {
                     out[i] = instance.names[leagueIndex][i] + " (" + i + ")";
-                    System.out.println(out[i]);
                 }
             }
             return out;
