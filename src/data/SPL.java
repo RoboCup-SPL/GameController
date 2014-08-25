@@ -82,9 +82,5 @@ public class SPL extends Rules
         compatibilityToVersion7 = false;
         /** If true, the drop-in player competition is active*/
         dropInPlayerMode = false;
-        /**Defines if actual league is SPL*/
-        isSPL = true;
-        /**Defines if actual league is HL*/
-        isHL = false;
     }
 }

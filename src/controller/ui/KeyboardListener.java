@@ -73,7 +73,7 @@ public class KeyboardListener implements KeyEventDispatcher
             case KeyEvent.VK_DELETE: event = ActionBoard.testmode; break;
             case KeyEvent.VK_BACK_SPACE: event = ActionBoard.undo[1]; break;
             default:
-                if (Rules.league.isSPL) {
+                if (Rules.league instanceof SPL) {
                     switch (key) {
                         case KeyEvent.VK_B: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_BLUE ? 0 : 1]; break;
                         case KeyEvent.VK_R: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_RED ? 0 : 1]; break;
@@ -90,7 +90,7 @@ public class KeyboardListener implements KeyEventDispatcher
                         case KeyEvent.VK_T: event = ActionBoard.teammatePushing; break;
                         case KeyEvent.VK_S: event = ActionBoard.substitute; break;
                     }
-                } else if (Rules.league.isHL) {
+                } else if (Rules.league instanceof HL) {
                     switch (key) {
                         case KeyEvent.VK_B: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_BLUE ? 0 : 1]; break;
                         case KeyEvent.VK_R: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_RED ? 0 : 1]; break;

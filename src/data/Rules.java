@@ -91,8 +91,4 @@ public abstract class Rules
     public boolean compatibilityToVersion7;
     /** If true, the drop-in player competition is active*/
     public boolean dropInPlayerMode;
-    /**Defines if actual league is SPL*/
-    public boolean isSPL;
-    /**Defines if actual league is HL*/
-    public boolean isHL;
 }
