@@ -1,14 +1,15 @@
 package controller.ui;
 
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.KeyEvent;
-
 import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
 import data.GameControlData;
+import data.HL;
 import data.Rules;
+import data.SPL;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 
 
 /**

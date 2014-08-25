@@ -1,7 +1,9 @@
 package controller.action.ui.penalty;
 
-import common.Log;
+import java.util.ArrayList;
 
+import common.Log;
+import controller.EventHandler;
 import data.AdvancedData;
 import data.PlayerInfo;
 import data.Rules;

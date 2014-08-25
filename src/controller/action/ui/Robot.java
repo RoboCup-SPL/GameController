@@ -3,8 +3,8 @@ package controller.action.ui;
 import java.util.ArrayList;
 
 import common.Log;
-
 import controller.EventHandler;
+import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.action.ui.penalty.CoachMotion;
@@ -15,8 +15,10 @@ import controller.action.ui.penalty.ServiceHL;
 import controller.action.ui.penalty.Substitute;
 import data.AdvancedData;
 import data.AdvancedData.PenaltyQueueData;
+import data.HL;
 import data.PlayerInfo;
 import data.Rules;
+import data.SPL;
 
 /**
  * @author Michel Bartsch

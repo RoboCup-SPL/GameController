@@ -1,16 +1,7 @@
 package controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.regex.Pattern;
-
-import javax.swing.JOptionPane;
-
 import common.ApplicationLock;
 import common.Log;
-
 import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.SPLCoachMessageReceiver;
@@ -22,7 +13,16 @@ import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
+import data.SPL;
 import data.Teams;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Pattern;
+
+import javax.swing.*;
 
 
 /**
