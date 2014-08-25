@@ -197,14 +197,14 @@ public class StartInput extends JFrame implements Serializable
                             }
                         }
                     }
-                    if (Rules.league instanceof SPLDropIn) {
+                    if (Rules.league.isSPL && Rules.league.dropInPlayerMode) {
                         nofulltime.setVisible(false);
                         fulltime.setVisible(false);
                         autoColorChange.setVisible(false);
                     } else {
                         nofulltime.setVisible(true);
                         fulltime.setVisible(true);
-                        if (Rules.league instanceof SPL) {
+                        if (Rules.league.isSPL) {
                             nofulltime.setText(FULLTIME_LABEL_NO);
                             fulltime.setText(FULLTIME_LABEL_YES);
                             autoColorChange.setVisible(false);

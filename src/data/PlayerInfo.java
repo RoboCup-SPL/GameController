@@ -96,7 +96,7 @@ public class PlayerInfo implements Serializable
         String out = "----------------------------------------\n";
         String temp;
         
-        if (Rules.league instanceof SPL) {
+        if (Rules.league.isSPL) {
             switch (penalty) {
                 case PENALTY_NONE:                   temp = "none"; break;
                 case PENALTY_SPL_BALL_HOLDING:       temp = "ball holding"; break;
