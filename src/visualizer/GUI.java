@@ -15,14 +15,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import common.Log;
+
 import data.GameControlData;
 import data.Rules;
-import data.SPL;
 import data.Teams;
 
 /**

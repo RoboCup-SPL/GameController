@@ -5,7 +5,6 @@ import controller.action.ActionBoard;
 import data.GameControlReturnData;
 import data.PlayerInfo;
 import data.Rules;
-import data.SPL;
 
 /**
  * @author Marcel Steinbeck, Michel Bartsch

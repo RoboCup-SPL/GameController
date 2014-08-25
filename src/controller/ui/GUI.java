@@ -1,7 +1,6 @@
 package controller.ui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
@@ -9,9 +8,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -25,6 +24,7 @@ import javax.swing.JToggleButton;
 
 import common.Log;
 import common.TotalScaleLayout;
+
 import controller.Clock;
 import controller.EventHandler;
 import controller.action.ActionBoard;
@@ -33,11 +33,8 @@ import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import data.AdvancedData;
 import data.GameControlData;
-import data.HL;
 import data.PlayerInfo;
 import data.Rules;
-import data.SPL;
-import data.SPLCoachMessage;
 import data.Teams;
 
 

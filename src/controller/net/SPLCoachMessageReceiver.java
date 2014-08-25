@@ -7,15 +7,10 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 import common.Log;
-import controller.EventHandler;
-import controller.action.ActionBoard;
+
 import controller.action.net.SPLCoachMessageReceived;
-import data.GameControlData;
-import data.PlayerInfo;
-import data.Rules;
 import data.SPLCoachMessage;
 
 public class SPLCoachMessageReceiver extends Thread
