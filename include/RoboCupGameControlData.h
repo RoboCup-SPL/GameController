@@ -111,10 +111,9 @@ struct RoboCupGameControlReturnData
 
 #ifdef __cplusplus
   // constructor
-  RoboCupGameControlReturnData()
+  RoboCupGameControlReturnData() : version(GAMECONTROLLER_RETURN_STRUCT_VERSION)
   {
-    *(uint32_t*) header = *(const uint32_t*) GAMECONTROLLER_RETURN_STRUCT_HEADER;
-    version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
+    std::memcpy(header, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(header));
   }
 #endif
 };

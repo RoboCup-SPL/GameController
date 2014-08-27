@@ -2,6 +2,9 @@
 #define SPLCOACHMESSAGE_H
 
 #include <stdint.h>
+#ifdef __cplusplus
+#include <cstring>
+#endif
 
 #define SPL_COACH_MESSAGE_PORT           3839
 
@@ -20,10 +23,9 @@ struct SPLCoachMessage
 
 #ifdef __cplusplus
   // constructor
-  SPLCoachMessage()
+  SPLCoachMessage() : version(SPL_COACH_MESSAGE_STRUCT_VERSION)
   {
-    *(uint32_t*) header = *(const uint32_t*) SPL_COACH_MESSAGE_STRUCT_HEADER;
-    version = SPL_COACH_MESSAGE_STRUCT_VERSION;
+    std::memcpy(header, SPL_COACH_MESSAGE_STRUCT_HEADER, sizeof(header));
   }
 #endif
 };

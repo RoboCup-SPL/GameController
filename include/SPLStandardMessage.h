@@ -2,6 +2,9 @@
 #define SPLSTANDARDMESSAGE_H
 
 #include <stdint.h>
+#ifdef __cplusplus
+#include <cstring>
+#endif
 
 #define SPL_STANDARD_MESSAGE_STRUCT_HEADER  "SPL "
 #define SPL_STANDARD_MESSAGE_STRUCT_VERSION 5
@@ -63,13 +66,16 @@ struct SPLStandardMessage
 
 #ifdef __cplusplus
   // constructor
-  SPLStandardMessage()
+  SPLStandardMessage() :
+    version(SPL_STANDARD_MESSAGE_STRUCT_VERSION),
+    playerNum(0),
+    teamColor(0),
+    fallen(0),
+    ballAge(-1),
+    intention(0),
+    numOfDataBytes(0)
   {
-    *(uint32_t*) header = *(const uint32_t*) SPL_STANDARD_MESSAGE_STRUCT_HEADER;
-    version = SPL_STANDARD_MESSAGE_STRUCT_VERSION;
-    playerNum = 0;
-    teamColor = 0;
-    fallen = 0;
+    std::memcpy(header, SPL_STANDARD_MESSAGE_STRUCT_HEADER, sizeof(header));
     pose[0] = 0.f;
     pose[1] = 0.f;
     pose[2] = 0.f;
@@ -77,13 +83,10 @@ struct SPLStandardMessage
     walkingTo[1] = 0.f;
     shootingTo[0] = 0.f;
     shootingTo[1] = 0.f;
-    ballAge = -1;
     ball[0] = 0.f;
     ball[1] = 0.f;
     ballVel[0] = 0.f;
     ballVel[1] = 0.f;
-    intention = 0;
-    numOfDataBytes = 0;
   }
 #endif
 };
