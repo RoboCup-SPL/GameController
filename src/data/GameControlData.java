@@ -14,6 +14,8 @@ import java.nio.ByteOrder;
  */
 public class GameControlData implements Serializable
 {
+    private static final long serialVersionUID = 5061539348771652049L;
+
     /** Some constants from the C-structure. */
     public static final int GAMECONTROLLER_RETURNDATA_PORT = 3838; // port to receive return-packets on
     public static final int GAMECONTROLLER_GAMEDATA_PORT= 3838; // port to send game state packets to

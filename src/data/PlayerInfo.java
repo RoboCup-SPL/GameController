@@ -14,6 +14,8 @@ import java.nio.ByteOrder;
  */
 public class PlayerInfo implements Serializable
 {
+    private static final long serialVersionUID = -8480462279073509072L;
+
     /** What type of penalty a player may have. */
     public static final byte PENALTY_NONE = 0;
     

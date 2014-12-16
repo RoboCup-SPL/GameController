@@ -1,7 +1,6 @@
 package controller.ui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
@@ -9,7 +8,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.AbstractButton;
@@ -37,7 +35,6 @@ import data.HL;
 import data.PlayerInfo;
 import data.Rules;
 import data.SPL;
-import data.SPLCoachMessage;
 import data.Teams;
 
 
@@ -60,6 +57,8 @@ public class GUI extends JFrame implements GCGUI
     /** Fix button centering for Apple Java. */
     private class Button extends JButton
     {
+        private static final long serialVersionUID = -1533689100759569853L;
+
         public Button()
         {
             setMargin(insets);
@@ -80,6 +79,8 @@ public class GUI extends JFrame implements GCGUI
     /** Fix button centering for Apple Java. */
     private class ToggleButton extends JToggleButton
     {
+        private static final long serialVersionUID = -7733709666734108610L;
+
         public ToggleButton()
         {
             setMargin(insets);

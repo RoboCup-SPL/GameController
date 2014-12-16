@@ -72,7 +72,7 @@ public class Log
     public static void toFile(String s)
     {
         try{
-            instance.file.write(instance.timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
+            instance.file.write(timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
             instance.file.flush();
         } catch (IOException e) {
             error("cannot write to logfile!");
@@ -185,7 +185,7 @@ public class Log
             if (instance.errorFile == null) {
                 instance.errorFile = new FileWriter(new File(instance.errorPath));
             }
-            instance.errorFile.write(instance.timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
+            instance.errorFile.write(timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
             instance.errorFile.flush();
         } catch (IOException e) {
              System.err.println("cannot write to error file!");

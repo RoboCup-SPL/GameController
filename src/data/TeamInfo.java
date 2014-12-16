@@ -14,6 +14,8 @@ import java.nio.ByteOrder;
  */
 public class TeamInfo implements Serializable
 {
+    private static final long serialVersionUID = 2795660408542807763L;
+
     /**
      * How many players a team may have.
      * Actually that many players in each team need to be sent, even if

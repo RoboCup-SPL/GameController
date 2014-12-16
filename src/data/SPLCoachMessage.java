@@ -8,6 +8,8 @@ import controller.EventHandler;
 
 public class SPLCoachMessage implements Serializable
 {
+    private static final long serialVersionUID = -1586200167710301614L;
+
     /** Some constants from the C-structure. */
     public static final int SPL_COACH_MESSAGE_PORT = 3839;
     public static final String SPL_COACH_MESSAGE_STRUCT_HEADER = "SPLC";

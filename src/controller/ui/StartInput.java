@@ -4,6 +4,7 @@ import data.Rules;
 import data.SPL;
 import data.SPLDropIn;
 import data.Teams;
+
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Color;
@@ -13,12 +14,12 @@ import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.io.Serializable;
+
 import javax.swing.*;
 
 
@@ -70,10 +71,11 @@ public class StartInput extends JFrame implements Serializable
     private ImagePanel[] teamContainer = new ImagePanel[2];
     private ImageIcon[] teamIcon = new ImageIcon[2];
     private JLabel[] teamIconLabel = new JLabel[2];
-    private JComboBox[] team = new JComboBox[2];
+    @SuppressWarnings("unchecked")
+    private JComboBox<String>[] team = (JComboBox<String>[]) new JComboBox[2];
     private JPanel optionsLeft;
     private JPanel optionsRight;
-    private JComboBox league;
+    private JComboBox<String> league;
     private JRadioButton nofulltime;
     private JRadioButton fulltime;
     private ButtonGroup fulltimeGroup;
@@ -85,7 +87,6 @@ public class StartInput extends JFrame implements Serializable
      * Creates a new StartInput.
      * @param args The parameters that the jar file was started with.
      */
-    @SuppressWarnings("unchecked")
     public StartInput(boolean fullscreenMode)
     {
         super(WINDOW_TITLE);
@@ -109,7 +110,7 @@ public class StartInput extends JFrame implements Serializable
             setTeamIcon(i, 0);
             teamIconLabel[i] = new JLabel(teamIcon[i]);
             teamContainer[i].add(teamIconLabel[i], BorderLayout.CENTER);
-            team[i] = new JComboBox(teams);
+            team[i] = new JComboBox<String>(teams);
             teamContainer[i].add(team[i], BorderLayout.SOUTH);
         }
         team[0].addActionListener(new ActionListener()
@@ -176,7 +177,7 @@ public class StartInput extends JFrame implements Serializable
         optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
         add(optionsRight);
         Dimension optionsDim = new Dimension(WINDOW_WIDTH/3-2*STANDARD_SPACE, OPTIONS_HEIGHT);
-        league = new JComboBox();
+        league = new JComboBox<String>();
         for (int i=0; i < Rules.LEAGUES.length; i++) {
             league.addItem(Rules.LEAGUES[i].leagueName);
             if (Rules.LEAGUES[i] == Rules.league) {

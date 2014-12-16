@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import common.Log;
 import controller.EventHandler;
-import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.action.ui.penalty.CoachMotion;

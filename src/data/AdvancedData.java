@@ -24,6 +24,8 @@ import controller.action.ActionBoard;
  */
 public class AdvancedData extends GameControlData implements Cloneable
 {
+    private static final long serialVersionUID = 2720243434306304319L;
+
     /** This message is set when the data is put into the timeline */
     public String message = "";
 
@@ -384,6 +386,8 @@ public class AdvancedData extends GameControlData implements Cloneable
     }
 
     public class PenaltyQueueData  implements Serializable {
+        private static final long serialVersionUID = 7536004813202642582L;
+
         public long whenPenalized;
         public byte penalty;
 

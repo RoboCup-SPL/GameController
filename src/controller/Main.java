@@ -13,7 +13,6 @@ import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
-import data.SPL;
 import data.Teams;
 
 import java.io.File;
@@ -51,8 +50,6 @@ public class Main
             + "\n  (-l | --league) %s%sselect league (default is spl)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
             + "\n";
-    private static final String COMMAND_HELP = "--help";
-    private static final String COMMAND_HELP_SHORT = "-h";
     private static final String DEFAULT_BROADCAST = "255.255.255.255";
     private static final String COMMAND_BROADCAST = "--broadcast";
     private static final String COMMAND_BROADCAST_SHORT = "-b";

@@ -1,7 +1,5 @@
 package data;
 
-import java.awt.Color;
-
 /**
  *
  * @author Michel-Zen

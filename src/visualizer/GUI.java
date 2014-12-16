@@ -22,7 +22,6 @@ import javax.swing.JFrame;
 import common.Log;
 import data.GameControlData;
 import data.Rules;
-import data.SPL;
 import data.Teams;
 
 /**
@@ -32,6 +31,8 @@ import data.Teams;
  */
 public class GUI extends JFrame
 {
+    private static final long serialVersionUID = -3694754414830065322L;
+
     /**
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
