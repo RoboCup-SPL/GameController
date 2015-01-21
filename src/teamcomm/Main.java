@@ -2,8 +2,11 @@ package teamcomm;
 
 import java.net.SocketException;
 import javax.swing.JOptionPane;
+import teamcomm.gui.RobotView;
 import teamcomm.net.GameControlDataReceiver;
+import teamcomm.net.ISPLStandardMessageReceiver;
 import teamcomm.net.SPLStandardMessageReceiverManager;
+import teamcomm.net.SPLStandardMessageTestProvider;
 
 /**
  * @author Felix Thielke
@@ -22,7 +25,7 @@ public class Main {
      */
     public static void main(final String[] args) {
         GameControlDataReceiver gcDataReceiver = null;
-        SPLStandardMessageReceiverManager receiverManager = null;
+        ISPLStandardMessageReceiver receiverManager = null;
 
         // Initialize listener for GameController messages
         try {
@@ -36,6 +39,7 @@ public class Main {
         }
 
         // Initialize listeners for robots
+        /*
         try {
             receiverManager = new SPLStandardMessageReceiverManager();
         } catch (SocketException ex) {
@@ -45,10 +49,16 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         }
+        */
+        receiverManager = new SPLStandardMessageTestProvider(4, 5, 5);
+        
+        // Initialize robot view part of the GUI
+        final Thread robotView = new Thread(new RobotView());
 
         // Start threads
         gcDataReceiver.start();
         receiverManager.start();
+        robotView.start();
 
         // Wait for shutdown
         try {
@@ -61,15 +71,18 @@ public class Main {
         }
 
         // Shutdown threads
-        gcDataReceiver.interrupt();
         receiverManager.interrupt();
+        gcDataReceiver.interrupt();
+        robotView.interrupt();
 
         try {
-            gcDataReceiver.join();
-            receiverManager.join();
+            gcDataReceiver.join(1000);
+            robotView.join(1000);
+            receiverManager.join(100);
         } catch (InterruptedException ex) {
 
         }
+        System.exit(0);
     }
 
     public static void shutdown() {

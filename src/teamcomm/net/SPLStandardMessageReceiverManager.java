@@ -6,7 +6,7 @@ import java.net.SocketException;
  *
  * @author Felix Thielke
  */
-public class SPLStandardMessageReceiverManager {
+public class SPLStandardMessageReceiverManager implements ISPLStandardMessageReceiver {
 
     private static final int MAX_TEAMNUMBER = 50;
 
@@ -18,21 +18,31 @@ public class SPLStandardMessageReceiverManager {
         }
     }
 
+    @Override
     public void start() {
         for (SPLStandardMessageReceiver r : receivers) {
             r.start();
         }
     }
 
+    @Override
     public void interrupt() {
         for (SPLStandardMessageReceiver r : receivers) {
             r.interrupt();
         }
     }
 
+    @Override
     public void join() throws InterruptedException {
         for (SPLStandardMessageReceiver r : receivers) {
             r.join();
+        }
+    }
+
+    @Override
+    public void join(final long millis) throws InterruptedException {
+        for (SPLStandardMessageReceiver r : receivers) {
+            r.join(millis);
         }
     }
 }

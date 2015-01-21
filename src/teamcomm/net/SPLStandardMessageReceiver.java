@@ -25,7 +25,7 @@ public class SPLStandardMessageReceiver extends Thread {
         this.teamNumber = teamNumber;
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
-        datagramSocket.bind(new InetSocketAddress(teamNumber * 100 + 10001));
+        datagramSocket.bind(new InetSocketAddress(getTeamport(teamNumber)));
     }
 
     @Override
@@ -48,4 +48,7 @@ public class SPLStandardMessageReceiver extends Thread {
         datagramSocket.close();
     }
 
+    private static int getTeamport(final int teamNumber) {
+        return teamNumber * 100 + 10001;
+    }
 }

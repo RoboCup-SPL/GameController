@@ -1,19 +1,22 @@
 package teamcomm.data;
 
 import data.SPLStandardMessage;
+import java.util.LinkedList;
 
 /**
  *
  * @author Felix Thielke
  */
 public class RobotState {
-
+    
     private final String address;
     private SPLStandardMessage lastMessage;
+    private final LinkedList<Long> recentMessageTimestamps = new LinkedList<Long>();
+    private final LinkedList<Integer> messagesPerSecond = new LinkedList<Integer>();
+    private long lastMpsTest = 0;
     private int messageCount = 0;
     private int illegalMessageCount = 0;
     private final int teamNumber;
-    private final long startTimestamp = System.currentTimeMillis();
 
     public RobotState(final String address, final int teamNumber) {
         this.address = address;
@@ -26,6 +29,7 @@ public class RobotState {
         } else {
             lastMessage = message;
         }
+        recentMessageTimestamps.addFirst(System.currentTimeMillis());
         messageCount++;
     }
 
@@ -36,9 +40,33 @@ public class RobotState {
     public SPLStandardMessage getLastMessage() {
         return lastMessage;
     }
+    
+    public int getRecentMessageCount() {
+        final long cut = System.currentTimeMillis() - 1000;
+        Long val = recentMessageTimestamps.peekLast();
+        while(val != null && val < cut) {
+            recentMessageTimestamps.pollLast();
+            val = recentMessageTimestamps.peekLast();
+        }
+        
+        final int mps = recentMessageTimestamps.size();
+        if(lastMpsTest <= cut) {
+            messagesPerSecond.add(mps);
+            lastMpsTest = System.currentTimeMillis();
+        }
+        
+        return mps;
+    }
 
     public double getMessagesPerSecond() {
-        return (double) (System.currentTimeMillis() - startTimestamp) / 1000.0 * (double) messageCount;
+        getRecentMessageCount();
+        
+        long sum = 0;
+        for(int mps : messagesPerSecond) {
+            sum += mps;
+        }
+        
+        return (double)sum / (double)messagesPerSecond.size();
     }
 
     public int getMessageCount() {
