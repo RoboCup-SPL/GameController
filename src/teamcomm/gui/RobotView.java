@@ -45,8 +45,8 @@ public class RobotView extends JFrame implements Runnable {
                 Main.shutdown();
             }
         });
-        setMinimumSize(new Dimension(600, 200));
-        setMaximumSize(new Dimension(2000, 200));
+        setMinimumSize(new Dimension(600, 500));
+        setMaximumSize(new Dimension(2000, 500));
 
         // Display default text
         emptyPane.add(new JLabel("No Robots found", JLabel.CENTER));
@@ -146,28 +146,57 @@ public class RobotView extends JFrame implements Runnable {
     }
 
     private JPanel createRobotPanel(final RobotState robot) {
-        final DecimalFormat df = new DecimalFormat("#.##");
+        final DecimalFormat df = new DecimalFormat("#.#####");
         final JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setPreferredSize(new Dimension(150, 200));
-        panel.setMinimumSize(new Dimension(150, 200));
-        panel.setMaximumSize(new Dimension(150, 200));
+        panel.setPreferredSize(new Dimension(150, 400));
+        panel.setMinimumSize(new Dimension(150, 400));
+        panel.setMaximumSize(new Dimension(150, 400));
 
-        panel.add(new JLabel("IP: " + robot.getAddress(), JLabel.CENTER));
+        panel.add(new JLabel("Player no: " + robot.getLastMessage().playerNum, JLabel.LEFT));
+        panel.add(new JLabel("IP: " + robot.getAddress(), JLabel.LEFT));
         panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
         panel.add(new JLabel("Per second: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
         panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount(), JLabel.LEFT));
+        panel.add(new JLabel(" ", JLabel.LEFT));
+        panel.add(new JLabel(robot.getLastMessage().fallen ? "fallen" : "upright", JLabel.LEFT));
+        panel.add(new JLabel("Pos.X: " + df.format(robot.getLastMessage().pose[0]), JLabel.LEFT));
+        panel.add(new JLabel("Pos.Y: " + df.format(robot.getLastMessage().pose[1]), JLabel.LEFT));
+        panel.add(new JLabel("Pos.T: " + df.format(robot.getLastMessage().pose[2]), JLabel.LEFT));
+        panel.add(new JLabel("Target.X: " + df.format(robot.getLastMessage().walkingTo[0]), JLabel.LEFT));
+        panel.add(new JLabel("Target.Y: " + df.format(robot.getLastMessage().walkingTo[1]), JLabel.LEFT));
+        panel.add(new JLabel("Shot.X: " + df.format(robot.getLastMessage().shootingTo[0]), JLabel.LEFT));
+        panel.add(new JLabel("Shot.Y: " + df.format(robot.getLastMessage().shootingTo[1]), JLabel.LEFT));
+        panel.add(new JLabel("BallRel.X: " + df.format(robot.getLastMessage().ball[0]), JLabel.LEFT));
+        panel.add(new JLabel("BallRel.Y: " + df.format(robot.getLastMessage().ball[1]), JLabel.LEFT));
+        panel.add(new JLabel("BallVel.X: " + df.format(robot.getLastMessage().ballVel[0]), JLabel.LEFT));
+        panel.add(new JLabel("BallVel.Y: " + df.format(robot.getLastMessage().ballVel[1]), JLabel.LEFT));
+        panel.add(new JLabel("BallAge: " + robot.getLastMessage().ballAge, JLabel.LEFT));
 
         return panel;
     }
 
     private void updateRobotPanel(final JPanel panel, final RobotState robot) {
-        final DecimalFormat df = new DecimalFormat("#.##");
-        ((JLabel)panel.getComponent(0)).setText("IP: " + robot.getAddress());
-        ((JLabel)panel.getComponent(1)).setText("Messages: " + robot.getMessageCount());
-        ((JLabel)panel.getComponent(2)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
-        ((JLabel)panel.getComponent(3)).setText("Illegal: " + robot.getIllegalMessageCount());
+        final DecimalFormat df = new DecimalFormat("#.#####");
+        ((JLabel)panel.getComponent(0)).setText("Player no: " + robot.getLastMessage().playerNum);
+        ((JLabel)panel.getComponent(1)).setText("IP: " + robot.getAddress());
+        ((JLabel)panel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
+        ((JLabel)panel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
+        ((JLabel)panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount());
+        ((JLabel)panel.getComponent(6)).setText(robot.getLastMessage().fallen ? "fallen" : "upright");
+        ((JLabel)panel.getComponent(7)).setText("Pos.X: " + df.format(robot.getLastMessage().pose[0]));
+        ((JLabel)panel.getComponent(8)).setText("Pos.Y: " + df.format(robot.getLastMessage().pose[1]));
+        ((JLabel)panel.getComponent(9)).setText("Pos.T: " + df.format(robot.getLastMessage().pose[2]));
+        ((JLabel)panel.getComponent(10)).setText("Target.X: " + df.format(robot.getLastMessage().walkingTo[0]));
+        ((JLabel)panel.getComponent(11)).setText("Target.Y: " + df.format(robot.getLastMessage().walkingTo[1]));
+        ((JLabel)panel.getComponent(12)).setText("Shot.X: " + df.format(robot.getLastMessage().shootingTo[0]));
+        ((JLabel)panel.getComponent(13)).setText("Shot.Y: " + df.format(robot.getLastMessage().shootingTo[1]));
+        ((JLabel)panel.getComponent(14)).setText("BallRel.X: " + df.format(robot.getLastMessage().ball[0]));
+        ((JLabel)panel.getComponent(15)).setText("BallRel.Y: " + df.format(robot.getLastMessage().ball[1]));
+        ((JLabel)panel.getComponent(16)).setText("BallVel.X: " + df.format(robot.getLastMessage().ballVel[0]));
+        ((JLabel)panel.getComponent(17)).setText("BallVel.Y: " + df.format(robot.getLastMessage().ballVel[1]));
+        ((JLabel)panel.getComponent(18)).setText("BallAge: " + robot.getLastMessage().ballAge);
     }
 
 }

@@ -39,7 +39,7 @@ public class Main {
         }
 
         // Initialize listeners for robots
-        /*
+        
         try {
             receiverManager = new SPLStandardMessageReceiverManager();
         } catch (SocketException ex) {
@@ -49,8 +49,8 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         }
-        */
-        receiverManager = new SPLStandardMessageTestProvider(4, 5, 5);
+        
+        //receiverManager = new SPLStandardMessageTestProvider(4, 5, 5);
         
         // Initialize robot view part of the GUI
         final Thread robotView = new Thread(new RobotView());
