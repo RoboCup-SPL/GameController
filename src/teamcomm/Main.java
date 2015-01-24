@@ -6,7 +6,6 @@ import teamcomm.gui.RobotView;
 import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.ISPLStandardMessageReceiver;
 import teamcomm.net.SPLStandardMessageReceiverManager;
-import teamcomm.net.SPLStandardMessageTestProvider;
 
 /**
  * @author Felix Thielke
@@ -39,7 +38,6 @@ public class Main {
         }
 
         // Initialize listeners for robots
-        
         try {
             receiverManager = new SPLStandardMessageReceiverManager();
         } catch (SocketException ex) {

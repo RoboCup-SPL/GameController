@@ -49,6 +49,6 @@ public class SPLStandardMessageReceiver extends Thread {
     }
 
     private static int getTeamport(final int teamNumber) {
-        return teamNumber * 100 + 10001;
+        return teamNumber + 10000;
     }
 }
