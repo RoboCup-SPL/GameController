@@ -5,9 +5,12 @@ import data.SPLStandardMessage;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import teamcomm.data.RobotData;
 
@@ -18,14 +21,38 @@ import teamcomm.data.RobotData;
 public class SPLStandardMessageReceiver extends Thread {
 
     private final DatagramSocket datagramSocket;
+    private final boolean local;
     private final int teamNumber;
 
-    public SPLStandardMessageReceiver(final int teamNumber) throws SocketException {
+    public SPLStandardMessageReceiver(final int teamNumber) throws IOException, SocketException {
+        this(teamNumber, false);
+    }
+
+    public SPLStandardMessageReceiver(final int teamNumber, final boolean local) throws IOException, SocketException {
         assert (teamNumber > 0 && teamNumber < 100);
         this.teamNumber = teamNumber;
-        datagramSocket = new DatagramSocket(null);
+
+        this.local = local;
+
+        if (local) {
+            datagramSocket = new MulticastSocket(null);
+        } else {
+            datagramSocket = new DatagramSocket(null);
+        }
         datagramSocket.setReuseAddress(true);
         datagramSocket.bind(new InetSocketAddress(getTeamport(teamNumber)));
+
+        if (local) {
+            InetAddress address;
+            try {
+                final byte[] addr = InetAddress.getLocalHost().getAddress();
+                addr[0] = (byte) 239;
+                address = InetAddress.getByAddress(addr);
+            } catch (UnknownHostException ex) {
+                address = InetAddress.getByName("239.0.0.1");
+            }
+            ((MulticastSocket) datagramSocket).joinGroup(address);
+        }
     }
 
     @Override
@@ -38,10 +65,16 @@ public class SPLStandardMessageReceiver extends Thread {
                 buffer.rewind();
 
                 final SPLStandardMessage message = new SPLStandardMessage();
-                RobotData.getInstance().receiveMessage(packet.getAddress().getHostAddress(), teamNumber, message.fromByteArray(buffer) ? message : null);
+                if (local) {
+                    if (message.fromByteArray(buffer)) {
+                        RobotData.getInstance().receiveMessage("10.0." + teamNumber + "." + message.playerNum, teamNumber, message);
+                    }
+                } else {
+                    RobotData.getInstance().receiveMessage(packet.getAddress().getHostAddress(), teamNumber, message.fromByteArray(buffer) ? message : null);
+                }
             } catch (SocketTimeoutException e) {
             } catch (IOException e) {
-                Log.error("something went wrong while receiving the game controller packages : " + e.getMessage());
+                Log.error("something went wrong while receiving the message packages: " + e.getMessage());
             }
         }
 

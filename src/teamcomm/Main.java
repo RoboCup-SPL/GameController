@@ -1,10 +1,10 @@
 package teamcomm;
 
+import java.io.IOException;
 import java.net.SocketException;
 import javax.swing.JOptionPane;
 import teamcomm.gui.RobotView;
 import teamcomm.net.GameControlDataReceiver;
-import teamcomm.net.ISPLStandardMessageReceiver;
 import teamcomm.net.SPLStandardMessageReceiverManager;
 
 /**
@@ -24,7 +24,7 @@ public class Main {
      */
     public static void main(final String[] args) {
         GameControlDataReceiver gcDataReceiver = null;
-        ISPLStandardMessageReceiver receiverManager = null;
+        SPLStandardMessageReceiverManager receiverManager = null;
 
         // Initialize listener for GameController messages
         try {
@@ -39,17 +39,21 @@ public class Main {
 
         // Initialize listeners for robots
         try {
-            receiverManager = new SPLStandardMessageReceiverManager();
+            receiverManager = new SPLStandardMessageReceiverManager(true);
         } catch (SocketException ex) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up packet listeners.",
                     "SocketException",
                     JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null,
+                    "Error while setting up packet listeners.",
+                    "IOException",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
         }
-        
-        //receiverManager = new SPLStandardMessageTestProvider(4, 5, 5);
-        
+
         // Initialize robot view part of the GUI
         final Thread robotView = new Thread(new RobotView());
 
