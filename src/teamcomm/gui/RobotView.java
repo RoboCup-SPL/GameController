@@ -9,8 +9,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.media.opengl.GLContext;
-import javax.media.opengl.awt.GLCanvas;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -18,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
-import jogamp.opengl.gl4.GL4bcImpl;
 import teamcomm.Main;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
@@ -29,7 +26,7 @@ import teamcomm.data.RobotState;
 public class RobotView extends JFrame implements Runnable {
 
     private static final long serialVersionUID = 6549981924840180076L;
-    private final GLCanvas fieldView = new GLCanvas();
+    private final FieldView fieldView = new FieldView();
     private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
@@ -59,7 +56,7 @@ public class RobotView extends JFrame implements Runnable {
         contentPane.add(teamPanels[0], BorderLayout.WEST);
         contentPane.add(teamPanels[1], BorderLayout.EAST);
         contentPane.add(teamPanels[2], BorderLayout.SOUTH);
-        contentPane.add(fieldView, BorderLayout.CENTER);
+        contentPane.add(fieldView.getCanvas(), BorderLayout.CENTER);
         setContentPane(contentPane);
 
         // Display window
@@ -78,22 +75,14 @@ public class RobotView extends JFrame implements Runnable {
             } catch (InterruptedException ex) {
             }
         }
+
+        // Terminate 3D rendering
+        fieldView.terminate();
     }
 
     private void updateView() {
         final int[] teamNumbers = RobotData.getInstance().getTeamNumbers();
         final Iterator<RobotState> otherRobots = RobotData.getInstance().getOtherRobots();
-        if (teamNumbers == null) {
-            if (otherRobots.hasNext()) {
-
-            } else {
-
-            }
-        } else {
-            if (getContentPane() != tabbedPane) {
-
-            }
-        }
 
         for (int team = 0; team < 3; team++) {
             final Iterator<RobotState> robots;

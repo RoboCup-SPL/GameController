@@ -2,6 +2,7 @@ package teamcomm;
 
 import java.io.IOException;
 import java.net.SocketException;
+import javax.media.opengl.GLProfile;
 import javax.swing.JOptionPane;
 import teamcomm.gui.RobotView;
 import teamcomm.net.GameControlDataReceiver;
@@ -25,6 +26,9 @@ public class Main {
     public static void main(final String[] args) {
         GameControlDataReceiver gcDataReceiver = null;
         SPLStandardMessageReceiverManager receiverManager = null;
+
+        // Initialize the JOGL profile for 3D drawing
+        GLProfile.initSingleton();
 
         // Initialize listener for GameController messages
         try {
