@@ -22,7 +22,7 @@ public class RobotData {
 
     private static RobotData instance;
     private final int[] teamNumbers = new int[]{0, 0};
-    
+
     @SuppressWarnings("unchecked")
     private final List<RobotState>[] robots = new List[]{new ArrayList<RobotState>(5), new ArrayList<RobotState>(5), new LinkedList<RobotState>()};
     private final HashMap<String, RobotState> robotsByAddress = new HashMap<String, RobotState>();
@@ -45,7 +45,7 @@ public class RobotData {
         rwl.writeLock().lock();
         try {
             if (data == null) {
-                if (teamNumbers[0] != 0) {
+                if (teamNumbers[0] != 0 && !robots[TEAM_OTHER].isEmpty()) {
                     // Delete info about teams
                     teamNumbers[0] = 0;
                     teamNumbers[1] = 0;
@@ -103,9 +103,22 @@ public class RobotData {
     public void receiveMessage(final String address, final int teamNumber, final SPLStandardMessage message) {
         rwl.writeLock().lock();
         try {
+            if (message != null && teamNumbers[message.teamColor] == 0) {
+                teamNumbers[message.teamColor] = teamNumber;
+                ListIterator<RobotState> it = robots[TEAM_OTHER].listIterator();
+                while (it.hasNext()) {
+                    final RobotState r = it.next();
+                    if (r.getTeamNumber() == teamNumber) {
+                        robots[message.teamColor].add(r);
+                        it.remove();
+                    }
+                }
+            }
+
             RobotState r = robotsByAddress.get(address);
             if (r == null) {
                 r = new RobotState(address, teamNumber);
+
                 if (teamNumber == teamNumbers[0]) {
                     robots[0].add(r);
                 } else if (teamNumber == teamNumbers[1]) {
@@ -118,7 +131,7 @@ public class RobotData {
 
             r.registerMessage(message);
 
-            for(int t = 0;t<2;t++) {
+            for (int t = 0; t < 2; t++) {
                 if (r.getTeamNumber() == teamNumbers[t]) {
                     robots[t].sort(new Comparator<RobotState>() {
                         @Override
@@ -137,11 +150,11 @@ public class RobotData {
             notifyAll();
         }
     }
-    
+
     public void lockForReading() {
         rwl.readLock().lock();
     }
-    
+
     public void unlockForReading() {
         rwl.readLock().unlock();
     }

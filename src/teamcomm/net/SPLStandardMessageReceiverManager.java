@@ -17,9 +17,9 @@ public class SPLStandardMessageReceiverManager {
         this(false);
     }
 
-    public SPLStandardMessageReceiverManager(final boolean multicast) throws IOException, SocketException {
+    public SPLStandardMessageReceiverManager(final boolean local) throws IOException, SocketException {
         for (int i = 0; i < MAX_TEAMNUMBER; i++) {
-            receivers[i] = new SPLStandardMessageReceiver(i + 1, multicast);
+            receivers[i] = new SPLStandardMessageReceiver(i + 1, local);
         }
     }
 
