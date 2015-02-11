@@ -1,6 +1,7 @@
 package teamcomm.net;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.SocketException;
 
 /**
@@ -44,6 +45,12 @@ public class SPLStandardMessageReceiverManager {
     public void join(final long millis) throws InterruptedException {
         for (SPLStandardMessageReceiver r : receivers) {
             r.join(millis);
+        }
+    }
+    
+    public void setLogger(final ObjectOutputStream logStream) {
+        for (SPLStandardMessageReceiver r : receivers) {
+            r.setLogger(logStream);
         }
     }
 }

@@ -3,6 +3,7 @@ package teamcomm.net;
 import common.Log;
 import data.SPLStandardMessage;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -23,6 +24,7 @@ public class SPLStandardMessageReceiver extends Thread {
     private final DatagramSocket datagramSocket;
     private final boolean local;
     private final int teamNumber;
+    private ObjectOutputStream logStream;
 
     public SPLStandardMessageReceiver(final int teamNumber) throws IOException, SocketException {
         this(teamNumber, false);
@@ -53,6 +55,8 @@ public class SPLStandardMessageReceiver extends Thread {
             }
             ((MulticastSocket) datagramSocket).joinGroup(address);
         }
+
+        logStream = null;
     }
 
     @Override
@@ -65,12 +69,29 @@ public class SPLStandardMessageReceiver extends Thread {
                 buffer.rewind();
 
                 final SPLStandardMessage message = new SPLStandardMessage();
+                final boolean valid = message.fromByteArray(buffer);
                 if (local) {
-                    if (message.fromByteArray(buffer)) {
+                    if (valid) {
                         RobotData.getInstance().receiveMessage("10.0." + teamNumber + "." + message.playerNum, teamNumber, message);
                     }
                 } else {
-                    RobotData.getInstance().receiveMessage(packet.getAddress().getHostAddress(), teamNumber, message.fromByteArray(buffer) ? message : null);
+                    RobotData.getInstance().receiveMessage(packet.getAddress().getHostAddress(), teamNumber, valid ? message : null);
+                }
+
+                // Log package
+                if (logStream != null) {
+                    // Timestamp
+                    logStream.writeLong(System.currentTimeMillis());
+
+                    // Validity
+                    logStream.writeBoolean(valid);
+
+                    // Package contents
+                    if (valid) {
+                        logStream.writeObject(message);
+                    } else {
+                        logStream.write(buffer.array());
+                    }
                 }
             } catch (SocketTimeoutException e) {
             } catch (IOException e) {
@@ -79,6 +100,10 @@ public class SPLStandardMessageReceiver extends Thread {
         }
 
         datagramSocket.close();
+    }
+
+    public void setLogger(final ObjectOutputStream logStream) {
+        this.logStream = logStream;
     }
 
     private static int getTeamport(final int teamNumber) {
