@@ -136,6 +136,14 @@ public class RobotData {
                     robots[t].sort(new Comparator<RobotState>() {
                         @Override
                         public int compare(RobotState o1, RobotState o2) {
+                            if (o1 == null) {
+                                if (o2 == null) {
+                                    return 0;
+                                }
+                                return -1;
+                            } else if (o2 == null) {
+                                return 1;
+                            }
                             return o1.getLastMessage().playerNum - o2.getLastMessage().playerNum;
                         }
                     });
