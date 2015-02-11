@@ -24,6 +24,8 @@ import javax.xml.stream.events.XMLEvent;
 public class RoSi2Element {
 
     private final List<RoSi2Element> children = new LinkedList<RoSi2Element>();
+    private final Map<String, String> vars = new HashMap<String, String>();
+    private final Map<String, String> attributes = new HashMap<String, String>();
     private final String name;
     private final String tag;
 
@@ -114,23 +116,21 @@ public class RoSi2Element {
                         inputFileStack.getFirst().simulationTagPassed = true;
                     } else if (tag.equals("Include")) {
                         // Open the included file
-                        final Attribute attr = e.getAttributeByName(new QName("href"));
-                        if (attr == null) {
-                            throw new RoSi2ParseException("Missing href attribute");
-                        }
-                        inputFileStack.addFirst(new InputFileState(factory, new File(inputFileStack.getFirst().path.getParentFile(), attr.getValue())));
+                        inputFileStack.addFirst(new InputFileState(factory, new File(inputFileStack.getFirst().path.getParentFile(), getXmlAttribute(e, "href", true))));
                     } else if (inputFileStack.getFirst().simulationTagPassed) {
-                        // Create and add element
-                        final Attribute name = e.getAttributeByName(new QName("name"));
-                        final RoSi2Element elem;
-                        if (name != null) {
-                            elem = new RoSi2Element(tag, name.getValue());
-                            namedElements.put(name.getValue(), elem);
+                        if (tag.equals("Set")) {
+                            // Set variable binding
+                            parentStack.getFirst().vars.putIfAbsent(getXmlAttribute(e, "name", true), getXmlAttribute(e, "value", true));
                         } else {
-                            elem = new RoSi2Element(tag);
+                            // Create and add element
+                            final String name = getXmlAttribute(e, "name", false);
+                            final RoSi2Element elem = new RoSi2Element(tag, name);
+                            if (name != null) {
+                                namedElements.put(name, elem);
+                            }
+                            parentStack.getFirst().children.add(elem);
+                            parentStack.addFirst(elem);
                         }
-                        parentStack.getFirst().children.add(elem);
-                        parentStack.addFirst(elem);
                     }
                 } else if (ev.isEndElement()) {
                     if (ev.asEndElement().getName().getLocalPart().equals(parentStack.getFirst().tag)) {
@@ -148,9 +148,20 @@ public class RoSi2Element {
         }
 
         // TODO: Find the scene element and resolve the references and variable
-        //       bindings of its named children
-        
+        //       instantiations of its named children
         return null;
+    }
+
+    private static String getXmlAttribute(final StartElement e, final String name, boolean required) throws RoSi2ParseException {
+        final Attribute attr = e.getAttributeByName(new QName(name));
+        if (attr == null) {
+            if (required) {
+                throw new RoSi2ParseException("Missing attribute " + name + " on " + e.getName().getLocalPart() + " tag.");
+            }
+            return null;
+        }
+
+        return attr.getValue();
     }
 
     public static class RoSi2ParseException extends Exception {

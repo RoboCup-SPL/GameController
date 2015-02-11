@@ -156,7 +156,11 @@ public class RobotData {
     }
 
     public void unlockForReading() {
-        rwl.readLock().unlock();
+        try {
+            rwl.readLock().unlock();
+        } catch (IllegalMonitorStateException e) {
+            System.out.println("Error in RobotData#unlockForReading()");
+        }
     }
 
     public Iterator<RobotState> getRobotsForTeam(final int team) {

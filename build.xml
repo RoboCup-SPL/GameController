@@ -85,6 +85,6 @@
   </target>
   
   <target name="run_teamcomm" depends="jar">
-    <java jar="${jar.dir}/TeamCommunicationMonitor.jar" fork="true"/>
+    <java jar="${jar.dir}/TeamCommunicationMonitor.jar" dir="${jar.dir}" fork="true"/>
   </target>
 </project>

@@ -8,7 +8,7 @@ import java.util.LinkedList;
  * @author Felix Thielke
  */
 public class RobotState {
-    
+
     private final String address;
     private SPLStandardMessage lastMessage;
     private final LinkedList<Long> recentMessageTimestamps = new LinkedList<Long>();
@@ -40,33 +40,33 @@ public class RobotState {
     public SPLStandardMessage getLastMessage() {
         return lastMessage;
     }
-    
+
     public int getRecentMessageCount() {
         final long cut = System.currentTimeMillis() - 1000;
         Long val = recentMessageTimestamps.peekLast();
-        while(val != null && val < cut) {
+        while (val != null && val < cut) {
             recentMessageTimestamps.pollLast();
             val = recentMessageTimestamps.peekLast();
         }
-        
+
         final int mps = recentMessageTimestamps.size();
-        if(lastMpsTest <= cut) {
+        if (lastMpsTest <= cut) {
             messagesPerSecond.add(mps);
             lastMpsTest = System.currentTimeMillis();
         }
-        
+
         return mps;
     }
 
     public double getMessagesPerSecond() {
         getRecentMessageCount();
-        
+
         long sum = 0;
-        for(int mps : messagesPerSecond) {
+        for (int mps : messagesPerSecond) {
             sum += mps;
         }
-        
-        return (double)sum / (double)messagesPerSecond.size();
+
+        return (double) sum / (double) messagesPerSecond.size();
     }
 
     public int getMessageCount() {
@@ -75,6 +75,10 @@ public class RobotState {
 
     public int getIllegalMessageCount() {
         return illegalMessageCount;
+    }
+
+    public double getIllegalMessageRatio() {
+        return illegalMessageCount / (illegalMessageCount + messageCount);
     }
 
     public int getTeamNumber() {
