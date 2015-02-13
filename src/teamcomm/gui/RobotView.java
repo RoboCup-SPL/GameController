@@ -138,28 +138,30 @@ public class RobotView extends JFrame implements Runnable {
         final JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setMinimumSize(new Dimension(150, 90));
-        panel.setMaximumSize(new Dimension(150, 90));
-        panel.setPreferredSize(new Dimension(150, 90));
+        panel.setMinimumSize(new Dimension(150, 105));
+        panel.setMaximumSize(new Dimension(150, 105));
+        panel.setPreferredSize(new Dimension(150, 105));
 
         panel.add(new JLabel("Player no: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().playerNum), JLabel.LEFT));
         panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
-        panel.add(new JLabel("Per second: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
+        panel.add(new JLabel("Current mps: " + df.format(robot.getRecentMessageCount()), JLabel.LEFT));
+        panel.add(new JLabel("Average mps: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
         panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + (int) (robot.getIllegalMessageRatio() * 100) + "%)", JLabel.LEFT));
 
         return panel;
     }
 
     private void updateRobotPanel(final JPanel panel, final RobotState robot) {
-        if(robot.getLastMessage() == null) {
+        if (robot.getLastMessage() == null) {
             return;
         }
-        
+
         final DecimalFormat df = new DecimalFormat("#.#####");
         ((JLabel) panel.getComponent(0)).setText("Player no: " + robot.getLastMessage().playerNum);
         ((JLabel) panel.getComponent(1)).setText("Messages: " + robot.getMessageCount());
-        ((JLabel) panel.getComponent(2)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
-        ((JLabel) panel.getComponent(3)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + (int) (robot.getIllegalMessageRatio() * 100) + "%)");
+        ((JLabel) panel.getComponent(2)).setText("Current mps: " + df.format(robot.getRecentMessageCount()));
+        ((JLabel) panel.getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
+        ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + (int) (robot.getIllegalMessageRatio() * 100) + "%)");
     }
 
     private JFrame createRobotDetailPanel(final RobotState robot, final JPanel anchor) {
@@ -187,7 +189,7 @@ public class RobotView extends JFrame implements Runnable {
         panel.add(new JLabel("Per second: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
         panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + (int) (robot.getIllegalMessageRatio() * 100) + "%)", JLabel.LEFT));
         panel.add(new JLabel(" ", JLabel.LEFT));
-        panel.add(new JLabel(robot.getLastMessage().fallen ? "fallen" : "upright", JLabel.LEFT));
+        panel.add(new JLabel(robot.getLastMessage() == null ? "?" : (robot.getLastMessage().fallen ? "fallen" : "upright"), JLabel.LEFT));
         panel.add(new JLabel("Pos.X: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().pose[0])), JLabel.LEFT));
         panel.add(new JLabel("Pos.Y: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().pose[1])), JLabel.LEFT));
         panel.add(new JLabel("Pos.T: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().pose[2])), JLabel.LEFT));
@@ -209,10 +211,10 @@ public class RobotView extends JFrame implements Runnable {
     }
 
     private void updateRobotDetailPanel(final JFrame frame, final RobotState robot) {
-        if(robot.getLastMessage() == null) {
+        if (robot.getLastMessage() == null) {
             return;
         }
-        
+
         final JPanel panel = (JPanel) frame.getContentPane();
         final DecimalFormat df = new DecimalFormat("#.#####");
         ((JLabel) panel.getComponent(0)).setText((robot.getLastMessage().teamColor == 0 ? "Blue" : "Red") + " Team");
