@@ -47,6 +47,7 @@ struct SPLStandardMessage
   float ball[2];
 
   // velocity of the ball (same coordinate system as above)
+  // the unit is millimeters per millisecond 
   float ballVel[2];
 
   // describes what the robot intends to do:
