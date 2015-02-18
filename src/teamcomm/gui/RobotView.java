@@ -1,18 +1,23 @@
 package teamcomm.gui;
 
+import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,8 +32,15 @@ import teamcomm.data.RobotState;
 public class RobotView extends JFrame implements Runnable {
 
     private static final long serialVersionUID = 6549981924840180076L;
+
+    private static final int ROBOTPANEL_W = 150;
+    private static final int ROBOTPANEL_H = 105;
+
+    private static final Map<Integer, ImageIcon> logos = new HashMap<Integer, ImageIcon>();
+
     private final FieldView fieldView = new FieldView();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
+    private final JLabel[] teamLogos = new JLabel[]{new JLabel(), new JLabel()};
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
     private final Map<String, JFrame> robotDetailPanels = new HashMap<String, JFrame>();
 
@@ -47,10 +59,25 @@ public class RobotView extends JFrame implements Runnable {
 
         // Setup team panels
         teamPanels[0].setLayout(new BoxLayout(teamPanels[0], BoxLayout.Y_AXIS));
-        //teamPanels[0].add(new JLabel("No blue team found", SwingConstants.CENTER));
         teamPanels[1].setLayout(new BoxLayout(teamPanels[1], BoxLayout.Y_AXIS));
-        //teamPanels[1].add(new JLabel("No red team found", SwingConstants.CENTER));
         teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.X_AXIS));
+        /*teamPanels[0].setLayout(new GridLayout(6, 1, 0, 5));
+        teamPanels[1].setLayout(new GridLayout(6, 1, 0, 5));*/
+
+        // Setup team logos
+        /*final JPanel logoLeft = new JPanel();
+        logoLeft.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+        logoLeft.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+        logoLeft.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+        logoLeft.setSize(ROBOTPANEL_W, ROBOTPANEL_H);
+        logoLeft.add(teamLogos[0]);*/
+        teamPanels[0].add(teamLogos[0]);
+        /*final JPanel logoRight = new JPanel();
+        logoRight.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+        logoRight.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+        logoRight.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+        logoRight.add(teamLogos[1]);*/
+        teamPanels[1].add(teamLogos[1]);
 
         // Setup content pane
         final JPanel contentPane = new JPanel(new BorderLayout());
@@ -90,9 +117,12 @@ public class RobotView extends JFrame implements Runnable {
             final Iterator<RobotState> robots;
             if (team < 2) {
                 if (teamNumbers == null) {
+                    teamLogos[team].setIcon(null);
                     continue;
                 }
                 robots = RobotData.getInstance().getRobotsForTeam(team);
+
+                teamLogos[team].setIcon(getTeamIcon(teamNumbers[team]));
             } else {
                 robots = otherRobots;
             }
@@ -117,12 +147,12 @@ public class RobotView extends JFrame implements Runnable {
                     updateRobotDetailPanel(detailPanel, robot);
                 }
 
-                if (teamPanels[team].getComponentCount() <= i) {
+                if (teamPanels[team].getComponentCount() <= i+1) {
                     teamPanels[team].add(panel);
                     panel.revalidate();
-                } else if (panel != teamPanels[team].getComponent(i)) {
+                } else if (panel != teamPanels[team].getComponent(i+1)) {
                     teamPanels[team].remove(panel);
-                    teamPanels[team].add(panel, i);
+                    teamPanels[team].add(panel, i+1);
                     panel.revalidate();
                 }
 
@@ -133,14 +163,48 @@ public class RobotView extends JFrame implements Runnable {
         repaint();
     }
 
+    private ImageIcon getTeamIcon(final int team) {
+        ImageIcon icon = logos.get(team);
+        if (icon != null) {
+            return icon;
+        }
+
+        icon = new ImageIcon(Teams.getIcon(team));
+        float scaleFactor;
+        if (icon.getImage().getWidth(null) > icon.getImage().getHeight(null)) {
+            scaleFactor = (float) (ROBOTPANEL_W) / icon.getImage().getWidth(null);
+        } else {
+            scaleFactor = (float) (ROBOTPANEL_H) / icon.getImage().getHeight(null);
+        }
+
+        // getScaledInstance/SCALE_SMOOTH does not work with all color models, so we need to convert image
+        BufferedImage image = (BufferedImage) icon.getImage();
+        if (image.getType() != BufferedImage.TYPE_INT_ARGB) {
+            BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics g = temp.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            image = temp;
+        }
+
+        icon.setImage(image.getScaledInstance(
+                (int) (icon.getImage().getWidth(null) * scaleFactor),
+                (int) (icon.getImage().getHeight(null) * scaleFactor),
+                Image.SCALE_SMOOTH));
+
+        logos.put(team, icon);
+
+        return icon;
+    }
+
     private JPanel createRobotPanel(final RobotState robot) {
         final DecimalFormat df = new DecimalFormat("#.#####");
         final JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setMinimumSize(new Dimension(150, 105));
-        panel.setMaximumSize(new Dimension(150, 105));
-        panel.setPreferredSize(new Dimension(150, 105));
+        panel.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+        panel.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+        panel.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
 
         panel.add(new JLabel("Player no: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().playerNum), JLabel.LEFT));
         panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
