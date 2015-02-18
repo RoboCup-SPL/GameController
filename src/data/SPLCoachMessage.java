@@ -14,7 +14,7 @@ public class SPLCoachMessage implements Serializable
     public static final int SPL_COACH_MESSAGE_PORT = 3839;
     public static final String SPL_COACH_MESSAGE_STRUCT_HEADER = "SPLC";
     public static final int SPL_COACH_MESSAGE_STRUCT_VERSION = 2;
-    public static final int SPL_COACH_MESSAGE_SIZE = 40;
+    public static final int SPL_COACH_MESSAGE_SIZE = 80;
     public static final long SPL_COACH_MESSAGE_RECEIVE_INTERVALL = 10000; // in ms
     public static final long SPL_COACH_MESSAGE_MIN_SEND_INTERVALL = 3000; // in ms
     public static final long SPL_COACH_MESSAGE_MAX_SEND_INTERVALL = 6000; // in ms

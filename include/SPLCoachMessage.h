@@ -10,7 +10,7 @@
 
 #define SPL_COACH_MESSAGE_STRUCT_HEADER  "SPLC"
 #define SPL_COACH_MESSAGE_STRUCT_VERSION 2
-#define SPL_COACH_MESSAGE_SIZE           40
+#define SPL_COACH_MESSAGE_SIZE           80
 
 struct SPLCoachMessage 
 {
