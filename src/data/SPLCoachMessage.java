@@ -13,7 +13,7 @@ public class SPLCoachMessage implements Serializable
     /** Some constants from the C-structure. */
     public static final int SPL_COACH_MESSAGE_PORT = 3839;
     public static final String SPL_COACH_MESSAGE_STRUCT_HEADER = "SPLC";
-    public static final int SPL_COACH_MESSAGE_STRUCT_VERSION = 2;
+    public static final int SPL_COACH_MESSAGE_STRUCT_VERSION = 3;
     public static final int SPL_COACH_MESSAGE_SIZE = 80;
     public static final long SPL_COACH_MESSAGE_RECEIVE_INTERVALL = 10000; // in ms
     public static final long SPL_COACH_MESSAGE_MIN_SEND_INTERVALL = 3000; // in ms
@@ -21,11 +21,13 @@ public class SPLCoachMessage implements Serializable
     public static final int SIZE = 4 // header size
                                    + 1 // byte for the version
                                    + 1 // team number
+                                   + 1 // sequence number
                                    + SPL_COACH_MESSAGE_SIZE;
 
     public String header;   // header to identify the structure
     public byte version;    // version of the data structure
     public byte team;       // unique team number
+    public byte sequence;   // sequence number of this message (set by the coach)
     public byte[] message;  // what the coach says
     private long sendTime;  // delay in ms that the message will be held back
 
@@ -42,6 +44,7 @@ public class SPLCoachMessage implements Serializable
         buffer.put(header.getBytes());
         buffer.put(version);
         buffer.put(team);
+        buffer.put(sequence);
         buffer.put(message);
 
         return buffer.array();
@@ -65,6 +68,7 @@ public class SPLCoachMessage implements Serializable
                     if ((team != EventHandler.getInstance().data.team[0].teamNumber) && (team != EventHandler.getInstance().data.team[1].teamNumber)) {
                         return false;
                     }
+                    sequence = buffer.get();
                     message = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
                     buffer.get(message);
                     return true;

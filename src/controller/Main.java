@@ -138,7 +138,7 @@ public class Main
         }
 
         data.colorChangeAuto = input.outAutoColorChange;
-        data.playoff = input.outFulltime;
+        data.gameType = input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
 
         try {
             //sender
@@ -178,7 +178,7 @@ public class Main
             Log.init(logFile.getPath());
         }
         Log.toFile("League = "+Rules.league.leagueName);
-        Log.toFile("Play-off = "+data.playoff);
+        Log.toFile("Game type = "+ (data.gameType == GameControlData.GAME_ROUNDROBIN ? "round robin" : "play-off"));
         Log.toFile("Auto color change = "+data.colorChangeAuto);
         Log.toFile("Using broadcast address " + outBroadcastAddress);
 

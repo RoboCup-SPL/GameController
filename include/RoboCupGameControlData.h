@@ -6,7 +6,7 @@
 #define GAMECONTROLLER_PORT            3838
 
 #define GAMECONTROLLER_STRUCT_HEADER   "RGme"
-#define GAMECONTROLLER_STRUCT_VERSION  8
+#define GAMECONTROLLER_STRUCT_VERSION  9
 
 #define MAX_NUM_PLAYERS             11
 
@@ -15,6 +15,9 @@
 #define TEAM_RED                    1
 #define TEAM_MAGENTA                1
 #define DROPBALL                    2
+
+#define GAME_ROUNDROBIN             0
+#define GAME_PLAYOFF                1
 
 #define STATE_INITIAL               0
 #define STATE_READY                 1
@@ -71,6 +74,7 @@ struct TeamInfo
   uint8_t score;                // team's score
   uint8_t penaltyShot;          // penalty shot counter
   uint16_t singleShots;         // bits represent penalty shot success
+  uint8_t coachSequence;        // sequence number of the coach's message
   uint8_t coachMessage[SPL_COACH_MESSAGE_SIZE]; // the coach's message to the team
   RobotInfo coach;
   RobotInfo players[MAX_NUM_PLAYERS]; // the team's players
@@ -82,6 +86,7 @@ struct RoboCupGameControlData
   uint8_t version;              // version of the data structure
   uint8_t packetNumber;         // number incremented with each packet sent (with wraparound)
   uint8_t playersPerTeam;       // The number of players on a team
+  uint8_t gameType;             // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF)
   uint8_t state;                // state of the game (STATE_READY, STATE_PLAYING, etc)
   uint8_t firstHalf;            // 1 = game in first half, 0 otherwise
   uint8_t kickOffTeam;          // the next team to kick off (TEAM_BLUE, TEAM_RED)
