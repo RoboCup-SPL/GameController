@@ -17,7 +17,7 @@ struct SPLCoachMessage
   char header[4];        // "SPLC"
   uint8_t version;       // SPL_COACH_MESSAGE_STRUCT_VERSION
   uint8_t team;          // team number
-  unit8_t sequence;      // sequence number of this message
+  uint8_t sequence;      // sequence number of this message
 
   // buffer for message
   uint8_t message[SPL_COACH_MESSAGE_SIZE];
