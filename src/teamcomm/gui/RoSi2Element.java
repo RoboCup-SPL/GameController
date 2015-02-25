@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,7 +15,11 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.media.opengl.GL2GL3;
+import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.GLUquadric;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -33,6 +38,11 @@ public class RoSi2Element {
      * References to all named elements
      */
     private final Map<String, RoSi2Element> namedElements;
+
+    /**
+     * Path of the file in which this element is declared.
+     */
+    private final File filepath;
 
     /**
      * Immediate children of this element.
@@ -71,11 +81,12 @@ public class RoSi2Element {
      */
     private RoSi2Drawable constantInstance;
 
-    private RoSi2Element(final String tag, final Map<String, RoSi2Element> namedElements) {
-        this(tag, null, null, namedElements);
+    private RoSi2Element(final File path, final String tag, final Map<String, RoSi2Element> namedElements) {
+        this(path, tag, null, null, namedElements);
     }
 
-    private RoSi2Element(final String tag, final String name, final Iterator<Attribute> iter, final Map<String, RoSi2Element> namedElements) {
+    private RoSi2Element(final File path, final String tag, final String name, final Iterator<Attribute> iter, final Map<String, RoSi2Element> namedElements) {
+        this.filepath = path;
         this.tag = tag;
         this.name = name;
         this.namedElements = namedElements;
@@ -114,11 +125,15 @@ public class RoSi2Element {
         return null;
     }
 
-    public RoSi2Drawable instantiate() throws RoSi2ParseException {
-        return instantiate(null);
+    public RoSi2Drawable instantiate(final GL2 gl) throws RoSi2ParseException {
+        return instantiate(gl, null);
     }
 
-    public RoSi2Drawable instantiate(final Map<String, String> vars) throws RoSi2ParseException {
+    public RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars) throws RoSi2ParseException {
+        return instantiate(gl, vars, new TextureLoader(gl));
+    }
+
+    private RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars, final TextureLoader texLoader) throws RoSi2ParseException {
         // The instantiation is constant unless it references a variable
         boolean constant = true;
 
@@ -140,19 +155,19 @@ public class RoSi2Element {
 
         // Check if this element references another and in that case instantiate
         // the referenced element
-        final String ref = attributes.get("ref");
+        final String ref = getAttributeValue(varBindings, "ref", false);
         if (ref != null) {
             final RoSi2Element referenced = namedElements.get(tag + "#" + ref);
             if (referenced == null) {
                 throw new RoSi2ParseException("Referenced element cannot be found: " + ref);
             }
-            return referenced.instantiate(varBindings);
+            return referenced.instantiate(gl, varBindings, texLoader);
         }
 
         // Instantiate all child elements
         final List<RoSi2Drawable> childInstances = new LinkedList<RoSi2Drawable>();
         for (final RoSi2Element child : children) {
-            final RoSi2Drawable childInst = child.instantiate(varBindings);
+            final RoSi2Drawable childInst = child.instantiate(gl, varBindings, texLoader);
             if (childInst != null) {
                 // If a child instance is not constant, the instance of this
                 // element is neither
@@ -167,9 +182,9 @@ public class RoSi2Element {
         // Instantiate this element
         final RoSi2Drawable instance;
         if (tag.equals("Compound")) {
-            instance = new Compound(childInstances);
+            instance = new Compound(gl, childInstances);
         } else if (tag.equals("Body")) {
-            instance = new Body(childInstances);
+            instance = new Body(gl, childInstances);
         } else if (tag.equals("Translation")) {
             instance = new Translation(new float[]{
                 getLength(varBindings, "x", false, 0.0f),
@@ -183,37 +198,83 @@ public class RoSi2Element {
                 getAngle(varBindings, "z", false, 0.0f)
             });
         } else if (tag.equals("Appearance")) {
-            instance = new Appearance(childInstances);
+            instance = new Appearance(gl, childInstances);
         } else if (tag.equals("BoxAppearance")) {
-            instance = new BoxAppearance(childInstances,
+            instance = new BoxAppearance(gl, childInstances,
                     getLength(varBindings, "width", true, 0.0f),
                     getLength(varBindings, "height", true, 0.0f),
                     getLength(varBindings, "depth", true, 0.0f));
         } else if (tag.equals("SphereAppearance")) {
-            instance = new SphereAppearance(childInstances,
+            instance = new SphereAppearance(gl, childInstances,
                     getLength(varBindings, "radius", true, 0.0f));
         } else if (tag.equals("CylinderAppearance")) {
-            instance = new CylinderAppearance(childInstances,
+            instance = new CylinderAppearance(gl, childInstances,
                     getLength(varBindings, "height", true, 0.0f),
                     getLength(varBindings, "radius", true, 0.0f));
         } else if (tag.equals("CapsuleAppearance")) {
-            instance = new CapsuleAppearance(childInstances,
+            instance = new CapsuleAppearance(gl, childInstances,
                     getLength(varBindings, "height", true, 0.0f),
                     getLength(varBindings, "radius", true, 0.0f));
         } else if (tag.equals("ComplexAppearance")) {
-            instance = new ComplexAppearance(childInstances);
+            instance = new ComplexAppearance(gl, childInstances);
         } else if (tag.equals("Vertices")) {
-            instance = new Vertices();
+            final float unit = getUnit(varBindings, "unit", false, 1.0f);
+            final ArrayList<Vertices.Vertex> vs = new ArrayList<Vertices.Vertex>();
+            final String str = content.toString();
+
+            // TODO: parse vertices
+            vs.trimToSize();
+            instance = new Vertices(vs);
         } else if (tag.equals("Normals")) {
-            instance = new Normals();
+            final ArrayList<Normals.Normal> ns = new ArrayList<Normals.Normal>();
+            final String str = content.toString();
+
+            // TODO: parse normals
+            ns.trimToSize();
+            instance = new Normals(ns);
         } else if (tag.equals("TexCoords")) {
-            instance = new TexCoords();
-        } else if (tag.equals("Triangles")) {
-            instance = new Triangles();
-        } else if (tag.equals("Quads")) {
-            instance = new Quads();
+            final ArrayList<TexCoords.TexCoord> ts = new ArrayList<TexCoords.TexCoord>();
+            final String str = content.toString();
+
+            // TODO: parse texture coordinates
+            ts.trimToSize();
+            instance = new TexCoords(ts);
+        } else if (tag.equals("Triangles") || tag.equals("Quads")) {
+            final LinkedList<Integer> vs = new LinkedList<Integer>();
+
+            // TODO: parse vertex indices
+            instance = new PrimitiveGroup(tag.equals("Triangles") ? GL.GL_TRIANGLES : GL2GL3.GL_QUADS, vs);
         } else if (tag.equals("Surface")) {
-            instance = new Surface();
+            final String texturePath = getAttributeValue(varBindings, "diffuseTexture", false);
+            final Texture texture;
+            if (texturePath == null) {
+                texture = null;
+            } else {
+                texture = texLoader.loadTexture(new File(filepath.getParentFile(), texturePath).getPath());
+            }
+
+            final String shininessStr = getAttributeValue(varBindings, "shininess", false);
+            Float shininess;
+            if (shininessStr == null) {
+                shininess = null;
+            } else {
+                try {
+                    shininess = Float.valueOf(shininessStr);
+                    if (shininess < 0.0f || shininess > 128.0f) {
+                        throw new RoSi2ParseException("Shininess value muust bbe  between 0 and 128, found: " + shininess);
+                    }
+                } catch (final NumberFormatException e) {
+                    shininess = null;
+                }
+            }
+
+            instance = new Surface(
+                    getColor(varBindings, "diffuseColor", true),
+                    getColor(varBindings, "ambientColor", false),
+                    getColor(varBindings, "specularColor", false),
+                    getColor(varBindings, "emissionColor", false),
+                    shininess,
+                    texture);
         } else {
             return null;
         }
@@ -226,7 +287,95 @@ public class RoSi2Element {
         return instance;
     }
 
-    private float getLength(final Map<String, String> varBindings, final String key, final boolean required, float defaultValue) throws RoSi2ParseException {
+    private float[] getColor(final Map<String, String> varBindings, final String key, final boolean required) throws RoSi2ParseException {
+        final String val = getAttributeValue(varBindings, key, required);
+        if (val == null) {
+            return null;
+        }
+        final float f1_255 = 1.0f / 255.0f;
+        final float f1_15 = 1.0f / 15.0f;
+
+        if (val.charAt(0) == '#') {
+            // html style #rrggbb, #rgb
+            // + self invented #rrggbbaa, #rgba
+            switch (val.length()) {
+                case 4:
+                    return new float[]{
+                        f1_15 * hexDigit(val.charAt(1)),
+                        f1_15 * hexDigit(val.charAt(2)),
+                        f1_15 * hexDigit(val.charAt(3)),
+                        1.0f
+                    };
+                case 5:
+                    return new float[]{
+                        f1_15 * hexDigit(val.charAt(1)),
+                        f1_15 * hexDigit(val.charAt(2)),
+                        f1_15 * hexDigit(val.charAt(3)),
+                        f1_15 * hexDigit(val.charAt(4))
+                    };
+                case 7:
+                    return new float[]{
+                        f1_255 * ((hexDigit(val.charAt(1)) << 4) | hexDigit(val.charAt(2))),
+                        f1_255 * ((hexDigit(val.charAt(3)) << 4) | hexDigit(val.charAt(4))),
+                        f1_255 * ((hexDigit(val.charAt(5)) << 4) | hexDigit(val.charAt(6))),
+                        1.0f
+                    };
+                case 9:
+                    return new float[]{
+                        f1_255 * ((hexDigit(val.charAt(1)) << 4) | hexDigit(val.charAt(2))),
+                        f1_255 * ((hexDigit(val.charAt(3)) << 4) | hexDigit(val.charAt(4))),
+                        f1_255 * ((hexDigit(val.charAt(5)) << 4) | hexDigit(val.charAt(6))),
+                        f1_255 * ((hexDigit(val.charAt(7)) << 4) | hexDigit(val.charAt(8)))
+                    };
+            }
+        } else if (val.charAt(val.length() - 1) == ')') {
+            if (val.startsWith("rgb(")) {
+                // css style rgb color (rgb(r,g,b) with r,g,b\in[0..255]\cup[0%,..,100%])
+                final String[] values = val.substring(4, val.length() - 1).replace(" ", "").split(",");
+                if (values.length == 3) {
+                    final float[] color = new float[4];
+                    for (int i = 0; i < 3; i++) {
+                        if (values[i].charAt(values[i].length() - 1) == '%') {
+                            color[i] = Double.valueOf(values[i].substring(0, values[i].length() - 1)).floatValue() * 0.01f;
+                        } else {
+                            color[i] = Double.valueOf(values[i]).floatValue() * f1_255;
+                        }
+                    }
+                    color[3] = 1.0f;
+                    return color;
+                }
+            } else if (val.startsWith("rgba(")) {
+                // css3 style rgba color (rgba(r,g,b,a) with r,g,b\in[0..255]\cup[0%,..,100%] and a\in[0..1])
+                final String[] values = val.substring(5, val.length() - 1).replace(" ", "").split(",");
+                if (values.length == 4) {
+                    final float[] color = new float[4];
+                    for (int i = 0; i < 3; i++) {
+                        if (values[i].charAt(values[i].length() - 1) == '%') {
+                            color[i] = Double.valueOf(values[i].substring(0, values[i].length() - 1)).floatValue() * 0.01f;
+                        } else {
+                            color[i] = Double.valueOf(values[i]).floatValue() * f1_255;
+                        }
+                    }
+                    color[3] = Double.valueOf(values[3]).floatValue();
+                    return color;
+                }
+            }
+        }
+
+        throw new RoSi2ParseException("invalid color format: " + val);
+    }
+
+    private static int hexDigit(final char ch) {
+        if (ch >= '0' && ch <= '9') {
+            return ch - '0';
+        } else if (ch >= 'a' && ch <= 'f') {
+            return (ch - 'a') + 10;
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+    private float getLength(final Map<String, String> varBindings, final String key, final boolean required, final float defaultValue) throws RoSi2ParseException {
         float[] value = new float[1];
         String[] unit = new String[1];
         if (!getFloatAndUnit(varBindings, key, required, value, unit)) {
@@ -248,7 +397,28 @@ public class RoSi2Element {
         throw new RoSi2ParseException("Unexpected unit \"" + unit[0] + " (expected one of \"mm, cm, dm, m, km\")");
     }
 
-    private float getAngle(final Map<String, String> varBindings, final String key, final boolean required, float defaultValue) throws RoSi2ParseException {
+    private float getUnit(final Map<String, String> varBindings, final String key, final boolean required, final float defaultValue) throws RoSi2ParseException {
+        final String unit = getAttributeValue(varBindings, key, required);
+        if (unit == null || unit.isEmpty()) {
+            return defaultValue;
+        }
+
+        if (unit.equals("m")) {
+            return 1.0f;
+        } else if (unit.equals("mm")) {
+            return 0.001f;
+        } else if (unit.equals("cm")) {
+            return 0.01f;
+        } else if (unit.equals("dm")) {
+            return 0.1f;
+        } else if (unit.equals("km")) {
+            return 1000.0f;
+        }
+
+        throw new RoSi2ParseException("Unexpected unit \"" + unit + " (expected one of \"mm, cm, dm, m, km\")");
+    }
+
+    private float getAngle(final Map<String, String> varBindings, final String key, final boolean required, final float defaultValue) throws RoSi2ParseException {
         float[] value = new float[1];
         String[] unit = new String[1];
         if (!getFloatAndUnit(varBindings, key, required, value, unit)) {
@@ -361,15 +531,24 @@ public class RoSi2Element {
 
     public static abstract class RoSi2Drawable {
 
+        private final GL2 gl;
         protected final List<RoSi2Drawable> children;
         private final FloatBuffer transformation;
 
-        public RoSi2Drawable() {
+        protected RoSi2Drawable() {
+            gl = null;
             children = new LinkedList<RoSi2Drawable>();
             transformation = null;
         }
 
-        public RoSi2Drawable(final List<RoSi2Drawable> children) throws RoSi2ParseException {
+        public RoSi2Drawable(final GL2 gl) {
+            this.gl = gl;
+            children = new LinkedList<RoSi2Drawable>();
+            transformation = null;
+        }
+
+        public RoSi2Drawable(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
+            this.gl = gl;
             this.children = children;
 
             // Find children defining a transformation
@@ -430,11 +609,9 @@ public class RoSi2Element {
         }
 
         /**
-         * Draws this element and its children using the given GL object.
-         *
-         * @param gl GL object
+         * Draws this element and its children.
          */
-        public final void draw(final GL2 gl) {
+        public final void draw() {
             // Apply transformation
             if (transformation != null) {
                 gl.glPushMatrix();
@@ -446,7 +623,7 @@ public class RoSi2Element {
 
             // Draw children
             for (final RoSi2Drawable child : children) {
-                child.draw(gl);
+                child.draw();
             }
 
             // Reset transformation
@@ -467,14 +644,13 @@ public class RoSi2Element {
          * element. The display list will not be destroyed, so this object may
          * safely be garbage collected afterwards.
          *
-         * @param gl GL object
          * @return number of the created display list
          */
-        public final int createDisplayList(final GL2 gl) {
+        public final int createDisplayList() {
             final int listId = gl.glGenLists(1);
 
             gl.glNewList(listId, GL2.GL_COMPILE);
-            draw(gl);
+            draw();
             gl.glEndList();
 
             return listId;
@@ -483,8 +659,8 @@ public class RoSi2Element {
 
     public static class Compound extends RoSi2Drawable {
 
-        public Compound(final List<RoSi2Drawable> children) throws RoSi2ParseException {
-            super(children);
+        public Compound(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
+            super(gl, children);
         }
 
         @Override
@@ -496,8 +672,8 @@ public class RoSi2Element {
 
     public static class Body extends RoSi2Drawable {
 
-        public Body(final List<RoSi2Drawable> children) throws RoSi2ParseException {
-            super(children);
+        public Body(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
+            super(gl, children);
         }
 
         @Override
@@ -540,8 +716,8 @@ public class RoSi2Element {
 
         protected final Surface surface;
 
-        public Appearance(final List<RoSi2Drawable> children) throws RoSi2ParseException {
-            super(children);
+        public Appearance(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
+            super(gl, children);
 
             Surface s = null;
             ListIterator<RoSi2Drawable> iter = this.children.listIterator();
@@ -554,6 +730,9 @@ public class RoSi2Element {
                     s = (Surface) cur;
                     iter.remove();
                 }
+            }
+            if (s == null && !getClass().equals(Appearance.class)) {
+                throw new RoSi2ParseException(getClass().getSimpleName() + " element needs a Surface element");
             }
             surface = s;
         }
@@ -582,8 +761,8 @@ public class RoSi2Element {
          */
         private final float depth;
 
-        public BoxAppearance(final List<RoSi2Drawable> children, final float width, final float height, final float depth) throws RoSi2ParseException {
-            super(children);
+        public BoxAppearance(final GL2 gl, final List<RoSi2Drawable> children, final float width, final float height, final float depth) throws RoSi2ParseException {
+            super(gl, children);
 
             this.width = width;
             this.height = height;
@@ -592,7 +771,67 @@ public class RoSi2Element {
 
         @Override
         protected void render(final GL2 gl) {
-            // Do nothing
+            surface.set(gl);
+
+            final float lx = depth * 0.5f;
+            final float ly = width * 0.5f;
+            final float lz = height * 0.5f;
+
+            // -y-side
+            gl.glBegin(GL2.GL_TRIANGLE_FAN);
+            gl.glNormal3f(0, -1, 0);
+            gl.glVertex3f(lx, -ly, -lz);
+            gl.glVertex3f(lx, -ly, lz);
+            gl.glVertex3f(-lx, -ly, lz);
+            gl.glVertex3f(-lx, -ly, -lz);
+            gl.glEnd();
+
+            // y-side
+            gl.glBegin(GL2.GL_TRIANGLE_FAN);
+            gl.glNormal3f(0, 1, 0);
+            gl.glVertex3f(-lx, ly, lz);
+            gl.glVertex3f(lx, ly, lz);
+            gl.glVertex3f(lx, ly, -lz);
+            gl.glVertex3f(-lx, ly, -lz);
+            gl.glEnd();
+
+            // -x-side
+            gl.glBegin(GL2.GL_TRIANGLE_FAN);
+            gl.glNormal3f(-1, 0, 0);
+            gl.glVertex3f(-lx, -ly, -lz);
+            gl.glVertex3f(-lx, -ly, lz);
+            gl.glVertex3f(-lx, ly, lz);
+            gl.glVertex3f(-lx, ly, -lz);
+            gl.glEnd();
+
+            // x-side
+            gl.glBegin(GL2.GL_TRIANGLE_FAN);
+            gl.glNormal3f(1, 0, 0);
+            gl.glVertex3f(lx, -ly, -lz);
+            gl.glVertex3f(lx, ly, -lz);
+            gl.glVertex3f(lx, ly, lz);
+            gl.glVertex3f(lx, -ly, lz);
+            gl.glEnd();
+
+            // bottom
+            gl.glBegin(GL2.GL_TRIANGLE_FAN);
+            gl.glNormal3f(0, 0, -1);
+            gl.glVertex3f(-lx, -ly, -lz);
+            gl.glVertex3f(-lx, ly, -lz);
+            gl.glVertex3f(lx, ly, -lz);
+            gl.glVertex3f(lx, -ly, -lz);
+            gl.glEnd();
+
+            // top
+            gl.glBegin(GL2.GL_TRIANGLE_FAN);
+            gl.glNormal3f(0, 0, 1);
+            gl.glVertex3f(-lx, -ly, lz);
+            gl.glVertex3f(lx, -ly, lz);
+            gl.glVertex3f(lx, ly, lz);
+            gl.glVertex3f(-lx, ly, lz);
+            gl.glEnd();
+
+            surface.unset(gl);
         }
 
     }
@@ -604,15 +843,23 @@ public class RoSi2Element {
          */
         private final float radius;
 
-        public SphereAppearance(final List<RoSi2Drawable> children, final float radius) throws RoSi2ParseException {
-            super(children);
+        public SphereAppearance(final GL2 gl, final List<RoSi2Drawable> children, final float radius) throws RoSi2ParseException {
+            super(gl, children);
 
             this.radius = radius;
         }
 
         @Override
         protected void render(final GL2 gl) {
-            // Do nothing
+            final GLU glu = GLU.createGLU(gl);
+
+            surface.set(gl);
+
+            final GLUquadric q = glu.gluNewQuadric();
+            glu.gluSphere(q, radius, 16, 16);
+            glu.gluDeleteQuadric(q);
+
+            surface.unset(gl);
         }
 
     }
@@ -629,8 +876,8 @@ public class RoSi2Element {
          */
         private final float radius;
 
-        public CylinderAppearance(final List<RoSi2Drawable> children, final float height, final float radius) throws RoSi2ParseException {
-            super(children);
+        public CylinderAppearance(final GL2 gl, final List<RoSi2Drawable> children, final float height, final float radius) throws RoSi2ParseException {
+            super(gl, children);
 
             this.height = height;
             this.radius = radius;
@@ -638,7 +885,22 @@ public class RoSi2Element {
 
         @Override
         protected void render(final GL2 gl) {
-            // Do nothing
+            final GLU glu = GLU.createGLU(gl);
+
+            surface.set(gl);
+
+            final GLUquadric q = glu.gluNewQuadric();
+            gl.glTranslatef(0.f, 0.f, height * -0.5f);
+            glu.gluCylinder(q, radius, radius, height, 16, 1);
+            gl.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+            glu.gluDisk(q, 0, radius, 16, 1);
+            gl.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+            gl.glTranslatef(0, 0, height);
+            glu.gluDisk(q, 0, radius, 16, 1);
+            gl.glTranslatef(0.f, 0.f, height * -0.5f);
+            glu.gluDeleteQuadric(q);
+
+            surface.unset(gl);
         }
 
     }
@@ -655,8 +917,8 @@ public class RoSi2Element {
          */
         private final float radius;
 
-        public CapsuleAppearance(final List<RoSi2Drawable> children, final float height, final float radius) throws RoSi2ParseException {
-            super(children);
+        public CapsuleAppearance(final GL2 gl, final List<RoSi2Drawable> children, final float height, final float radius) throws RoSi2ParseException {
+            super(gl, children);
 
             this.height = height;
             this.radius = radius;
@@ -664,25 +926,147 @@ public class RoSi2Element {
 
         @Override
         protected void render(final GL2 gl) {
-            // Do nothing
+            final GLU glu = GLU.createGLU(gl);
+
+            surface.set(gl);
+
+            final GLUquadric q = glu.gluNewQuadric();
+            final float cylinderHeight = height - radius - radius;
+            gl.glTranslatef(0.f, 0.f, cylinderHeight * -0.5f);
+            glu.gluCylinder(q, radius, radius, cylinderHeight, 16, 1);
+            glu.gluSphere(q, radius, 16, 16);
+            gl.glTranslatef(0, 0, cylinderHeight);
+            glu.gluSphere(q, radius, 16, 16);
+            glu.gluDeleteQuadric(q);
+
+            surface.unset(gl);
         }
 
     }
 
     public static class ComplexAppearance extends Appearance {
 
-        public ComplexAppearance(final List<RoSi2Drawable> children) throws RoSi2ParseException {
-            super(children);
+        private final Vertices vertices;
+        private final Normals normals;
+        private final boolean normalsDefined;
+        private final TexCoords texCoords;
+        private final List<PrimitiveGroup> primitiveGroups;
+
+        public ComplexAppearance(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
+            super(gl, children);
+
+            // scan children for elements defining the complex appearance
+            primitiveGroups = new LinkedList<PrimitiveGroup>();
+            Vertices v = null;
+            Normals n = null;
+            TexCoords t = null;
+            final ListIterator<RoSi2Drawable> iter = this.children.listIterator();
+            while (iter.hasNext()) {
+                final RoSi2Drawable child = iter.next();
+                if (child instanceof PrimitiveGroup) {
+                    primitiveGroups.add((PrimitiveGroup) child);
+                    iter.remove();
+                } else if (child instanceof Vertices) {
+                    if (v != null) {
+                        throw new RoSi2ParseException("More than one Vertices element.");
+                    }
+                    v = (Vertices) child;
+                    iter.remove();
+                } else if (child instanceof Normals) {
+                    if (n != null) {
+                        throw new RoSi2ParseException("More than one Normals element.");
+                    }
+                    n = (Normals) child;
+                    iter.remove();
+                } else if (child instanceof TexCoords) {
+                    if (t != null) {
+                        throw new RoSi2ParseException("More than one TexCoords element.");
+                    }
+                    t = (TexCoords) child;
+                    iter.remove();
+                }
+            }
+
+            if (v == null) {
+                throw new RoSi2ParseException("ComplexAppearance element requires a Vertices element");
+            } else if (primitiveGroups.isEmpty()) {
+                throw new RoSi2ParseException("ComplexAppearance element requires a Triangles or Quads element");
+            }
+
+            if (n == null) {
+                normalsDefined = false;
+                n = computeNormals();
+            } else {
+                normalsDefined = true;
+            }
+
+            vertices = v;
+            normals = n;
+            texCoords = t;
+        }
+
+        private Normals computeNormals() {
+            // TODO
+            return null;
         }
 
         @Override
         protected void render(final GL2 gl) {
-            // Do nothing
+            surface.set(gl, texCoords != null);
+
+            for (final PrimitiveGroup primitiveGroup : primitiveGroups) {
+                gl.glBegin(primitiveGroup.mode);
+                final Iterator<Integer> iter = primitiveGroup.vertices.iterator();
+
+                while (iter.hasNext()) {
+                    final int i = iter.next();
+                    if (texCoords != null && i < texCoords.coords.size()) {
+                        gl.glTexCoord2f(texCoords.coords.get(i).x, texCoords.coords.get(i).y);
+                    }
+                    if (normalsDefined) {
+                        if (iter.hasNext()) {
+                            final Normals.Normal n = normals.normals.get(iter.next());
+                            gl.glNormal3f(n.x, n.y, n.z);
+                        } else {
+                            break;
+                        }
+                    } else {
+                        gl.glNormal3f(normals.normals.get(i).x, normals.normals.get(i).y, normals.normals.get(i).z);
+                    }
+                    gl.glVertex3f(vertices.vertices.get(i).x, vertices.vertices.get(i).y, vertices.vertices.get(i).z);
+                }
+                gl.glEnd();
+            }
+
+            surface.unset(gl, texCoords != null);
         }
 
     }
 
     public static class Vertices extends RoSi2Drawable {
+
+        public static class Vertex {
+
+            public float x;
+            public float y;
+            public float z;
+
+            public Vertex() {
+                this(0, 0, 0);
+            }
+
+            public Vertex(final float x, final float y, final float z) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+        }
+
+        public final List<Vertex> vertices;
+
+        public Vertices(final List<Vertex> vertices) {
+            this.vertices = vertices;
+        }
 
         @Override
         protected void render(final GL2 gl) {
@@ -693,6 +1077,38 @@ public class RoSi2Element {
 
     public static class Normals extends RoSi2Drawable {
 
+        public static class Normal extends Vertices.Vertex {
+
+            public int length;
+
+            public Normal() {
+                this(0, 0, 0, 0);
+            }
+
+            public Normal(final float x, final float y, final float z, final int length) {
+                super(x, y, z);
+                this.length = length;
+            }
+
+            /**
+             * Addition of another normal to this one.
+             *
+             * @param other The other normal that will be added to this one
+             */
+            void add(final Normal other) {
+                x += other.x;
+                y += other.y;
+                z += other.z;
+                length += other.length;
+            }
+        }
+
+        public final List<Normal> normals;
+
+        public Normals(final List<Normal> normals) {
+            this.normals = normals;
+        }
+
         @Override
         protected void render(final GL2 gl) {
             // Do nothing
@@ -702,6 +1118,38 @@ public class RoSi2Element {
 
     public static class TexCoords extends RoSi2Drawable {
 
+        /**
+         * A point on a texture.
+         */
+        public static class TexCoord {
+
+            /**
+             * The x-component of the point.
+             */
+            public float x;
+            /**
+             * The y-component of the point.
+             */
+            public float y;
+
+            /**
+             * Constructs a point of a texture
+             *
+             * @param x The x-component of the point
+             * @param y The y-component of the point
+             */
+            public TexCoord(final float x, final float y) {
+                this.x = x;
+                this.y = y;
+            }
+        };
+
+        public final List<TexCoord> coords;
+
+        public TexCoords(final List<TexCoord> coords) {
+            this.coords = coords;
+        }
+
         @Override
         protected void render(final GL2 gl) {
             // Do nothing
@@ -709,16 +1157,15 @@ public class RoSi2Element {
 
     }
 
-    public static class Triangles extends RoSi2Drawable {
+    public static class PrimitiveGroup extends RoSi2Drawable {
 
-        @Override
-        protected void render(final GL2 gl) {
-            // Do nothing
+        private final int mode;
+        private final List<Integer> vertices;
+
+        public PrimitiveGroup(final int mode, final List<Integer> vertices) {
+            this.mode = mode;
+            this.vertices = vertices;
         }
-
-    }
-
-    public static class Quads extends RoSi2Drawable {
 
         @Override
         protected void render(final GL2 gl) {
@@ -729,9 +1176,126 @@ public class RoSi2Element {
 
     public static class Surface extends RoSi2Drawable {
 
+        public final float[] diffuseColor;
+        public final float[] ambientColor;
+        public final float[] specularColor;
+        public final float[] emissionColor;
+        public final float shininess;
+        public final Texture texture;
+
+        public Surface(final float[] diffuseColor, final float[] ambientColor, final float[] specularColor, final float[] emissionColor, final Float shininess, final Texture texture) {
+            this.diffuseColor = diffuseColor;
+
+            this.ambientColor = ambientColor;
+
+            if (specularColor != null) {
+                this.specularColor = specularColor;
+            } else {
+                this.specularColor = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
+            }
+
+            if (emissionColor != null) {
+                this.emissionColor = emissionColor;
+            } else {
+                this.emissionColor = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
+            }
+
+            if (shininess != null) {
+                this.shininess = shininess;
+            } else {
+                this.shininess = 0.0f;
+            }
+
+            this.texture = texture;
+        }
+
         @Override
         protected void render(final GL2 gl) {
             // Do nothing
+        }
+
+        public void set(final GL2 gl) {
+            set(gl, true);
+        }
+
+        public void set(final GL2 gl, final boolean defaultTextureSize) {
+            if (ambientColor != null) {
+                gl.glColorMaterial(GL2.GL_FRONT, GL2.GL_DIFFUSE);
+                gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, FloatBuffer.wrap(ambientColor));
+            } else {
+                gl.glColorMaterial(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE);
+            }
+            gl.glColor4fv(FloatBuffer.wrap(diffuseColor));
+
+            gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, FloatBuffer.wrap(specularColor));
+            gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, shininess);
+            gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, FloatBuffer.wrap(emissionColor));
+
+            if (texture != null) {
+                gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.id);
+
+                if (texture.hasAlpha) {
+                    gl.glEnable(GL2.GL_BLEND);
+                    gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+                }
+                if (defaultTextureSize) {
+                    gl.glEnable(GL2.GL_TEXTURE_GEN_S);
+                    gl.glEnable(GL2.GL_TEXTURE_GEN_T);
+
+                    gl.glTexGeni(GL2.GL_S, GL2.GL_TEXTURE_GEN_MODE, GL2.GL_OBJECT_LINEAR);
+                    gl.glTexGenfv(GL2.GL_S, GL2.GL_OBJECT_PLANE, FloatBuffer.wrap(new float[]{1.f, 0.f, 0.f, 0.f}));
+
+                    gl.glTexGeni(GL2.GL_T, GL2.GL_TEXTURE_GEN_MODE, GL2.GL_OBJECT_LINEAR);
+                    gl.glTexGenfv(GL2.GL_T, GL2.GL_OBJECT_PLANE, FloatBuffer.wrap(new float[]{0.f, 1.f, 0.f, 0.f}));
+                }
+            } else if (diffuseColor[3] < 1.0f) {
+                gl.glEnable(GL2.GL_BLEND);
+                gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+            }
+        }
+
+        public void unset(final GL2 gl) {
+            unset(gl, true);
+        }
+
+        public void unset(final GL2 gl, final boolean defaultTextureSize) {
+            if (texture != null) {
+                if (defaultTextureSize) {
+                    gl.glDisable(GL2.GL_TEXTURE_GEN_S);
+                    gl.glDisable(GL2.GL_TEXTURE_GEN_T);
+                }
+                gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
+            }
+            if (diffuseColor[3] < 1.0f || (texture != null && texture.hasAlpha)) {
+                gl.glDisable(GL2.GL_BLEND);
+            }
+        }
+
+    }
+
+    public static class TextureLoader {
+
+        private final GL gl;
+        private final Map<String, Texture> textures = new HashMap<String, Texture>();
+
+        public TextureLoader(final GL gl) {
+            this.gl = gl;
+        }
+
+        public Texture loadTexture(final String filename) {
+            // TODO
+            return null;
+        }
+    }
+
+    public static class Texture {
+
+        public final int id;
+        public final boolean hasAlpha;
+
+        public Texture(final int id, final boolean hasAlpha) {
+            this.id = id;
+            this.hasAlpha = hasAlpha;
         }
 
     }
@@ -758,15 +1322,19 @@ public class RoSi2Element {
         // Map with mappings of all named elements
         final Map<String, RoSi2Element> namedElements = new HashMap<String, RoSi2Element>();
 
+        // Flag indicating whether the parser is within the scene element
+        boolean withinSceneElement = false;
+
         // Open the given file
         inputFileStack.addFirst(new InputFileState(factory, new File(filename)));
 
         // Create the root element
-        parentStack.addFirst(new RoSi2Element("Simulation", namedElements));
+        parentStack.addFirst(new RoSi2Element(inputFileStack.getFirst().path, "Simulation", namedElements));
 
         // Parse the file(s)
         while (!inputFileStack.isEmpty()) {
             while (inputFileStack.getFirst().reader.hasNext()) {
+
                 final XMLEvent ev = inputFileStack.getFirst().reader.nextEvent();
 
                 if (ev.isStartElement()) {
@@ -786,9 +1354,12 @@ public class RoSi2Element {
                         } else {
                             // Create and add element
                             final String name = getXmlAttribute(e, "name", false);
-                            final RoSi2Element elem = new RoSi2Element(tag, name, e.getAttributes(), namedElements);
-                            if (name != null) {
+                            final RoSi2Element elem = new RoSi2Element(inputFileStack.getFirst().path, tag, name, e.getAttributes(), namedElements);
+                            if (name != null && !withinSceneElement) {
                                 namedElements.put(tag + '#' + name, elem);
+                            }
+                            if (!withinSceneElement && tag.equals("Scene")) {
+                                withinSceneElement = true;
                             }
 
                             parentStack.getFirst().children.add(elem);
@@ -803,7 +1374,11 @@ public class RoSi2Element {
                         parentStack.getFirst().content.append(e.getData());
                     }
                 } else if (ev.isEndElement()) {
-                    if (ev.asEndElement().getName().getLocalPart().equals(parentStack.getFirst().tag)) {
+                    final String tag = ev.asEndElement().getName().getLocalPart();
+                    if (tag.equals(parentStack.getFirst().tag) && !tag.equals("Simulation")) {
+                        if (tag.equals("Scene")) {
+                            withinSceneElement = false;
+                        }
                         parentStack.removeFirst();
                     }
                 }
@@ -838,6 +1413,7 @@ public class RoSi2Element {
         }
 
         return attr.getValue();
+
     }
 
     public static class RoSi2ParseException extends Exception {

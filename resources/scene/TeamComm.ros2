@@ -1,0 +1,29 @@
+<Simulation>
+
+  <Include href="NaoV4H21.rsi2"/>
+  <Include href="Ball2010SPL.rsi2"/>
+  <Include href="Field2015SPL.rsi2"/>
+  <Include href="Boards.rsi2"/>
+
+  <Scene>
+
+    <Compound name="robots">
+      <Body ref="Nao" name="robot" />
+      <Body ref="Nao" name="robot2">
+        <Set name="NaoColor" value="red"/>
+      </Body>
+    </Compound>
+
+    <Body ref="ball" name="ball">
+      <Translation z="0.0325m" />
+    </Body>
+
+    <Compound name="boards">
+      <Compound ref="boards"/>
+    </Compound>
+
+    <Compound name="field">
+      <Compound ref="field"/>
+    </Compound>
+  </Scene>
+</Simulation>
