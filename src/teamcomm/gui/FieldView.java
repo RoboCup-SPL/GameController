@@ -24,9 +24,10 @@ public class FieldView implements GLEventListener {
     private final GLCanvas canvas;
     private final Animator animator;
     private int fieldList = -1;
+    private int ballList = -1;
     private int width;
     private int height;
-    private final float[] cameraPos = {0.0f, 0.0f, 5.0f};
+    private final float[] cameraPos = {0.0f, 0.0f, 250.0f};
     private final float[] cameraTarget = {0.0f, 0.0f, 0.0f};
     private final float[] cameraUp = {0.0f, 1.0f, 0.0f};
 
@@ -95,7 +96,8 @@ public class FieldView implements GLEventListener {
         // Load display elements
         try {
             final RoSi2Element scene = RoSi2Element.parseFile("scene/TeamComm.ros2");
-            fieldList = scene.findElement("ball").instantiate(gl).createDisplayList();
+            fieldList = scene.findElement("fields").instantiate(gl).createDisplayList();
+            ballList = scene.findElement("ball").instantiate(gl).createDisplayList();
         } catch (RoSi2Element.RoSi2ParseException ex) {
             Logger.getLogger(FieldView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLStreamException ex) {
@@ -134,6 +136,11 @@ public class FieldView implements GLEventListener {
         // Render the field
         if (fieldList >= 0) {
             gl.glCallList(fieldList);
+        }
+
+        // Render the ball
+        if (ballList >= 0) {
+            gl.glCallList(ballList);
         }
     }
 

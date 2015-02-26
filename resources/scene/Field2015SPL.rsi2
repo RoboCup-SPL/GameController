@@ -28,12 +28,12 @@
 
     <Compound ref="fieldGoal" name="Goal1">
       <Translation x="-4525mm"/>
-      <Set name="color" value="fieldWhite"/>
+      <Set name="color" value="fieldYellow"/>
     </Compound>
     <Compound ref="fieldGoal" name="Goal2">
       <Translation x="4525mm"/>
       <Rotation z="180degree"/>
-      <Set name="color" value="fieldWhite"/>
+      <Set name="color" value="fieldYellow"/>
     </Compound>
 
   </Compound>

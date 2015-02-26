@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -13,8 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2GL3;
@@ -85,7 +85,7 @@ public class RoSi2Element {
         this(path, tag, null, null, namedElements);
     }
 
-    private RoSi2Element(final File path, final String tag, final String name, final Iterator<Attribute> iter, final Map<String, RoSi2Element> namedElements) {
+    private RoSi2Element(final File path, final String tag, final String name, final Iterator iter, final Map<String, RoSi2Element> namedElements) {
         this.filepath = path;
         this.tag = tag;
         this.name = name;
@@ -93,7 +93,7 @@ public class RoSi2Element {
 
         if (iter != null) {
             while (iter.hasNext()) {
-                final Attribute attr = iter.next();
+                final Attribute attr = (Attribute) iter.next();
                 attributes.put(attr.getName().getLocalPart(), attr.getValue());
             }
         }
@@ -218,31 +218,186 @@ public class RoSi2Element {
         } else if (tag.equals("ComplexAppearance")) {
             instance = new ComplexAppearance(gl, childInstances);
         } else if (tag.equals("Vertices")) {
-            final float unit = getUnit(varBindings, "unit", false, 1.0f);
+            final double unit = getUnit(varBindings, "unit", false, 1.0f);
             final ArrayList<Vertices.Vertex> vs = new ArrayList<Vertices.Vertex>();
             final String str = content.toString();
+            final DecimalFormat fmt = new DecimalFormat();
+            int pos = 0;
+            final double[] vertex = new double[3];
+            int i = 0;
 
-            // TODO: parse vertices
+            // parse vertices
+            parsing:
+            while (pos < str.length()) {
+                while (Character.isWhitespace(str.charAt(pos))) {
+                    pos++;
+                    if (pos == str.length()) {
+                        break parsing;
+                    }
+                }
+                while (str.charAt(pos) == '#') {
+                    do {
+                        pos++;
+                        if (pos == str.length()) {
+                            break parsing;
+                        }
+                    } while (str.charAt(pos) != '\n' && str.charAt(pos) != '\r');
+                    while (Character.isWhitespace(str.charAt(pos))) {
+                        pos++;
+                        if (pos == str.length()) {
+                            break parsing;
+                        }
+                    }
+                }
+                final ParsePosition p = new ParsePosition(pos);
+                final Number n = fmt.parse(str, p);
+                if (n == null) {
+                    throw new RoSi2ParseException("Vertex coordinate is not a number: " + str.substring(pos, pos + 1));
+                }
+                pos = p.getIndex();
+                vertex[i++] = n.doubleValue();
+
+                if (i == 3) {
+                    vs.add(new Vertices.Vertex((float) (vertex[0] * unit), (float) (vertex[1] * unit), (float) (vertex[2] * unit)));
+                    i = 0;
+                }
+            }
+
             vs.trimToSize();
             instance = new Vertices(vs);
         } else if (tag.equals("Normals")) {
             final ArrayList<Normals.Normal> ns = new ArrayList<Normals.Normal>();
             final String str = content.toString();
+            final DecimalFormat fmt = new DecimalFormat();
+            int pos = 0;
+            final float[] normal = new float[3];
+            int i = 0;
 
-            // TODO: parse normals
+            // parse normals
+            parsing:
+            while (pos < str.length()) {
+                while (Character.isWhitespace(str.charAt(pos))) {
+                    pos++;
+                    if (pos == str.length()) {
+                        break parsing;
+                    }
+                }
+                while (str.charAt(pos) == '#') {
+                    do {
+                        pos++;
+                        if (pos == str.length()) {
+                            break parsing;
+                        }
+                    } while (str.charAt(pos) != '\n' && str.charAt(pos) != '\r');
+                    while (Character.isWhitespace(str.charAt(pos))) {
+                        pos++;
+                        if (pos == str.length()) {
+                            break parsing;
+                        }
+                    }
+                }
+                final ParsePosition p = new ParsePosition(pos);
+                final Number n = fmt.parse(str, p);
+                if (n == null) {
+                    throw new RoSi2ParseException("Normal coordinate is not a number");
+                }
+                normal[i++] = n.floatValue();
+                pos = p.getIndex();
+
+                if (i == 3) {
+                    ns.add(new Normals.Normal(normal[0], normal[1], normal[2], 1));
+                    i = 0;
+                }
+            }
+
             ns.trimToSize();
             instance = new Normals(ns);
         } else if (tag.equals("TexCoords")) {
             final ArrayList<TexCoords.TexCoord> ts = new ArrayList<TexCoords.TexCoord>();
             final String str = content.toString();
+            final DecimalFormat fmt = new DecimalFormat();
+            int pos = 0;
+            final float[] coord = new float[2];
+            int i = 0;
 
-            // TODO: parse texture coordinates
+            // parse texture coordinates
+            parsing:
+            while (pos < str.length()) {
+                while (Character.isWhitespace(str.charAt(pos))) {
+                    pos++;
+                    if (pos == str.length()) {
+                        break parsing;
+                    }
+                }
+                while (str.charAt(pos) == '#') {
+                    do {
+                        pos++;
+                        if (pos == str.length()) {
+                            break parsing;
+                        }
+                    } while (str.charAt(pos) != '\n' && str.charAt(pos) != '\r');
+                    while (Character.isWhitespace(str.charAt(pos))) {
+                        pos++;
+                        if (pos == str.length()) {
+                            break parsing;
+                        }
+                    }
+                }
+                final ParsePosition p = new ParsePosition(pos);
+                final Number n = fmt.parse(str, p);
+                if (n == null) {
+                    throw new RoSi2ParseException("Texture coordinate is not a number");
+                }
+                coord[i++] = n.floatValue();
+                pos = p.getIndex();
+
+                if (i == 2) {
+                    ts.add(new TexCoords.TexCoord(coord[0], coord[1]));
+                    i = 0;
+                }
+            }
+
             ts.trimToSize();
             instance = new TexCoords(ts);
         } else if (tag.equals("Triangles") || tag.equals("Quads")) {
             final LinkedList<Integer> vs = new LinkedList<Integer>();
+            final String str = content.toString();
+            final DecimalFormat fmt = new DecimalFormat();
+            fmt.setParseIntegerOnly(true);
+            int pos = 0;
 
-            // TODO: parse vertex indices
+            // parse vertex indices
+            parsing:
+            while (pos < str.length()) {
+                while (Character.isWhitespace(str.charAt(pos))) {
+                    pos++;
+                    if (pos == str.length()) {
+                        break parsing;
+                    }
+                }
+                while (str.charAt(pos) == '#') {
+                    do {
+                        pos++;
+                        if (pos == str.length()) {
+                            break parsing;
+                        }
+                    } while (str.charAt(pos) != '\n' && str.charAt(pos) != '\r');
+                    while (Character.isWhitespace(str.charAt(pos))) {
+                        pos++;
+                        if (pos == str.length()) {
+                            break parsing;
+                        }
+                    }
+                }
+                final ParsePosition p = new ParsePosition(pos);
+                final Number n = fmt.parse(str, p);
+                if (n == null) {
+                    throw new RoSi2ParseException("Vertex index is not a number");
+                }
+                vs.add(n.intValue());
+                pos = p.getIndex();
+            }
+
             instance = new PrimitiveGroup(tag.equals("Triangles") ? GL.GL_TRIANGLES : GL2GL3.GL_QUADS, vs);
         } else if (tag.equals("Surface")) {
             final String texturePath = getAttributeValue(varBindings, "diffuseTexture", false);
@@ -440,29 +595,11 @@ public class RoSi2Element {
             return false;
         }
 
-        // Regex matching the parsing behaviour of Double.valueOf()
-        // (see Java Platform SE API Documentation)
-        final String Digits = "(\\p{Digit}+)";
-        final String HexDigits = "(\\p{XDigit}+)";
-        final String Exp = "[eE][+-]?" + Digits;
-        final String fpRegex
-                = ("[\\x00-\\x20]*"
-                + "[+-]?("
-                + "NaN|"
-                + "Infinity|"
-                + "(((" + Digits + "(\\.)?(" + Digits + "?)(" + Exp + ")?)|"
-                + "(\\.(" + Digits + ")(" + Exp + ")?)|"
-                + "(("
-                + "(0[xX]" + HexDigits + "(\\.)?)|"
-                + "(0[xX]" + HexDigits + "?(\\.)" + HexDigits + ")"
-                + ")[pP][+-]?" + Digits + "))"
-                + "[fFdD]?))"
-                + "[\\x00-\\x20]*");
-        final Matcher matcher = Pattern.compile(fpRegex).matcher(val);
-
-        if (matcher.matches()) {
-            value[0] = Double.valueOf(val.substring(0, matcher.end())).floatValue();
-            unit[0] = val.substring(matcher.end()).trim();
+        ParsePosition pos = new ParsePosition(0);
+        final Number v = new DecimalFormat().parse(val, pos);
+        if (v != null) {
+            value[0] = v.floatValue();
+            unit[0] = val.substring(pos.getIndex()).trim();
             return true;
         }
 
@@ -613,8 +750,8 @@ public class RoSi2Element {
          */
         public final void draw() {
             // Apply transformation
+            gl.glPushMatrix();
             if (transformation != null) {
-                gl.glPushMatrix();
                 gl.glMultMatrixf(transformation);
             }
 
@@ -627,9 +764,7 @@ public class RoSi2Element {
             }
 
             // Reset transformation
-            if (transformation != null) {
-                gl.glPopMatrix();
-            }
+            gl.glPopMatrix();
         }
 
         /**
@@ -992,6 +1127,7 @@ public class RoSi2Element {
             } else if (primitiveGroups.isEmpty()) {
                 throw new RoSi2ParseException("ComplexAppearance element requires a Triangles or Quads element");
             }
+            vertices = v;
 
             if (n == null) {
                 normalsDefined = false;
@@ -999,15 +1135,76 @@ public class RoSi2Element {
             } else {
                 normalsDefined = true;
             }
-
-            vertices = v;
             normals = n;
+            
             texCoords = t;
         }
 
         private Normals computeNormals() {
-            // TODO
-            return null;
+            ArrayList<Normals.Normal> ns = new ArrayList<Normals.Normal>(vertices.vertices.size());
+            for (int i = 0; i < vertices.vertices.size(); i++) {
+                ns.add(new Normals.Normal());
+            }
+
+            for (PrimitiveGroup primitiveGroup : primitiveGroups) {
+                ListIterator<Integer> iter = primitiveGroup.vertices.listIterator();
+                while (iter.hasNext()) {
+                    int i1 = iter.next();
+                    if (i1 >= ns.size()) {
+                        iter.set(0);
+                        i1 = 0;
+                    }
+                    int i2 = iter.next();
+                    if (i2 >= ns.size()) {
+                        iter.set(0);
+                        i2 = 0;
+                    }
+                    int i3 = iter.next();
+                    if (i3 >= ns.size()) {
+                        iter.set(0);
+                        i3 = 0;
+                    }
+                    int i4 = 0;
+                    if (primitiveGroup.mode == GL2.GL_QUADS) {
+                        i4 = iter.next();
+                        if (i4 >= ns.size()) {
+                            iter.set(0);
+                        }
+                        i4 = 0;
+                    }
+
+                    final Vertices.Vertex p1 = vertices.vertices.get(i1);
+                    final Vertices.Vertex p2 = vertices.vertices.get(i2);
+                    final Vertices.Vertex p3 = vertices.vertices.get(i3);
+
+                    final Vertices.Vertex u = new Vertices.Vertex(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
+                    final Vertices.Vertex v = new Vertices.Vertex(p3.x - p1.x, p3.y - p1.y, p3.z - p1.z);
+                    final Normals.Normal n = new Normals.Normal(u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z, u.x * v.y - u.y * v.x, 1);
+                    double len = Math.sqrt(n.x * n.x + n.y * n.y + n.z * n.z);
+                    len = len == 0 ? 1.f : 1.f / len;
+                    n.x *= len;
+                    n.y *= len;
+                    n.z *= len;
+
+                    ns.get(i1).add(n);
+                    ns.get(i2).add(n);
+                    ns.get(i3).add(n);
+                    if (primitiveGroup.mode == GL2.GL_QUADS) {
+                        ns.get(i4).add(n);
+                    }
+                }
+            }
+
+            for (Normals.Normal i : ns) {
+                if (i.length > 0) {
+                    final float mult = 1.0f / (float) i.length;
+                    i.x *= mult;
+                    i.y *= mult;
+                    i.z *= mult;
+                }
+            }
+
+            return new Normals(ns);
         }
 
         @Override

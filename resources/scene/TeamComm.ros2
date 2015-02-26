@@ -22,8 +22,6 @@
       <Compound ref="boards"/>
     </Compound>
 
-    <Compound name="field">
-      <Compound ref="field"/>
-    </Compound>
+    <Compound name="fields" ref="field" />
   </Scene>
 </Simulation>
