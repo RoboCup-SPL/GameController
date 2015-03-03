@@ -2,23 +2,6 @@
 
   <Compound name="field">
 
-    <BoxGeometry width="8m" height="0.2m" depth="11m" color="rgb(80, 80, 80)">
-      <Translation z="-0.1m"/>
-      <Material name="fieldCarpet"/>
-    </BoxGeometry>
-    <BoxGeometry width="0.1m" height="0.3m" depth="11m" color="rgb(80, 80, 80)">
-      <Translation y="-4.05m" z="0.15m"/>
-    </BoxGeometry>
-    <BoxGeometry width="0.1m" height="0.3m" depth="11m" color="rgb(80, 80, 80)">
-      <Translation y="4.05m" z="0.15m"/>
-    </BoxGeometry>
-    <BoxGeometry width="8m" height="0.3m" depth="0.1m" color="rgb(80, 80, 80)">
-      <Translation x="-5.55m" z="0.15m"/>
-    </BoxGeometry>
-    <BoxGeometry width="8m" height="0.3m" depth="0.1m" color="rgb(80, 80, 80)">
-      <Translation x="5.55m" z="0.15m"/>
-    </BoxGeometry>
-
     <ComplexAppearance ref="fieldLines" name="fieldLines1"/>
     <ComplexAppearance ref="fieldLines" name="fieldLines2">
       <Rotation z="180degree"/>
@@ -28,24 +11,17 @@
 
     <Compound ref="fieldGoal" name="Goal1">
       <Translation x="-4525mm"/>
-      <Set name="color" value="fieldYellow"/>
+      <Set name="color" value="fieldWhite"/>
     </Compound>
     <Compound ref="fieldGoal" name="Goal2">
       <Translation x="4525mm"/>
       <Rotation z="180degree"/>
-      <Set name="color" value="fieldYellow"/>
+      <Set name="color" value="fieldWhite"/>
     </Compound>
 
   </Compound>
 
   <Compound name="fieldGoal">
-
-    <CylinderGeometry height="800mm" radius="50mm" name="post1">
-      <Translation y="-800mm" z="400mm"/>
-    </CylinderGeometry>
-    <CylinderGeometry height="800mm" radius="50mm" name="post2">
-      <Translation y="800mm" z="400mm"/>
-    </CylinderGeometry>
 
     <CylinderAppearance height="850mm" radius="50mm" name="post1">
       <Translation y="-800mm" z="425mm"/>
@@ -95,21 +71,11 @@
     </BoxAppearance>
     <ComplexAppearance ref="fieldNet"/>
 
-    <BoxGeometry width="1600mm" height="0.2m" depth="0.01m">
-      <Translation x="-450mm" z="0.1m"/>
-    </BoxGeometry>
-    <BoxGeometry width="0.01mm" height="0.2m" depth="400mm">
-      <Translation x="-250mm" y="-800mm" z="0.1m"/>
-    </BoxGeometry>
-    <BoxGeometry width="0.01mm" height="0.2m" depth="400mm">
-      <Translation x="-250mm" y="800mm" z="0.1m"/>
-    </BoxGeometry>
-
   </Compound>
 
-  <Surface name="fieldGreen" diffuseColor="#000000" ambientColor="#20cb20" diffuseTexture="../Textures/shadow.png"/>
-  <Surface name="fieldNet" diffuseColor="rgb(100%, 100%, 100%)" diffuseTexture="../Textures/net.png"/>
-  <Surface name="fieldWhite" diffuseColor="rgb(100%, 100%, 100%)" specularColor="rgb(80%, 80%, 80%)" shininess="10" diffuseTexture="../Textures/shadow.png"/>
+  <Surface name="fieldGreen" diffuseColor="#000000" ambientColor="#20cb20" diffuseTexture="Textures/shadow.png"/>
+  <Surface name="fieldNet" diffuseColor="rgb(100%, 100%, 100%)" diffuseTexture="Textures/net.png"/>
+  <Surface name="fieldWhite" diffuseColor="rgb(100%, 100%, 100%)" specularColor="rgb(80%, 80%, 80%)" shininess="10" diffuseTexture="Textures/shadow.png"/>
   <Surface name="fieldYellow" diffuseColor="rgb(60%, 54%, 0%)" ambientColor="rgb(45%, 40%, 0%)" specularColor="rgb(40%, 36%, 30%)" shininess="30"/>
 
   <Vertices name="fieldLines">

@@ -8,20 +8,19 @@
   <Scene>
 
     <Compound name="robots">
-      <Body ref="Nao" name="robot" />
-      <Body ref="Nao" name="robot2">
+      <Body ref="Nao" name="robotBlue" />
+      <Body ref="Nao" name="robotRed">
         <Set name="NaoColor" value="red"/>
       </Body>
     </Compound>
 
-    <Body ref="ball" name="ball">
+    <Body name="ball" ref="ball">
       <Translation z="0.0325m" />
     </Body>
 
-    <Compound name="boards">
-      <Compound ref="boards"/>
+    <Compound name="field">
+      <Compound ref="field" />
+      <Compound ref="boards" />
     </Compound>
-
-    <Compound name="fields" ref="field" />
   </Scene>
 </Simulation>

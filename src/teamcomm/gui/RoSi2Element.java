@@ -1,11 +1,16 @@
 package teamcomm.gui;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -15,9 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.media.opengl.GL2GL3;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 import javax.xml.namespace.QName;
@@ -130,10 +135,10 @@ public class RoSi2Element {
     }
 
     public RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars) throws RoSi2ParseException {
-        return instantiate(gl, vars, new TextureLoader(gl));
+        return instantiate(gl, vars, new TextureLoader(gl), null);
     }
 
-    private RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars, final TextureLoader texLoader) throws RoSi2ParseException {
+    private RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars, final TextureLoader texLoader, final List<RoSi2Drawable> refChilds) throws RoSi2ParseException {
         // The instantiation is constant unless it references a variable
         boolean constant = true;
 
@@ -153,21 +158,15 @@ public class RoSi2Element {
             varBindings = new HashMap<String, String>(this.vars);
         }
 
-        // Check if this element references another and in that case instantiate
-        // the referenced element
-        final String ref = getAttributeValue(varBindings, "ref", false);
-        if (ref != null) {
-            final RoSi2Element referenced = namedElements.get(tag + "#" + ref);
-            if (referenced == null) {
-                throw new RoSi2ParseException("Referenced element cannot be found: " + ref);
-            }
-            return referenced.instantiate(gl, varBindings, texLoader);
-        }
-
         // Instantiate all child elements
-        final List<RoSi2Drawable> childInstances = new LinkedList<RoSi2Drawable>();
+        final List<RoSi2Drawable> childInstances;
+        if(refChilds != null) {
+            childInstances = new LinkedList<RoSi2Drawable>(refChilds);
+        } else {
+            childInstances = new LinkedList<RoSi2Drawable>();
+        }
         for (final RoSi2Element child : children) {
-            final RoSi2Drawable childInst = child.instantiate(gl, varBindings, texLoader);
+            final RoSi2Drawable childInst = child.instantiate(gl, varBindings, texLoader, null);
             if (childInst != null) {
                 // If a child instance is not constant, the instance of this
                 // element is neither
@@ -177,6 +176,17 @@ public class RoSi2Element {
 
                 childInstances.add(childInst);
             }
+        }
+
+        // Check if this element references another and in that case instantiate
+        // the referenced element
+        final String ref = getAttributeValue(varBindings, "ref", false);
+        if (ref != null) {
+            final RoSi2Element referenced = namedElements.get(tag + "#" + ref);
+            if (referenced == null) {
+                throw new RoSi2ParseException("Referenced element cannot be found: " + ref);
+            }
+            return referenced.instantiate(gl, varBindings, texLoader, childInstances);
         }
 
         // Instantiate this element
@@ -222,6 +232,10 @@ public class RoSi2Element {
             final ArrayList<Vertices.Vertex> vs = new ArrayList<Vertices.Vertex>();
             final String str = content.toString();
             final DecimalFormat fmt = new DecimalFormat();
+            fmt.setGroupingUsed(false);
+            final DecimalFormatSymbols sym = (DecimalFormatSymbols) DecimalFormatSymbols.getInstance().clone();
+            sym.setDecimalSeparator('.');
+            fmt.setDecimalFormatSymbols(sym);
             int pos = 0;
             final double[] vertex = new double[3];
             int i = 0;
@@ -269,6 +283,10 @@ public class RoSi2Element {
             final ArrayList<Normals.Normal> ns = new ArrayList<Normals.Normal>();
             final String str = content.toString();
             final DecimalFormat fmt = new DecimalFormat();
+            fmt.setGroupingUsed(false);
+            final DecimalFormatSymbols sym = (DecimalFormatSymbols) DecimalFormatSymbols.getInstance().clone();
+            sym.setDecimalSeparator('.');
+            fmt.setDecimalFormatSymbols(sym);
             int pos = 0;
             final float[] normal = new float[3];
             int i = 0;
@@ -316,6 +334,10 @@ public class RoSi2Element {
             final ArrayList<TexCoords.TexCoord> ts = new ArrayList<TexCoords.TexCoord>();
             final String str = content.toString();
             final DecimalFormat fmt = new DecimalFormat();
+            fmt.setGroupingUsed(false);
+            final DecimalFormatSymbols sym = (DecimalFormatSymbols) DecimalFormatSymbols.getInstance().clone();
+            sym.setDecimalSeparator('.');
+            fmt.setDecimalFormatSymbols(sym);
             int pos = 0;
             final float[] coord = new float[2];
             int i = 0;
@@ -398,14 +420,18 @@ public class RoSi2Element {
                 pos = p.getIndex();
             }
 
-            instance = new PrimitiveGroup(tag.equals("Triangles") ? GL.GL_TRIANGLES : GL2GL3.GL_QUADS, vs);
+            instance = new PrimitiveGroup(tag.equals("Triangles") ? GL.GL_TRIANGLES : GL2.GL_QUADS, vs);
         } else if (tag.equals("Surface")) {
             final String texturePath = getAttributeValue(varBindings, "diffuseTexture", false);
             final Texture texture;
             if (texturePath == null) {
                 texture = null;
             } else {
-                texture = texLoader.loadTexture(new File(filepath.getParentFile(), texturePath).getPath());
+                try {
+                    texture = texLoader.loadTexture(new File(filepath.getParentFile(), texturePath));
+                } catch (IOException ex) {
+                    throw new RoSi2ParseException("Texture not found: " + texturePath);
+                }
             }
 
             final String shininessStr = getAttributeValue(varBindings, "shininess", false);
@@ -416,7 +442,7 @@ public class RoSi2Element {
                 try {
                     shininess = Float.valueOf(shininessStr);
                     if (shininess < 0.0f || shininess > 128.0f) {
-                        throw new RoSi2ParseException("Shininess value muust bbe  between 0 and 128, found: " + shininess);
+                        throw new RoSi2ParseException("Shininess value must be between 0 and 128, found: " + shininess);
                     }
                 } catch (final NumberFormatException e) {
                     shininess = null;
@@ -596,7 +622,12 @@ public class RoSi2Element {
         }
 
         ParsePosition pos = new ParsePosition(0);
-        final Number v = new DecimalFormat().parse(val, pos);
+        final DecimalFormat fmt = new DecimalFormat();
+        fmt.setGroupingUsed(false);
+        final DecimalFormatSymbols sym = (DecimalFormatSymbols) DecimalFormatSymbols.getInstance().clone();
+        sym.setDecimalSeparator('.');
+        fmt.setDecimalFormatSymbols(sym);
+        final Number v = fmt.parse(val, pos);
         if (v != null) {
             value[0] = v.floatValue();
             unit[0] = val.substring(pos.getIndex()).trim();
@@ -671,6 +702,9 @@ public class RoSi2Element {
         private final GL2 gl;
         protected final List<RoSi2Drawable> children;
         private final FloatBuffer transformation;
+        
+        private Rotation rotation;
+        private Translation translation;
 
         protected RoSi2Drawable() {
             gl = null;
@@ -689,8 +723,8 @@ public class RoSi2Element {
             this.children = children;
 
             // Find children defining a transformation
-            Translation translation = null;
-            Rotation rotation = null;
+            /*Translation translation = null;
+            Rotation rotation = null;*/
             ListIterator<RoSi2Drawable> iter = children.listIterator();
             while (iter.hasNext()) {
                 final RoSi2Drawable cur = iter.next();
@@ -750,9 +784,17 @@ public class RoSi2Element {
          */
         public final void draw() {
             // Apply transformation
-            gl.glPushMatrix();
             if (transformation != null) {
-                gl.glMultMatrixf(transformation);
+                gl.glPushMatrix();
+                //gl.glMultMatrixf(transformation);
+            }
+            if(translation != null) {
+                gl.glTranslatef(translation.translation[0], translation.translation[1], translation.translation[2]);
+            }
+            if(rotation != null) {
+                gl.glRotated(Math.toDegrees(rotation.rotation[0]), 1, 0, 0);
+                gl.glRotated(Math.toDegrees(rotation.rotation[1]), 0, 1, 0);
+                gl.glRotated(Math.toDegrees(rotation.rotation[2]), 0, 0, 1);
             }
 
             // Draw this element
@@ -764,7 +806,9 @@ public class RoSi2Element {
             }
 
             // Reset transformation
-            gl.glPopMatrix();
+            if (transformation != null) {
+                gl.glPopMatrix();
+            }
         }
 
         /**
@@ -1136,7 +1180,7 @@ public class RoSi2Element {
                 normalsDefined = true;
             }
             normals = n;
-            
+
             texCoords = t;
         }
 
@@ -1209,7 +1253,7 @@ public class RoSi2Element {
 
         @Override
         protected void render(final GL2 gl) {
-            surface.set(gl, texCoords != null);
+            surface.set(gl, texCoords == null);
 
             for (final PrimitiveGroup primitiveGroup : primitiveGroups) {
                 gl.glBegin(primitiveGroup.mode);
@@ -1235,7 +1279,7 @@ public class RoSi2Element {
                 gl.glEnd();
             }
 
-            surface.unset(gl, texCoords != null);
+            surface.unset(gl, texCoords == null);
         }
 
     }
@@ -1382,7 +1426,6 @@ public class RoSi2Element {
 
         public Surface(final float[] diffuseColor, final float[] ambientColor, final float[] specularColor, final float[] emissionColor, final Float shininess, final Texture texture) {
             this.diffuseColor = diffuseColor;
-
             this.ambientColor = ambientColor;
 
             if (specularColor != null) {
@@ -1479,9 +1522,45 @@ public class RoSi2Element {
             this.gl = gl;
         }
 
-        public Texture loadTexture(final String filename) {
-            // TODO
-            return null;
+        public Texture loadTexture(final File filename) throws IOException {
+            Texture tex = textures.get(filename.getAbsolutePath());
+            if (tex != null) {
+                return tex;
+            }
+
+            final BufferedImage img = ImageIO.read(filename);
+            final int[] imageData = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
+            final boolean hasAlpha = img.getColorModel().hasAlpha();
+
+            final ByteBuffer buffer = ByteBuffer.allocate(imageData.length * (hasAlpha ? 4 : 3));
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            for (final int c : imageData) {
+                if (hasAlpha) {
+                    buffer.putInt(c);
+                } else {
+                    buffer.put((byte) (c & 0xFF));
+                    buffer.put((byte) ((c >> 8) & 0xFF));
+                    buffer.put((byte) ((c >> 16) & 0xFF));
+                }
+            }
+            buffer.rewind();
+
+            // Allocate texture
+            final IntBuffer texIds = IntBuffer.allocate(1);
+            gl.glGenTextures(1, texIds);
+            final int textureId = texIds.get(0);
+
+            // Load texture into GL
+            gl.glBindTexture(GL.GL_TEXTURE_2D, textureId);
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
+            gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, hasAlpha ? 4 : 3, img.getWidth(), img.getHeight(), 0, hasAlpha ? GL.GL_BGRA : GL2.GL_BGR, GL.GL_UNSIGNED_BYTE, buffer);
+            gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
+
+            tex = new Texture(textureId, hasAlpha);
+            textures.put(filename.getAbsolutePath(), tex);
+
+            return tex;
         }
     }
 

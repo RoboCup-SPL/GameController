@@ -1,6 +1,9 @@
 package teamcomm.gui;
 
 import com.jogamp.opengl.util.Animator;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.logging.Level;
@@ -13,6 +16,8 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
+import javax.swing.JOptionPane;
+import javax.swing.event.MouseInputAdapter;
 import javax.xml.stream.XMLStreamException;
 
 /**
@@ -25,21 +30,67 @@ public class FieldView implements GLEventListener {
     private final Animator animator;
     private int fieldList = -1;
     private int ballList = -1;
+    private int robotBlueList = -1;
+    private int robotRedList = -1;
     private int width;
     private int height;
-    private final float[] cameraPos = {0.0f, 0.0f, 250.0f};
-    private final float[] cameraTarget = {0.0f, 0.0f, 0.0f};
-    private final float[] cameraUp = {0.0f, 1.0f, 0.0f};
+    private float cameraTheta = 45;
+    private float cameraPhi = 0;
+    private float cameraRadius = 9;
 
     public FieldView() {
         // Initialize GL canvas
-        GLProfile glp = GLProfile.getDefault();
+        GLProfile glp = GLProfile.get(GLProfile.GL2);
         GLCapabilities caps = new GLCapabilities(glp);
         canvas = new GLCanvas(caps);
         width = canvas.getBounds().width;
         height = canvas.getBounds().height;
         canvas.addGLEventListener(this);
         animator = new Animator(canvas);
+
+        final MouseInputAdapter listener = new MouseInputAdapter() {
+
+            private int[] lastPos = null;
+
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    lastPos = new int[]{e.getX(), e.getY()};
+                }
+            }
+
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    lastPos = null;
+                }
+            }
+
+            @Override
+            public void mouseDragged(final MouseEvent e) {
+                if (lastPos != null) {
+                    final float factor = (float) (Math.PI / 20.0);
+                    cameraPhi += (e.getX() - lastPos[0]) * factor;
+                    cameraTheta += (e.getY() - lastPos[1]) * factor;
+                    if(cameraTheta < 0) {
+                        cameraTheta = 0;
+                    }
+                    if(cameraTheta > 90) {
+                        cameraTheta = 90;
+                    }
+                    lastPos = new int[]{e.getX(), e.getY()};
+                }
+            }
+
+        };
+        canvas.addMouseListener(listener);
+        canvas.addMouseMotionListener(listener);
+        canvas.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(final MouseWheelEvent e) {
+                cameraRadius += e.getPreciseWheelRotation() * 0.01;
+            }
+        });
 
         // Start rendering
         animator.start();
@@ -59,7 +110,7 @@ public class FieldView implements GLEventListener {
         final GL2 gl = glad.getGL().getGL2();
 
         // Enable VSync
-        glad.getGL().setSwapInterval(1);
+        gl.setSwapInterval(1);
 
         // enable depth test
         gl.glClearDepth(1.0f);
@@ -96,10 +147,16 @@ public class FieldView implements GLEventListener {
         // Load display elements
         try {
             final RoSi2Element scene = RoSi2Element.parseFile("scene/TeamComm.ros2");
-            fieldList = scene.findElement("fields").instantiate(gl).createDisplayList();
+            fieldList = scene.findElement("field").instantiate(gl).createDisplayList();
             ballList = scene.findElement("ball").instantiate(gl).createDisplayList();
+            robotBlueList = scene.findElement("robotBlue").instantiate(gl).createDisplayList();
+            robotRedList = scene.findElement("robotRed").instantiate(gl).createDisplayList();
         } catch (RoSi2Element.RoSi2ParseException ex) {
-            Logger.getLogger(FieldView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    ex.getMessage(),
+                    "Error loading scene",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
         } catch (XMLStreamException ex) {
             Logger.getLogger(FieldView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -128,10 +185,30 @@ public class FieldView implements GLEventListener {
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
         glu.gluPerspective(40, (double) width / (double) height, 0.1, 500);
-        glu.gluLookAt(cameraPos[0], cameraPos[1], cameraPos[2], cameraTarget[0], cameraTarget[1], cameraTarget[2], cameraUp[0], cameraUp[1], cameraUp[2]);
 
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
+        gl.glTranslatef(0, 0, -cameraRadius);
+        gl.glRotatef(-cameraTheta, 1, 0, 0);
+        gl.glRotatef(cameraPhi, 0, 0, 1);
+
+        gl.glPolygonMode(GL2.GL_FRONT, GL2.GL_FILL);
+        gl.glShadeModel(GL2.GL_SMOOTH);
+
+        gl.glColorMaterial(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE);
+
+        gl.glBegin(GL.GL_LINES);
+        gl.glNormal3f(0, 0, 1);
+        gl.glColor3f(1, 0, 0);
+        gl.glVertex3f(0, 0, 0);
+        gl.glVertex3f(1, 0, 0);
+        gl.glColor3f(0, 1, 0);
+        gl.glVertex3f(0, 0, 0);
+        gl.glVertex3f(0, 1, 0);
+        gl.glColor3f(0, 0, 1);
+        gl.glVertex3f(0, 0, 0);
+        gl.glVertex3f(0, 0, 1);
+        gl.glEnd();
 
         // Render the field
         if (fieldList >= 0) {
@@ -141,6 +218,20 @@ public class FieldView implements GLEventListener {
         // Render the ball
         if (ballList >= 0) {
             gl.glCallList(ballList);
+        }
+
+        // Render the robots
+        if (robotBlueList >= 0) {
+            gl.glTranslatef(1, 0, 0);
+            gl.glRotatef(180, 0, 0, 1);
+            gl.glCallList(robotBlueList);
+            gl.glRotatef(-180, 0, 0, 1);
+            gl.glTranslatef(-1, 0, 0);
+        }
+        if (robotRedList >= 0) {
+            gl.glTranslatef(-1, 0, 0);
+            gl.glCallList(robotRedList);
+            gl.glTranslatef(1, 0, 0);
         }
     }
 
