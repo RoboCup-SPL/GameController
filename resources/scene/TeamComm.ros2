@@ -15,6 +15,10 @@
       <Translation z="0.0325m" />
     </Body>
 
+    <Body name="ballTransparent" ref="ballTransparent">
+      <Translation z="0.0325m" />
+    </Body>
+
     <Compound name="field">
       <Compound ref="boards" />
       <Compound ref="field" />

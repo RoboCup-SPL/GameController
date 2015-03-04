@@ -27,6 +27,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.xml.stream.XMLStreamException;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
+import teamcomm.gui.drawings.BallPerPlayer;
 import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.Field;
 import teamcomm.gui.drawings.Models;
@@ -53,7 +54,8 @@ public class FieldView implements GLEventListener {
      */
     private static final Class[] DRAWINGS = {
         Player.class,
-        Field.class
+        Field.class,
+        BallPerPlayer.class
     };
 
     private final Map<String, Integer> objectLists = new HashMap<String, Integer>();
