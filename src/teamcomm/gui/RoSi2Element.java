@@ -13,13 +13,16 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -103,6 +106,10 @@ public class RoSi2Element {
             }
         }
     }
+    
+    public String getName() {
+        return name;
+    }
 
     /**
      * Returns the child element with the given name from the element. Elements
@@ -128,6 +135,39 @@ public class RoSi2Element {
         }
 
         return null;
+    }
+
+    /**
+     * Returns all child elements with one of the given names from the element.
+     * Elements are searched via breadth-first search.
+     *
+     * @param names Names of the children
+     * @return List containing found elements
+     */
+    public List<RoSi2Element> findElements(final Collection<String> names) {
+        final List<RoSi2Element> foundElems = new LinkedList<RoSi2Element>();
+        
+        if(names.isEmpty()) {
+            return foundElems;
+        }
+        
+        final Set<String> searchedNames = new HashSet<String>(names);
+        final LinkedList<RoSi2Element> elems = new LinkedList<RoSi2Element>(children);
+
+        while (!elems.isEmpty()) {
+            final RoSi2Element cur = elems.pollFirst();
+            if (cur.name != null && searchedNames.contains(cur.name)) {
+                foundElems.add(cur);
+                searchedNames.remove(cur.name);
+                if(searchedNames.isEmpty()) {
+                    return foundElems;
+                }
+            }
+            
+            elems.addAll(cur.children);
+        }
+
+        return foundElems;
     }
 
     public RoSi2Drawable instantiate(final GL2 gl) throws RoSi2ParseException {

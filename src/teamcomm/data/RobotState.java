@@ -7,7 +7,7 @@ import java.util.LinkedList;
  *
  * @author Felix Thielke
  */
-public class RobotState {
+public class RobotState implements Cloneable {
 
     private final String address;
     private SPLStandardMessage lastMessage;
@@ -83,6 +83,15 @@ public class RobotState {
 
     public int getTeamNumber() {
         return teamNumber;
+    }
+    
+    @Override
+    public RobotState clone() {
+        try {
+            return (RobotState) super.clone();
+        } catch (CloneNotSupportedException ex) {
+        }
+        return null;
     }
 
 }

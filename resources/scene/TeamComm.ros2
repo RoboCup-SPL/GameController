@@ -6,13 +6,10 @@
   <Include href="Boards.rsi2"/>
 
   <Scene>
-
-    <Compound name="robots">
-      <Body ref="Nao" name="robotBlue" />
-      <Body ref="Nao" name="robotRed">
-        <Set name="NaoColor" value="red"/>
-      </Body>
-    </Compound>
+    <Body ref="Nao" name="robotBlue" />
+    <Body ref="Nao" name="robotRed">
+      <Set name="NaoColor" value="red"/>
+    </Body>
 
     <Body name="ball" ref="ball">
       <Translation z="0.0325m" />
