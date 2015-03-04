@@ -19,8 +19,8 @@
     </Body>
 
     <Compound name="field">
-      <Compound ref="field" />
       <Compound ref="boards" />
+      <Compound ref="field" />
     </Compound>
   </Scene>
 </Simulation>

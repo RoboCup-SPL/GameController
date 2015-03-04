@@ -160,7 +160,7 @@ public class RoSi2Element {
 
         // Instantiate all child elements
         final List<RoSi2Drawable> childInstances;
-        if(refChilds != null) {
+        if (refChilds != null) {
             childInstances = new LinkedList<RoSi2Drawable>(refChilds);
         } else {
             childInstances = new LinkedList<RoSi2Drawable>();
@@ -701,21 +701,22 @@ public class RoSi2Element {
 
         private final GL2 gl;
         protected final List<RoSi2Drawable> children;
-        private final FloatBuffer transformation;
-        
-        private Rotation rotation;
-        private Translation translation;
+
+        private final Rotation rotation;
+        private final Translation translation;
 
         protected RoSi2Drawable() {
             gl = null;
             children = new LinkedList<RoSi2Drawable>();
-            transformation = null;
+            rotation = null;
+            translation = null;
         }
 
         public RoSi2Drawable(final GL2 gl) {
             this.gl = gl;
             children = new LinkedList<RoSi2Drawable>();
-            transformation = null;
+            rotation = null;
+            translation = null;
         }
 
         public RoSi2Drawable(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
@@ -723,60 +724,28 @@ public class RoSi2Element {
             this.children = children;
 
             // Find children defining a transformation
-            /*Translation translation = null;
-            Rotation rotation = null;*/
+            Translation t = null;
+            Rotation r = null;
             ListIterator<RoSi2Drawable> iter = children.listIterator();
             while (iter.hasNext()) {
                 final RoSi2Drawable cur = iter.next();
                 if (cur instanceof Translation) {
-                    if (translation != null) {
+                    if (t != null) {
                         throw new RoSi2ParseException("More than one Translation element");
                     }
                     iter.remove();
-                    translation = (Translation) cur;
+                    t = (Translation) cur;
                 } else if (cur instanceof Rotation) {
-                    if (rotation != null) {
+                    if (r != null) {
                         throw new RoSi2ParseException("More than one Rotation element");
                     }
                     iter.remove();
-                    rotation = (Rotation) cur;
+                    r = (Rotation) cur;
                 }
             }
 
-            // Compute a GL matrix for the transformation
-            if (rotation == null && translation == null) {
-                transformation = null;
-            } else {
-                transformation = FloatBuffer.allocate(16);
-                if (rotation != null) {
-                    final double sx = Math.sin(rotation.rotation[0]);
-                    final double sy = Math.sin(rotation.rotation[1]);
-                    final double sz = Math.sin(rotation.rotation[2]);
-                    final double cx = Math.cos(rotation.rotation[0]);
-                    final double cy = Math.cos(rotation.rotation[1]);
-                    final double cz = Math.cos(rotation.rotation[2]);
-                    transformation.put((float) (cy * cz)) // c0x
-                            .put((float) (cy * sz)) // c0y
-                            .put((float) (-sy)) // c0z
-                            .put(0.0f)
-                            .put((float) (sx * sy * cz - cx * sz)) // c1x
-                            .put((float) (cx * cz + sx * sy * sz)) // c1y
-                            .put((float) (sx * cy)) // c1z
-                            .put(0.0f)
-                            .put((float) (sx * sz + cx * sy * cz)) // c2x
-                            .put((float) (cx * sy * sz - sx * cz)) // c2y
-                            .put((float) (cx * cy)) // c2z
-                            .put(0.0f);
-                } else {
-                    transformation.put(new float[]{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f});
-                }
-                if (translation != null) {
-                    transformation.put(translation.translation);
-                } else {
-                    transformation.put(new float[]{0.0f, 0.0f, 0.0f});
-                }
-                transformation.put(1.0f);
-            }
+            translation = t;
+            rotation = r;
         }
 
         /**
@@ -784,17 +753,17 @@ public class RoSi2Element {
          */
         public final void draw() {
             // Apply transformation
-            if (transformation != null) {
+            if (translation != null || rotation != null) {
                 gl.glPushMatrix();
-                //gl.glMultMatrixf(transformation);
-            }
-            if(translation != null) {
-                gl.glTranslatef(translation.translation[0], translation.translation[1], translation.translation[2]);
-            }
-            if(rotation != null) {
-                gl.glRotated(Math.toDegrees(rotation.rotation[0]), 1, 0, 0);
-                gl.glRotated(Math.toDegrees(rotation.rotation[1]), 0, 1, 0);
-                gl.glRotated(Math.toDegrees(rotation.rotation[2]), 0, 0, 1);
+
+                if (translation != null) {
+                    gl.glTranslatef(translation.translation[0], translation.translation[1], translation.translation[2]);
+                }
+                if (rotation != null) {
+                    gl.glRotated(Math.toDegrees(rotation.rotation[0]), 1, 0, 0);
+                    gl.glRotated(Math.toDegrees(rotation.rotation[1]), 0, 1, 0);
+                    gl.glRotated(Math.toDegrees(rotation.rotation[2]), 0, 0, 1);
+                }
             }
 
             // Draw this element
@@ -806,7 +775,7 @@ public class RoSi2Element {
             }
 
             // Reset transformation
-            if (transformation != null) {
+            if (translation != null || rotation != null) {
                 gl.glPopMatrix();
             }
         }

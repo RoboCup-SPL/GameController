@@ -25,6 +25,9 @@ import javax.xml.stream.XMLStreamException;
  * @author Felix Thielke
  */
 public class FieldView implements GLEventListener {
+    
+    private static final float NEAR_PLANE = 1;
+    private static final float FAR_PLANE = 20;
 
     private final GLCanvas canvas;
     private final Animator animator;
@@ -71,11 +74,15 @@ public class FieldView implements GLEventListener {
                 if (lastPos != null) {
                     final float factor = (float) (Math.PI / 20.0);
                     cameraPhi += (e.getX() - lastPos[0]) * factor;
-                    cameraTheta += (e.getY() - lastPos[1]) * factor;
-                    if(cameraTheta < 0) {
-                        cameraTheta = 0;
+                    if (cameraPhi < -90) {
+                        cameraPhi = -90;
+                    } else if (cameraPhi > 90) {
+                        cameraPhi = 90;
                     }
-                    if(cameraTheta > 90) {
+                    cameraTheta += (e.getY() - lastPos[1]) * factor;
+                    if (cameraTheta < 0) {
+                        cameraTheta = 0;
+                    } else if (cameraTheta > 90) {
                         cameraTheta = 90;
                     }
                     lastPos = new int[]{e.getX(), e.getY()};
@@ -89,6 +96,11 @@ public class FieldView implements GLEventListener {
             @Override
             public void mouseWheelMoved(final MouseWheelEvent e) {
                 cameraRadius += e.getPreciseWheelRotation() * 0.01;
+                if(cameraRadius < NEAR_PLANE) {
+                    cameraRadius = NEAR_PLANE;
+                } else if(cameraRadius > FAR_PLANE-5) {
+                    cameraRadius = FAR_PLANE-5;
+                }
             }
         });
 
@@ -129,7 +141,6 @@ public class FieldView implements GLEventListener {
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
         gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, FloatBuffer.wrap(new float[]{0.2f, 0.2f, 0.2f, 1.0f}));
         gl.glLightModelf(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, GL.GL_TRUE);
-
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, FloatBuffer.wrap(new float[]{0.5f, 0.5f, 0.5f, 1.0f}));
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, FloatBuffer.wrap(new float[]{1.0f, 1.0f, 1.0f, 1.0f}));
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, FloatBuffer.wrap(new float[]{1.0f, 1.0f, 1.0f, 1.0f}));
@@ -184,7 +195,7 @@ public class FieldView implements GLEventListener {
         final GLU glu = GLU.createGLU(gl);
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(40, (double) width / (double) height, 0.1, 500);
+        glu.gluPerspective(40, (double) width / (double) height, NEAR_PLANE, FAR_PLANE);
 
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
@@ -197,18 +208,21 @@ public class FieldView implements GLEventListener {
 
         gl.glColorMaterial(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE);
 
-        gl.glBegin(GL.GL_LINES);
-        gl.glNormal3f(0, 0, 1);
-        gl.glColor3f(1, 0, 0);
-        gl.glVertex3f(0, 0, 0);
-        gl.glVertex3f(1, 0, 0);
-        gl.glColor3f(0, 1, 0);
-        gl.glVertex3f(0, 0, 0);
-        gl.glVertex3f(0, 1, 0);
-        gl.glColor3f(0, 0, 1);
-        gl.glVertex3f(0, 0, 0);
-        gl.glVertex3f(0, 0, 1);
-        gl.glEnd();
+        /*
+         // Draw axes
+         gl.glBegin(GL.GL_LINES);
+         gl.glNormal3f(0, 0, 1);
+         gl.glColor3f(1, 0, 0);
+         gl.glVertex3f(0, 0, 0);
+         gl.glVertex3f(1, 0, 0);
+         gl.glColor3f(0, 1, 0);
+         gl.glVertex3f(0, 0, 0);
+         gl.glVertex3f(0, 1, 0);
+         gl.glColor3f(0, 0, 1);
+         gl.glVertex3f(0, 0, 0);
+         gl.glVertex3f(0, 0, 1);
+         gl.glEnd();
+         */
 
         // Render the field
         if (fieldList >= 0) {
