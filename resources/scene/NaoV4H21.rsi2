@@ -1,7 +1,7 @@
 <Simulation>
 
   <Body name="Nao">
-    <Translation z="400mm"/>
+    <Translation z="330mm"/>
 
     <Set name="NaoColor" value="blue"/>
 
