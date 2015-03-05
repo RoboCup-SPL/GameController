@@ -14,7 +14,7 @@ public class BallPerPlayer extends PerPlayer {
 
     @Override
     public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player) {
-        if(player.getLastMessage().ballAge > -1 && player.getLastMessage().ballAge < 5000) {
+        if(player.getLastMessage() != null && player.getLastMessage().ballAge > -1 && player.getLastMessage().ballAge < 5000) {
             gl.glPushMatrix();
 
             gl.glTranslatef(player.getLastMessage().pose[0] / 1000.f, player.getLastMessage().pose[1] / 1000.f, 0);

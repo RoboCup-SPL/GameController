@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +31,6 @@ import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.Field;
 import teamcomm.gui.drawings.Models;
 import teamcomm.gui.drawings.PerPlayer;
-import teamcomm.gui.drawings.PerTeam;
 import teamcomm.gui.drawings.Player;
 import teamcomm.gui.drawings.Static;
 
@@ -132,7 +130,7 @@ public class FieldView implements GLEventListener {
         for (Class c : DRAWINGS) {
             try {
                 final Object instance = c.newInstance();
-                if (instance instanceof PerPlayer || instance instanceof PerTeam || instance instanceof Static) {
+                if (instance instanceof PerPlayer || instance instanceof Static) {
                     drawings.add((Drawing) instance);
                 }
             } catch (InstantiationException ex) {
@@ -253,20 +251,6 @@ public class FieldView implements GLEventListener {
     public void display(final GLAutoDrawable glad) {
         final GL2 gl = glad.getGL().getGL2();
 
-        // Get team states
-        final List<RobotState> robotsLeft = new LinkedList<RobotState>();
-        for (final Iterator<RobotState> i = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); i.hasNext();) {
-            robotsLeft.add(i.next().clone());
-        }
-        final List<RobotState> robotsRight = new LinkedList<RobotState>();
-        for (final Iterator<RobotState> i = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); i.hasNext();) {
-            robotsRight.add(i.next().clone());
-        }
-        final List<RobotState> robotsOther = new LinkedList<RobotState>();
-        for (final Iterator<RobotState> i = RobotData.getInstance().getOtherRobots(); i.hasNext();) {
-            robotsOther.add(i.next().clone());
-        }
-
         // Clear buffers
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
@@ -276,26 +260,33 @@ public class FieldView implements GLEventListener {
         gl.glRotatef(-cameraTheta, 1, 0, 0);
         gl.glRotatef(cameraPhi, 0, 0, 1);
 
+        // Lock robot states
+        RobotData.getInstance().lockForReading();
+
         // Render drawings
         for (final Drawing d : drawings) {
             if (d instanceof Static) {
                 ((Static) d).draw(gl, objectLists);
-            } else if (d instanceof PerTeam) {
-                ((PerTeam) d).draw(gl, objectLists, null);
             } else if (d instanceof PerPlayer) {
-                for (final RobotState r : robotsLeft) {
-                    ((PerPlayer) d).draw(gl, objectLists, r);
+                for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
+                    ((PerPlayer) d).draw(gl, objectLists, iter.next());
                 }
                 gl.glRotatef(180, 0, 0, 1);
-                for (final RobotState r : robotsRight) {
-                    ((PerPlayer) d).draw(gl, objectLists, r);
+                for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
+                    ((PerPlayer) d).draw(gl, objectLists, iter.next());
                 }
                 gl.glRotatef(180, 0, 0, 1);
-                for (final RobotState r : robotsOther) {
-                    ((PerPlayer) d).draw(gl, objectLists, r);
-                }
+
+                /*
+                 for (final Iterator<RobotState> iter = RobotData.getInstance().getOtherRobots(); iter.hasNext();) {
+                 ((PerPlayer) d).draw(gl, objectLists, iter.next());
+                 }
+                 */
             }
         }
+
+        // Unlock robot states
+        RobotData.getInstance().unlockForReading();
     }
 
     @Override

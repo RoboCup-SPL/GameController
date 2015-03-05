@@ -1,5 +1,6 @@
 package teamcomm.gui.drawings;
 
+import data.SPLStandardMessage;
 import java.util.Map;
 import javax.media.opengl.GL2;
 import teamcomm.data.RobotState;
@@ -13,14 +14,22 @@ public class Player extends PerPlayer {
 
     @Override
     public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player) {
-        gl.glPushMatrix();
+        final SPLStandardMessage msg = player.getLastMessage();
+        if (msg != null) {
+            gl.glPushMatrix();
 
-        gl.glTranslatef(player.getLastMessage().pose[0] / 1000.f, player.getLastMessage().pose[1] / 1000.f, 0);
-        gl.glRotatef((float) Math.toDegrees(player.getLastMessage().pose[2]), 0, 0, 1);
+            gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
+            gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
 
-        gl.glCallList(player.getLastMessage().teamColor == 0 ? modelLists.get("robotBlue") : modelLists.get("robotRed"));
+            if (msg.fallen) {
+                gl.glTranslatef(0, 0, 0.05f);
+                gl.glRotatef(90, 0, 1, 0);
+            }
 
-        gl.glPopMatrix();
+            gl.glCallList(msg.teamColor == 0 ? modelLists.get("robotBlue") : modelLists.get("robotRed"));
+
+            gl.glPopMatrix();
+        }
     }
 
 }
