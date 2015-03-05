@@ -48,7 +48,7 @@ public class GameControlData implements Serializable
     /** The size in bytes this class has packed. */
     public static final int SIZE =
             4 + // header
-            1 + // version
+            2 + // version
             1 + // packet number
             1 + // numPlayers
             1 + // gameType
@@ -117,7 +117,7 @@ public class GameControlData implements Serializable
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(GAMECONTROLLER_STRUCT_HEADER.getBytes(), 0, 4);
-        buffer.put(GAMECONTROLLER_STRUCT_VERSION);
+        buffer.putShort(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
         buffer.put(gameType);
@@ -181,7 +181,7 @@ public class GameControlData implements Serializable
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         byte[] header = new byte[4];
         buffer.get(header, 0, 4);
-        if (buffer.get() != GAMECONTROLLER_STRUCT_VERSION) {
+        if (buffer.getShort() != GAMECONTROLLER_STRUCT_VERSION) {
             return false;
         }
         packetNumber = buffer.get(); 
