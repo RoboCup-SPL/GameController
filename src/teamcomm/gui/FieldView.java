@@ -32,6 +32,7 @@ import teamcomm.gui.drawings.Field;
 import teamcomm.gui.drawings.Models;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Player;
+import teamcomm.gui.drawings.PlayerNumber;
 import teamcomm.gui.drawings.Static;
 
 /**
@@ -53,7 +54,8 @@ public class FieldView implements GLEventListener {
     private static final Class[] DRAWINGS = {
         Player.class,
         Field.class,
-        BallPerPlayer.class
+        BallPerPlayer.class,
+        PlayerNumber.class
     };
 
     private final Map<String, Integer> objectLists = new HashMap<String, Integer>();
@@ -269,11 +271,11 @@ public class FieldView implements GLEventListener {
                 ((Static) d).draw(gl, objectLists);
             } else if (d instanceof PerPlayer) {
                 for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
-                    ((PerPlayer) d).draw(gl, objectLists, iter.next());
+                    ((PerPlayer) d).draw(gl, objectLists, iter.next(), false);
                 }
                 gl.glRotatef(180, 0, 0, 1);
                 for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
-                    ((PerPlayer) d).draw(gl, objectLists, iter.next());
+                    ((PerPlayer) d).draw(gl, objectLists, iter.next(), true);
                 }
                 gl.glRotatef(180, 0, 0, 1);
 

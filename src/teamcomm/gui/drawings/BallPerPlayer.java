@@ -13,7 +13,7 @@ import teamcomm.data.RobotState;
 public class BallPerPlayer extends PerPlayer {
 
     @Override
-    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player) {
+    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final boolean inverted) {
         if(player.getLastMessage() != null && player.getLastMessage().ballAge > -1 && player.getLastMessage().ballAge < 5000) {
             gl.glPushMatrix();
 

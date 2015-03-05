@@ -4,6 +4,7 @@
   <Include href="Ball2010SPL.rsi2"/>
   <Include href="Field2015SPL.rsi2"/>
   <Include href="Boards.rsi2"/>
+  <Include href="Numbers.rsi2"/>
 
   <Scene>
     <Body ref="Nao" name="robotBlue" />
@@ -22,6 +23,19 @@
     <Compound name="field">
       <Compound ref="boards" />
       <Compound ref="field" />
+    </Compound>
+    
+    <Compound>
+      <Body name="number0" ref="number0" />
+      <Body name="number1" ref="number1" />
+      <Body name="number2" ref="number2" />
+      <Body name="number3" ref="number3" />
+      <Body name="number4" ref="number4" />
+      <Body name="number5" ref="number5" />
+      <Body name="number6" ref="number6" />
+      <Body name="number7" ref="number7" />
+      <Body name="number8" ref="number8" />
+      <Body name="number9" ref="number9" />
     </Compound>
   </Scene>
 </Simulation>
