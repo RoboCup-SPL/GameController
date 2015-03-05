@@ -207,36 +207,17 @@ Please note that the field "team" now contains the team number, not its color.
 
 The format of the packets the GameController broadcasts and receives at port
 GAMECONTROLLER_PORT is defined in the file RoboCupGameControlData.h. It differs
-from the version used in 2013 in several ways:
+from the version used in 2014 in several ways:
 
-- Each TeamInfo now contains information about the coach and its current message
-  (coach, coachMessage).
-  
-- The field goalColour was removed, since all goals are yellow.
+- SPLCoachMessage as well as TeamInfo now have a sequence number of 1 byte which
+  is set by the coach.
 
-- Information for the GameStateVisualizer is part of the packet now (penaltyShot,
-  singleShots, secondaryTime).
-  
-- A counter that is increased for each packet sent (packetNumber) was added. It 
-  allows determining whether a new packet arrived even when using libgamectrl.
-  
-- The PENALTY_SUBSTITUTE is now also used in the SPL for a robot that is a 
-  substitute. Player number 6 is penalized this way right from the beginning,
-  waiting for being substituted for another player.
+- Coach messages now have a data packet size of 80 bytes instead of 40.
 
-- Because of the substitute, playersPerTeam is 6 now in regular SPL games, but
-  not in drop-in player games.
-
-- The new PENALTY_SPL_COACH_MOTION was added.
-
-- There is a new secondary game state STATE2_TIMEOUT.
-  
-- The custom types uint8, uint16, and uint32 were replaced by the standard types
-  uint8_t, uint16_t, and uint32_t defined in <stdint.h> (or <cstdint>). Please
-  note that including RoboCupGameControlData.h inside a namespace now has strange
-  effects. They can avoided by including <stdint.h> before opening the namespace.
-  
-- Many fields use smaller data types now.
+- RobocupGameControlData now has the gameType flag which indicates whether the
+  current game is a round-robin game (time does not stop + no whistles) or a
+  play-off game, i.e. a (quarter / semi) final (whistle is used + time is
+  stopped).
 
 
 ## 8. Known Issues

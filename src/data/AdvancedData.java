@@ -59,9 +59,6 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** If true, left side has the kickoff. */
     public boolean leftSideKickoff = true;
     
-    /** If true, the game auto-pauses the game for full 10minutes playing. */
-    public boolean playoff;
-    
     /** If true, the colors change automatically. */
     public boolean colorChangeAuto;
     
@@ -215,7 +212,7 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public int getRemainingGameTime()
     {
-        int regularNumberOfPenaltyShots = playoff ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
+        int regularNumberOfPenaltyShots = (gameType == GAME_PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
         int duration = secGameState == STATE2_TIMEOUT ? secsRemaining : 
                 secGameState == STATE2_NORMAL ? Rules.league.halfTime
                 : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
@@ -224,7 +221,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                 : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL// during timeouts
                 || (gameState == STATE_READY || gameState == STATE_SET)
-                && (playoff && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
+                && ((gameType == GAME_PLAYOFF) && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
                 : getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset);
@@ -242,7 +239,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                 && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf == C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pauseTime);
-        } else if (Rules.league.pausePenaltyShootOutTime != 0 && playoff && team[0].score == team[1].score
+        } else if (Rules.league.pausePenaltyShootOutTime != 0 && (gameType == GAME_PLAYOFF) && team[0].score == team[1].score
                 && (gameState == STATE_INITIAL && secGameState == STATE2_PENALTYSHOOT && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf != C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pausePenaltyShootOutTime);
@@ -373,6 +370,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                             message[k++] = 0;
                         }
                         
+                        team[j].coachSequence = splCoachMessageQueue.get(i).sequence;
                         team[j].coachMessage = message;
                         Log.toFile("Coach Message Team "+  Rules.league.teamColorName[team[j].teamColor]+" "+ new String(message));
                         splCoachMessageQueue.remove(i);

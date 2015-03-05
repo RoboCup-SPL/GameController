@@ -21,11 +21,14 @@ public class GameControlData implements Serializable
     public static final int GAMECONTROLLER_GAMEDATA_PORT= 3838; // port to send game state packets to
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 8;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 9;
 
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte DROPBALL = 2;
+    
+    public static final byte GAME_ROUNDROBIN = 0;
+    public static final byte GAME_PLAYOFF = 1;
 
     public static final byte STATE_INITIAL = 0;
     public static final byte STATE_READY = 1;
@@ -48,6 +51,7 @@ public class GameControlData implements Serializable
             1 + // version
             1 + // packet number
             1 + // numPlayers
+            1 + // gameType
             1 + // gameState
             1 + // firstHalf
             1 + // kickOffTeam
@@ -77,6 +81,7 @@ public class GameControlData implements Serializable
     // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
     public byte packetNumber = 0;
     public byte playersPerTeam = (byte)Rules.league.teamSize;   // The number of players on a team
+    public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF)
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
     public byte kickOffTeam = TEAM_BLUE;                        // the next team to kick off
@@ -115,6 +120,7 @@ public class GameControlData implements Serializable
         buffer.put(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
+        buffer.put(gameType);
         buffer.put(gameState);
         buffer.put(firstHalf);
         buffer.put(kickOffTeam);
@@ -180,6 +186,7 @@ public class GameControlData implements Serializable
         }
         packetNumber = buffer.get(); 
         playersPerTeam = buffer.get();
+        gameType = buffer.get();
         gameState = buffer.get();
         firstHalf = buffer.get();
         kickOffTeam = buffer.get();
@@ -205,6 +212,12 @@ public class GameControlData implements Serializable
         out += "            Version: "+GAMECONTROLLER_STRUCT_VERSION+"\n";
         out += "      Packet Number: "+(packetNumber & 0xFF)+"\n";
         out += "   Players per Team: "+playersPerTeam+"\n";
+        switch (gameType) {
+            case GAME_ROUNDROBIN: temp = "round robin"; break;
+            case GAME_PLAYOFF:    temp = "playoff";   break;
+            default: temp = "undefinied("+gameType+")";
+        }
+        out += "           gameType: "+temp+"\n";
         switch (gameState) {
             case STATE_INITIAL:  temp = "initial"; break;
             case STATE_READY:    temp = "ready";   break;
