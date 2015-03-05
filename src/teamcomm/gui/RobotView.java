@@ -62,21 +62,21 @@ public class RobotView extends JFrame implements Runnable {
         teamPanels[1].setLayout(new BoxLayout(teamPanels[1], BoxLayout.Y_AXIS));
         teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.X_AXIS));
         /*teamPanels[0].setLayout(new GridLayout(6, 1, 0, 5));
-        teamPanels[1].setLayout(new GridLayout(6, 1, 0, 5));*/
+         teamPanels[1].setLayout(new GridLayout(6, 1, 0, 5));*/
 
         // Setup team logos
         /*final JPanel logoLeft = new JPanel();
-        logoLeft.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-        logoLeft.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-        logoLeft.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-        logoLeft.setSize(ROBOTPANEL_W, ROBOTPANEL_H);
-        logoLeft.add(teamLogos[0]);*/
+         logoLeft.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+         logoLeft.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+         logoLeft.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+         logoLeft.setSize(ROBOTPANEL_W, ROBOTPANEL_H);
+         logoLeft.add(teamLogos[0]);*/
         teamPanels[0].add(teamLogos[0]);
         /*final JPanel logoRight = new JPanel();
-        logoRight.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-        logoRight.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-        logoRight.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-        logoRight.add(teamLogos[1]);*/
+         logoRight.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+         logoRight.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+         logoRight.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
+         logoRight.add(teamLogos[1]);*/
         teamPanels[1].add(teamLogos[1]);
 
         // Setup content pane
@@ -111,20 +111,18 @@ public class RobotView extends JFrame implements Runnable {
 
     private void updateView() {
         final int[] teamNumbers = RobotData.getInstance().getTeamNumbers();
-        final Iterator<RobotState> otherRobots = RobotData.getInstance().getOtherRobots();
 
         for (int team = 0; team < 3; team++) {
             final Iterator<RobotState> robots;
             if (team < 2) {
                 if (teamNumbers == null) {
                     teamLogos[team].setIcon(null);
-                    continue;
+                } else {
+                    teamLogos[team].setIcon(getTeamIcon(teamNumbers[team]));
                 }
                 robots = RobotData.getInstance().getRobotsForTeam(team);
-
-                teamLogos[team].setIcon(getTeamIcon(teamNumbers[team]));
             } else {
-                robots = otherRobots;
+                robots = RobotData.getInstance().getOtherRobots();
             }
 
             int i = 0;
@@ -147,12 +145,12 @@ public class RobotView extends JFrame implements Runnable {
                     updateRobotDetailPanel(detailPanel, robot);
                 }
 
-                if (teamPanels[team].getComponentCount() <= i+1) {
+                if (teamPanels[team].getComponentCount() <= i + (team < 2 ? 1 : 0)) {
                     teamPanels[team].add(panel);
                     panel.revalidate();
-                } else if (panel != teamPanels[team].getComponent(i+1)) {
+                } else if (panel != teamPanels[team].getComponent(i + (team < 2 ? 1 : 0))) {
                     teamPanels[team].remove(panel);
-                    teamPanels[team].add(panel, i+1);
+                    teamPanels[team].add(panel, i + (team < 2 ? 1 : 0));
                     panel.revalidate();
                 }
 

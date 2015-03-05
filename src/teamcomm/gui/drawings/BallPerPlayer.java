@@ -27,8 +27,8 @@ public class BallPerPlayer extends PerPlayer {
             gl.glBegin(GL.GL_LINES);
             gl.glColor3f(1, 0, 0);
             gl.glNormal3f(0, 0, 1);
-            gl.glVertex3f(0, 0, 0);
-            gl.glVertex3f(player.getLastMessage().ballVel[0] / 1000.f, player.getLastMessage().ballVel[1] / 1000.f, 0);
+            gl.glVertex3f(0, 0, 0.0325f);
+            gl.glVertex3f(player.getLastMessage().ballVel[0] / 1000.f, player.getLastMessage().ballVel[1] / 1000.f, 0.0325f);
             gl.glEnd();
 
             gl.glPopMatrix();
