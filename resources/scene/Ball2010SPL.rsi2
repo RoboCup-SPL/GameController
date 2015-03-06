@@ -1,16 +1,10 @@
 <Simulation>
 
   <Surface name="ballOrange" diffuseColor="rgb(100%, 0%, 0%)" specularColor="rgb(60%, 60%, 60%)" shininess="30"/>
-  <Surface name="ballOrangeTransparent" diffuseColor="rgba(100%, 0%, 0%, 0.8)" specularColor="rgb(60%, 60%, 60%)" shininess="30"/>
 
   <Body name="ball">
     <SphereAppearance radius="0.0325">
       <Surface ref="ballOrange"/>
-    </SphereAppearance>
-  </Body>
-  <Body name="ballTransparent">
-    <SphereAppearance radius="0.0325">
-      <Surface ref="ballOrangeTransparent"/>
     </SphereAppearance>
   </Body>
 
