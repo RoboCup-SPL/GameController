@@ -242,8 +242,6 @@ public class RobotView extends JFrame implements Runnable {
                 i++;
             }
         }
-
-        repaint();
     }
 
     private ImageIcon getTeamIcon(final int team) {

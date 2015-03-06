@@ -104,6 +104,10 @@ public class Main {
 
         }
 
+        if (logFile.length() <= 4) {
+            logFile.delete();
+        }
+
         System.exit(0);
     }
 
