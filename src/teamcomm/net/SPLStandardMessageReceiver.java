@@ -2,9 +2,13 @@ package teamcomm.net;
 
 import common.Log;
 import data.SPLStandardMessage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.DatagramPacket;
@@ -69,10 +73,12 @@ public class SPLStandardMessageReceiver extends Thread {
                     final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
 
-                    if (packet.getAddress().equals(localhost)) {
-                        queue.add(new NetPackage("10.0." + team + "." + buffer[5], team, buffer));
-                    } else {
-                        queue.add(new NetPackage(packet.getAddress().getHostAddress(), team, buffer));
+                    if (logReplayThread == null) {
+                        if (packet.getAddress().equals(localhost)) {
+                            queue.add(new NetPackage("10.0." + team + "." + buffer[5], team, buffer));
+                        } else {
+                            queue.add(new NetPackage(packet.getAddress().getHostAddress(), team, buffer));
+                        }
                     }
 
                     buffer = new byte[SPLStandardMessage.SIZE];
@@ -85,14 +91,114 @@ public class SPLStandardMessageReceiver extends Thread {
         }
     }
 
+    private class LogReplayThread extends Thread {
+
+        private final ObjectInputStream replayLog;
+        private final BufferedInputStream bufStream;
+        private long pausedTimestamp = 0;
+        private long pausedOffset = 0;
+
+        public LogReplayThread(final File logfile) throws IOException {
+            bufStream = new BufferedInputStream(new FileInputStream(logfile));
+            replayLog = new ObjectInputStream(bufStream);
+        }
+
+        public void togglePause() {
+            synchronized (replayLog) {
+                if (pausedTimestamp == 0) {
+                    pausedTimestamp = System.currentTimeMillis();
+                } else {
+                    pausedOffset += System.currentTimeMillis() - pausedTimestamp;
+                    pausedTimestamp = 0;
+                }
+                replayLog.notifyAll();
+            }
+        }
+
+        public boolean isPaused() {
+            return pausedTimestamp > 0;
+        }
+
+        @Override
+        public void run() {
+            try {
+                final long startTimestamp = System.currentTimeMillis();
+
+                bufStream.mark(10);
+                if (bufStream.read() < 0) {
+                    return;
+                }
+                bufStream.reset();
+
+                queue.clear();
+                Thread.sleep(100);
+                RobotData.getInstance().reset();
+
+                final NetPackage pFirst = (NetPackage) replayLog.readObject();
+                pausedOffset += pFirst.timestamp;
+                queue.add(pFirst);
+
+                while (!isInterrupted()) {
+                    bufStream.mark(10);
+                    if (bufStream.read() < 0) {
+                        break;
+                    }
+                    bufStream.reset();
+
+                    final NetPackage p = (NetPackage) replayLog.readObject();
+
+                    while (true) {
+                        while (isPaused()) {
+                            synchronized (replayLog) {
+                                replayLog.wait();
+                            }
+                        }
+
+                        final long diff = p.timestamp - (System.currentTimeMillis() - (startTimestamp - pausedOffset));
+                        if (diff <= 0) {
+                            break;
+                        }
+                        Thread.sleep(diff);
+                    }
+
+                    queue.add(p);
+                }
+            } catch (IOException e) {
+                Log.error("error while reading log file: " + e.getMessage());
+            } catch (ClassNotFoundException e) {
+                Log.error("error while reading log file: " + e.getMessage());
+            } catch (InterruptedException ex) {
+            } finally {
+                try {
+                    bufStream.close();
+                    replayLog.close();
+                } catch (IOException e) {
+                }
+
+                queue.clear();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                }
+                RobotData.getInstance().reset();
+
+                logReplayThread = null;
+            }
+        }
+    }
+
     private static final long beginTimestamp = System.currentTimeMillis();
     private final InetAddress localhost;
+
+    private static SPLStandardMessageReceiver instance;
 
     private static final int MAX_TEAMNUMBER = 50;
 
     private final ReceiverThread[] receivers = new ReceiverThread[MAX_TEAMNUMBER];
     private final LinkedBlockingQueue<NetPackage> queue = new LinkedBlockingQueue<NetPackage>();
     private final ObjectOutputStream logger;
+
+    private LogReplayThread logReplayThread;
 
     public SPLStandardMessageReceiver() throws IOException, SocketException {
         this(null);
@@ -118,6 +224,42 @@ public class SPLStandardMessageReceiver extends Thread {
         for (int i = 0; i < MAX_TEAMNUMBER; i++) {
             receivers[i] = new ReceiverThread(i + 1);
         }
+    }
+
+    public static SPLStandardMessageReceiver getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(final SPLStandardMessageReceiver instance) {
+        SPLStandardMessageReceiver.instance = instance;
+    }
+
+    public void replayLog(final File logfile) throws FileNotFoundException, IOException {
+        if (logReplayThread == null) {
+            logReplayThread = new LogReplayThread(logfile);
+            logReplayThread.start();
+        }
+    }
+
+    public void stopReplaying() {
+        if (logReplayThread != null) {
+            logReplayThread.interrupt();
+        }
+    }
+
+    public void toggleReplayPaused() {
+        if (logReplayThread != null) {
+            logReplayThread.togglePause();
+        }
+    }
+
+    public boolean isReplayPaused() {
+        return logReplayThread == null || logReplayThread.isPaused();
+
+    }
+
+    public boolean isReplaying() {
+        return logReplayThread != null;
     }
 
     @Override

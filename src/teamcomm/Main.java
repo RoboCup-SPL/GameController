@@ -71,6 +71,7 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         }
+        SPLStandardMessageReceiver.setInstance(receiver);
 
         // Initialize robot view part of the GUI
         final Thread robotView = new Thread(new RobotView());

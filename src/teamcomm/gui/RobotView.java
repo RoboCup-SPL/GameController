@@ -1,11 +1,14 @@
 package teamcomm.gui;
 
+import com.sun.glass.events.KeyEvent;
 import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -13,6 +16,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,16 +26,21 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 import teamcomm.Main;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
 import teamcomm.gui.drawings.Drawing;
+import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
  * @author Felix Thielke
@@ -49,6 +59,8 @@ public class RobotView extends JFrame implements Runnable {
     private final JLabel[] teamLogos = new JLabel[]{new JLabel(), new JLabel()};
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
     private final Map<String, JFrame> robotDetailPanels = new HashMap<String, JFrame>();
+
+    private final JMenuItem[] logMenuItems;
 
     public RobotView() {
         super("Robots");
@@ -80,8 +92,63 @@ public class RobotView extends JFrame implements Runnable {
         contentPane.add(fieldView.getCanvas(), BorderLayout.CENTER);
         setContentPane(contentPane);
 
-        // Add menu
+        // Add menu bar
         final JMenuBar mb = new JMenuBar();
+
+        // Log menu
+        final JMenu logMenu = new JMenu("Log");
+        final JMenuItem replayOption = new JMenuItem("Replay log file");
+        final JMenuItem pauseOption = new JMenuItem("Pause replaying");
+        final JMenuItem stopOption = new JMenuItem("Stop replaying");
+        final JFrame frame = this;
+        replayOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final JFileChooser fc = new JFileChooser(new File(new File(".").getAbsoluteFile(), "logs_teamcomm"));
+                int returnVal = fc.showOpenDialog(frame);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        SPLStandardMessageReceiver.getInstance().replayLog(fc.getSelectedFile());
+                        replayOption.setEnabled(false);
+                        pauseOption.setEnabled(true);
+                        stopOption.setEnabled(true);
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error opening log file.",
+                                ex.getClass().getSimpleName(),
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+        logMenu.add(replayOption);
+        pauseOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                SPLStandardMessageReceiver.getInstance().toggleReplayPaused();
+                if (SPLStandardMessageReceiver.getInstance().isReplayPaused()) {
+                    pauseOption.setText("Continue replaying");
+                } else {
+                    pauseOption.setText("Pause replaying");
+                }
+            }
+        });
+        pauseOption.setEnabled(false);
+        logMenu.add(pauseOption);
+        stopOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                SPLStandardMessageReceiver.getInstance().stopReplaying();
+            }
+        });
+        stopOption.setEnabled(false);
+        logMenu.add(stopOption);
+        replayOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.MODIFIER_FUNCTION));
+        pauseOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.MODIFIER_FUNCTION));
+        stopOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.MODIFIER_FUNCTION));
+        mb.add(logMenu);
+        logMenuItems = new JMenuItem[]{replayOption, pauseOption, stopOption};
+
         final JMenu drawingsMenu = new JMenu("Drawings");
         for (final Drawing d : fieldView.getDrawings()) {
             final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
@@ -104,18 +171,26 @@ public class RobotView extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
-            RobotData.getInstance().lockForReading();
-            updateView();
-            RobotData.getInstance().unlockForReading();
-            try {
-                Thread.sleep(1000 / 4);
-            } catch (InterruptedException ex) {
-            }
-        }
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                if (!logMenuItems[0].isEnabled() && !SPLStandardMessageReceiver.getInstance().isReplaying()) {
+                    logMenuItems[0].setEnabled(true);
+                    logMenuItems[1].setEnabled(false);
+                    logMenuItems[2].setEnabled(false);
+                }
 
-        // Terminate 3D rendering
-        fieldView.terminate();
+                RobotData.getInstance().lockForReading();
+                updateView();
+                RobotData.getInstance().unlockForReading();
+                try {
+                    Thread.sleep(1000 / 4);
+                } catch (InterruptedException ex) {
+                }
+            }
+        } finally {
+            // Terminate 3D rendering
+            fieldView.terminate();
+        }
     }
 
     private void updateView() {

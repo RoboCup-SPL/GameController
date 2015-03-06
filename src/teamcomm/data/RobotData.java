@@ -39,6 +39,20 @@ public class RobotData {
     private RobotData() {
     }
 
+    public void reset() {
+        rwl.writeLock().lock();
+        try {
+            teamNumbers[0] = 0;
+            teamNumbers[1] = 0;
+            robots[0] = new ArrayList<RobotState>(5);
+            robots[1] = new ArrayList<RobotState>(5);
+            robots[2] = new LinkedList<RobotState>();
+            robotsByAddress.clear();
+        } finally {
+            rwl.writeLock().unlock();
+        }
+    }
+
     public void updateGameData(final GameControlData data) {
         boolean somethingChanged = false;
 
