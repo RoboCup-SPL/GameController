@@ -1,6 +1,5 @@
 package teamcomm.gui;
 
-import com.sun.glass.events.KeyEvent;
 import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -9,8 +8,10 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -143,9 +144,9 @@ public class RobotView extends JFrame implements Runnable {
         });
         stopOption.setEnabled(false);
         logMenu.add(stopOption);
-        replayOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.MODIFIER_FUNCTION));
-        pauseOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.MODIFIER_FUNCTION));
-        stopOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.MODIFIER_FUNCTION));
+        replayOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+        pauseOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
+        stopOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
         mb.add(logMenu);
         logMenuItems = new JMenuItem[]{replayOption, pauseOption, stopOption};
 
