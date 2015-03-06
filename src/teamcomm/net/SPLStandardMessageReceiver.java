@@ -74,7 +74,7 @@ public class SPLStandardMessageReceiver extends Thread {
                     socket.receive(packet);
 
                     if (logReplayThread == null) {
-                        if (packet.getAddress().equals(localhost)) {
+                        if (packet.getAddress().equals(localhost) || packet.getAddress().getAddress()[0] != 10) {
                             queue.add(new NetPackage("10.0." + team + "." + buffer[5], team, buffer));
                         } else {
                             queue.add(new NetPackage(packet.getAddress().getHostAddress(), team, buffer));
