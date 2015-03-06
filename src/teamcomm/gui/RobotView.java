@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -18,13 +20,17 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import teamcomm.Main;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
+import teamcomm.gui.drawings.Drawing;
 
 /**
  * @author Felix Thielke
@@ -61,22 +67,9 @@ public class RobotView extends JFrame implements Runnable {
         teamPanels[0].setLayout(new BoxLayout(teamPanels[0], BoxLayout.Y_AXIS));
         teamPanels[1].setLayout(new BoxLayout(teamPanels[1], BoxLayout.Y_AXIS));
         teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.X_AXIS));
-        /*teamPanels[0].setLayout(new GridLayout(6, 1, 0, 5));
-         teamPanels[1].setLayout(new GridLayout(6, 1, 0, 5));*/
 
         // Setup team logos
-        /*final JPanel logoLeft = new JPanel();
-         logoLeft.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-         logoLeft.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-         logoLeft.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-         logoLeft.setSize(ROBOTPANEL_W, ROBOTPANEL_H);
-         logoLeft.add(teamLogos[0]);*/
         teamPanels[0].add(teamLogos[0]);
-        /*final JPanel logoRight = new JPanel();
-         logoRight.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-         logoRight.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-         logoRight.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-         logoRight.add(teamLogos[1]);*/
         teamPanels[1].add(teamLogos[1]);
 
         // Setup content pane
@@ -86,6 +79,22 @@ public class RobotView extends JFrame implements Runnable {
         contentPane.add(teamPanels[2], BorderLayout.SOUTH);
         contentPane.add(fieldView.getCanvas(), BorderLayout.CENTER);
         setContentPane(contentPane);
+
+        // Add menu
+        final JMenuBar mb = new JMenuBar();
+        final JMenu drawingsMenu = new JMenu("Drawings");
+        for (final Drawing d : fieldView.getDrawings()) {
+            final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
+            m.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(final ItemEvent e) {
+                    d.setActive(e.getStateChange() == ItemEvent.SELECTED);
+                }
+            });
+            drawingsMenu.add(m);
+        }
+        mb.add(drawingsMenu);
+        setJMenuBar(mb);
 
         // Display window
         setPreferredSize(new Dimension(800, 600));

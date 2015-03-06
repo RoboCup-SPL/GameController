@@ -49,7 +49,7 @@ public class FieldView implements GLEventListener {
 
     /**
      * Classes of drawings that are drawn in the FieldView. Classes that are not
-     * subclasses of one of PerPlayer, PerTeam or Static will be ignored.
+     * subclasses of one of PerPlayer or Static will be ignored.
      */
     private static final Class[] DRAWINGS = {
         Player.class,
@@ -267,23 +267,19 @@ public class FieldView implements GLEventListener {
 
         // Render drawings
         for (final Drawing d : drawings) {
-            if (d instanceof Static) {
-                ((Static) d).draw(gl, objectLists);
-            } else if (d instanceof PerPlayer) {
-                for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
-                    ((PerPlayer) d).draw(gl, objectLists, iter.next(), false);
+            if(d.isActive()) {
+                if (d instanceof Static) {
+                    ((Static) d).draw(gl, objectLists);
+                } else if (d instanceof PerPlayer) {
+                    for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
+                        ((PerPlayer) d).draw(gl, objectLists, iter.next(), false);
+                    }
+                    gl.glRotatef(180, 0, 0, 1);
+                    for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
+                        ((PerPlayer) d).draw(gl, objectLists, iter.next(), true);
+                    }
+                    gl.glRotatef(180, 0, 0, 1);
                 }
-                gl.glRotatef(180, 0, 0, 1);
-                for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
-                    ((PerPlayer) d).draw(gl, objectLists, iter.next(), true);
-                }
-                gl.glRotatef(180, 0, 0, 1);
-
-                /*
-                 for (final Iterator<RobotState> iter = RobotData.getInstance().getOtherRobots(); iter.hasNext();) {
-                 ((PerPlayer) d).draw(gl, objectLists, iter.next());
-                 }
-                 */
             }
         }
 
@@ -300,5 +296,9 @@ public class FieldView implements GLEventListener {
         gl.glLoadIdentity();
         glu.gluPerspective(40, (double) width / (double) height, NEAR_PLANE, FAR_PLANE);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
+    }
+    
+    public List<Drawing> getDrawings() {
+        return drawings;
     }
 }

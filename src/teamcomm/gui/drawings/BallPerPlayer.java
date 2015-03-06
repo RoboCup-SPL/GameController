@@ -57,7 +57,7 @@ public class BallPerPlayer extends PerPlayer {
             gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
             final GLU glu = GLU.createGLU(gl);
             final GLUquadric q = glu.gluNewQuadric();
-            glu.gluCylinder(q, BALL_RADIUS, BALL_RADIUS, (float) Math.sqrt(ball[0] * ball[0] + ball[1] * ball[1] + (BALL_RADIUS - ROBOT_HEAD_Z) * (BALL_RADIUS - ROBOT_HEAD_Z)), 16, 1);
+            glu.gluCylinder(q, BALL_RADIUS, BALL_RADIUS, Math.sqrt(ball[0] * ball[0] + ball[1] * ball[1] + (BALL_RADIUS - ROBOT_HEAD_Z) * (BALL_RADIUS - ROBOT_HEAD_Z)), 16, 1);
             glu.gluDeleteQuadric(q);
             gl.glDisable(GL2.GL_BLEND);
 
