@@ -15,19 +15,19 @@ public class SPLStandardMessage implements Serializable {
     public static final byte SPL_STANDARD_MESSAGE_STRUCT_VERSION = 5;
     public static final short SPL_STANDARD_MESSAGE_DATA_SIZE = 800;
     public static final int SIZE = 4 // header size
-                                   + 1 // byte for the version
-                                   + 1 // player number
-                                   + 1 // team color
-                                   + 1 // fallen
-                                   + 12 // pose
-                                   + 8 // walking target
-                                   + 8 // shooting target
-                                   + 4 // ball age
-                                   + 8 // ball position
-                                   + 8 // ball velocity
-                                   + 2 // intention (with padding)
-                                   + 2 // actual size of data
-                                   + SPL_STANDARD_MESSAGE_DATA_SIZE;
+            + 1 // byte for the version
+            + 1 // player number
+            + 1 // team color
+            + 1 // fallen
+            + 12 // pose
+            + 8 // walking target
+            + 8 // shooting target
+            + 4 // ball age
+            + 8 // ball position
+            + 8 // ball velocity
+            + 2 // intention (with padding)
+            + 2 // actual size of data
+            + SPL_STANDARD_MESSAGE_DATA_SIZE;
 
     public String header;   // header to identify the structure
     public byte version;    // version of the data structure
@@ -165,14 +165,14 @@ public class SPLStandardMessage implements Serializable {
                     ballVel[0] = buffer.getFloat();
                     ballVel[1] = buffer.getFloat();
 
-                    int intention = Byte.toUnsignedInt(buffer.get());
+                    int intention = (int) buffer.get();
                     buffer.get();
                     if (intention >= Intention.values().length) {
                         return false;
                     }
                     this.intention = Intention.values()[intention];
 
-                    int numOfDataBytes = Short.toUnsignedInt(buffer.getShort());
+                    int numOfDataBytes = (int) buffer.getShort();
                     if (numOfDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
                         return false;
                     }

@@ -118,7 +118,7 @@ public class FieldView implements GLEventListener {
         canvas.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(final MouseWheelEvent e) {
-                cameraRadius -= e.getPreciseWheelRotation() * 0.05;
+                cameraRadius -= e.getWheelRotation() * 0.05;
                 if (cameraRadius < NEAR_PLANE) {
                     cameraRadius = NEAR_PLANE;
                 } else if (cameraRadius > FAR_PLANE - 5) {
@@ -267,7 +267,7 @@ public class FieldView implements GLEventListener {
 
         // Render drawings
         for (final Drawing d : drawings) {
-            if(d.isActive()) {
+            if (d.isActive()) {
                 if (d instanceof Static) {
                     ((Static) d).draw(gl, objectLists);
                 } else if (d instanceof PerPlayer) {
@@ -297,7 +297,7 @@ public class FieldView implements GLEventListener {
         glu.gluPerspective(40, (double) width / (double) height, NEAR_PLANE, FAR_PLANE);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
     }
-    
+
     public List<Drawing> getDrawings() {
         return drawings;
     }

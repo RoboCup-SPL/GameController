@@ -106,7 +106,7 @@ public class RoSi2Element {
             }
         }
     }
-    
+
     public String getName() {
         return name;
     }
@@ -146,11 +146,11 @@ public class RoSi2Element {
      */
     public List<RoSi2Element> findElements(final Collection<String> names) {
         final List<RoSi2Element> foundElems = new LinkedList<RoSi2Element>();
-        
-        if(names.isEmpty()) {
+
+        if (names.isEmpty()) {
             return foundElems;
         }
-        
+
         final Set<String> searchedNames = new HashSet<String>(names);
         final LinkedList<RoSi2Element> elems = new LinkedList<RoSi2Element>(children);
 
@@ -159,11 +159,11 @@ public class RoSi2Element {
             if (cur.name != null && searchedNames.contains(cur.name)) {
                 foundElems.add(cur);
                 searchedNames.remove(cur.name);
-                if(searchedNames.isEmpty()) {
+                if (searchedNames.isEmpty()) {
                     return foundElems;
                 }
             }
-            
+
             elems.addAll(cur.children);
         }
 
@@ -192,7 +192,9 @@ public class RoSi2Element {
         if (vars != null) {
             varBindings = vars;
             for (final Map.Entry<String, String> entry : this.vars.entrySet()) {
-                varBindings.putIfAbsent(entry.getKey(), entry.getValue());
+                if (!varBindings.containsKey(entry.getKey())) {
+                    varBindings.put(entry.getKey(), entry.getValue());
+                }
             }
         } else {
             varBindings = new HashMap<String, String>(this.vars);
@@ -1635,7 +1637,10 @@ public class RoSi2Element {
                     } else if (inputFileStack.getFirst().simulationTagPassed) {
                         if (tag.equals("Set")) {
                             // Set variable binding
-                            parentStack.getFirst().vars.putIfAbsent(getXmlAttribute(e, "name", true), getXmlAttribute(e, "value", true));
+                            final String name = getXmlAttribute(e, "name", true);
+                            if (!parentStack.getFirst().vars.containsKey(name)) {
+                                parentStack.getFirst().vars.put(name, getXmlAttribute(e, "value", true));
+                            }
                         } else {
                             // Create and add element
                             final String name = getXmlAttribute(e, "name", false);

@@ -3,6 +3,7 @@ package teamcomm.data;
 import data.GameControlData;
 import data.SPLStandardMessage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -147,7 +148,7 @@ public class RobotData {
 
             for (int t = 0; t < 2; t++) {
                 if (r.getTeamNumber() == teamNumbers[t]) {
-                    robots[t].sort(new Comparator<RobotState>() {
+                    Collections.sort(robots[t], new Comparator<RobotState>() {
                         @Override
                         public int compare(RobotState o1, RobotState o2) {
                             if (o1.getLastMessage() == null) {
