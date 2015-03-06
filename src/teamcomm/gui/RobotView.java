@@ -96,6 +96,27 @@ public class RobotView extends JFrame implements Runnable {
         // Add menu bar
         final JMenuBar mb = new JMenuBar();
 
+        // File menu
+        final JMenu fileMenu = new JMenu("File");
+        JMenuItem i = new JMenuItem("Reset");
+        i.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RobotData.getInstance().reset();
+            }
+        });
+        i.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+        fileMenu.add(i);
+        i = new JMenuItem("Exit");
+        i.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Main.shutdown();
+            }
+        });
+        fileMenu.add(i);
+        mb.add(fileMenu);
+
         // Log menu
         final JMenu logMenu = new JMenu("Log");
         final JMenuItem replayOption = new JMenuItem("Replay log file");
@@ -240,6 +261,13 @@ public class RobotView extends JFrame implements Runnable {
                 }
 
                 i++;
+            }
+
+            if (team < 2 && i == 0) {
+                teamPanels[team].removeAll();
+                teamPanels[team].add(teamLogos[team]);
+                robotPanels.clear();
+                robotDetailPanels.clear();
             }
         }
     }
