@@ -17,11 +17,13 @@ public class BallPerPlayer extends PerPlayer {
 
     private static final float ROBOT_HEAD_Z = 0.5f;
     private static final float BALL_RADIUS = 0.0325f;
+    private static final float MIN_CYLINDER_RADIUS = 0.01f;
+    private static final int MAX_BALLAGE = 5000;
 
     @Override
     public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final boolean inverted) {
         final SPLStandardMessage msg = player.getLastMessage();
-        if (msg != null && msg.ballAge > -1 && msg.ballAge < 5000) {
+        if (msg != null && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE) {
             final float[] ball = {msg.ball[0] / 1000.f, msg.ball[1] / 1000.f};
 
             gl.glPushMatrix();
@@ -57,7 +59,18 @@ public class BallPerPlayer extends PerPlayer {
             gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
             final GLU glu = GLU.createGLU(gl);
             final GLUquadric q = glu.gluNewQuadric();
-            glu.gluCylinder(q, BALL_RADIUS, BALL_RADIUS, Math.sqrt(ball[0] * ball[0] + ball[1] * ball[1] + (BALL_RADIUS - ROBOT_HEAD_Z) * (BALL_RADIUS - ROBOT_HEAD_Z)), 16, 1);
+            final double cylinderLength = Math.sqrt(ball[0] * ball[0] + ball[1] * ball[1] + (BALL_RADIUS - ROBOT_HEAD_Z) * (BALL_RADIUS - ROBOT_HEAD_Z));
+            final double relativeAge = (double) msg.ballAge / (double) MAX_BALLAGE;
+            final double thinpart = cylinderLength * relativeAge;
+            final double thickpart = cylinderLength - thinpart;
+            if (thickpart < 0.05) {
+                glu.gluCylinder(q, MIN_CYLINDER_RADIUS, MIN_CYLINDER_RADIUS, cylinderLength, 16, 1);
+            } else {
+                glu.gluCylinder(q, BALL_RADIUS, BALL_RADIUS, thickpart - 0.05, 16, 1);
+                gl.glTranslated(0, 0, thickpart - 0.05);
+                glu.gluCylinder(q, BALL_RADIUS, MIN_CYLINDER_RADIUS, 0.05, 16, 1);
+                glu.gluCylinder(q, MIN_CYLINDER_RADIUS, MIN_CYLINDER_RADIUS, thinpart, 16, 1);
+            }
             glu.gluDeleteQuadric(q);
             gl.glDisable(GL2.GL_BLEND);
 
