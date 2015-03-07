@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -98,6 +100,7 @@ public class RobotView extends JFrame implements Runnable {
 
         // File menu
         final JMenu fileMenu = new JMenu("File");
+        final JFrame frame = this;
         JMenuItem i = new JMenuItem("Reset");
         i.addActionListener(new ActionListener() {
             @Override
@@ -112,6 +115,7 @@ public class RobotView extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Main.shutdown();
+                frame.setVisible(false);
             }
         });
         fileMenu.add(i);
@@ -122,7 +126,6 @@ public class RobotView extends JFrame implements Runnable {
         final JMenuItem replayOption = new JMenuItem("Replay log file");
         final JMenuItem pauseOption = new JMenuItem("Pause replaying");
         final JMenuItem stopOption = new JMenuItem("Stop replaying");
-        final JFrame frame = this;
         replayOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -218,6 +221,8 @@ public class RobotView extends JFrame implements Runnable {
     private void updateView() {
         final int[] teamNumbers = RobotData.getInstance().getTeamNumbers();
 
+        final Set<String> robotAddresses = new LinkedHashSet<String>(robotPanels.keySet());
+
         for (int team = 0; team < 3; team++) {
             final Iterator<RobotState> robots;
             if (team < 2) {
@@ -234,6 +239,8 @@ public class RobotView extends JFrame implements Runnable {
             int i = 0;
             while (robots.hasNext()) {
                 final RobotState robot = robots.next();
+
+                robotAddresses.remove(robot.getAddress());
 
                 JPanel panel = robotPanels.get(robot.getAddress());
                 if (panel == null) {
@@ -262,12 +269,15 @@ public class RobotView extends JFrame implements Runnable {
 
                 i++;
             }
+        }
 
-            if (team < 2 && i == 0) {
-                teamPanels[team].removeAll();
-                teamPanels[team].add(teamLogos[team]);
-                robotPanels.clear();
-                robotDetailPanels.clear();
+        // Remove unused JPanels
+        for (final String addr : robotAddresses) {
+            robotDetailPanels.remove(addr).dispose();
+
+            final JPanel p = robotPanels.remove(addr);
+            for (int i = 0; i < 3; i++) {
+                teamPanels[i].remove(p);
             }
         }
     }
