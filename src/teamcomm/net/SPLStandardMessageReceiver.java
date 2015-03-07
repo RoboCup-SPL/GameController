@@ -139,7 +139,7 @@ public class SPLStandardMessageReceiver extends Thread {
                 RobotData.getInstance().reset();
 
                 final NetPackage pFirst = (NetPackage) replayLog.readObject();
-                pausedOffset += pFirst.timestamp;
+                pausedOffset -= pFirst.timestamp;
                 queue.add(pFirst);
 
                 while (!isInterrupted()) {
@@ -158,7 +158,7 @@ public class SPLStandardMessageReceiver extends Thread {
                             }
                         }
 
-                        final long diff = p.timestamp - (System.currentTimeMillis() - (startTimestamp - pausedOffset));
+                        final long diff = p.timestamp - (System.currentTimeMillis() - (startTimestamp + pausedOffset));
                         if (diff <= 0) {
                             break;
                         }
