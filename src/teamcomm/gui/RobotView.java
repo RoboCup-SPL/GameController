@@ -270,10 +270,10 @@ public class RobotView extends JFrame implements Runnable {
                 i++;
             }
         }
-
+        
         // Remove unused JPanels
         for (final String addr : robotAddresses) {
-            robotDetailPanels.remove(addr).dispose();
+            robotDetailPanels.remove(addr);
 
             final JPanel p = robotPanels.remove(addr);
             for (int i = 0; i < 3; i++) {

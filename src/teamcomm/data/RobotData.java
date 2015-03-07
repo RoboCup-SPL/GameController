@@ -45,9 +45,9 @@ public class RobotData {
         try {
             teamNumbers[0] = 0;
             teamNumbers[1] = 0;
-            robots[0] = new ArrayList<RobotState>(5);
-            robots[1] = new ArrayList<RobotState>(5);
-            robots[2] = new LinkedList<RobotState>();
+            robots[0].clear();
+            robots[1].clear();
+            robots[2].clear();
             robotsByAddress.clear();
         } finally {
             rwl.writeLock().unlock();
