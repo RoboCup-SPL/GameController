@@ -57,12 +57,16 @@ public class SPLStandardMessageReceiver extends Thread {
             socket = new MulticastSocket(null);
             socket.setReuseAddress(true);
             socket.bind(new InetSocketAddress(getTeamport(team)));
-
-            // Join multicast group (for compatibility with SimRobot)
-            final byte[] addr = localhost.getAddress();
-            addr[0] = (byte) 239;
-            final InetAddress address = InetAddress.getByAddress(addr);
-            socket.joinGroup(address);
+            
+            try {
+	            // Join multicast group (for compatibility with SimRobot)
+	            final byte[] addr = localhost.getAddress();
+	            addr[0] = (byte) 239;
+	            final InetAddress address = InetAddress.getByAddress(addr);
+	            socket.joinGroup(address);
+            } catch (SocketException ex) {
+            	// Ignore, because this is only for testing and does not work everywhere
+            }
         }
 
         @Override
