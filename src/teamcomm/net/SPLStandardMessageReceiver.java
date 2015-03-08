@@ -19,14 +19,23 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import teamcomm.data.RobotData;
+import teamcomm.data.messages.AdvancedMessage;
+import teamcomm.data.messages.BHumanMessage;
+import teamcomm.data.messages.Team;
 
 /**
  *
  * @author Felix Thielke
  */
 public class SPLStandardMessageReceiver extends Thread {
+
+    private static final Class[] MESSAGES = {
+        BHumanMessage.class
+    };
 
     private static class NetPackage implements Serializable {
 
@@ -57,15 +66,15 @@ public class SPLStandardMessageReceiver extends Thread {
             socket = new MulticastSocket(null);
             socket.setReuseAddress(true);
             socket.bind(new InetSocketAddress(getTeamport(team)));
-            
+
             try {
-	            // Join multicast group (for compatibility with SimRobot)
-	            final byte[] addr = localhost.getAddress();
-	            addr[0] = (byte) 239;
-	            final InetAddress address = InetAddress.getByAddress(addr);
-	            socket.joinGroup(address);
+                // Join multicast group (for compatibility with SimRobot)
+                final byte[] addr = localhost.getAddress();
+                addr[0] = (byte) 239;
+                final InetAddress address = InetAddress.getByAddress(addr);
+                socket.joinGroup(address);
             } catch (SocketException ex) {
-            	// Ignore, because this is only for testing and does not work everywhere
+                // Ignore, because this is only for testing and does not work everywhere
             }
         }
 
@@ -201,6 +210,7 @@ public class SPLStandardMessageReceiver extends Thread {
     private final ReceiverThread[] receivers = new ReceiverThread[MAX_TEAMNUMBER];
     private final LinkedBlockingQueue<NetPackage> queue = new LinkedBlockingQueue<NetPackage>();
     private final ObjectOutputStream logger;
+    private final Map<Integer, Class<? extends AdvancedMessage>> messageClasses = new HashMap<Integer, Class<? extends AdvancedMessage>>();
 
     private LogReplayThread logReplayThread;
 
@@ -223,6 +233,20 @@ public class SPLStandardMessageReceiver extends Thread {
             addr = InetAddress.getByName("127.0.0.1");
         }
         this.localhost = addr;
+
+        // Determine message classes per team
+        for (Class<?> c : MESSAGES) {
+            if (AdvancedMessage.class.isAssignableFrom(c)) {
+                final Team annotation = c.getAnnotation(Team.class);
+                if (annotation != null) {
+                    for (final int t : annotation.value()) {
+                        if (!messageClasses.containsKey(t)) {
+                            messageClasses.put(t, (Class<? extends AdvancedMessage>) c);
+                        }
+                    }
+                }
+            }
+        }
 
         // Create receiver threads
         for (int i = 0; i < MAX_TEAMNUMBER; i++) {
@@ -277,7 +301,8 @@ public class SPLStandardMessageReceiver extends Thread {
             // Handle received packages
             while (!isInterrupted()) {
                 final NetPackage p = queue.take();
-                final SPLStandardMessage message = new SPLStandardMessage();
+                final SPLStandardMessage message;
+                final Class<? extends AdvancedMessage> c = messageClasses.get(p.team);
 
                 if (logger != null) {
                     try {
@@ -287,7 +312,25 @@ public class SPLStandardMessageReceiver extends Thread {
                     }
                 }
 
-                RobotData.getInstance().receiveMessage(p.host, p.team, message.fromByteArray(ByteBuffer.wrap(p.message)) ? message : null);
+                try {
+                    final boolean valid;
+                    if (c == null) {
+                        message = new SPLStandardMessage();
+                        valid = message.fromByteArray(ByteBuffer.wrap(p.message));
+                    } else {
+                        message = c.newInstance();
+                        valid = message.fromByteArray(ByteBuffer.wrap(p.message));
+                        if (valid) {
+                            ((AdvancedMessage) message).init();
+                        }
+                    }
+
+                    RobotData.getInstance().receiveMessage(p.host, p.team, valid ? message : null);
+                } catch (InstantiationException ex) {
+                    Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
+                } catch (IllegalAccessException ex) {
+                    Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
+                }
             }
         } catch (InterruptedException ex) {
         } finally {

@@ -66,7 +66,7 @@ public class RobotView extends JFrame implements Runnable {
     private final JMenuItem[] logMenuItems;
 
     public RobotView() {
-        super("Robots");
+        super("TeamCommunicationMonitor");
 
         // Setup window
         setLocationByPlatform(true);
