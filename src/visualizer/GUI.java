@@ -15,10 +15,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
+import coloring.AwtColorConverter;
+import coloring.ColorConverter;
+import coloring.InternalColor;
 import common.Log;
 import data.GameControlData;
 import data.Rules;
@@ -68,6 +72,8 @@ public class GUI extends JFrame
     private Font standardSmallFont;
     private Font scoreFont;
     private Font coachMessageFont;
+    /** Converter to get the {@link InternalColor} to a Awt {@link Color}. */
+    private ColorConverter<Color> converter = new AwtColorConverter();
 
 
     /**
@@ -260,7 +266,7 @@ public class GUI extends JFrame
             Teams.getIcon(data.team[1].teamNumber)};
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         for (int i=0; i<2; i++) {
-            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor].getColor(converter));
             float scaleFactorX = 1f;
             float scaleFactorY = 1f;
             if (icons[i].getWidth() * 1.2f > icons[i].getHeight()) {
@@ -293,7 +299,7 @@ public class GUI extends JFrame
         g.setColor(Color.BLACK);
         drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
         for (int i=0; i<2; i++) {
-            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor].getColor(converter));
             drawCenteredString(
                     g,
                     data.team[i].score+"",
@@ -417,7 +423,7 @@ public class GUI extends JFrame
         int y = getSizeToHeight(0.86);
         int size = getSizeToWidth(0.02);
         for (int i=0; i<2; i++) {
-            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor].getColor(converter));
             for (int j=0; j<data.team[i].penaltyShot; j++) {
                 if ((data.team[i].singleShots & (1<<j)) != 0) {
                     g.fillOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
@@ -509,7 +515,7 @@ public class GUI extends JFrame
             }
 
             //Draw the coach label and coach message box
-            g2.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            g2.setColor(Rules.league.teamColor[data.team[i].teamColor].getColor(converter));
             if (i == 1) {
                 g2.drawString(row1, getSizeToWidth(0.01), getSizeToHeight(0.92));
                 g2.drawString(row2, getSizeToWidth(0.01), getSizeToHeight(0.98));
