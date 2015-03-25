@@ -1,6 +1,6 @@
 package data;
 
-import java.awt.Color;
+import coloring.InternalColor;
 
 /**
  *
@@ -20,8 +20,8 @@ public class SPL extends Rules
         teamSize = 6; // 5 players + 1 sub
         /** How many robots of each team may play at one time. */
         robotsPlaying = 5;
-        /** The Java Colors the left and the right team starts with. */
-        teamColor = new Color[] {Color.BLUE, Color.RED};
+        /** The Colors the left and the right team starts with. */
+        teamColor = new InternalColor[] {InternalColor.BLUE, InternalColor.RED};
         /** The name of the colors. */
         teamColorName = new String[] {"Blue", "Red"};
         /** If the colors change automatically. */

@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -21,6 +22,9 @@ import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 
+import coloring.AwtColorConverter;
+import coloring.ColorConverter;
+import coloring.InternalColor;
 import common.Log;
 import common.TotalScaleLayout;
 import controller.Clock;
@@ -246,6 +250,8 @@ public class GUI extends JFrame implements GCGUI
     private JPanel log;
     private JToggleButton[] undo;
     private JButton cancelUndo;
+    /** Converter to get the {@link InternalColor} to a Awt {@link Color}. */
+    private ColorConverter<Color> converter = new AwtColorConverter();
   
     
     /**
@@ -313,7 +319,7 @@ public class GUI extends JFrame implements GCGUI
         for (int i=0; i<2; i++) {
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
             name[i].setHorizontalAlignment(JLabel.CENTER);
-            name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
+            name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor].getColor(converter));
             goalInc[i] = new Button("+");
             goalDec[i] = new Button("-");
             kickOff[i] = new JRadioButton(KICKOFF);
@@ -885,7 +891,7 @@ public class GUI extends JFrame implements GCGUI
     private void updateColor(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
+            name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor].getColor(converter));
             side[i].setImage(backgroundSide[i][data.team[i].teamColor].getImage());
         }
     }

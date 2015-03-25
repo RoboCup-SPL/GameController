@@ -1,6 +1,6 @@
 package data;
 
-import java.awt.Color;
+import coloring.InternalColor;
 
 
 /**
@@ -29,8 +29,8 @@ public abstract class Rules
     public int teamSize;
     /** How many robots of each team may play at one time. */
     public int robotsPlaying;
-    /** The Java Colors the left and the right team starts with. */
-    public Color[] teamColor;
+    /** The Colors the left and the right team starts with. */
+    public InternalColor[] teamColor;
     /** The name of the colors. */
     public String[] teamColorName;
     /** If the colors change automatically. */
