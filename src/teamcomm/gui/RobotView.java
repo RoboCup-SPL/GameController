@@ -366,7 +366,7 @@ public class RobotView extends JFrame implements Runnable {
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        panel.add(new JLabel((robot.getLastMessage() == null ? "Unknown" : (robot.getLastMessage().teamColor == 0 ? "Blue" : "Red")) + " Team", JLabel.LEFT));
+        panel.add(new JLabel(robot.getLastMessage() == null ? "Unknown Team" : ("Team " + Teams.getNames(true)[robot.getLastMessage().teamNum]), JLabel.LEFT));
         panel.add(new JLabel("Player no: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().playerNum), JLabel.LEFT));
         panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
         panel.add(new JLabel("Per second: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
@@ -385,7 +385,7 @@ public class RobotView extends JFrame implements Runnable {
         panel.add(new JLabel("BallRel.Y: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ball[1])), JLabel.LEFT));
         panel.add(new JLabel("BallVel.X: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ballVel[0])), JLabel.LEFT));
         panel.add(new JLabel("BallVel.Y: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ballVel[1])), JLabel.LEFT));
-        panel.add(new JLabel("BallAge: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().ballAge), JLabel.LEFT));
+        panel.add(new JLabel("BallAge: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ballAge)) + "s", JLabel.LEFT));
         panel.add(new JLabel(" ", JLabel.LEFT));
         panel.add(new JLabel("Additional data: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().data.length + "B"), JLabel.LEFT));
 
@@ -401,7 +401,7 @@ public class RobotView extends JFrame implements Runnable {
 
         final JPanel panel = (JPanel) frame.getContentPane();
         final DecimalFormat df = new DecimalFormat("#.#####");
-        ((JLabel) panel.getComponent(0)).setText((robot.getLastMessage().teamColor == 0 ? "Blue" : "Red") + " Team");
+        ((JLabel) panel.getComponent(0)).setText("Team " + Teams.getNames(true)[robot.getLastMessage().teamNum]);
         ((JLabel) panel.getComponent(1)).setText("Player no: " + robot.getLastMessage().playerNum);
         ((JLabel) panel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
         ((JLabel) panel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));

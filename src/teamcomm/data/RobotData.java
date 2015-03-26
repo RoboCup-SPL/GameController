@@ -118,14 +118,21 @@ public class RobotData {
     public void receiveMessage(final String address, final int teamNumber, final SPLStandardMessage message) {
         rwl.writeLock().lock();
         try {
-            if (message != null && teamNumbers[message.teamColor] == 0) {
-                teamNumbers[message.teamColor] = teamNumber;
-                ListIterator<RobotState> it = robots[TEAM_OTHER].listIterator();
-                while (it.hasNext()) {
-                    final RobotState r = it.next();
-                    if (r.getTeamNumber() == teamNumber) {
-                        robots[message.teamColor].add(r);
-                        it.remove();
+            if (message != null) {
+                for(int i=0;i<2;i++) {
+                    if(teamNumbers[i] == 0) {
+                        teamNumbers[i] = teamNumber;
+                        ListIterator<RobotState> it = robots[TEAM_OTHER].listIterator();
+                        while (it.hasNext()) {
+                            final RobotState r = it.next();
+                            if (r.getTeamNumber() == teamNumber) {
+                                robots[i].add(r);
+                                it.remove();
+                            }
+                        }
+                        break;
+                    } else if(teamNumbers[i] == teamNumber) {
+                        break;
                     }
                 }
             }

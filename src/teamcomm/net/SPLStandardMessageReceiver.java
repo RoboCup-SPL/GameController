@@ -325,7 +325,7 @@ public class SPLStandardMessageReceiver extends Thread {
                         }
                     }
 
-                    RobotData.getInstance().receiveMessage(p.host, p.team, valid ? message : null);
+                    RobotData.getInstance().receiveMessage(p.host, valid ? message.teamNum : p.team, valid ? message : null);
                 } catch (InstantiationException ex) {
                     Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
                 } catch (IllegalAccessException ex) {

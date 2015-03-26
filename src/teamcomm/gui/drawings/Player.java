@@ -26,7 +26,7 @@ public class Player extends PerPlayer {
                 gl.glRotatef(90, 0, 1, 0);
             }
 
-            gl.glCallList(msg.teamColor == 0 ? modelLists.get("robotBlue") : modelLists.get("robotRed"));
+            gl.glCallList(msg.teamNum >= 5 ? modelLists.get("robotBlue") : modelLists.get("robotRed"));
 
             gl.glPopMatrix();
         }
