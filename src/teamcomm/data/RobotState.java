@@ -2,6 +2,7 @@ package teamcomm.data;
 
 import data.SPLStandardMessage;
 import java.util.LinkedList;
+import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
  *
@@ -42,7 +43,13 @@ public class RobotState {
     }
 
     public int getRecentMessageCount() {
-        final long cut = System.currentTimeMillis() - 1000;
+        final long cut;
+        if(SPLStandardMessageReceiver.getInstance().isReplaying() && SPLStandardMessageReceiver.getInstance().isReplayPaused()) {
+            cut = 0;
+        } else {
+            cut = System.currentTimeMillis() - 1000;
+        }
+        
         Long val = recentMessageTimestamps.peekLast();
         while (val != null && val < cut) {
             recentMessageTimestamps.pollLast();
@@ -62,7 +69,7 @@ public class RobotState {
         getRecentMessageCount();
 
         long sum = 0;
-        for (int mps : messagesPerSecond) {
+        for (final int mps : messagesPerSecond) {
             sum += mps;
         }
 
@@ -83,6 +90,10 @@ public class RobotState {
 
     public int getTeamNumber() {
         return teamNumber;
+    }
+    
+    public boolean isInactive() {
+        return recentMessageTimestamps.isEmpty();
     }
 
 }
