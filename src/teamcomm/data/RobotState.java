@@ -44,12 +44,12 @@ public class RobotState {
 
     public int getRecentMessageCount() {
         final long cut;
-        if(SPLStandardMessageReceiver.getInstance().isReplaying() && SPLStandardMessageReceiver.getInstance().isReplayPaused()) {
+        if (SPLStandardMessageReceiver.getInstance().isReplaying() && SPLStandardMessageReceiver.getInstance().isReplayPaused()) {
             cut = 0;
         } else {
             cut = System.currentTimeMillis() - 1000;
         }
-        
+
         Long val = recentMessageTimestamps.peekLast();
         while (val != null && val < cut) {
             recentMessageTimestamps.pollLast();
@@ -85,13 +85,13 @@ public class RobotState {
     }
 
     public double getIllegalMessageRatio() {
-        return illegalMessageCount / (illegalMessageCount + messageCount);
+        return (double) illegalMessageCount / (double) messageCount;
     }
 
     public int getTeamNumber() {
         return teamNumber;
     }
-    
+
     public boolean isInactive() {
         return recentMessageTimestamps.isEmpty();
     }

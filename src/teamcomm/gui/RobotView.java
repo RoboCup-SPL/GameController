@@ -53,7 +53,7 @@ public class RobotView extends JFrame implements Runnable {
 
     private static final long serialVersionUID = 6549981924840180076L;
 
-    private static final int ROBOTPANEL_W = 150;
+    private static final int ROBOTPANEL_W = 175;
     private static final int ROBOTPANEL_H = 105;
 
     private static final Map<Integer, ImageIcon> logos = new HashMap<Integer, ImageIcon>();
@@ -205,7 +205,7 @@ public class RobotView extends JFrame implements Runnable {
                     logMenuItems[2].setEnabled(false);
                 }
 
-                //RobotData.getInstance().removeInactiveRobots();
+                RobotData.getInstance().removeInactiveRobots();
                 RobotData.getInstance().lockForReading();
                 updateView();
                 RobotData.getInstance().unlockForReading();
@@ -335,7 +335,7 @@ public class RobotView extends JFrame implements Runnable {
         panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
         panel.add(new JLabel("Current mps: " + df.format(robot.getRecentMessageCount()), JLabel.LEFT));
         panel.add(new JLabel("Average mps: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
-        panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + (int) (robot.getIllegalMessageRatio() * 100) + "%)", JLabel.LEFT));
+        panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)", JLabel.LEFT));
 
         return panel;
     }
@@ -350,7 +350,7 @@ public class RobotView extends JFrame implements Runnable {
         ((JLabel) panel.getComponent(1)).setText("Messages: " + robot.getMessageCount());
         ((JLabel) panel.getComponent(2)).setText("Current mps: " + df.format(robot.getRecentMessageCount()));
         ((JLabel) panel.getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
-        ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + (int) (robot.getIllegalMessageRatio() * 100) + "%)");
+        ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
     }
 
     private JFrame createRobotDetailPanel(final RobotState robot, final JPanel anchor) {
@@ -376,7 +376,7 @@ public class RobotView extends JFrame implements Runnable {
         panel.add(new JLabel("Player no: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().playerNum), JLabel.LEFT));
         panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
         panel.add(new JLabel("Per second: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
-        panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + (int) (robot.getIllegalMessageRatio() * 100) + "%)", JLabel.LEFT));
+        panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)", JLabel.LEFT));
         panel.add(new JLabel(" ", JLabel.LEFT));
         panel.add(new JLabel(robot.getLastMessage() == null ? "?" : (robot.getLastMessage().fallen ? "fallen" : "upright"), JLabel.LEFT));
         panel.add(new JLabel("Activity: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().intention.toString()), JLabel.LEFT));
@@ -411,7 +411,7 @@ public class RobotView extends JFrame implements Runnable {
         ((JLabel) panel.getComponent(1)).setText("Player no: " + robot.getLastMessage().playerNum);
         ((JLabel) panel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
         ((JLabel) panel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
-        ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + (int) (robot.getIllegalMessageRatio() * 100) + "%)");
+        ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
         ((JLabel) panel.getComponent(6)).setText(robot.getLastMessage().fallen ? "fallen" : "upright");
         ((JLabel) panel.getComponent(7)).setText("Activity: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().intention.toString()));
         ((JLabel) panel.getComponent(8)).setText("Pos.X: " + df.format(robot.getLastMessage().pose[0]));
@@ -427,6 +427,8 @@ public class RobotView extends JFrame implements Runnable {
         ((JLabel) panel.getComponent(18)).setText("BallVel.Y: " + df.format(robot.getLastMessage().ballVel[1]));
         ((JLabel) panel.getComponent(19)).setText("BallAge: " + robot.getLastMessage().ballAge);
         ((JLabel) panel.getComponent(21)).setText("Additional data: " + robot.getLastMessage().data.length + "B");
+        
+        frame.pack();
     }
 
     private static String getTeamName(final SPLStandardMessage msg) {

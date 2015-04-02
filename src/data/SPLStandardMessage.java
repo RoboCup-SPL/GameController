@@ -170,7 +170,6 @@ public class SPLStandardMessage implements Serializable {
                 } else {
                     playerNum = buffer.get();
                     if (playerNum < 1 || playerNum > 5) {
-                System.out.println("test1");
                         return false;
                     }
 
@@ -184,7 +183,6 @@ public class SPLStandardMessage implements Serializable {
                             fallen = true;
                             break;
                         default:
-                System.out.println("test2");
                             return false;
                     }
 
@@ -215,7 +213,6 @@ public class SPLStandardMessage implements Serializable {
                     for (int i = 0; i < SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; i++) {
                         final int s = (int) buffer.get();
                         if (s >= Suggestion.values().length) {
-                System.out.println("test3");
                             return false;
                         }
                         this.suggestion[i] = Suggestion.values()[s];
@@ -223,7 +220,6 @@ public class SPLStandardMessage implements Serializable {
 
                     int intention = (int) buffer.get();
                     if (intention >= Intention.values().length) {
-                System.out.println("test4");
                         return false;
                     }
                     this.intention = Intention.values()[intention];
@@ -233,18 +229,15 @@ public class SPLStandardMessage implements Serializable {
 
                     currentPositionConfidence = buffer.get();
                     if (currentPositionConfidence < 0 || currentPositionConfidence > 100) {
-                System.out.println("test5");
                         return false;
                     }
                     currentSideConfidence = buffer.get();
                     if (currentSideConfidence < 0 || currentSideConfidence > 100) {
-                System.out.println(currentSideConfidence);
                         return false;
                     }
 
                     short numOfDataBytes = buffer.getShort();
                     if (numOfDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
-                System.out.println("test7");
                         return false;
                     }
                     data = new byte[numOfDataBytes];

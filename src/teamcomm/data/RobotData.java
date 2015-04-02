@@ -185,9 +185,11 @@ public class RobotData {
         rwl.writeLock().lock();
         try {
             for (int i = 0; i < 3; i++) {
-                for (final RobotState r : robots[i]) {
+                final ListIterator<RobotState> iter = robots[i].listIterator();
+                while (iter.hasNext()) {
+                    final RobotState r = iter.next();
                     if (r.getMessageCount() > 10 && r.isInactive()) {
-                        robots[i].remove(r);
+                        iter.remove();
                     }
                 }
             }
