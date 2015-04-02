@@ -1,5 +1,6 @@
 package teamcomm.gui;
 
+import data.SPLStandardMessage;
 import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -289,7 +290,11 @@ public class RobotView extends JFrame implements Runnable {
             return icon;
         }
 
-        icon = new ImageIcon(Teams.getIcon(team));
+        try {
+            icon = new ImageIcon(Teams.getIcon(team));
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
         float scaleFactor;
         if (icon.getImage().getWidth(null) > icon.getImage().getHeight(null)) {
             scaleFactor = (float) (ROBOTPANEL_W) / icon.getImage().getWidth(null);
@@ -367,7 +372,7 @@ public class RobotView extends JFrame implements Runnable {
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        panel.add(new JLabel(robot.getLastMessage() == null ? "Unknown Team" : ("Team " + Teams.getNames(true)[robot.getLastMessage().teamNum]), JLabel.LEFT));
+        panel.add(new JLabel(getTeamName(robot.getLastMessage()), JLabel.LEFT));
         panel.add(new JLabel("Player no: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().playerNum), JLabel.LEFT));
         panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
         panel.add(new JLabel("Per second: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
@@ -402,7 +407,7 @@ public class RobotView extends JFrame implements Runnable {
 
         final JPanel panel = (JPanel) frame.getContentPane();
         final DecimalFormat df = new DecimalFormat("#.#####");
-        ((JLabel) panel.getComponent(0)).setText("Team " + Teams.getNames(true)[robot.getLastMessage().teamNum]);
+        ((JLabel) panel.getComponent(0)).setText(getTeamName(robot.getLastMessage()));
         ((JLabel) panel.getComponent(1)).setText("Player no: " + robot.getLastMessage().playerNum);
         ((JLabel) panel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
         ((JLabel) panel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
@@ -422,6 +427,15 @@ public class RobotView extends JFrame implements Runnable {
         ((JLabel) panel.getComponent(18)).setText("BallVel.Y: " + df.format(robot.getLastMessage().ballVel[1]));
         ((JLabel) panel.getComponent(19)).setText("BallAge: " + robot.getLastMessage().ballAge);
         ((JLabel) panel.getComponent(21)).setText("Additional data: " + robot.getLastMessage().data.length + "B");
+    }
+
+    private static String getTeamName(final SPLStandardMessage msg) {
+        final String[] teamNames = Teams.getNames(true);
+        if (msg != null && msg.teamNum < teamNames.length) {
+            return ("Team " + teamNames[msg.teamNum]);
+        } else {
+            return "Unknown Team";
+        }
     }
 
 }
