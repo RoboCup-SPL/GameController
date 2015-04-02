@@ -18,7 +18,7 @@ public class BallPerPlayer extends PerPlayer {
     private static final float ROBOT_HEAD_Z = 0.5f;
     private static final float BALL_RADIUS = 0.0325f;
     private static final float MIN_CYLINDER_RADIUS = 0.01f;
-    private static final int MAX_BALLAGE = 5000;
+    private static final float MAX_BALLAGE = 5.0f;
 
     @Override
     public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final boolean inverted) {
