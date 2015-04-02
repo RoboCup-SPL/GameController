@@ -205,7 +205,7 @@ public class RobotView extends JFrame implements Runnable {
                     logMenuItems[2].setEnabled(false);
                 }
 
-                RobotData.getInstance().removeInactiveRobots();
+                //RobotData.getInstance().removeInactiveRobots();
                 RobotData.getInstance().lockForReading();
                 updateView();
                 RobotData.getInstance().unlockForReading();
