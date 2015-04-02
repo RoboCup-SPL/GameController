@@ -204,6 +204,7 @@ public class RobotView extends JFrame implements Runnable {
                     logMenuItems[2].setEnabled(false);
                 }
 
+                RobotData.getInstance().removeInactiveRobots();
                 RobotData.getInstance().lockForReading();
                 updateView();
                 RobotData.getInstance().unlockForReading();
@@ -270,7 +271,7 @@ public class RobotView extends JFrame implements Runnable {
                 i++;
             }
         }
-        
+
         // Remove unused JPanels
         for (final String addr : robotAddresses) {
             robotDetailPanels.remove(addr);

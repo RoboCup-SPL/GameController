@@ -119,8 +119,8 @@ public class RobotData {
         rwl.writeLock().lock();
         try {
             if (message != null) {
-                for(int i=0;i<2;i++) {
-                    if(teamNumbers[i] == 0) {
+                for (int i = 0; i < 2; i++) {
+                    if (teamNumbers[i] == 0) {
                         teamNumbers[i] = teamNumber;
                         ListIterator<RobotState> it = robots[TEAM_OTHER].listIterator();
                         while (it.hasNext()) {
@@ -131,7 +131,7 @@ public class RobotData {
                             }
                         }
                         break;
-                    } else if(teamNumbers[i] == teamNumber) {
+                    } else if (teamNumbers[i] == teamNumber) {
                         break;
                     }
                 }
@@ -178,6 +178,21 @@ public class RobotData {
 
         synchronized (this) {
             notifyAll();
+        }
+    }
+
+    public void removeInactiveRobots() {
+        rwl.writeLock().lock();
+        try {
+            for (int i = 0; i < 3; i++) {
+                for (final RobotState r : robots[i]) {
+                    if (r.getMessageCount() > 10 && r.isInactive()) {
+                        robots[i].remove(r);
+                    }
+                }
+            }
+        } finally {
+            rwl.writeLock().unlock();
         }
     }
 
