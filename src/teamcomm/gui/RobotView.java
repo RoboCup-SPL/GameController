@@ -222,7 +222,6 @@ public class RobotView extends JFrame implements Runnable {
 
     private void updateView() {
         final int[] teamNumbers = RobotData.getInstance().getTeamNumbers();
-
         final Set<String> robotAddresses = new LinkedHashSet<String>(robotPanels.keySet());
 
         for (int team = 0; team < 3; team++) {
@@ -281,6 +280,9 @@ public class RobotView extends JFrame implements Runnable {
             for (int i = 0; i < 3; i++) {
                 teamPanels[i].remove(p);
             }
+        }
+        if(!robotAddresses.isEmpty()) {
+            repaint();
         }
     }
 
@@ -427,8 +429,6 @@ public class RobotView extends JFrame implements Runnable {
         ((JLabel) panel.getComponent(18)).setText("BallVel.Y: " + df.format(robot.getLastMessage().ballVel[1]));
         ((JLabel) panel.getComponent(19)).setText("BallAge: " + robot.getLastMessage().ballAge);
         ((JLabel) panel.getComponent(21)).setText("Additional data: " + robot.getLastMessage().data.length + "B");
-        
-        frame.pack();
     }
 
     private static String getTeamName(final SPLStandardMessage msg) {

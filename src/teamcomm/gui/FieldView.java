@@ -33,6 +33,7 @@ import teamcomm.gui.drawings.Models;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Player;
 import teamcomm.gui.drawings.PlayerNumber;
+import teamcomm.gui.drawings.PlayerTarget;
 import teamcomm.gui.drawings.Static;
 
 /**
@@ -53,6 +54,7 @@ public class FieldView implements GLEventListener {
      */
     private static final Class[] DRAWINGS = {
         Player.class,
+        PlayerTarget.class,
         Field.class,
         BallPerPlayer.class,
         PlayerNumber.class
