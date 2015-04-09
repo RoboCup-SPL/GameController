@@ -118,7 +118,9 @@ struct RoboCupGameControlReturnData
   // constructor
   RoboCupGameControlReturnData() : version(GAMECONTROLLER_RETURN_STRUCT_VERSION)
   {
-    std::memcpy(header, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(header));
+    const char* init = GAMECONTROLLER_RETURN_STRUCT_HEADER;
+    for(unsigned int i = 0; i < sizeof(header); ++i)
+      header[i] = init[i];
   }
 #endif
 };

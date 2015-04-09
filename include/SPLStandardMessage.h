@@ -132,9 +132,9 @@ struct SPLStandardMessage
     currentSideConfidence(-1),
     numOfDataBytes(0)
   {
-    const char* c = SPL_STANDARD_MESSAGE_STRUCT_HEADER;
+    const char* init = SPL_STANDARD_MESSAGE_STRUCT_HEADER;
     for(unsigned int i = 0; i < sizeof(header); ++i)
-      header[i] = c[i];
+      header[i] = init[i];
     pose[0] = 0.f;
     pose[1] = 0.f;
     pose[2] = 0.f;
