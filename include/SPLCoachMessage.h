@@ -11,7 +11,7 @@
 #define SPL_COACH_MESSAGE_STRUCT_VERSION 3
 #define SPL_COACH_MESSAGE_SIZE           81
 
-struct SPLCoachMessage 
+struct SPLCoachMessage
 {
   char header[4];        // "SPLC"
   uint8_t version;       // SPL_COACH_MESSAGE_STRUCT_VERSION

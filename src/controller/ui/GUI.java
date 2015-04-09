@@ -136,7 +136,6 @@ public class GUI extends JFrame implements GCGUI
     private static final String TIMEOUT = "Timeout";
     private static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
     private static final String STUCK = "Global <br/> Game <br/> Stuck";
-    private static final String KICKOFF_GOAL = "Kickoff Goal";
     private static final String OUT = "Out";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
@@ -157,11 +156,11 @@ public class GUI extends JFrame implements GCGUI
     private static final String PENALTY_SHOOT_SHORT = "Penalty";
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
-    private static final String PEN_FALLEN = "Fallen Robot";
-    private static final String PEN_INACTIVE = "Inactive / Local Game Stuck";
+    private static final String PEN_MOTION_IN_SET = "Motion in Set";
+    private static final String PEN_INACTIVE = "Fallen / Inactive / Local Game Stuck";
     private static final String PEN_DEFENDER = "Illegal Defender";
-    private static final String PEN_HOLDING = "Ball Holding";
-    private static final String PEN_HANDS = "Hands";
+    private static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
+    private static final String PEN_KICK_OFF_GOAL = "Kickoff Goal";
     private static final String PEN_COACH_MOTION = "Coach Motion";
     private static final String PEN_PICKUP = "Pick-Up";
     private static final String PEN_MANIPULATION = "Ball Manipulation";
@@ -450,11 +449,11 @@ public class GUI extends JFrame implements GCGUI
             
             pen[0] = new ToggleButton(PEN_PUSHING);
             pen[1] = new ToggleButton(PEN_LEAVING);
-            pen[2] = new ToggleButton(PEN_FALLEN);
-            pen[3] = new ToggleButton(PEN_INACTIVE);
-            pen[4] = new ToggleButton(PEN_DEFENDER);
-            pen[5] = new ToggleButton(PEN_HOLDING);
-            pen[6] = new ToggleButton(PEN_HANDS);
+            pen[2] = new ToggleButton(PEN_INACTIVE);
+            pen[3] = new ToggleButton(PEN_DEFENDER);
+            pen[4] = new ToggleButton(PEN_MOTION_IN_SET);
+            pen[5] = new ToggleButton(PEN_KICK_OFF_GOAL);
+            pen[6] = new ToggleButton(PEN_BALL_CONTACT);
             pen[7] = new ToggleButton(PEN_PICKUP);
             pen[8] = new ToggleButton(Rules.league.dropInPlayerMode ? TEAMMATE_PUSHING : PEN_COACH_MOTION);
             pen[9] = new ToggleButton(PEN_SUBSTITUTE);
@@ -627,11 +626,11 @@ public class GUI extends JFrame implements GCGUI
         if (Rules.league instanceof SPL) {
             pen[0].addActionListener(ActionBoard.pushing);
             pen[1].addActionListener(ActionBoard.leaving);
-            pen[2].addActionListener(ActionBoard.fallen);
-            pen[3].addActionListener(ActionBoard.inactive);
-            pen[4].addActionListener(ActionBoard.defender);
-            pen[5].addActionListener(ActionBoard.holding);
-            pen[6].addActionListener(ActionBoard.hands);
+            pen[2].addActionListener(ActionBoard.inactive);
+            pen[3].addActionListener(ActionBoard.defender);
+            pen[4].addActionListener(ActionBoard.motionInSet);
+            pen[5].addActionListener(ActionBoard.kickOffGoal);
+            pen[6].addActionListener(ActionBoard.ballContact);
             pen[7].addActionListener(ActionBoard.pickUp);
             pen[8].addActionListener(Rules.league.dropInPlayerMode ? ActionBoard.teammatePushing : ActionBoard.coachMotion);
             pen[9].addActionListener(ActionBoard.substitute);
@@ -1137,14 +1136,14 @@ public class GUI extends JFrame implements GCGUI
     {
         pen[0].setEnabled(ActionBoard.pushing.isLegal(data));
         pen[1].setEnabled(ActionBoard.leaving.isLegal(data));
-        pen[2].setEnabled(ActionBoard.fallen.isLegal(data));
-        pen[3].setEnabled(ActionBoard.inactive.isLegal(data));
-        pen[3].setText("<html><center>"
+        pen[2].setEnabled(ActionBoard.inactive.isLegal(data));
+        pen[2].setText("<html><center>"
                 +(ActionBoard.inactive.isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")
                 +PEN_INACTIVE);
-        pen[4].setEnabled(ActionBoard.defender.isLegal(data));
-        pen[5].setEnabled(ActionBoard.holding.isLegal(data));
-        pen[6].setEnabled(ActionBoard.hands.isLegal(data));
+        pen[3].setEnabled(ActionBoard.defender.isLegal(data));
+        pen[4].setEnabled(ActionBoard.motionInSet.isLegal(data));
+        pen[5].setEnabled(ActionBoard.kickOffGoal.isLegal(data));
+        pen[6].setEnabled(ActionBoard.ballContact.isLegal(data));
         pen[7].setEnabled(ActionBoard.pickUp.isLegal(data));
         pen[8].setEnabled(Rules.league.dropInPlayerMode ? ActionBoard.teammatePushing.isLegal(data)
                 : ActionBoard.coachMotion.isLegal(data));
@@ -1153,11 +1152,11 @@ public class GUI extends JFrame implements GCGUI
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
         pen[0].setSelected(hightlightEvent == ActionBoard.pushing);
         pen[1].setSelected(hightlightEvent == ActionBoard.leaving);
-        pen[2].setSelected(hightlightEvent == ActionBoard.fallen);
-        pen[3].setSelected(hightlightEvent == ActionBoard.inactive);
-        pen[4].setSelected(hightlightEvent == ActionBoard.defender);
-        pen[5].setSelected(hightlightEvent == ActionBoard.holding);
-        pen[6].setSelected(hightlightEvent == ActionBoard.hands);
+        pen[2].setSelected(hightlightEvent == ActionBoard.inactive);
+        pen[3].setSelected(hightlightEvent == ActionBoard.defender);
+        pen[4].setSelected(hightlightEvent == ActionBoard.motionInSet);
+        pen[5].setSelected(hightlightEvent == ActionBoard.kickOffGoal);
+        pen[6].setSelected(hightlightEvent == ActionBoard.ballContact);
         pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
         pen[8].setSelected(Rules.league.dropInPlayerMode ? hightlightEvent == ActionBoard.teammatePushing
                 : hightlightEvent == ActionBoard.coachMotion);

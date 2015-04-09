@@ -32,13 +32,13 @@
 
 #define PENALTY_NONE                        0
 // SPL
-#define PENALTY_SPL_BALL_HOLDING            1
+#define PENALTY_SPL_ILLEGAL_BALL_CONTACT    1 // ball holding / playing with hands
 #define PENALTY_SPL_PLAYER_PUSHING          2
-#define PENALTY_SPL_OBSTRUCTION             3
-#define PENALTY_SPL_INACTIVE_PLAYER         4
-#define PENALTY_SPL_ILLEGAL_DEFENDER        5
+#define PENALTY_SPL_ILLEGAL_MOTION_IN_SET   3 // heard whistle too early?
+#define PENALTY_SPL_INACTIVE_PLAYER         4 // fallen, inactive, local game stuck
+#define PENALTY_SPL_ILLEGAL_DEFENDER        5 // own penalty area, center circle during kick-off
 #define PENALTY_SPL_LEAVING_THE_FIELD       6
-#define PENALTY_SPL_PLAYING_WITH_HANDS      7
+#define PENALTY_SPL_KICK_OFF_GOAL           7 // scored from inside center circle after kick-off
 #define PENALTY_SPL_REQUEST_FOR_PICKUP      8
 #define PENALTY_SPL_COACH_MOTION            9
 // HL Kid Size

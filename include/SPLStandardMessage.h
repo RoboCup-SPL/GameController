@@ -13,7 +13,7 @@
 
  For each parameter, the respective comments describe its unit.
  The following units are used:
- 
+
    - Distances:  Millimeters (mm)
    - Angles:     Radian
    - Time:       Seconds (s)
@@ -21,7 +21,7 @@
 */
 
 
-struct SPLStandardMessage 
+struct SPLStandardMessage
 {
   char header[4];        // "SPL "
   uint8_t version;       // has to be set to SPL_STANDARD_MESSAGE_STRUCT_VERSION
@@ -37,18 +37,18 @@ struct SPLStandardMessage
   // +ve y-axis is 90 degrees counter clockwise from the +ve x-axis
   // angle in radians, 0 along the +x axis, increasing counter clockwise
   float pose[3];      // x,y,theta
-  
+
   // [MANDATORY FIELD]
   // the robot's target position on the field
   // the coordinate system is the same as for the pose
   // if the robot does not have any target, this attribute should be set to the robot's position
-  float walkingTo[2]; 
-  
+  float walkingTo[2];
+
   // [MANDATORY FIELD]
   // the target position of the next shot (either pass or goal shot)
   // the coordinate system is the same as for the pose
   // if the robot does not intend to shoot, this attribute should be set to the robot's position
-  float shootingTo[2]; 
+  float shootingTo[2];
 
   // ball information
   float ballAge;        // seconds since this robot last saw the ball. -1.f if we haven't seen it
@@ -63,7 +63,7 @@ struct SPLStandardMessage
   // velocity of the ball (same coordinate system as above)
   // the unit is millimeters per second
   float ballVel[2];
-  
+
   // describes what - in the robot's opinion - the teammates should do:
   // 0 - nothing particular (default)
   // 1 - play keeper
@@ -75,7 +75,7 @@ struct SPLStandardMessage
   // Example: To suggest a teammate, which has the number 5, to play in defense:
   //          suggestion[4] = 2;
   int8_t suggestion[SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
-  
+
   // [MANDATORY FIELD]
   // describes what the robot intends to do:
   // 0 - nothing particular (default)
@@ -84,14 +84,14 @@ struct SPLStandardMessage
   // 3 - wants to play the ball
   // 4 - robot is lost
   int8_t intention;
-  
+
   // [MANDATORY]
   // the average speed that the robot has, for instance, when walking towards the ball
   // the unit is mm/s
   // the idea of this value is to roughly represent the robot's walking skill
   // it has to be set once at the beginning of the game and remains fixed
   int16_t averageWalkSpeed;
-  
+
   // [MANDATORY]
   // the maximum distance that the ball rolls after a strong kick by the robot
   // the unit is mm
@@ -110,7 +110,7 @@ struct SPLStandardMessage
   // the unit is percent [0,..100]
   // the value should be updated in the course of the game
   int8_t currentSideConfidence;
-  
+
   // number of bytes that is actually used by the data array
   uint16_t numOfDataBytes;
 
