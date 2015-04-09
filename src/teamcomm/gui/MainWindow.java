@@ -175,6 +175,15 @@ public class MainWindow extends JFrame implements Runnable {
         mb.add(logMenu);
         logMenuItems = new JMenuItem[]{replayOption, pauseOption, stopOption};
 
+        final JMenu viewMenu = new JMenu("View");
+        final JCheckBoxMenuItem mirrorOption = new JCheckBoxMenuItem("Mirror", RobotData.getInstance().isMirrored());
+        mirrorOption.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(final ItemEvent e) {
+                RobotData.getInstance().setMirrored(e.getStateChange() == ItemEvent.SELECTED);
+            }
+        });
+        viewMenu.add(mirrorOption);
         final JMenu drawingsMenu = new JMenu("Drawings");
         for (final Drawing d : fieldView.getDrawings()) {
             final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
@@ -186,7 +195,8 @@ public class MainWindow extends JFrame implements Runnable {
             });
             drawingsMenu.add(m);
         }
-        mb.add(drawingsMenu);
+        viewMenu.add(drawingsMenu);
+        mb.add(viewMenu);
         setJMenuBar(mb);
 
         // Display window
@@ -285,9 +295,8 @@ public class MainWindow extends JFrame implements Runnable {
                 teamPanels[i].remove(p);
             }
         }
-        if(!robotAddresses.isEmpty()) {
-            repaint();
-        }
+        
+        repaint();
     }
 
     private ImageIcon getTeamIcon(final int team) {

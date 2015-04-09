@@ -22,9 +22,12 @@ public class RobotData {
     public static final int TEAM_OTHER = 2;
 
     private static RobotData instance;
+
     private final int[] teamNumbers = new int[]{0, 0};
     private final int[] teamColors = new int[]{GameControlData.TEAM_BLUE, GameControlData.TEAM_RED};
-    
+
+    private boolean mirrored = false;
+
     @SuppressWarnings("unchecked")
     private final List<RobotState>[] robots = new List[]{new ArrayList<RobotState>(5), new ArrayList<RobotState>(5), new LinkedList<RobotState>()};
     private final HashMap<String, RobotState> robotsByAddress = new HashMap<String, RobotState>();
@@ -104,9 +107,9 @@ public class RobotData {
                         somethingChanged = true;
                     }
                 }
-                
+
                 // Update team colors
-                for(int i=0;i<2;i++) {
+                for (int i = 0; i < 2; i++) {
                     teamColors[i] = data.team[i].teamColor;
                 }
             }
@@ -214,7 +217,7 @@ public class RobotData {
 
     public Iterator<RobotState> getRobotsForTeam(final int team) {
         if (team >= 0 && team <= 2) {
-            return robots[team].iterator();
+            return robots[outputSide(team)].iterator();
         } else {
             return null;
         }
@@ -228,14 +231,31 @@ public class RobotData {
         if (teamNumbers[0] == 0) {
             return null;
         } else {
-            return teamNumbers.clone();
+            if (mirrored) {
+                return new int[]{teamNumbers[1], teamNumbers[0]};
+            } else {
+                return teamNumbers.clone();
+            }
         }
     }
-    
+
     public int getTeamColor(final int team) {
         if (team == 0 || team == 1) {
-            return teamColors[team];
+            return teamColors[outputSide(team)];
         }
         throw new IllegalArgumentException("Invalid team");
     }
+
+    public boolean isMirrored() {
+        return mirrored;
+    }
+
+    public void setMirrored(final boolean mirrored) {
+        this.mirrored = mirrored;
+    }
+    
+    private int outputSide(final int side) {
+        return mirrored ? (side == 0 ? 1 : (side == 1 ? 0 : side)) : side;
+    }
+
 }
