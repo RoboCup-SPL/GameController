@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -105,7 +106,7 @@ public class GUI extends JFrame
         standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*getWidth()));
         standardSmallFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_S_SIZE*getWidth()));
         scoreFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_XXL_SIZE*getWidth()));
-        coachMessageFont = new Font(Font.DIALOG, Font.PLAIN, (int)(0.037*getWidth()));
+        coachMessageFont = new Font(Font.DIALOG, Font.PLAIN, (int)(0.033*getWidth()));
         
         addWindowListener(new WindowAdapter()
         {
@@ -483,39 +484,44 @@ public class GUI extends JFrame
             }
 
             g2.setFont(standardSmallFont);
-            int maxWidth = (getSizeToWidth(0.99) - getSizeToWidth(0.01) - g2.getFontMetrics().stringWidth("00::00")) / 2;
+            int maxWidth = (getSizeToWidth(0.99) - getSizeToWidth(0.01) - g2.getFontMetrics().stringWidth("Second Half")) / 2;
 
             g2.setFont(coachMessageFont);
-            int split = -1;
-            int j;
-            for (j = 0; j < coachMessage.length() &&
-                  g2.getFontMetrics().stringWidth(coachMessage.substring(0, j + 1)) <= maxWidth; ++j) {
-                if (!Character.isLetter(coachMessage.charAt(j))
-                        || j < coachMessage.length() - 1
-                        && Character.isLowerCase(coachMessage.charAt(j))
-                        && Character.isUpperCase(coachMessage.charAt(j + 1))) {
-                    split = j;
+            
+            ArrayList<String> rows = new ArrayList<String>();
+            while (true) {
+                int split = -1;
+                int j;
+                for (j = 0; j < coachMessage.length() &&
+                      g2.getFontMetrics().stringWidth(coachMessage.substring(0, j + 1)) <= maxWidth; ++j) {
+                    if (!Character.isLetter(coachMessage.charAt(j))
+                            || j < coachMessage.length() - 1
+                            && Character.isLowerCase(coachMessage.charAt(j))
+                            && Character.isUpperCase(coachMessage.charAt(j + 1))) {
+                        split = j;
+                    }
+                }
+                if (j < coachMessage.length()) {
+                    rows.add(coachMessage.substring(0, split + 1).trim());
+                    coachMessage = coachMessage.substring(split + 1).trim();
+                } else {
+                    break;
                 }
             }
-
-            String row1;
-            String row2;
-            if (j == coachMessage.length()) {
-                row1 = "";
-                row2 = coachMessage;
-            } else {
-                row1 = coachMessage.substring(0, split + 1).trim();
-                row2 = coachMessage.substring(split + 1).trim();
+            if (coachMessage.length() > 0) {
+                rows.add(coachMessage);
             }
 
             //Draw the coach label and coach message box
             g2.setColor(Rules.league.teamColor[data.team[i].teamColor]);
             if (i == 1) {
-                g2.drawString(row1, getSizeToWidth(0.01), getSizeToHeight(0.92));
-                g2.drawString(row2, getSizeToWidth(0.01), getSizeToHeight(0.98));
+                for (int j = rows.size() - 1; j >= 0; --j) {
+                  g2.drawString(rows.get(j), getSizeToWidth(0.01), getSizeToHeight(0.98 - (rows.size() - 1 - j) * 0.05));
+                }
             } else {
-                g2.drawString(row1, getSizeToWidth(0.99) - g2.getFontMetrics().stringWidth(row1), getSizeToHeight(0.92));
-                g2.drawString(row2, getSizeToWidth(0.99) - g2.getFontMetrics().stringWidth(row2), getSizeToHeight(0.98));
+                for (int j = rows.size() - 1; j >= 0; --j) {
+                    g2.drawString(rows.get(j), getSizeToWidth(0.99) - g2.getFontMetrics().stringWidth(rows.get(j)), getSizeToHeight(0.98 - (rows.size() - 1 - j) * 0.05));
+                }
             }
         }
     }
