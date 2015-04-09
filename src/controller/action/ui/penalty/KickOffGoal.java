@@ -11,7 +11,7 @@ import data.Rules;
  * 
  * This action means that the playing with hands penalty has been selected.
  */
-public class Hands extends Penalty
+public class KickOffGoal extends Penalty
 {
     /**
      * Performs this action`s penalty on a selected player.
@@ -24,9 +24,9 @@ public class Hands extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = PlayerInfo.PENALTY_SPL_PLAYING_WITH_HANDS;
+        player.penalty = PlayerInfo.PENALTY_SPL_KICK_OFF_GOAL;
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Playing with Hands "+
+        Log.state(data, "Kickoff Goal "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
     }

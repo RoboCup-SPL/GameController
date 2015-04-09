@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #ifdef __cplusplus
-#include <cstring>
 #endif
 
 #define SPL_COACH_MESSAGE_PORT           3839
@@ -12,7 +11,7 @@
 #define SPL_COACH_MESSAGE_STRUCT_VERSION 3
 #define SPL_COACH_MESSAGE_SIZE           81
 
-struct SPLCoachMessage 
+struct SPLCoachMessage
 {
   char header[4];        // "SPLC"
   uint8_t version;       // SPL_COACH_MESSAGE_STRUCT_VERSION
@@ -26,7 +25,9 @@ struct SPLCoachMessage
   // constructor
   SPLCoachMessage() : version(SPL_COACH_MESSAGE_STRUCT_VERSION)
   {
-    std::memcpy(header, SPL_COACH_MESSAGE_STRUCT_HEADER, sizeof(header));
+    const char* init = SPL_COACH_MESSAGE_STRUCT_HEADER;
+    for(unsigned int i = 0; i < sizeof(header); ++i)
+      header[i] = init[i];
   }
 #endif
 };

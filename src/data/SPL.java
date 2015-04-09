@@ -40,6 +40,8 @@ public class SPL extends Rules
         kickoffTime = 10;
         /** Time in seconds before a global game stuck can be called. */
         minDurationBeforeStuck = 15;
+        /** The number of seconds switching to Playing is delayed in a play-off game. */
+        playOffDelayedSwitchToPlaying = 15;
         /** If there is an overtime before penalty-shoot in a play-off game. */
         overtime = false;
         /** Time in seconds one overtime half is long. */
@@ -61,7 +63,7 @@ public class SPL extends Rules
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
-        penaltyTime = new int[] {-1, 45, 45, 45, 45, 45, 45, 45, 45, 2 * halfTime};
+        penaltyTime = new int[] {-1, 45, 45, 0, 45, 45, 45, 45, 45, 2 * halfTime};
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */

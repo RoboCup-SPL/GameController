@@ -136,6 +136,7 @@ public class Main
         for (int i=0; i<2; i++) {
             data.team[i].teamNumber = (byte)input.outTeam[i];
         }
+        data.kickOffTeam = (byte)input.outTeam[0];
 
         data.colorChangeAuto = input.outAutoColorChange;
         data.gameType = input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;

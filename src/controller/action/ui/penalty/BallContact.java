@@ -9,9 +9,9 @@ import data.Rules;
 /**
  * @author Michel Bartsch
  * 
- * This action means that the fallen robot penalty has been selected.
+ * This action means that the ball holding penalty has been selected.
  */
-public class Fallen extends Penalty
+public class BallContact extends Penalty
 {
     /**
      * Performs this action`s penalty on a selected player.
@@ -24,9 +24,9 @@ public class Fallen extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = PlayerInfo.PENALTY_SPL_OBSTRUCTION;
+        player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_BALL_CONTACT;
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Fallen Robot "+
+        Log.state(data, "Illegal Ball Contact "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
     }
@@ -40,9 +40,6 @@ public class Fallen extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_READY)
-            || (data.gameState == GameControlData.STATE_PLAYING)
-            || (data.gameState == GameControlData.STATE_SET)
-            || (data.testmode);
+        return (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
     }
 }

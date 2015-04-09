@@ -36,7 +36,7 @@ public class FirstHalf extends GCAction
             data.firstHalf = GameControlData.C_TRUE;
             data.secGameState = GameControlData.STATE2_NORMAL;
             changeSide(data);
-            data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamColor : data.team[1].teamColor);
+            data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.gameState = GameControlData.STATE_INITIAL;
             // Don't set data.whenCurrentGameStateBegan, because it's used to count the pause
             Log.state(data, "1st Half");

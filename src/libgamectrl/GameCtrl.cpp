@@ -13,10 +13,12 @@
 #pragma clang diagnostic ignored "-Wconversion"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
+#define BOOST_SIGNALS_NO_DEPRECATION_WARNING
 #include <alcommon/albroker.h>
 #include <alcommon/alproxy.h>
 #include <alproxies/dcmproxy.h>
 #include <alproxies/almemoryproxy.h>
+#undef BOOST_SIGNALS_NO_DEPRECATION_WARNING
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
@@ -151,15 +153,15 @@ private:
 
         if(gameCtrlData.state == STATE_INITIAL &&
            gameCtrlData.secondaryState == STATE2_PENALTYSHOOT &&
-           gameCtrlData.kickOffTeam == team.teamColour)
+           gameCtrlData.kickOffTeam == team.teamNumber)
           setLED(rightFootRed, 0.f, 1.f, 0.f);
         else if(gameCtrlData.state == STATE_INITIAL &&
                 gameCtrlData.secondaryState == STATE2_PENALTYSHOOT &&
-                gameCtrlData.kickOffTeam != team.teamColour)
+                gameCtrlData.kickOffTeam != team.teamNumber)
           setLED(rightFootRed, 1.f, 1.0f, 0.f);
         else if(now - whenPacketWasReceived < GAMECONTROLLER_TIMEOUT &&
                 gameCtrlData.state <= STATE_SET &&
-                gameCtrlData.kickOffTeam == team.teamColour)
+                gameCtrlData.kickOffTeam == team.teamNumber)
           setLED(rightFootRed, 1.f, 1.f, 1.f);
         else
           setLED(rightFootRed, 0.f, 0.f, 0.f);
@@ -292,7 +294,6 @@ private:
             if(leftFootButtonPressed)
             {
               team.teamColour ^= 1;
-              gameCtrlData.kickOffTeam ^= 1;
               publish();
             }
             previousLeftFootButtonPressed = leftFootButtonPressed;
@@ -307,10 +308,10 @@ private:
               if(gameCtrlData.secondaryState == STATE2_NORMAL)
               {
                 gameCtrlData.secondaryState = STATE2_PENALTYSHOOT;
-                gameCtrlData.kickOffTeam = team.teamColour;
+                gameCtrlData.kickOffTeam = team.teamNumber;
               }
-              else if(gameCtrlData.kickOffTeam == team.teamColour)
-                gameCtrlData.kickOffTeam ^= 1;
+              else if(gameCtrlData.kickOffTeam == team.teamNumber)
+                gameCtrlData.kickOffTeam = 0;
               else
                 gameCtrlData.secondaryState = STATE2_NORMAL;
               publish();
