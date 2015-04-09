@@ -60,6 +60,8 @@ public class SPLStandardMessageReceiver extends Thread {
         private final int team;
 
         public ReceiverThread(final int team) throws UnknownHostException, IOException {
+            setName("SPLStandardMessageReceiver_team" + team);
+            
             this.team = team;
 
             // Bind socket to team port

@@ -75,6 +75,7 @@ public class Main {
 
         // Initialize robot view part of the GUI
         final Thread robotView = new Thread(new RobotView());
+        robotView.setName("GUI");
 
         // Start threads
         gcDataReceiver.start();

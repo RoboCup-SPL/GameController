@@ -21,6 +21,8 @@ public class GameControlDataReceiver extends Thread {
     private final DatagramSocket datagramSocket;
 
     public GameControlDataReceiver() throws SocketException {
+        setName("GameControlDataReceiver");
+        
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
         datagramSocket.setSoTimeout(GAMECONTROLLER_TIMEOUT);
