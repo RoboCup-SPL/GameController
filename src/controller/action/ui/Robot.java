@@ -8,6 +8,7 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.action.ui.penalty.CoachMotion;
 import controller.action.ui.penalty.Penalty;
+import controller.action.ui.penalty.MotionInSet;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.ServiceHL;
@@ -72,7 +73,10 @@ public class Robot extends GCAction
             Log.state(data, "Entering Player " + Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
         }
-        else if (EventHandler.getInstance().lastUIEvent instanceof Penalty || EventHandler.getInstance().lastUIEvent instanceof TeammatePushing) {
+        else if (EventHandler.getInstance().lastUIEvent instanceof MotionInSet && player.penalty == PlayerInfo.PENALTY_NONE
+                || (EventHandler.getInstance().lastUIEvent instanceof Penalty 
+                        && !(EventHandler.getInstance().lastUIEvent instanceof MotionInSet))
+                || EventHandler.getInstance().lastUIEvent instanceof TeammatePushing) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         }
         else if (player.penalty != PlayerInfo.PENALTY_NONE) {
@@ -93,7 +97,7 @@ public class Robot extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return !data.ejected[side][number]
-                && (!(EventHandler.getInstance().lastUIEvent instanceof Penalty)
+                && ((!(EventHandler.getInstance().lastUIEvent instanceof Penalty) || EventHandler.getInstance().lastUIEvent instanceof MotionInSet)
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
                 && (data.getRemainingPenaltyTime(side, number) == 0 || Rules.league instanceof HL)
                 && (data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE || data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying)
