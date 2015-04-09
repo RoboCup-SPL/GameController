@@ -1,11 +1,11 @@
 package teamcomm;
 
+import com.jogamp.opengl.GLProfile;
 import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.media.opengl.GLProfile;
 import javax.swing.JOptionPane;
 import teamcomm.gui.RobotView;
 import teamcomm.net.GameControlDataReceiver;

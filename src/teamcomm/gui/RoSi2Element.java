@@ -1,14 +1,14 @@
 package teamcomm.gui;
 
-import java.awt.image.BufferedImage;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParsePosition;
@@ -23,11 +23,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
-import javax.imageio.ImageIO;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -36,6 +31,7 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+import teamcomm.gui.TextureLoader.Texture;
 
 /**
  * @author Felix Thielke
@@ -1520,69 +1516,6 @@ public class RoSi2Element {
             if (diffuseColor[3] < 1.0f || (texture != null && texture.hasAlpha)) {
                 gl.glDisable(GL2.GL_BLEND);
             }
-        }
-
-    }
-
-    public static class TextureLoader {
-
-        private final GL gl;
-        private final Map<String, Texture> textures = new HashMap<String, Texture>();
-
-        public TextureLoader(final GL gl) {
-            this.gl = gl;
-        }
-
-        public Texture loadTexture(final File filename) throws IOException {
-            Texture tex = textures.get(filename.getAbsolutePath());
-            if (tex != null) {
-                return tex;
-            }
-
-            final BufferedImage img = ImageIO.read(filename);
-            final int[] imageData = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
-            final boolean hasAlpha = img.getColorModel().hasAlpha();
-
-            final ByteBuffer buffer = ByteBuffer.allocate(imageData.length * (hasAlpha ? 4 : 3));
-            buffer.order(ByteOrder.LITTLE_ENDIAN);
-            for (final int c : imageData) {
-                if (hasAlpha) {
-                    buffer.putInt(c);
-                } else {
-                    buffer.put((byte) (c & 0xFF));
-                    buffer.put((byte) ((c >> 8) & 0xFF));
-                    buffer.put((byte) ((c >> 16) & 0xFF));
-                }
-            }
-            buffer.rewind();
-
-            // Allocate texture
-            final IntBuffer texIds = IntBuffer.allocate(1);
-            gl.glGenTextures(1, texIds);
-            final int textureId = texIds.get(0);
-
-            // Load texture into GL
-            gl.glBindTexture(GL.GL_TEXTURE_2D, textureId);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
-            gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, hasAlpha ? 4 : 3, img.getWidth(), img.getHeight(), 0, hasAlpha ? GL.GL_BGRA : GL2.GL_BGR, GL.GL_UNSIGNED_BYTE, buffer);
-            gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
-
-            tex = new Texture(textureId, hasAlpha);
-            textures.put(filename.getAbsolutePath(), tex);
-
-            return tex;
-        }
-    }
-
-    public static class Texture {
-
-        public final int id;
-        public final boolean hasAlpha;
-
-        public Texture(final int id, final boolean hasAlpha) {
-            this.id = id;
-            this.hasAlpha = hasAlpha;
         }
 
     }

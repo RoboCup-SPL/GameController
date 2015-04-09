@@ -1,8 +1,8 @@
 package teamcomm.gui.drawings;
 
+import com.jogamp.opengl.GL2;
 import data.SPLStandardMessage;
 import java.util.Map;
-import javax.media.opengl.GL2;
 import teamcomm.data.RobotState;
 
 @Models({"robotBlue", "robotRed"})
