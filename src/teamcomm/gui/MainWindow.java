@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -192,6 +194,10 @@ public class MainWindow extends JFrame implements Runnable {
         // Display window
         setPreferredSize(new Dimension(800, 600));
         pack();
+        try {
+            Thread.sleep(100); // For compatibility with X11 (?)
+        } catch (InterruptedException ex) {
+        }
         setVisible(true);
     }
 
