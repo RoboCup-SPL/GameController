@@ -40,7 +40,7 @@ import teamcomm.gui.drawings.Static;
  *
  * @author Felix Thielke
  */
-public class FieldView implements GLEventListener {
+public class View3D implements GLEventListener {
 
     private static final float NEAR_PLANE = 1;
     private static final float FAR_PLANE = 20;
@@ -67,7 +67,7 @@ public class FieldView implements GLEventListener {
     private float cameraPhi = 0;
     private float cameraRadius = 9;
 
-    public FieldView() {
+    public View3D() {
         // Initialize GL canvas and animator
         GLProfile glp = GLProfile.get(GLProfile.GL2);
         GLCapabilities caps = new GLCapabilities(glp);

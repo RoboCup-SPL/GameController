@@ -171,10 +171,10 @@ public class RoSi2Element {
     }
 
     public RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars) throws RoSi2ParseException {
-        return instantiate(gl, vars, new TextureLoader(gl), null);
+        return instantiate(gl, vars, null);
     }
 
-    private RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars, final TextureLoader texLoader, final List<RoSi2Drawable> refChilds) throws RoSi2ParseException {
+    private RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars, final List<RoSi2Drawable> refChilds) throws RoSi2ParseException {
         // The instantiation is constant unless it references a variable
         boolean constant = true;
 
@@ -204,7 +204,7 @@ public class RoSi2Element {
             childInstances = new LinkedList<RoSi2Drawable>();
         }
         for (final RoSi2Element child : children) {
-            final RoSi2Drawable childInst = child.instantiate(gl, varBindings, texLoader, null);
+            final RoSi2Drawable childInst = child.instantiate(gl, varBindings, null);
             if (childInst != null) {
                 // If a child instance is not constant, the instance of this
                 // element is neither
@@ -224,7 +224,7 @@ public class RoSi2Element {
             if (referenced == null) {
                 throw new RoSi2ParseException("Referenced element cannot be found: " + ref);
             }
-            return referenced.instantiate(gl, varBindings, texLoader, childInstances);
+            return referenced.instantiate(gl, varBindings, childInstances);
         }
 
         // Instantiate this element
@@ -466,7 +466,7 @@ public class RoSi2Element {
                 texture = null;
             } else {
                 try {
-                    texture = texLoader.loadTexture(new File(filepath.getParentFile(), texturePath));
+                    texture = TextureLoader.getInstance().loadTexture(gl, new File(filepath.getParentFile(), texturePath));
                 } catch (IOException ex) {
                     throw new RoSi2ParseException("Texture not found: " + texturePath);
                 }

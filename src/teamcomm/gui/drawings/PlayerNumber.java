@@ -5,7 +5,6 @@ import data.SPLStandardMessage;
 import java.util.Map;
 import teamcomm.data.RobotState;
 
-@Models({"number1", "number2", "number3", "number4", "number5"})
 /**
  *
  * @author Felix Thielke
@@ -18,12 +17,13 @@ public class PlayerNumber extends PerPlayer {
         if (msg != null) {
             gl.glPushMatrix();
 
-            gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0.8f);
+            gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0.7f);
             
             if(inverted) {
                 gl.glRotatef(180, 0, 0, 1);
             }
-            gl.glCallList(modelLists.get("number" + msg.playerNum));
+            gl.glRotatef(90, 1, 0, 0);
+            Text.drawText(gl, "" + msg.playerNum, 0, 0, 0.25f);
 
             gl.glPopMatrix();
         }

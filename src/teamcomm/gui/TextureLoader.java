@@ -18,15 +18,24 @@ import javax.imageio.ImageIO;
  */
 public class TextureLoader {
 
-    private final GL gl;
-    private final Map<String, Texture> textures = new HashMap<String, Texture>();
+    private static final TextureLoader instance = new TextureLoader();
+    private final Map<GL, Map<String, Texture>> textures = new HashMap<GL, Map<String, Texture>>();
 
-    public TextureLoader(final GL gl) {
-        this.gl = gl;
+    private TextureLoader() {
     }
 
-    public Texture loadTexture(final File filename) throws IOException {
-        Texture tex = textures.get(filename.getAbsolutePath());
+    public static TextureLoader getInstance() {
+        return instance;
+    }
+
+    public Texture loadTexture(final GL gl, final File filename) throws IOException {
+        Map<String, Texture> map = textures.get(gl);
+        if(map == null) {
+            map = new HashMap<String, Texture>();
+            textures.put(gl, map);
+        }
+
+        Texture tex = map.get(filename.getAbsolutePath());
         if (tex != null) {
             return tex;
         }
@@ -56,7 +65,7 @@ public class TextureLoader {
         gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, hasAlpha ? 4 : 3, img.getWidth(), img.getHeight(), 0, hasAlpha ? GL.GL_BGRA : GL2.GL_BGR, GL.GL_UNSIGNED_BYTE, buffer);
         gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
         tex = new Texture(textureId, hasAlpha);
-        textures.put(filename.getAbsolutePath(), tex);
+        map.put(filename.getAbsolutePath(), tex);
         return tex;
     }
 

@@ -49,7 +49,7 @@ import teamcomm.net.SPLStandardMessageReceiver;
 /**
  * @author Felix Thielke
  */
-public class RobotView extends JFrame implements Runnable {
+public class MainWindow extends JFrame implements Runnable {
 
     private static final long serialVersionUID = 6549981924840180076L;
 
@@ -58,7 +58,7 @@ public class RobotView extends JFrame implements Runnable {
 
     private static final Map<Integer, ImageIcon> logos = new HashMap<Integer, ImageIcon>();
 
-    private final FieldView fieldView = new FieldView();
+    private final View3D fieldView = new View3D();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
     private final JLabel[] teamLogos = new JLabel[]{new JLabel(), new JLabel()};
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
@@ -66,7 +66,7 @@ public class RobotView extends JFrame implements Runnable {
 
     private final JMenuItem[] logMenuItems;
 
-    public RobotView() {
+    public MainWindow() {
         super("TeamCommunicationMonitor");
 
         // Setup window

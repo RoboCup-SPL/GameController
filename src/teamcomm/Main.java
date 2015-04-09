@@ -7,7 +7,7 @@ import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import teamcomm.gui.RobotView;
+import teamcomm.gui.MainWindow;
 import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.SPLStandardMessageReceiver;
 
@@ -74,7 +74,7 @@ public class Main {
         SPLStandardMessageReceiver.setInstance(receiver);
 
         // Initialize robot view part of the GUI
-        final Thread robotView = new Thread(new RobotView());
+        final Thread robotView = new Thread(new MainWindow());
         robotView.setName("GUI");
 
         // Start threads
