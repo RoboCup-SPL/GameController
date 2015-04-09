@@ -14,7 +14,7 @@ public class PlayerTarget extends PerPlayer {
     private static final float CROSS_RADIUS = 0.1f;
 
     @Override
-    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final boolean inverted) {
+    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
         final SPLStandardMessage msg = player.getLastMessage();
         if (msg != null) {
             final float poseX = msg.pose[0] / 1000.f;

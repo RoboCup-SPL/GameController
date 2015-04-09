@@ -11,7 +11,7 @@ import teamcomm.gui.TextureLoader.Texture;
 
 /**
  *
- * @author Felix
+ * @author Felix Thielke
  */
 public class Text {
 

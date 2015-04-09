@@ -1,8 +1,10 @@
 package teamcomm.gui.drawings;
 
 import com.jogamp.opengl.GL2;
+import data.GameControlData;
 import data.SPLStandardMessage;
 import java.util.Map;
+import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
 
 @Models({"robotBlue", "robotRed"})
@@ -13,7 +15,7 @@ import teamcomm.data.RobotState;
 public class Player extends PerPlayer {
 
     @Override
-    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final boolean inverted) {
+    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
         final SPLStandardMessage msg = player.getLastMessage();
         if (msg != null) {
             gl.glPushMatrix();
@@ -26,7 +28,7 @@ public class Player extends PerPlayer {
                 gl.glRotatef(90, 0, 1, 0);
             }
 
-            gl.glCallList(msg.teamNum >= 5 ? modelLists.get("robotBlue") : modelLists.get("robotRed"));
+            gl.glCallList(RobotData.getInstance().getTeamColor(side) == GameControlData.TEAM_BLUE ? modelLists.get("robotBlue") : modelLists.get("robotRed"));
 
             gl.glPopMatrix();
         }

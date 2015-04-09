@@ -10,5 +10,5 @@ import teamcomm.data.RobotState;
  */
 public abstract class PerPlayer extends Drawing {
 
-    public abstract void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final boolean inverted);
+    public abstract void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side);
 }

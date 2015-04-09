@@ -4,7 +4,6 @@
   <Include href="Ball2010SPL.rsi2"/>
   <Include href="Field2015SPL.rsi2"/>
   <Include href="Boards.rsi2"/>
-  <Include href="Numbers.rsi2"/>
 
   <Scene>
     <Body ref="Nao" name="robotBlue" />

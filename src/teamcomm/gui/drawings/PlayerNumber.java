@@ -3,6 +3,7 @@ package teamcomm.gui.drawings;
 import com.jogamp.opengl.GL2;
 import data.SPLStandardMessage;
 import java.util.Map;
+import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
 
 /**
@@ -12,14 +13,14 @@ import teamcomm.data.RobotState;
 public class PlayerNumber extends PerPlayer {
 
     @Override
-    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final boolean inverted) {
+    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
         final SPLStandardMessage msg = player.getLastMessage();
         if (msg != null) {
             gl.glPushMatrix();
 
             gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0.7f);
             
-            if(inverted) {
+            if(side == RobotData.TEAM_RIGHT) {
                 gl.glRotatef(180, 0, 0, 1);
             }
             gl.glRotatef(90, 1, 0, 0);

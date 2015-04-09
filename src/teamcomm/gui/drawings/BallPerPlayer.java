@@ -21,7 +21,7 @@ public class BallPerPlayer extends PerPlayer {
     private static final float MAX_BALLAGE = 5.0f;
 
     @Override
-    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final boolean inverted) {
+    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
         final SPLStandardMessage msg = player.getLastMessage();
         if (msg != null && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE) {
             final float[] ball = {msg.ball[0] / 1000.f, msg.ball[1] / 1000.f};

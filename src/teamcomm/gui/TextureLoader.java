@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author Felix
+ * @author Felix Thielke
  */
 public class TextureLoader {
 

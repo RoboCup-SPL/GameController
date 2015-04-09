@@ -274,11 +274,11 @@ public class View3D implements GLEventListener {
                     ((Static) d).draw(gl, objectLists);
                 } else if (d instanceof PerPlayer) {
                     for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
-                        ((PerPlayer) d).draw(gl, objectLists, iter.next(), false);
+                        ((PerPlayer) d).draw(gl, objectLists, iter.next(), RobotData.TEAM_LEFT);
                     }
                     gl.glRotatef(180, 0, 0, 1);
                     for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
-                        ((PerPlayer) d).draw(gl, objectLists, iter.next(), true);
+                        ((PerPlayer) d).draw(gl, objectLists, iter.next(), RobotData.TEAM_RIGHT);
                     }
                     gl.glRotatef(180, 0, 0, 1);
                 }
