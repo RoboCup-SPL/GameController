@@ -9,7 +9,7 @@ import data.Rules;
 /**
  * @author Michel Bartsch
  * 
- * This action means that the fallen robot penalty has been selected.
+ * This action means that the illegal motion in set robot penalty has been selected.
  */
 public class MotionInSet extends Penalty
 {
