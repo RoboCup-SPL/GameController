@@ -1,6 +1,7 @@
 package teamcomm.gui.drawings;
 
 import com.jogamp.opengl.GL2;
+import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.Map;
 import teamcomm.data.RobotData;
@@ -18,7 +19,11 @@ public class PlayerNumber extends PerPlayer {
         if (msg != null) {
             gl.glPushMatrix();
 
-            gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0.7f);
+            if(player.getPenalty() != PlayerInfo.PENALTY_NONE) {
+                gl.glTranslatef(-msg.playerNum, -3.5f, 0.7f);
+            } else {
+                gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0.7f);
+            }
             
             if(side == RobotData.TEAM_RIGHT) {
                 gl.glRotatef(180, 0, 0, 1);

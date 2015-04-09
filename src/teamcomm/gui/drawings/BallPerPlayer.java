@@ -4,6 +4,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
+import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.Map;
 import teamcomm.data.RobotState;
@@ -23,7 +24,7 @@ public class BallPerPlayer extends PerPlayer {
     @Override
     public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
         final SPLStandardMessage msg = player.getLastMessage();
-        if (msg != null && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE) {
+        if (msg != null && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
             final float[] ball = {msg.ball[0] / 1000.f, msg.ball[1] / 1000.f};
 
             gl.glPushMatrix();

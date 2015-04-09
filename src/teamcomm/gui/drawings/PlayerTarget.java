@@ -1,6 +1,7 @@
 package teamcomm.gui.drawings;
 
 import com.jogamp.opengl.GL2;
+import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.Map;
 import teamcomm.data.RobotState;
@@ -16,7 +17,7 @@ public class PlayerTarget extends PerPlayer {
     @Override
     public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
         final SPLStandardMessage msg = player.getLastMessage();
-        if (msg != null) {
+        if (msg != null && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
             final float poseX = msg.pose[0] / 1000.f;
             final float poseY = msg.pose[1] / 1000.f;
             final float walkingToX = msg.walkingTo[0] / 1000.f;

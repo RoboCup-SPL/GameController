@@ -1,6 +1,7 @@
 package teamcomm.data;
 
 import data.GameControlData;
+import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,6 +106,15 @@ public class RobotData {
                         }
                         teamNumbers[i0] = data.team[i0].teamNumber;
                         somethingChanged = true;
+                    }
+                }
+
+                // Update penalties
+                for (int i = 0; i < 2; i++) {
+                    for (final RobotState r : robots[i]) {
+                        if (r.getLastMessage() != null && r.getLastMessage().playerNum-1 < data.team[i].player.length) {
+                            r.setPenalty(data.team[i].player[r.getLastMessage().playerNum-1].penalty);
+                        }
                     }
                 }
 
@@ -253,7 +263,7 @@ public class RobotData {
     public void setMirrored(final boolean mirrored) {
         this.mirrored = mirrored;
     }
-    
+
     private int outputSide(final int side) {
         return mirrored ? (side == 0 ? 1 : (side == 1 ? 0 : side)) : side;
     }

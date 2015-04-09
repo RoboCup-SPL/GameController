@@ -1,5 +1,6 @@
 package teamcomm.data;
 
+import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.LinkedList;
 import teamcomm.net.SPLStandardMessageReceiver;
@@ -18,6 +19,7 @@ public class RobotState {
     private int messageCount = 0;
     private int illegalMessageCount = 0;
     private final int teamNumber;
+    private byte penalty = PlayerInfo.PENALTY_NONE;
 
     public RobotState(final String address, final int teamNumber) {
         this.address = address;
@@ -96,4 +98,11 @@ public class RobotState {
         return recentMessageTimestamps.isEmpty();
     }
 
+    public byte getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(final byte penalty) {
+        this.penalty = penalty;
+    }
 }
