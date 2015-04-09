@@ -391,6 +391,19 @@ public class AdvancedData extends GameControlData implements Cloneable
             }
         }
     }
+    
+    public void updatePenalties() {
+        if (gameType == GAME_PLAYOFF && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
+                && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.playOffDelayedSwitchToPlaying) {
+            for (TeamInfo t : team) {
+                for (PlayerInfo p : t.player) {
+                    if (p.penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET) {
+                        p.penalty = PlayerInfo.PENALTY_NONE;
+                    }
+                }
+            }
+        }
+    }
 
     public class PenaltyQueueData  implements Serializable {
         private static final long serialVersionUID = 7536004813202642582L;

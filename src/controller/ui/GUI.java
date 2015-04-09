@@ -157,6 +157,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
     private static final String PEN_MOTION_IN_SET = "Motion in Set";
+    private static final String PEN_MOTION_IN_SET_SHORT = "Motion";
     private static final String PEN_INACTIVE = "Fallen / Inactive / Local Game Stuck";
     private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
@@ -1009,9 +1010,14 @@ public class GUI extends JFrame implements GCGUI
                                        ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE
                                       || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_SERVICE ))
                                     );
+                            boolean illegalMotion = Rules.league instanceof SPL
+                                    && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET;
                             if (seconds == 0) {
                                 if (pickup) {
                                     robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_PICKUP+")");
+                                    highlight(robot[i][j], true);
+                                } else if (illegalMotion) {
+                                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_MOTION_IN_SET_SHORT+")");
                                     highlight(robot[i][j], true);
                                 } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
                                     robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
@@ -1154,13 +1160,28 @@ public class GUI extends JFrame implements GCGUI
         pen[1].setSelected(hightlightEvent == ActionBoard.leaving);
         pen[2].setSelected(hightlightEvent == ActionBoard.inactive);
         pen[3].setSelected(hightlightEvent == ActionBoard.defender);
-        pen[4].setSelected(hightlightEvent == ActionBoard.motionInSet);
         pen[5].setSelected(hightlightEvent == ActionBoard.kickOffGoal);
         pen[6].setSelected(hightlightEvent == ActionBoard.ballContact);
         pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
         pen[8].setSelected(Rules.league.dropInPlayerMode ? hightlightEvent == ActionBoard.teammatePushing
                 : hightlightEvent == ActionBoard.coachMotion);
         pen[9].setSelected(hightlightEvent == ActionBoard.substitute);
+
+        // Handle quick select for ILLEGAL_MOTION_IN_SET
+        if (pen[4].isEnabled() 
+                && data.getNumberOfRobotsInPlay(0) == Rules.league.robotsPlaying
+                && data.getNumberOfRobotsInPlay(1) == Rules.league.robotsPlaying) {
+            boolean otherButtonSelected = false;
+            for (JToggleButton button : pen) {
+                otherButtonSelected |= button != pen[4] && button.isSelected();
+            }
+            pen[4].setSelected(!otherButtonSelected);
+            if (!otherButtonSelected) {
+                EventHandler.getInstance().lastUIEvent = ActionBoard.motionInSet;
+            }
+        } else {
+            pen[4].setSelected(EventHandler.getInstance().lastUIEvent == ActionBoard.motionInSet);
+        }
     }
     
     /**
