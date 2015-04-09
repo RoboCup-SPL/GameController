@@ -25,7 +25,7 @@ public class GameControlData implements Serializable
 
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
-    public static final byte DROPBALL = 2;
+    public static final byte DROPBALL = -128;
     
     public static final byte GAME_ROUNDROBIN = 0;
     public static final byte GAME_PLAYOFF = 1;
@@ -157,9 +157,9 @@ public class GameControlData implements Serializable
         buffer.put(playersPerTeam);
         buffer.put(gameState);
         buffer.put(firstHalf);
-        buffer.put(kickOffTeam);
+        buffer.put(kickOffTeam == DROPBALL ? 2 : team[kickOffTeam == team[0].teamNumber ? 0 : 1].teamColor);
         buffer.put(secGameState);
-        buffer.put(dropInTeam);
+        buffer.put(dropInTeam == -1 ? -1 : team[dropInTeam == team[0].teamNumber ? 0 : 1].teamColor);
         buffer.putShort(dropInTime);
         buffer.putInt(secsRemaining);
 
@@ -239,12 +239,7 @@ public class GameControlData implements Serializable
             default: temp = "undefinied("+firstHalf+")";
         }
         out += "          firstHalf: "+temp+"\n";
-        switch (kickOffTeam) {
-            case TEAM_BLUE: temp = "blue"; break;
-            case TEAM_RED:  temp = "red";  break;
-            default: temp = "undefinied("+kickOffTeam+")";
-        }
-        out += "        kickOffTeam: "+temp+"\n";
+        out += "        kickOffTeam: "+kickOffTeam+"\n";
         switch (secGameState) {
             case STATE2_NORMAL:       temp = "normal"; break;
             case STATE2_PENALTYSHOOT: temp = "penaltyshoot";  break;
@@ -253,12 +248,7 @@ public class GameControlData implements Serializable
             default: temp = "undefinied("+secGameState+")";
         }
         out += "       secGameState: "+temp+"\n";
-        switch (dropInTeam) {
-            case TEAM_BLUE: temp = "blue"; break;
-            case TEAM_RED:  temp = "red";  break;
-            default: temp = "undefinied("+dropInTeam+")";
-        }
-        out += "         dropInTeam: "+temp+"\n";
+        out += "         dropInTeam: "+dropInTeam+"\n";
         out += "         dropInTime: "+dropInTime+"\n";
         out += "      secsRemaining: "+secsRemaining+"\n";
         out += "      secondaryTime: "+secondaryTime+"\n";

@@ -948,7 +948,7 @@ public class GUI extends JFrame implements GCGUI
         if (data.kickOffTeam == GameControlData.DROPBALL) {
             kickOff[2].setSelected(true);
         } else {
-            kickOff[data.team[0].teamColor == data.kickOffTeam ? 0 : 1].setSelected(true);
+            kickOff[data.team[0].teamNumber == data.kickOffTeam ? 0 : 1].setSelected(true);
         }
         for (int i=0; i<2; i++) {
             kickOff[i].setEnabled(ActionBoard.kickOff[i].isLegal(data));
@@ -1097,14 +1097,8 @@ public class GUI extends JFrame implements GCGUI
             if (data.gameState == GameControlData.STATE_PLAYING
                     && data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0)
             {
-                if (data.kickOffTeam == data.team[i].teamColor)
-                {
-                    stuck[i].setEnabled(true);
-                    stuck[i].setText("<font color=#000000>"+KICKOFF_GOAL);
-                } else {
-                    stuck[i].setEnabled(false);
-                    stuck[i].setText("<font color=#808080>"+STUCK);
-                }
+                stuck[i].setEnabled(false);
+                stuck[i].setText("<font color=#808080>"+STUCK);
             } else {
                 stuck[i].setEnabled(ActionBoard.stuck[i].isLegal(data));
                 stuck[i].setText((ActionBoard.stuck[i].isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")+STUCK);

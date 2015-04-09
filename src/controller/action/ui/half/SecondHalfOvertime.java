@@ -39,7 +39,7 @@ public class SecondHalfOvertime extends GCAction
                 data.team[1].teamColor = GameControlData.TEAM_RED;
             }
             FirstHalf.changeSide(data);
-            data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamColor : data.team[1].teamColor);
+            data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.gameState = GameControlData.STATE_INITIAL;
             Log.state(data, "2nd Half Extra Time");
         }
