@@ -817,7 +817,7 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updateClock(AdvancedData data)
     {
-        clock.setText(formatTime(data.getRemainingGameTime()));
+        clock.setText(formatTime(data.getRemainingGameTime(true)));
         Integer secondaryTime = data.getSecondaryTime(KICKOFF_BLOCKED_HIGHLIGHT_SECONDS - 1);
         if (secondaryTime != null) {
             if (data.gameState == GameControlData.STATE_PLAYING) {
@@ -920,7 +920,7 @@ public class GUI extends JFrame implements GCGUI
                 break;
         }
         highlight(finish, (data.gameState != GameControlData.STATE_FINISHED)
-                && (data.getRemainingGameTime() <= FINISH_HIGHLIGHT_SECONDS)
+                && (data.getRemainingGameTime(true) <= FINISH_HIGHLIGHT_SECONDS)
                 && (finish.getBackground() != COLOR_HIGHLIGHT));
     }
     

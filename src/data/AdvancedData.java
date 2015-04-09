@@ -178,7 +178,7 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public void updateTimes()
     {
-        secsRemaining = (short) getRemainingGameTime();
+        secsRemaining = (short) getRemainingGameTime(false);
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         Integer subT = getSecondaryTime(0);
 
@@ -208,9 +208,11 @@ public class AdvancedData extends GameControlData implements Cloneable
     /**
      * Calculates the remaining game time in the current phase of the game.
      * This is what the primary clock will show.
+     * @param real If true, the real time will be returned. If false, the first number of seconds in the playing state
+     *             in play-off games will not be updated.
      * @return The remaining number of seconds.
      */
-    public int getRemainingGameTime()
+    public int getRemainingGameTime(boolean real)
     {
         int regularNumberOfPenaltyShots = (gameType == GAME_PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
         int duration = secGameState == STATE2_TIMEOUT ? secsRemaining : 
@@ -223,9 +225,11 @@ public class AdvancedData extends GameControlData implements Cloneable
                 || (gameState == STATE_READY || gameState == STATE_SET)
                 && ((gameType == GAME_PLAYOFF) && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
-        ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                : getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset);
-        
+                ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
+                : real || gameType != GAME_PLAYOFF || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
+                || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.playOffDelayedSwitchToPlaying 
+                ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
+                : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
         return duration - timePlayed;
     }
     
@@ -323,6 +327,11 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
     {
+        if(timeKickOffBlockedOvertime == 0 // preparing data packet
+                && gameType == GAME_PLAYOFF && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
+                && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.playOffDelayedSwitchToPlaying) {
+            return null;
+        }
         int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
         if (kickOffTeam == DROPBALL) {
             timeKickOffBlocked = 0;

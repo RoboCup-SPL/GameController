@@ -114,6 +114,7 @@ public class GameControlData implements Serializable
      */
     public ByteBuffer toByteArray()
     {
+    	AdvancedData data = (AdvancedData) this;
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(GAMECONTROLLER_STRUCT_HEADER.getBytes(), 0, 4);
@@ -121,7 +122,12 @@ public class GameControlData implements Serializable
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
         buffer.put(gameType);
-        buffer.put(gameState);
+    	if(gameType == GAME_PLAYOFF && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
+                && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.playOffDelayedSwitchToPlaying) {
+            buffer.put(STATE_SET);
+    	} else {
+            buffer.put(gameState);
+    	}
         buffer.put(firstHalf);
         buffer.put(kickOffTeam);
         buffer.put(secGameState);
