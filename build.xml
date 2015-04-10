@@ -8,6 +8,7 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="jar.dir"     value="${build.dir}/jar"/>
   <property name="resources.dir"  value="resources" />
+  <property name="common_classes" value="common/ data/" />
 
   <target name="clean">
     <delete dir="${build.dir}" quiet="true" />
@@ -23,19 +24,19 @@
 
   <target name="jar" depends="compile">
     <mkdir dir="${jar.dir}"/>
-    <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}">
+    <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}" includes="${common_classes} controller/">
       <manifest>
         <attribute name="Main-Class" value="controller.Main"/>
         <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
       </manifest>
     </jar>
-    <jar destfile="${jar.dir}/GameStateVisualizer.jar" basedir="${classes.dir}">
+    <jar destfile="${jar.dir}/GameStateVisualizer.jar" basedir="${classes.dir}" includes="${common_classes} visualizer/">
       <manifest>
         <attribute name="Main-Class" value="visualizer.Main"/>
         <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
       </manifest>
     </jar>
-    <jar destfile="${jar.dir}/LogAnalyzer.jar" basedir="${classes.dir}">
+    <jar destfile="${jar.dir}/LogAnalyzer.jar" basedir="${classes.dir}" includes="${common_classes} analyzer/">
       <manifest>
         <attribute name="Main-Class" value="analyzer.Main"/>
         <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
