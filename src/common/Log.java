@@ -1,11 +1,10 @@
 package common;
 
-import controller.EventHandler;
-import controller.Main;
 import data.AdvancedData;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -24,7 +23,7 @@ import java.util.LinkedList;
 public class Log
 {
     /** The instance of the singleton. */
-    private static Log instance = new Log();;
+    private static Log instance = new Log();
     
     /** The file to write into. */
     private FileWriter file;
@@ -60,7 +59,16 @@ public class Log
         } catch (IOException e) {
             error("cannot write to logfile "+path);
         }
-        toFile(Main.version);
+        
+        // Write version number if application is GameController
+        try {
+            toFile((String)Class.forName("controller.Main").getField("version").get(null));
+        } catch (ClassNotFoundException ex) {
+        } catch (NoSuchFieldException ex) {
+        } catch (SecurityException ex) {
+        } catch (IllegalArgumentException ex) {
+        } catch (IllegalAccessException ex) {
+        }
     }
     
     /**
@@ -145,7 +153,19 @@ public class Log
             }
         }
         AdvancedData state = (AdvancedData) instance.states.getLast().clone();
-        EventHandler.getInstance().data = state;
+        
+        // Write state to EventHandler if application is GameController
+        try {
+            final Class<?> eventHandlerClass = Class.forName("controller.EventHandler");
+            eventHandlerClass.getField("data").set(eventHandlerClass.getMethod("getInstance").invoke(null), state);
+        } catch (ClassNotFoundException ex) {
+        } catch (NoSuchFieldException ex) {
+        } catch (SecurityException ex) {
+        } catch (IllegalArgumentException ex) {
+        } catch (IllegalAccessException ex) {
+        } catch (NoSuchMethodException ex) {
+        } catch (InvocationTargetException ex) {
+        }
         return state.message;
     }
     

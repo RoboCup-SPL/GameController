@@ -16,8 +16,8 @@ public class SPLCoachMessage implements Serializable
     public static final int SPL_COACH_MESSAGE_STRUCT_VERSION = 3;
     public static final int SPL_COACH_MESSAGE_SIZE = 81;
     public static final long SPL_COACH_MESSAGE_RECEIVE_INTERVALL = 10000; // in ms
-    public static final long SPL_COACH_MESSAGE_MIN_SEND_INTERVALL = 3000; // in ms
-    public static final long SPL_COACH_MESSAGE_MAX_SEND_INTERVALL = 6000; // in ms
+    public static final long SPL_COACH_MESSAGE_MIN_SEND_INTERVALL = 0; // in ms
+    public static final long SPL_COACH_MESSAGE_MAX_SEND_INTERVALL = 0; // in ms
     public static final int SIZE = 4 // header size
                                    + 1 // byte for the version
                                    + 1 // team number

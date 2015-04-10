@@ -9,7 +9,7 @@ import data.Rules;
 /**
  * @author Michel Bartsch
  * 
- * This action means that the ball holding penalty has been selected.
+ * This action means that the illegal ball contact penalty has been selected.
  */
 public class BallContact extends Penalty
 {

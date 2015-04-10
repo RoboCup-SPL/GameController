@@ -781,7 +781,6 @@ public class GUI extends JFrame implements GCGUI
         updateState(data);
         updateGoal(data);
         updateKickoff(data);
-        updateRobots(data);
         updatePushes(data);
         updateTimeOut(data);
         updateRefereeTimeout(data);
@@ -794,6 +793,7 @@ public class GUI extends JFrame implements GCGUI
             updatePenaltiesHL(data);
             updateDropBall(data);
         }
+        updateRobots(data);
         updateUndo(data);
         repaint();
     }
@@ -1168,12 +1168,13 @@ public class GUI extends JFrame implements GCGUI
         pen[9].setSelected(hightlightEvent == ActionBoard.substitute);
 
         // Handle quick select for ILLEGAL_MOTION_IN_SET
-        if (pen[4].isEnabled() 
-                && data.getNumberOfRobotsInPlay(0) == Rules.league.robotsPlaying
-                && data.getNumberOfRobotsInPlay(1) == Rules.league.robotsPlaying) {
+        if (pen[4].isEnabled()) {
             boolean otherButtonSelected = false;
             for (JToggleButton button : pen) {
                 otherButtonSelected |= button != pen[4] && button.isSelected();
+            }
+            for (JToggleButton button : undo) {
+                otherButtonSelected |= button.isSelected();
             }
             pen[4].setSelected(!otherButtonSelected);
             if (!otherButtonSelected) {

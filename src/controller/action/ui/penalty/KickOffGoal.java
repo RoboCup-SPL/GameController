@@ -9,7 +9,7 @@ import data.Rules;
 /**
  * @author Michel Bartsch
  * 
- * This action means that the playing with hands penalty has been selected.
+ * This action means that the kick-off goal penalty has been selected.
  */
 public class KickOffGoal extends Penalty
 {
