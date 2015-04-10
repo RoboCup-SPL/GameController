@@ -295,8 +295,11 @@ public class MainWindow extends JFrame implements Runnable {
                 teamPanels[i].remove(p);
             }
         }
-        
-        repaint();
+
+        // Repaint the team panels
+        for (final JPanel panel : teamPanels) {
+            panel.repaint();
+        }
     }
 
     private ImageIcon getTeamIcon(final int team) {
