@@ -49,7 +49,7 @@
         <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
       </manifest>
     </jar>
-    <jar destfile="${jar.dir}/TeamCommunicationMonitor.jar" basedir="${classes.dir}">
+    <jar destfile="${jar.dir}/TeamCommunicationMonitor.jar" basedir="${classes.dir}" includes="${common_classes} teamcomm/">
       <manifest>
         <attribute name="Main-Class" value="teamcomm.Main"/>
         <attribute name="Author" value="Felix Thielke" />
