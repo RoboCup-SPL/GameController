@@ -163,6 +163,9 @@ libgamectrl (i.e. go back to the initial state). libgamectrl will also set
 "GameCtrl/teamNumber" back to zero, so it will recognize the next time your 
 application is started.
 
+Setting the default team color can actually be omitted now. In that case, it
+is black, i.e. the corresponding foot LED is switched off.
+
 You can receive the current GameController packet with:
 
     RoboCupGameControlData gameCtrlData; // should probably zero it the first time it is used
