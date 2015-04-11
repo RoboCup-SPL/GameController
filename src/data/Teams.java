@@ -19,10 +19,35 @@ import javax.imageio.ImageIO;
  * This class provides the icons and names including unique teamNumbers of all
  * teams written in the config file.
  * 
- * This class is a sigleton!
+ * This class is a singleton!
  */
 public class Teams
 {
+    /**
+     * Information about each team.
+     */
+    private static class Info
+    {
+        /** The name of the team. */
+        public String name;
+        /** The icon of the team. */
+        public BufferedImage icon;
+        /** The first and secondary jersey colors of the team. */
+        public String[] colors;
+        
+        /**
+         * Create a new team information.
+         * @param name The name of the team.
+         * @param colors The names of the jersey colors used by the team.
+         *         Can be null if no colors were specified.
+         */
+        public Info(String name, String[] colors)
+        {
+            this.name = name;
+            this.colors = colors;
+        }
+    }
+    
     /** The path to the leagues directories. */
     private static final String PATH = "config/";
     /** The name of the config file. */
@@ -39,23 +64,15 @@ public class Teams
     /** The instance of the singleton. */
     private static Teams instance = new Teams();
     
-    /** The names read from the config files. */
-    private String[][] names;
-    /**
-     * The icons read.
-     * Note, that not all icons are read from the start but just when you ask
-     * for them.
-     */
-    private BufferedImage[][] icons;
-    
+    /** The information read from the config files. */
+    private Info[][] teams;
     
     /**
-     * Creates a new Teams.
+     * Creates a new Teams object.
      */
     private Teams()
     {
-        names = new String[Rules.LEAGUES.length][];
-        icons = new BufferedImage[Rules.LEAGUES.length][];
+        teams = new Info[Rules.LEAGUES.length][];
         for (int i=0; i < Rules.LEAGUES.length; i++) {
             String dir = Rules.LEAGUES[i].leagueDirectory;
             int value;
@@ -82,14 +99,12 @@ public class Teams
                     } catch (Exception e) {}
                 }
             }
-            names[i] = new String[maxValue+1];
-            icons[i] = new BufferedImage[maxValue+1];
+            teams[i] = new Info[maxValue+1];
         }
     }
     
     /**
      * Returns the index the current league has within the LEAGUES-array.
-     * 
      * @return the leagues index.
      */
     private static int getLeagueIndex()
@@ -106,12 +121,11 @@ public class Teams
     
     /**
      * Reads the names of all teams in the config file.
-     * You dont need to use this because the getNames method automatically
+     * You don't need to use this because the getNames method automatically
      * uses this if needed.
      */
-    public static void readNames()
+    public static void readTeams()
     {
-        int value;
         BufferedReader br = null;
         try {
             InputStream inStream = new FileInputStream(PATH+Rules.league.leagueDirectory+"/"+CONFIG);
@@ -119,8 +133,11 @@ public class Teams
                     new InputStreamReader(inStream, CHARSET));
             String line;
             while ((line = br.readLine()) != null) {
-                value = Integer.valueOf(line.split("=")[0]);
-                instance.names[getLeagueIndex()][value] = line.split("=")[1];
+                int key = Integer.valueOf(line.split("=")[0]);
+                String value = line.split("=")[1];
+                String[] values = value.split(",");
+                instance.teams[getLeagueIndex()][key] = new Info(values[0],
+                        values.length == 3 ? new String[]{values[1], values[2]} : null);
             }
         } catch (IOException e) {
             Log.error("cannot load "+PATH+Rules.league.leagueDirectory+"/"+CONFIG);
@@ -136,37 +153,31 @@ public class Teams
     
     /**
      * Returns an array containing the names of all teams.
-     * 
-     * @param withNumbers   If true, each name starts with "<teamNumber>: ".
-     * 
-     * @return An array containing the names at their teamNumber`s position.
+     * @param withNumbers If true, each name starts with "<teamNumber>: ".
+     * @return An array containing the names at their teamNumber's position.
      */
     public static String[] getNames(boolean withNumbers)
     {
         int leagueIndex = getLeagueIndex();
-        if (instance.names[leagueIndex][0] == null) {
-            readNames();
+        if (instance.teams[leagueIndex][0] == null) {
+            readTeams();
         }
-        if (withNumbers) {
-            String[] out = new String[instance.names[leagueIndex].length];
-            for (int i=0; i<instance.names[leagueIndex].length; i++) {
-                if (instance.names[leagueIndex][i] != null) {
-                    out[i] = instance.names[leagueIndex][i] + " (" + i + ")";
-                }
+        String[] out = new String[instance.teams[leagueIndex].length];
+        for (int i=0; i<instance.teams[leagueIndex].length; i++) {
+            if (instance.teams[leagueIndex][i] != null) {
+                out[i] = instance.teams[leagueIndex][i].name + (withNumbers ? " (" + i + ")" : "");
             }
-            return out;
-        } else {
-            return instance.names[leagueIndex];
         }
+        return out;
     }
     
     /**
-     * Loads a team`s icon.
-     * You dont need to use this because the getIcon method automatically
+     * Loads a team's icon.
+     * You don't need to use this because the getIcon method automatically
      * uses this if needed.
      * @param team Number of the team which icon should be read.
      */
-    public static void readIcon(int team)
+    private static void readIcon(int team)
     {
         BufferedImage out = null;
         File file = null;
@@ -192,22 +203,37 @@ public class Teams
             graphics.setColor(new Color(0f, 0f, 0f, 0f));
             graphics.fillRect(0, 0, out.getWidth(), out.getHeight());
         }
-        instance.icons[getLeagueIndex()][team] = out;
+        instance.teams[getLeagueIndex()][team].icon = out;
     }
     
     /**
-     * Returns a team`s icon.
-     * 
-     * @param team   The unique teamNumber of the team you want the icon for.
-     * 
-     * @return The team´s icon.
+     * Returns a team's icon.
+     * @param team The unique team number of the team you want the icon for.
+     * @return The team's icon.
      */
     public static BufferedImage getIcon(int team)
     {
         int leagueIndex = getLeagueIndex();
-        if (instance.icons[leagueIndex][team] == null) {
+        if (instance.teams[leagueIndex][team] == null) {
+            readTeams();
+        }
+        if (instance.teams[leagueIndex][team].icon == null) {
             readIcon(team);
         }
-        return instance.icons[leagueIndex][team];
+        return instance.teams[leagueIndex][team].icon;
+    }
+    
+    /**
+     * Returns a team's jersey colors.
+     * @param team The unique team number of the team you want the icon for.
+     * @return The team's jersey colors or null if none were specified.
+     */
+    public static String[] getColors(int team)
+    {
+        int leagueIndex = getLeagueIndex();
+        if (instance.teams[leagueIndex][team] == null) {
+            readTeams();
+        }
+        return instance.teams[leagueIndex][team].colors;
     }
 }

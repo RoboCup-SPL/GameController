@@ -37,7 +37,7 @@ public class Main
      * Actually there are no dependencies, but this should be the first thing
      * to be written into the log file.
      */
-    public static final String version = "GC2 1.2";
+    public static final String version = "GC2 1.3";
     
     /** Relative directory of where logs are stored */
     private final static String LOG_DIRECTORY = "logs";
@@ -136,8 +136,9 @@ public class Main
         for (int i=0; i<2; i++) {
             data.team[i].teamNumber = (byte)input.outTeam[i];
         }
+        data.team[0].teamColor = input.outTeamColor[0];
+        data.team[1].teamColor = input.outTeamColor[1];
         data.kickOffTeam = (byte)input.outTeam[0];
-
         data.colorChangeAuto = input.outAutoColorChange;
         data.gameType = input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
 
@@ -185,7 +186,10 @@ public class Main
 
         //ui
         ActionBoard.init();
-        Log.state(data, Teams.getNames(false)[data.team[0].teamNumber] +" vs "+Teams.getNames(false)[data.team[1].teamNumber]);
+        Log.state(data, Teams.getNames(false)[data.team[0].teamNumber]
+                + " (" + Rules.league.teamColorName[data.team[0].teamColor]
+                + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
+                + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
         GCGUI gui = new GUI(input.outFullscreen, data);
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);

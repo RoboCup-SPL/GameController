@@ -21,7 +21,7 @@ public class Parser
     /* This prefix will be placed at the beginning of every logInfo´s log line,
      which was made undone by an undo*/
     private static final String UNDONE_PREFIX = "<undone>";
-    /* The seperator used for the output within a row. */
+    /* The separator used for the output within a row. */
     private static final String OUT_SEP = ",";
     /* The output´s date format (date-time) */
     public static final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
@@ -44,8 +44,7 @@ public class Parser
         "Manually Penalised",
         "Dropped Ball",
         "Global Game Stuck",
-        "Goal for Red",
-        "Goal for Blue",
+        "Goal for",
         "Goal decrease for Team",
         "Out by",
         "Substituted by Player",
@@ -79,7 +78,7 @@ public class Parser
     
      /**
      * Parsing a log to get some information and place the undone-prefix,
-     * so this is needded before parsing for statistics. The information
+     * so this is needed before parsing for statistics. The information
      * will be written into the LogInfo instance.
      * 
      * @param log   The log to parse.
@@ -130,8 +129,15 @@ public class Parser
             } else if (action.contains(" vs ")) {
                 String[] teams = action.split(" vs ");
                 if (teams.length == 2) {
-                    log.team[0] = teams[0];
-                    log.team[1] = teams[1];
+                    for (int j = 0; j < teams.length; ++j) {
+                        String[] parts = teams[j].split(" \\(");
+                        if (parts.length == 2) {
+                            log.team[j] = parts[0];
+                            log.color[j] = parts[1].split("\\)")[0];
+                        } else {
+                            log.parseErrors += "error in line "+i+": Color seems to be missing" + GUI.HTML_LF;
+                        }
+                    }
                 } else {
                     log.parseErrors += "error in line "+i+": Found vs but not 2 teams" + GUI.HTML_LF;
                 }
@@ -208,16 +214,16 @@ public class Parser
                 continue;
             }
             
-            if (raw.contains(log.league.teamColorName[0])) {
+            if (raw.contains(log.color[0])) {
                 team = teams[0];
-            } else if (raw.contains(log.league.teamColorName[1])) {
+            } else if (raw.contains(log.color[1])) {
                 team = teams[1];
             } else {
                 team = "";
             }
             
             player = "";
-            String pattern = "("+log.league.teamColorName[0]+"|"+log.league.teamColorName[1]+")\\s*(\\d+)\\s*$";
+            String pattern = "("+log.color[0]+"|"+log.color[1]+")\\s*(\\d+)\\s*$";
             Matcher matcher = Pattern.compile(pattern).matcher(raw);
             if (matcher.find()) {
                 if (matcher.groupCount() == 2) {

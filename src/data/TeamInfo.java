@@ -137,6 +137,8 @@ public class TeamInfo implements Serializable
         switch (teamColor) {
             case GameControlData.TEAM_BLUE: temp = "blue"; break;
             case GameControlData.TEAM_RED:  temp = "red";  break;
+            case GameControlData.TEAM_YELLOW: temp = "yellow"; break;
+            case GameControlData.TEAM_BLACK:  temp = "black";  break;
             default: temp = "undefinied("+teamColor+")";
         }
         out += "          teamColor: "+temp+"\n";

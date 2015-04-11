@@ -34,10 +34,6 @@ public class SecondHalfOvertime extends GCAction
         if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_FALSE;
             data.secGameState = GameControlData.STATE2_OVERTIME;
-            if (data.colorChangeAuto) {
-                data.team[0].teamColor = GameControlData.TEAM_BLUE;
-                data.team[1].teamColor = GameControlData.TEAM_RED;
-            }
             FirstHalf.changeSide(data);
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.gameState = GameControlData.STATE_INITIAL;

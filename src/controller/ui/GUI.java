@@ -117,9 +117,13 @@ public class GUI extends JFrame implements GCGUI
     private static final String WINDOW_TITLE = "GameController";
     private static final String ICONS_PATH = "config/icons/";
     private static final String[][] BACKGROUND_SIDE = {{"robot_left_blue.png",
-                                                        "robot_left_red.png"},
+                                                        "robot_left_red.png",
+                                                        "robot_left_yellow.png",
+                                                        "robot_left_black.png"},
                                                        {"robot_right_blue.png",
-                                                        "robot_right_red.png"}};
+                                                        "robot_right_red.png",
+                                                        "robot_right_yellow.png",
+                                                        "robot_right_black.png"}};
     private static final String BACKGROUND_MID = "field.png";
     private static final String BACKGROUND_CLOCK_SMALL = "time_ground_small.png";
     private static final String BACKGROUND_CLOCK = "time_ground.png";
@@ -256,7 +260,7 @@ public class GUI extends JFrame implements GCGUI
      *                      the display`s resolution to the GUI`s size.
      * @param data      The startig data.
      */
-    public GUI(boolean fullscreen, AdvancedData data)
+    public GUI(boolean fullscreen, GameControlData data)
     {
         super(WINDOW_TITLE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -284,7 +288,7 @@ public class GUI extends JFrame implements GCGUI
         lanOffline = new ImageIcon(ICONS_PATH+OFFLINE);
         lanUnknown = new ImageIcon(ICONS_PATH+UNKNOWN_ONLINE_STATUS);
         
-        backgroundSide = new ImageIcon[2][2];
+        backgroundSide = new ImageIcon[2][4];
         for (int i=0; i<BACKGROUND_SIDE.length; i++) {
             for (int j=0; j<BACKGROUND_SIDE[i].length; j++) {
                 backgroundSide[i][j] = new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i][j]);

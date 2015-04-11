@@ -36,21 +36,24 @@ Select your league. The default can be specified as a command line parameter (se
 Pick the two teams that are playing. They have to be different teams. If you are 
 practicing alone, use the "Invisibles" as second team.
 
-SPL: You also have to select whether you play a game in the preliminaries, a play-off
-game, or a drop-in player game. In the preliminaries and in drop-player games the clock
-will continue to run during game stoppages and there will be no penalty shootout in case
-of a draw. In drop-in player games, there are no coaches, teams cannot call a timeout,
-and there are no substitutes.
+SPL: The left team will always play with the jerseys that are specified first in the file
+teams.cfg. The right team will also play with its primary jerseys unless their color is
+the same as the jersey color of the left team. Then, the secondary jerseys will be used
+instead. You also have to select whether you play a game in the preliminaries or a 
+play-off game. In the preliminaries the clock will continue to run during game stoppages
+and there will be no penalty shootout in case of a draw. In play-off games, the clock
+will be stopped and there may be penalty shootout. In addition, kick-offs will be 
+signaled using a whistle while the GameController actually hides the game state change
+from the robots for a while.
 
 HL: You also have to select whether you play a normal game or a knock-out game. A
 knock-out game will continue after a draw with two halves of extra time (if goals were
-scored before) and then a penalty shoot-out if necessary.
+scored before) and then a penalty shoot-out if necessary. You can also select whether
+teams exchange their colors in the halftime.
 
 You can select whether the GameController should run in fullscreen mode or in windowed
 mode. Note that the fullscreen mode does not work correctly on some Linux desktops,
 because although they report to Java that they would support this feature, they do not.
-
-HL: You can also select whether teams exchange their colors in the halftime.
 
 
 ### Main Screen
