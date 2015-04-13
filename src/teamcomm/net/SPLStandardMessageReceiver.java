@@ -283,7 +283,7 @@ public class SPLStandardMessageReceiver extends Thread {
             while (!isInterrupted()) {
                 final NetPackage p = queue.take();
                 final SPLStandardMessage message;
-                final Class<? extends SPLStandardMessage> c = PluginLoader.getMessageClass(p.team);
+                final Class<? extends SPLStandardMessage> c = PluginLoader.getInstance().getMessageClass(p.team);
 
                 if (logger != null) {
                     try {
