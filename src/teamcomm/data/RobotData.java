@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import teamcomm.PluginLoader;
 
 /**
  * @author Felix Thielke
@@ -128,6 +129,8 @@ public class RobotData {
         }
 
         if (somethingChanged) {
+            PluginLoader.getInstance().update((int)data.team[0].teamNumber, (int)data.team[1].teamNumber);
+            
             synchronized (this) {
                 notifyAll();
             }
@@ -149,6 +152,7 @@ public class RobotData {
                                 it.remove();
                             }
                         }
+                        PluginLoader.getInstance().update(teamNumber);
                         break;
                     } else if (teamNumbers[i] == teamNumber) {
                         break;

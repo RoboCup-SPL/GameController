@@ -207,7 +207,7 @@ public class View3D implements GLEventListener {
         gl.glEnable(GL2.GL_LIGHT0);
 
         // Set clear color
-        gl.glClearColor(0.65f, 0.65f, 0.7f, 1.0f);
+        gl.glClearColor(0.3f, 0.3f, 0.35f, 1.0f);
 
         // Load display elements from scene file
         final Set<String> requiredModels = new HashSet<String>();

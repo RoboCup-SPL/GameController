@@ -203,7 +203,7 @@ public class SPLStandardMessageReceiver extends Thread {
 
     private static final int MAX_TEAMNUMBER = 50;
 
-    private final ReceiverThread[] receivers = new ReceiverThread[MAX_TEAMNUMBER];
+    private final ReceiverThread[] receivers = new ReceiverThread[MAX_TEAMNUMBER + Math.min(Math.max(MAX_TEAMNUMBER - 98, 0), 2)];
     private final LinkedBlockingQueue<NetPackage> queue = new LinkedBlockingQueue<NetPackage>();
     private final ObjectOutputStream logger;
 

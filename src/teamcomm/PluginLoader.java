@@ -1,17 +1,27 @@
 package teamcomm;
 
+import common.Log;
 import data.SPLStandardMessage;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import teamcomm.data.messages.AdvancedMessage;
 import teamcomm.gui.drawings.Drawing;
+import teamcomm.gui.drawings.PerPlayer;
+import teamcomm.gui.drawings.Static;
 
 /**
  *
@@ -51,17 +61,86 @@ public class PluginLoader {
     }
 
     public void update(final Set<Integer> teamNumbers) {
-        
-        pluginDir.listFiles(new FilenameFilter() {
+        // Find dirs that correspond to team numbers
+        final File[] pluginDirs = pluginDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(final File dir, final String name) {
                 try {
                     return teamNumbers.contains(Integer.parseInt(name));
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     return false;
                 }
             }
         });
+
+        // Find jar files
+        for (final File pDir : pluginDirs) {
+            if (!pDir.isDirectory()) {
+                continue;
+            }
+
+            final int teamNumber = Integer.parseInt(pDir.getName());
+            final LinkedList<File> dirs = new LinkedList<File>();
+            dirs.add(pDir);
+            final List<File> jars = new LinkedList<File>();
+
+            // Scan plugin directory
+            while (!dirs.isEmpty()) {
+                final File dir = dirs.pollFirst();
+                for (final File file : dir.listFiles()) {
+                    if (file.isDirectory()) {
+                        dirs.addLast(file);
+                    } else if (file.isFile() && file.getName().endsWith(".jar")) {
+                        jars.add(file);
+                    }
+                }
+            }
+
+            // Load jars
+            for (final File file : jars) {
+                try {
+                    final JarFile jar = new JarFile(file);
+                    final Set<String> classNames = new HashSet<String>();
+                    final Enumeration<JarEntry> entries = jar.entries();
+                    while (entries.hasMoreElements()) {
+                        final JarEntry entry = entries.nextElement();
+                        if (entry.getName().endsWith(".class")) {
+                            classNames.add(entry.getName().substring(0, entry.getName().length() - 6).replaceAll("/", "\\."));
+                        }
+                    }
+
+                    // Load classes from jar
+                    final URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()});
+                    classLoop:
+                    for (final String className : classNames) {
+                        final Class<?> cls = loader.loadClass(className);
+
+                        if (AdvancedMessage.class.isAssignableFrom(cls)) {
+                            // Class is a message class: set it as default if no
+                            // other message class exists for the team
+                            if (!messageClasses.containsKey(teamNumber)) {
+                                messageClasses.put(teamNumber, (Class<AdvancedMessage>) cls);
+                            }
+                        } else if (PerPlayer.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
+                            // Class is a drawing: add it to the team drawings
+                            // if it does not yet exist
+                            Collection<Drawing> drawingsForTeam = drawings.get(teamNumber);
+                            if (drawingsForTeam == null) {
+                                drawingsForTeam = new LinkedList<Drawing>();
+                                drawings.put(teamNumber, drawingsForTeam);
+                            }
+                            for (final Drawing d : drawingsForTeam) {
+                                if (cls.isInstance(d)) {
+                                    continue classLoop;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Log.error(ex.getClass().getSimpleName() + ": Could not open plugin " + file.getPath() + ": " + ex.getMessage());
+                }
+            }
+        }
     }
 
 }
