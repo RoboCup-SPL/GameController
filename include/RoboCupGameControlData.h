@@ -10,9 +10,14 @@
 
 #define MAX_NUM_PLAYERS             11
 
-#define TEAM_BLUE                   0
+// SPL
+#define TEAM_BLUE                   0 // cyan, blue, violet
+#define TEAM_RED                    1 // magenta, pink (not red/orange)
+#define TEAM_YELLOW                 2 // yellow
+#define TEAM_BLACK                  3 // black, dark gray
+
+// HL
 #define TEAM_CYAN                   0
-#define TEAM_RED                    1
 #define TEAM_MAGENTA                1
 #define DROPBALL                    255
 

@@ -146,10 +146,20 @@ private:
          team.teamColour != previousTeamColour ||
          team.players[*playerNumber - 1].penalty != previousPenalty)
       {
-        if(team.teamColour == TEAM_BLUE)
-          setLED(leftFootRed, 0.f, 0.f, 1.f);
-        else
-          setLED(leftFootRed, 1.f, 0.f, 0.f);
+        switch(team.teamColour)
+        {
+          case TEAM_BLUE:
+            setLED(leftFootRed, 0.f, 0.f, 1.f);
+            break;
+          case TEAM_RED:
+            setLED(leftFootRed, 1.f, 0.f, 0.f);
+            break;
+          case TEAM_YELLOW:
+            setLED(leftFootRed, 1.f, 1.f, 0.f);
+            break;
+          default:
+            setLED(leftFootRed, 0.f, 0.f, 0.f);
+        }
 
         if(gameCtrlData.state == STATE_INITIAL &&
            gameCtrlData.secondaryState == STATE2_PENALTYSHOOT &&
@@ -246,10 +256,12 @@ private:
       if(gameCtrlData.teams[0].teamNumber != teamNumber &&
          gameCtrlData.teams[1].teamNumber != teamNumber)
       {
-        uint8_t teamColour = *defaultTeamColour == TEAM_RED ? 1 : 0;
-        gameCtrlData.teams[teamColour].teamNumber = (uint8_t) teamNumber;
-        gameCtrlData.teams[teamColour].teamColour = teamColour;
-        gameCtrlData.teams[1 - teamColour].teamColour = 1 - teamColour;
+        uint8_t teamColour = (uint8_t) *defaultTeamColour;
+        if(teamColour != TEAM_BLUE && teamColour != TEAM_RED && teamColour != TEAM_YELLOW)
+          teamColour = TEAM_BLACK;
+        gameCtrlData.teams[0].teamNumber = (uint8_t) teamNumber;
+        gameCtrlData.teams[0].teamColour = teamColour;
+        gameCtrlData.teams[1].teamColour = teamColour ^ 1; // we don't know better
         if(!gameCtrlData.playersPerTeam)
           gameCtrlData.playersPerTeam = (uint8_t) *playerNumber; // we don't know better
         publish();
@@ -293,7 +305,7 @@ private:
           {
             if(leftFootButtonPressed)
             {
-              team.teamColour ^= 1;
+              team.teamColour = (team.teamColour + 1) & 3; // cycle between TEAM_BLUE .. TEAM_BLACK
               publish();
             }
             previousLeftFootButtonPressed = leftFootButtonPressed;
@@ -459,6 +471,11 @@ public:
 
       for(int i = 0; i < numOfButtons; ++i)
         buttons[i] = (float*) memory->getDataPtr(buttonNames[i]);
+
+      // If no color was set, set it to black (no LED).
+      // This actually has a race condition.
+      if(memory->getDataList("GameCtrl/teamColour").empty())
+        memory->insertData("GameCtrl/teamColour", TEAM_BLACK);
 
       playerNumber = (int*) memory->getDataPtr("GameCtrl/playerNumber");
       teamNumberPtr = (int*) memory->getDataPtr("GameCtrl/teamNumber");

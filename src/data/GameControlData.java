@@ -25,6 +25,8 @@ public class GameControlData implements Serializable
 
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
+    public static final byte TEAM_YELLOW = 2;
+    public static final byte TEAM_BLACK = 3;
     public static final byte DROPBALL = -128;
     
     public static final byte GAME_ROUNDROBIN = 0;
@@ -84,7 +86,7 @@ public class GameControlData implements Serializable
     public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF)
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
-    public byte kickOffTeam = TEAM_BLUE;                        // the next team to kick off
+    public byte kickOffTeam;                                    // the next team to kick off
     public byte secGameState = STATE2_NORMAL;                   // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     public byte dropInTeam;                                     // team that caused last drop in
     protected short dropInTime = -1;                            // number of seconds passed since the last drop in. -1 before first dropin
