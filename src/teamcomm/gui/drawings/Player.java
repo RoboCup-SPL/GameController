@@ -8,7 +8,7 @@ import java.util.Map;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
 
-@Models({"robotBlue", "robotRed"})
+@Models({"robotBlue", "robotRed", "robotBlack", "robotYellow"})
 /**
  *
  * @author Felix Thielke
@@ -21,7 +21,7 @@ public class Player extends PerPlayer {
         if (msg != null) {
             gl.glPushMatrix();
 
-            if(player.getPenalty() != PlayerInfo.PENALTY_NONE) {
+            if (player.getPenalty() != PlayerInfo.PENALTY_NONE) {
                 gl.glTranslatef(-msg.playerNum, -3.5f, 0);
             } else {
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
@@ -33,7 +33,20 @@ public class Player extends PerPlayer {
                 gl.glRotatef(90, 0, 1, 0);
             }
 
-            gl.glCallList(RobotData.getInstance().getTeamColor(side) == GameControlData.TEAM_BLUE ? modelLists.get("robotBlue") : modelLists.get("robotRed"));
+            switch (RobotData.getInstance().getTeamColor(side)) {
+                case GameControlData.TEAM_BLUE:
+                    gl.glCallList(modelLists.get("robotBlue"));
+                    break;
+                case GameControlData.TEAM_RED:
+                    gl.glCallList(modelLists.get("robotRed"));
+                    break;
+                case GameControlData.TEAM_BLACK:
+                    gl.glCallList(modelLists.get("robotBlack"));
+                    break;
+                case GameControlData.TEAM_YELLOW:
+                    gl.glCallList(modelLists.get("robotYellow"));
+                    break;
+            }
 
             gl.glPopMatrix();
         }

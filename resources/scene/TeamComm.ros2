@@ -9,6 +9,12 @@
     <Body ref="Nao" name="robotRed">
       <Set name="NaoColor" value="red"/>
     </Body>
+    <Body ref="Nao" name="robotBlack">
+      <Set name="NaoColor" value="black"/>
+    </Body>
+    <Body ref="Nao" name="robotYellow">
+      <Set name="NaoColor" value="yellow"/>
+    </Body>
 
     <Body name="ball" ref="ball">
       <Translation z="0.0325m" />
