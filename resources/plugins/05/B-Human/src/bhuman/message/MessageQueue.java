@@ -16,11 +16,10 @@ public class MessageQueue {
     private final short ballLastPerceptY;
     private final float robotPoseDeviation;
     private final short robotPoseValidity;
-    private final byte sizeMarker;
 
-    private final int usedSize;
+    private final long usedSize;
     private final int numberOfMessages;
-    
+
     public MessageQueue(final ByteBuffer buf) {
         buf.rewind();
         buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -32,40 +31,58 @@ public class MessageQueue {
         ballLastPerceptY = buf.getShort();
         robotPoseDeviation = buf.getFloat();
         robotPoseValidity = toUnsigned(buf.get());
-        sizeMarker = buf.get();
 
-        usedSize = buf.getInt();
+        usedSize = toUnsigned(buf.getInt());
         numberOfMessages = buf.getInt();
-        
-        System.out.println("timestamp: " + timestamp);
-        System.out.println("ballTimeWhenLastSeen: " + ballTimeWhenLastSeen);
-        System.out.println("ballTimeWhenDisappeared: " + ballTimeWhenDisappeared);
-        System.out.println("ballLastPerceptX: " + ballLastPerceptX);
-        System.out.println("ballLastPerceptY: " + ballLastPerceptY);
-        System.out.println("robotPoseDeviation: " + robotPoseDeviation);
-        System.out.println("robotPoseValidity: " + robotPoseValidity);
-        System.out.println("sizeMarker: " + sizeMarker);
-        System.out.println("usedSize: " + usedSize);
-        System.out.println("numberOfMessages: " + numberOfMessages);
-        
+
         while (buf.hasRemaining()) {
             final MessageID id = MessageID.values()[toUnsigned(buf.get())];
-
-            System.out.print(id.toString());
-            //if (id != MessageID.idProcessBegin && id != MessageID.idProcessFinished) {
-                final int size = buf.get() | (buf.get() << 8) | (buf.get() << 16);
-                System.out.print(" (" + size + " bytes)");
-                buf.position(buf.position() + size);
-            //}
-            System.err.println();
+            final int size = buf.get() | (buf.get() << 8) | (buf.get() << 16);
+            buf.position(buf.position() + size);
         }
     }
 
-    private static short toUnsigned(byte b) {
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public long getBallTimeWhenLastSeen() {
+        return ballTimeWhenLastSeen;
+    }
+
+    public long getBallTimeWhenDisappeared() {
+        return ballTimeWhenDisappeared;
+    }
+
+    public short getBallLastPerceptX() {
+        return ballLastPerceptX;
+    }
+
+    public short getBallLastPerceptY() {
+        return ballLastPerceptY;
+    }
+
+    public float getRobotPoseDeviation() {
+        return robotPoseDeviation;
+    }
+
+    public short getRobotPoseValidity() {
+        return robotPoseValidity;
+    }
+
+    public long getUsedSize() {
+        return usedSize;
+    }
+
+    public int getNumberOfMessages() {
+        return numberOfMessages;
+    }
+
+    private static short toUnsigned(final byte b) {
         return (short) (b < 0 ? b + (2 << Byte.SIZE) : b);
     }
 
-    private static long toUnsigned(int i) {
+    private static long toUnsigned(final int i) {
         return i < 0 ? i + (1l << (long) Integer.SIZE) : i;
     }
 }
