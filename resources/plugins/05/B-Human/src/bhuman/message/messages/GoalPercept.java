@@ -8,6 +8,8 @@ public class GoalPercept extends Message {
 
     public GoalPercept(byte[] data) {
         super(data);
+        
+        // TODO
     }
     
 }

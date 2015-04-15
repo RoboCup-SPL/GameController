@@ -1,7 +1,10 @@
 package bhuman.message;
 
+import bhuman.message.messages.Message;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  *
@@ -19,6 +22,8 @@ public class MessageQueue {
 
     private final long usedSize;
     private final int numberOfMessages;
+
+    private final Map<MessageID, Message> messages = new EnumMap<MessageID, Message>(MessageID.class);
 
     public MessageQueue(final ByteBuffer buf) {
         buf.rewind();
@@ -38,7 +43,9 @@ public class MessageQueue {
         while (buf.hasRemaining()) {
             final MessageID id = MessageID.values()[toUnsigned(buf.get())];
             final int size = buf.get() | (buf.get() << 8) | (buf.get() << 16);
-            buf.position(buf.position() + size);
+            final byte[] data = new byte[size];
+            buf.get(data);
+            messages.put(id, Message.factory(id, data));
         }
     }
 
@@ -76,6 +83,10 @@ public class MessageQueue {
 
     public int getNumberOfMessages() {
         return numberOfMessages;
+    }
+
+    public Message getMessage(final MessageID id) {
+        return messages.get(id);
     }
 
     private static short toUnsigned(final byte b) {

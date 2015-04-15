@@ -8,7 +8,10 @@ import teamcomm.data.messages.AdvancedMessage;
  * @author Felix Thielke
  */
 public class BHumanMessage extends AdvancedMessage {
+
     private static final long serialVersionUID = 8509144227967224852L;
+
+    public MessageQueue queue;
 
     @Override
     public String[] display() {
@@ -17,8 +20,7 @@ public class BHumanMessage extends AdvancedMessage {
 
     @Override
     public void init() {
-        System.out.println("test");
-        MessageQueue queue = new MessageQueue(ByteBuffer.wrap(data));
+        queue = new MessageQueue(ByteBuffer.wrap(data));
     }
-    
+
 }
