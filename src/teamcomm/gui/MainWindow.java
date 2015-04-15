@@ -64,7 +64,7 @@ public class MainWindow extends JFrame implements Runnable {
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
     private final Map<String, JFrame> robotDetailPanels = new HashMap<String, JFrame>();
 
-    private final JMenuItem[] logMenuItems;
+    private final JMenuItem[] logMenuItems = new JMenuItem[3];
 
     public MainWindow() {
         super("TeamCommunicationMonitor");
@@ -98,10 +98,23 @@ public class MainWindow extends JFrame implements Runnable {
 
         // Add menu bar
         final JMenuBar mb = new JMenuBar();
+        mb.add(createFileMenu());
+        mb.add(createLogMenu());
+        mb.add(createViewMenu());
+        setJMenuBar(mb);
 
-        // File menu
+        // Display window
+        setPreferredSize(new Dimension(800, 600));
+        pack();
+        try {
+            Thread.sleep(100); // For compatibility with X11 (?)
+        } catch (InterruptedException ex) {
+        }
+        setVisible(true);
+    }
+
+    private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
-        final JFrame frame = this;
         JMenuItem i = new JMenuItem("Reset");
         i.addActionListener(new ActionListener() {
             @Override
@@ -116,18 +129,21 @@ public class MainWindow extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Main.shutdown();
-                frame.setVisible(false);
+                setVisible(false);
             }
         });
         fileMenu.add(i);
-        mb.add(fileMenu);
 
-        // Log menu
+        return fileMenu;
+    }
+
+    private JMenu createLogMenu() {
+        final JFrame frame = this;
         final JMenu logMenu = new JMenu("Log");
-        final JMenuItem replayOption = new JMenuItem("Replay log file");
-        final JMenuItem pauseOption = new JMenuItem("Pause replaying");
-        final JMenuItem stopOption = new JMenuItem("Stop replaying");
-        replayOption.addActionListener(new ActionListener() {
+        logMenuItems[0] = new JMenuItem("Replay log file");
+        logMenuItems[1] = new JMenuItem("Pause replaying");
+        logMenuItems[2] = new JMenuItem("Stop replaying");
+        logMenuItems[0].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final JFileChooser fc = new JFileChooser(new File(new File(".").getAbsoluteFile(), "logs_teamcomm"));
@@ -135,9 +151,9 @@ public class MainWindow extends JFrame implements Runnable {
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     try {
                         SPLStandardMessageReceiver.getInstance().replayLog(fc.getSelectedFile());
-                        replayOption.setEnabled(false);
-                        pauseOption.setEnabled(true);
-                        stopOption.setEnabled(true);
+                        logMenuItems[0].setEnabled(false);
+                        logMenuItems[1].setEnabled(true);
+                        logMenuItems[2].setEnabled(true);
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null,
                                 "Error opening log file.",
@@ -147,35 +163,39 @@ public class MainWindow extends JFrame implements Runnable {
                 }
             }
         });
-        logMenu.add(replayOption);
-        pauseOption.addActionListener(new ActionListener() {
+        logMenu.add(logMenuItems[0]);
+        logMenuItems[1].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 SPLStandardMessageReceiver.getInstance().toggleReplayPaused();
                 if (SPLStandardMessageReceiver.getInstance().isReplayPaused()) {
-                    pauseOption.setText("Continue replaying");
+                    logMenuItems[1].setText("Continue replaying");
                 } else {
-                    pauseOption.setText("Pause replaying");
+                    logMenuItems[1].setText("Pause replaying");
                 }
             }
         });
-        pauseOption.setEnabled(false);
-        logMenu.add(pauseOption);
-        stopOption.addActionListener(new ActionListener() {
+        logMenuItems[1].setEnabled(false);
+        logMenu.add(logMenuItems[1]);
+        logMenuItems[2].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 SPLStandardMessageReceiver.getInstance().stopReplaying();
             }
         });
-        stopOption.setEnabled(false);
-        logMenu.add(stopOption);
-        replayOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
-        pauseOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
-        stopOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
-        mb.add(logMenu);
-        logMenuItems = new JMenuItem[]{replayOption, pauseOption, stopOption};
+        logMenuItems[2].setEnabled(false);
+        logMenu.add(logMenuItems[2]);
+        logMenuItems[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+        logMenuItems[1].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
+        logMenuItems[2].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
 
+        return logMenu;
+    }
+
+    private JMenu createViewMenu() {
         final JMenu viewMenu = new JMenu("View");
+
+        // Mirroring
         final JCheckBoxMenuItem mirrorOption = new JCheckBoxMenuItem("Mirror", RobotData.getInstance().isMirrored());
         mirrorOption.addItemListener(new ItemListener() {
             @Override
@@ -184,6 +204,14 @@ public class MainWindow extends JFrame implements Runnable {
             }
         });
         viewMenu.add(mirrorOption);
+
+        // Drawings
+        viewMenu.add(createDrawingsMenu());
+
+        return viewMenu;
+    }
+
+    private JMenu createDrawingsMenu() {
         final JMenu drawingsMenu = new JMenu("Drawings");
         for (final Drawing d : fieldView.getDrawings()) {
             final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
@@ -195,18 +223,8 @@ public class MainWindow extends JFrame implements Runnable {
             });
             drawingsMenu.add(m);
         }
-        viewMenu.add(drawingsMenu);
-        mb.add(viewMenu);
-        setJMenuBar(mb);
 
-        // Display window
-        setPreferredSize(new Dimension(800, 600));
-        pack();
-        try {
-            Thread.sleep(100); // For compatibility with X11 (?)
-        } catch (InterruptedException ex) {
-        }
-        setVisible(true);
+        return drawingsMenu;
     }
 
     @Override
