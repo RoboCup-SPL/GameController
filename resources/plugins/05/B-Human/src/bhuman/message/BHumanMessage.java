@@ -1,5 +1,6 @@
-package bhuman;
+package bhuman.message;
 
+import java.nio.ByteBuffer;
 import teamcomm.data.messages.AdvancedMessage;
 
 /**
@@ -16,7 +17,8 @@ public class BHumanMessage extends AdvancedMessage {
 
     @Override
     public void init() {
-        
+        System.out.println("test");
+        MessageQueue queue = new MessageQueue(ByteBuffer.wrap(data));
     }
     
 }
