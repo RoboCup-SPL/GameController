@@ -14,13 +14,14 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
@@ -47,7 +48,7 @@ public class View3D implements GLEventListener {
 
     private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
 
-    private final PriorityQueue<Drawing> drawings = new PriorityQueue<Drawing>(new Comparator<Drawing>() {
+    private static final Comparator<Drawing> drawingComparator = new Comparator<Drawing>() {
         @Override
         public int compare(final Drawing o1, final Drawing o2) {
             // opaque objects have priority over transparent objects
@@ -61,7 +62,8 @@ public class View3D implements GLEventListener {
             // higher priorities are drawn earlier
             return o2.getPriority() - o1.getPriority();
         }
-    });
+    };
+    private final List<Drawing> drawings = new LinkedList<Drawing>();
 
     private final Map<String, Integer> objectLists = new HashMap<String, Integer>();
 
@@ -136,6 +138,7 @@ public class View3D implements GLEventListener {
 
         // Setup common drawings
         drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
+        Collections.sort(drawings, drawingComparator);
 
         // Start rendering
         animator.start();
@@ -266,6 +269,7 @@ public class View3D implements GLEventListener {
                 teamNumbers[0] = PluginLoader.TEAMNUMBER_COMMON;
                 teamNumbers[1] = PluginLoader.TEAMNUMBER_COMMON;
                 drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
+                Collections.sort(drawings, drawingComparator);
             }
         } else {
             if (!((curTeamNumbers[0] == teamNumbers[0] && curTeamNumbers[1] == teamNumbers[1])
@@ -276,6 +280,7 @@ public class View3D implements GLEventListener {
                 drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
                 drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[0]));
                 drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
+                Collections.sort(drawings, drawingComparator);
             }
         }
 
@@ -320,7 +325,7 @@ public class View3D implements GLEventListener {
         }
     }
 
-    public PriorityQueue<Drawing> getDrawings() {
+    public List<Drawing> getDrawings() {
         return drawings;
     }
 }
