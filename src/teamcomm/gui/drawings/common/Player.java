@@ -1,4 +1,4 @@
-package teamcomm.gui.drawings;
+package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
 import data.GameControlData;
@@ -7,6 +7,8 @@ import data.SPLStandardMessage;
 import java.util.Map;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
+import teamcomm.gui.drawings.Models;
+import teamcomm.gui.drawings.PerPlayer;
 
 @Models({"robotBlue", "robotRed", "robotBlack", "robotYellow"})
 /**
@@ -52,4 +54,13 @@ public class Player extends PerPlayer {
         }
     }
 
+    @Override
+    public boolean hasAlpha() {
+        return false;
+    }
+
+    @Override
+    public int getPriority() {
+        return 0;
+    }
 }

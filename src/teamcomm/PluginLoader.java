@@ -30,6 +30,9 @@ import teamcomm.gui.drawings.Static;
 public class PluginLoader {
 
     private static final String PLUGIN_PATH = "plugins/";
+    private static final String COMMON_DRAWINGS_PLUGIN = "common.jar";
+
+    public static final int TEAMNUMBER_COMMON = -1;
 
     private static final PluginLoader instance = new PluginLoader();
 
@@ -38,6 +41,7 @@ public class PluginLoader {
     private final Map<Integer, Collection<Drawing>> drawings = new HashMap<Integer, Collection<Drawing>>();
 
     private PluginLoader() {
+        scanJar(new File(pluginDir, COMMON_DRAWINGS_PLUGIN), TEAMNUMBER_COMMON);
     }
 
     public static PluginLoader getInstance() {
@@ -48,6 +52,10 @@ public class PluginLoader {
         final Class<? extends AdvancedMessage> c = messageClasses.get(teamNumber);
 
         return c != null ? c : SPLStandardMessage.class;
+    }
+
+    public Collection<Drawing> getCommonDrawings() {
+        return getDrawings(TEAMNUMBER_COMMON);
     }
 
     public Collection<Drawing> getDrawings(final int teamNumber) {
@@ -98,49 +106,55 @@ public class PluginLoader {
 
             // Load jars
             for (final File file : jars) {
-                try {
-                    final JarFile jar = new JarFile(file);
-                    final Set<String> classNames = new HashSet<String>();
-                    final Enumeration<JarEntry> entries = jar.entries();
-                    while (entries.hasMoreElements()) {
-                        final JarEntry entry = entries.nextElement();
-                        if (entry.getName().endsWith(".class")) {
-                            classNames.add(entry.getName().substring(0, entry.getName().length() - 6).replaceAll("/", "\\."));
-                        }
-                    }
-
-                    // Load classes from jar
-                    final URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()});
-                    classLoop:
-                    for (final String className : classNames) {
-                        final Class<?> cls = loader.loadClass(className);
-
-                        if (AdvancedMessage.class.isAssignableFrom(cls)) {
-                            // Class is a message class: set it as default if no
-                            // other message class exists for the team
-                            if (!messageClasses.containsKey(teamNumber)) {
-                                messageClasses.put(teamNumber, (Class<AdvancedMessage>) cls);
-                            }
-                        } else if (PerPlayer.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
-                            // Class is a drawing: add it to the team drawings
-                            // if it does not yet exist
-                            Collection<Drawing> drawingsForTeam = drawings.get(teamNumber);
-                            if (drawingsForTeam == null) {
-                                drawingsForTeam = new LinkedList<Drawing>();
-                                drawings.put(teamNumber, drawingsForTeam);
-                            }
-                            for (final Drawing d : drawingsForTeam) {
-                                if (cls.isInstance(d)) {
-                                    continue classLoop;
-                                }
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Log.error(ex.getClass().getSimpleName() + ": Could not open plugin " + file.getPath() + ": " + ex.getMessage());
-                }
+                scanJar(file, teamNumber);
             }
         }
     }
 
+    private final void scanJar(final File file, final int teamNumber) {
+        try {
+            final JarFile jar = new JarFile(file);
+            final Set<String> classNames = new HashSet<String>();
+            final Enumeration<JarEntry> entries = jar.entries();
+            while (entries.hasMoreElements()) {
+                final JarEntry entry = entries.nextElement();
+                if (entry.getName().endsWith(".class")) {
+                    classNames.add(entry.getName().substring(0, entry.getName().length() - 6).replaceAll("/", "\\."));
+                }
+            }
+
+            // Load classes from jar
+            final URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()});
+            classLoop:
+            for (final String className : classNames) {
+                final Class<?> cls = loader.loadClass(className);
+
+                if (AdvancedMessage.class.isAssignableFrom(cls)) {
+                    // Class is a message class: set it as default if no
+                    // other message class exists for the team
+                    if (!messageClasses.containsKey(teamNumber)) {
+                        messageClasses.put(teamNumber, (Class<AdvancedMessage>) cls);
+                    }
+                } else if (PerPlayer.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
+                    // Class is a drawing: add it to the team drawings
+                    // if it does not yet exist
+                    Collection<Drawing> drawingsForTeam = drawings.get(teamNumber);
+                    if (drawingsForTeam == null) {
+                        drawingsForTeam = new LinkedList<Drawing>();
+                        drawings.put(teamNumber, drawingsForTeam);
+                    }
+                    for (final Drawing d : drawingsForTeam) {
+                        if (cls.isInstance(d)) {
+                            continue classLoop;
+                        }
+                    }
+                    final Drawing d = (Drawing) cls.newInstance();
+                    d.setTeamNumber(teamNumber);
+                    drawingsForTeam.add(d);
+                }
+            }
+        } catch (Exception ex) {
+            Log.error(ex.getClass().getSimpleName() + ": Could not open plugin " + file.getPath() + ": " + ex.getMessage());
+        }
+    }
 }

@@ -14,26 +14,23 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
 import javax.xml.stream.XMLStreamException;
+import teamcomm.PluginLoader;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
-import teamcomm.gui.drawings.BallPerPlayer;
 import teamcomm.gui.drawings.Drawing;
-import teamcomm.gui.drawings.Field;
 import teamcomm.gui.drawings.Models;
 import teamcomm.gui.drawings.PerPlayer;
-import teamcomm.gui.drawings.Player;
-import teamcomm.gui.drawings.PlayerNumber;
-import teamcomm.gui.drawings.PlayerTarget;
 import teamcomm.gui.drawings.Static;
 
 /**
@@ -48,24 +45,32 @@ public class View3D implements GLEventListener {
     private final GLCanvas canvas;
     private final Animator animator;
 
-    /**
-     * Classes of drawings that are drawn in the FieldView. Classes that are not
-     * subclasses of one of PerPlayer or Static will be ignored.
-     */
-    private static final Class[] DRAWINGS = {
-        Player.class,
-        PlayerTarget.class,
-        Field.class,
-        BallPerPlayer.class,
-        PlayerNumber.class
-    };
+    private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
+
+    private final PriorityQueue<Drawing> drawings = new PriorityQueue<Drawing>(new Comparator<Drawing>() {
+        @Override
+        public int compare(final Drawing o1, final Drawing o2) {
+            // opaque objects have priority over transparent objects
+            if (o1.hasAlpha() && !o2.hasAlpha()) {
+                return 1;
+            }
+            if (!o1.hasAlpha() && o2.hasAlpha()) {
+                return -1;
+            }
+
+            // higher priorities are drawn earlier
+            return o2.getPriority() - o1.getPriority();
+        }
+    });
 
     private final Map<String, Integer> objectLists = new HashMap<String, Integer>();
-    private final List<Drawing> drawings;
 
     private float cameraTheta = 45;
     private float cameraPhi = 0;
     private float cameraRadius = 9;
+
+    private int width = 0;
+    private int height = 0;
 
     public View3D() {
         // Initialize GL canvas and animator
@@ -129,18 +134,8 @@ public class View3D implements GLEventListener {
             }
         });
 
-        // Load drawings
-        drawings = new ArrayList<Drawing>(DRAWINGS.length);
-        for (Class c : DRAWINGS) {
-            try {
-                final Object instance = c.newInstance();
-                if (instance instanceof PerPlayer || instance instanceof Static) {
-                    drawings.add((Drawing) instance);
-                }
-            } catch (InstantiationException ex) {
-            } catch (IllegalAccessException ex) {
-            }
-        }
+        // Setup common drawings
+        drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
 
         // Start rendering
         animator.start();
@@ -184,11 +179,7 @@ public class View3D implements GLEventListener {
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 
         // Initialize projection matrix
-        final GLU glu = GLU.createGLU(gl);
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(40, (double) canvas.getBounds().width / (double) canvas.getBounds().height, NEAR_PLANE, FAR_PLANE);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        reshape(glad, canvas.getBounds().x, canvas.getBounds().y, canvas.getBounds().width, canvas.getBounds().height);
 
         // setup light
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
@@ -267,20 +258,45 @@ public class View3D implements GLEventListener {
         // Lock robot states
         RobotData.getInstance().lockForReading();
 
+        // Determine used drawings
+        final int[] curTeamNumbers = RobotData.getInstance().getTeamNumbers();
+        if (curTeamNumbers == null) {
+            if (teamNumbers[0] != PluginLoader.TEAMNUMBER_COMMON || teamNumbers[1] != PluginLoader.TEAMNUMBER_COMMON) {
+                drawings.clear();
+                teamNumbers[0] = PluginLoader.TEAMNUMBER_COMMON;
+                teamNumbers[1] = PluginLoader.TEAMNUMBER_COMMON;
+                drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
+            }
+        } else {
+            if (!((curTeamNumbers[0] == teamNumbers[0] && curTeamNumbers[1] == teamNumbers[1])
+                    || (curTeamNumbers[0] == teamNumbers[1] && curTeamNumbers[1] == teamNumbers[0]))) {
+                drawings.clear();
+                teamNumbers[0] = curTeamNumbers[0];
+                teamNumbers[1] = curTeamNumbers[1];
+                drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
+                drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[0]));
+                drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
+            }
+        }
+
         // Render drawings
         for (final Drawing d : drawings) {
             if (d.isActive()) {
                 if (d instanceof Static) {
                     ((Static) d).draw(gl, objectLists);
                 } else if (d instanceof PerPlayer) {
-                    for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
-                        ((PerPlayer) d).draw(gl, objectLists, iter.next(), RobotData.TEAM_LEFT);
+                    if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_LEFT]) {
+                        for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
+                            ((PerPlayer) d).draw(gl, objectLists, iter.next(), RobotData.TEAM_LEFT);
+                        }
                     }
-                    gl.glRotatef(180, 0, 0, 1);
-                    for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
-                        ((PerPlayer) d).draw(gl, objectLists, iter.next(), RobotData.TEAM_RIGHT);
+                    if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_RIGHT]) {
+                        gl.glRotatef(180, 0, 0, 1);
+                        for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
+                            ((PerPlayer) d).draw(gl, objectLists, iter.next(), RobotData.TEAM_RIGHT);
+                        }
+                        gl.glRotatef(180, 0, 0, 1);
                     }
-                    gl.glRotatef(180, 0, 0, 1);
                 }
             }
         }
@@ -292,15 +308,19 @@ public class View3D implements GLEventListener {
     @Override
     public void reshape(final GLAutoDrawable glad, final int x, final int y, final int width, final int height) {
         // Adjust projection matrix
-        final GL2 gl = glad.getGL().getGL2();
-        final GLU glu = GLU.createGLU(gl);
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(40, (double) width / (double) height, NEAR_PLANE, FAR_PLANE);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        if (this.width != width || this.height != height) {
+            this.width = width;
+            this.height = height;
+            final GL2 gl = glad.getGL().getGL2();
+            final GLU glu = GLU.createGLU(gl);
+            gl.glMatrixMode(GL2.GL_PROJECTION);
+            gl.glLoadIdentity();
+            glu.gluPerspective(40, (double) width / (double) height, NEAR_PLANE, FAR_PLANE);
+            gl.glMatrixMode(GL2.GL_MODELVIEW);
+        }
     }
 
-    public List<Drawing> getDrawings() {
+    public PriorityQueue<Drawing> getDrawings() {
         return drawings;
     }
 }

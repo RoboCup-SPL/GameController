@@ -1,4 +1,4 @@
-package teamcomm.gui.drawings;
+package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -8,6 +8,8 @@ import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.Map;
 import teamcomm.data.RobotState;
+import teamcomm.gui.drawings.Models;
+import teamcomm.gui.drawings.PerPlayer;
 
 @Models({"ball"})
 /**
@@ -77,6 +79,16 @@ public class BallPerPlayer extends PerPlayer {
 
             gl.glPopMatrix();
         }
+    }
+
+    @Override
+    public boolean hasAlpha() {
+        return true;
+    }
+
+    @Override
+    public int getPriority() {
+        return 500;
     }
 
 }

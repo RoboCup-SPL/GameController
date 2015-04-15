@@ -1,10 +1,11 @@
-package teamcomm.gui.drawings;
+package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.Map;
 import teamcomm.data.RobotState;
+import teamcomm.gui.drawings.PerPlayer;
 
 /**
  *
@@ -47,4 +48,13 @@ public class PlayerTarget extends PerPlayer {
         }
     }
 
+    @Override
+    public boolean hasAlpha() {
+        return false;
+    }
+
+    @Override
+    public int getPriority() {
+        return 0;
+    }
 }

@@ -1,6 +1,5 @@
 /build
 /nbproject
 *~
-/resources/plugins/05/B-Human/nbproject/private/
-/resources/plugins/05/B-Human/build/
-/resources/plugins/05/B-Human/dist/
+/resources/plugins/05/B-Human/nbproject
+/resources/plugins/05/B-Human/build
