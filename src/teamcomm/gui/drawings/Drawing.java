@@ -1,6 +1,7 @@
 package teamcomm.gui.drawings;
 
 /**
+ * Abstract base class for drawings of the 3D field view.
  *
  * @author Felix Thielke
  */
@@ -10,18 +11,38 @@ public abstract class Drawing {
 
     private int teamNumber = -1;
 
+    /**
+     * Sets whether this drawing is drawn.
+     *
+     * @param active boolean
+     */
     public void setActive(final boolean active) {
         this.active = active;
     }
 
+    /**
+     * Returns whether this drawing is drawn.
+     *
+     * @return boolean
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Returns the number of the team for which thhis drawing is drawn.
+     *
+     * @return team number
+     */
     public int getTeamNumber() {
         return teamNumber;
     }
 
+    /**
+     * Sets the number of the team for which thhis drawing is drawn.
+     *
+     * @param teamNumber team number
+     */
     public void setTeamNumber(final int teamNumber) {
         this.teamNumber = teamNumber;
     }

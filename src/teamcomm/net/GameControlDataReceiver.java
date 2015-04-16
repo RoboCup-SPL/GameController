@@ -12,6 +12,8 @@ import java.nio.ByteBuffer;
 import teamcomm.data.RobotData;
 
 /**
+ * Class for the thread which receives messages from the GameController.
+ * 
  * @author Felix Thielke
  */
 public class GameControlDataReceiver extends Thread {
@@ -20,6 +22,11 @@ public class GameControlDataReceiver extends Thread {
 
     private final DatagramSocket datagramSocket;
 
+    /**
+     * Constructor.
+     * 
+     * @throws SocketException if the socket cannot be bound
+     */
     public GameControlDataReceiver() throws SocketException {
         setName("GameControlDataReceiver");
         

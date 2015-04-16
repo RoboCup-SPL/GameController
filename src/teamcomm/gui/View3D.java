@@ -35,6 +35,7 @@ import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Static;
 
 /**
+ * Class for the 3-dimensional field view.
  *
  * @author Felix Thielke
  */
@@ -74,6 +75,9 @@ public class View3D implements GLEventListener {
     private int width = 0;
     private int height = 0;
 
+    /**
+     * Constructor.
+     */
     public View3D() {
         // Initialize GL canvas and animator
         GLProfile glp = GLProfile.get(GLProfile.GL2);
@@ -144,15 +148,28 @@ public class View3D implements GLEventListener {
         animator.start();
     }
 
+    /**
+     * Terminates the field view.
+     */
     public void terminate() {
         animator.stop();
         canvas.destroy();
     }
 
+    /**
+     * Returns the AWT canvas the field view is drawn on.
+     *
+     * @return AWT canvas
+     */
     public GLCanvas getCanvas() {
         return canvas;
     }
 
+    /**
+     * Initializes the field view.
+     *
+     * @param glad drawable
+     */
     @Override
     public void init(final GLAutoDrawable glad) {
         final GL2 gl = glad.getGL().getGL2();
@@ -240,11 +257,21 @@ public class View3D implements GLEventListener {
         }
     }
 
+    /**
+     * Performs cleanup after the canvas was disposed.
+     *
+     * @param glad drawable
+     */
     @Override
     public void dispose(final GLAutoDrawable glad) {
 
     }
 
+    /**
+     * Draws the field view.
+     *
+     * @param glad drawable
+     */
     @Override
     public void display(final GLAutoDrawable glad) {
         final GL2 gl = glad.getGL().getGL2();
@@ -310,6 +337,16 @@ public class View3D implements GLEventListener {
         RobotData.getInstance().unlockForReading();
     }
 
+    /**
+     * Method that gets called on a reshape event of the AWT canvas. Adjusts the
+     * viewing frustum of the field view for the new shape.
+     *
+     * @param glad drawable
+     * @param x new x offset
+     * @param y new y offset
+     * @param width new width
+     * @param height new height
+     */
     @Override
     public void reshape(final GLAutoDrawable glad, final int x, final int y, final int width, final int height) {
         // Adjust projection matrix
@@ -325,6 +362,11 @@ public class View3D implements GLEventListener {
         }
     }
 
+    /**
+     * Returns all drawings that are drawn in the field view.
+     *
+     * @return drawings
+     */
     public List<Drawing> getDrawings() {
         return drawings;
     }

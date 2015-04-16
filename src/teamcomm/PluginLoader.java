@@ -24,7 +24,8 @@ import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Static;
 
 /**
- *
+ * Singleton class for managing the loading of plugins.
+ * 
  * @author Felix Thielke
  */
 public class PluginLoader {
@@ -32,6 +33,9 @@ public class PluginLoader {
     private static final String PLUGIN_PATH = "plugins/";
     private static final String COMMON_DRAWINGS_PLUGIN = "common.jar";
 
+    /**
+     * Teamnumber used for common drawings.
+     */
     public static final int TEAMNUMBER_COMMON = -1;
 
     private static final PluginLoader instance = new PluginLoader();
@@ -44,30 +48,62 @@ public class PluginLoader {
         scanJar(new File(pluginDir, COMMON_DRAWINGS_PLUGIN), TEAMNUMBER_COMMON);
     }
 
+    /**
+     * Returns the only instance of the plugin loader.
+     * 
+     * @return instance
+     */
     public static PluginLoader getInstance() {
         return instance;
     }
 
+    /**
+     * Returns the class of messages from the given team.
+     * 
+     * @param teamNumber number of the team
+     * @return class for instantiating messages from the given team
+     */
     public Class<? extends SPLStandardMessage> getMessageClass(final int teamNumber) {
         final Class<? extends AdvancedMessage> c = messageClasses.get(teamNumber);
 
         return c != null ? c : SPLStandardMessage.class;
     }
-
+    
+    /**
+     * Returns drawings for all teams.
+     * 
+     * @return drawings
+     */
     public Collection<Drawing> getCommonDrawings() {
         return getDrawings(TEAMNUMBER_COMMON);
     }
 
+    /**
+     * Returns drawings for the given team.
+     * 
+     * @param teamNumber number of the team
+     * @return drawings
+     */
     public Collection<Drawing> getDrawings(final int teamNumber) {
         final Collection<Drawing> ds = drawings.get(teamNumber);
 
         return ds != null ? ds : new ArrayList<Drawing>(0);
     }
 
+    /**
+     * Dynamically loads/reloads plugins of the given teams.
+     * 
+     * @param teamNumbers numbers of the teams
+     */
     public void update(final Integer... teamNumbers) {
         update(new HashSet<Integer>(Arrays.asList(teamNumbers)));
     }
 
+    /**
+     * Dynamically loads/reloads plugins of the given teams.
+     * 
+     * @param teamNumbers numbers of the teams
+     */
     public void update(final Set<Integer> teamNumbers) {
         // Find dirs that correspond to team numbers
         final File[] pluginDirs = pluginDir.listFiles(new FilenameFilter() {
@@ -111,7 +147,7 @@ public class PluginLoader {
         }
     }
 
-    private final void scanJar(final File file, final int teamNumber) {
+    private void scanJar(final File file, final int teamNumber) {
         try {
             final JarFile jar = new JarFile(file);
             final Set<String> classNames = new HashSet<String>();

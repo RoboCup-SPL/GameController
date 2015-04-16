@@ -19,17 +19,28 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
+import javax.swing.JOptionPane;
 import teamcomm.PluginLoader;
 import teamcomm.data.RobotData;
 import teamcomm.data.messages.AdvancedMessage;
 
 /**
+ * Singleton class for the thread which handles messages from the robots. It
+ * spawns one thread for listening on each team port up to team number 100 and
+ * processes the messages received by these threads. It also handles logging and
+ * replaying of log files.
  *
  * @author Felix Thielke
  */
 public class SPLStandardMessageReceiver extends Thread {
 
+    /**
+     * Private class for a message. Instances of this class are stored in the
+     * log files.
+     */
     private static class NetPackage implements Serializable {
 
         private static final long serialVersionUID = 758311663011901849L;
@@ -130,6 +141,9 @@ public class SPLStandardMessageReceiver extends Thread {
 
         @Override
         public void run() {
+            // Stop logging
+            closeLogfile();
+
             try {
                 final long startTimestamp = System.currentTimeMillis();
 
@@ -191,6 +205,8 @@ public class SPLStandardMessageReceiver extends Thread {
                 }
                 RobotData.getInstance().reset();
 
+                createLogfile();
+
                 logReplayThread = null;
             }
         }
@@ -201,24 +217,25 @@ public class SPLStandardMessageReceiver extends Thread {
 
     private static SPLStandardMessageReceiver instance;
 
+    private static final String LOG_DIRECTORY = "logs_teamcomm";
     private static final int MAX_TEAMNUMBER = 100;
 
     private final ReceiverThread[] receivers = new ReceiverThread[MAX_TEAMNUMBER];
     private final LinkedBlockingQueue<NetPackage> queue = new LinkedBlockingQueue<NetPackage>();
-    private final ObjectOutputStream logger;
+    private File logFile;
+    private ObjectOutputStream logger;
 
     private LogReplayThread logReplayThread;
 
+    /**
+     * Constructor.
+     *
+     * @throws IOException if a problem occurs while creating the receiver
+     * threads
+     */
     public SPLStandardMessageReceiver() throws IOException {
-        this(null);
-    }
-
-    public SPLStandardMessageReceiver(final File logfile) throws IOException {
-        if (logfile == null) {
-            logger = null;
-        } else {
-            logger = new ObjectOutputStream(new FileOutputStream(logfile));
-        }
+        // Create log file
+        createLogfile();
 
         // Determine local IP address
         InetAddress addr;
@@ -235,14 +252,39 @@ public class SPLStandardMessageReceiver extends Thread {
         }
     }
 
+    /**
+     * Returns the only instance of the SPLStandardMessageReceiver.
+     *
+     * @return instance
+     */
     public static SPLStandardMessageReceiver getInstance() {
+        if (instance == null) {
+            try {
+                instance = new SPLStandardMessageReceiver();
+            } catch (SocketException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Error while setting up packet listeners.",
+                        "SocketException",
+                        JOptionPane.ERROR_MESSAGE);
+                System.exit(-1);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Error while setting up packet listeners.",
+                        "IOException",
+                        JOptionPane.ERROR_MESSAGE);
+                System.exit(-1);
+            }
+        }
         return instance;
     }
 
-    public static void setInstance(final SPLStandardMessageReceiver instance) {
-        SPLStandardMessageReceiver.instance = instance;
-    }
-
+    /**
+     * Starts replaying the given log file.
+     *
+     * @param logfile path to the file
+     * @throws FileNotFoundException if the file could not be found
+     * @throws IOException if an error occured while reading the file
+     */
     public void replayLog(final File logfile) throws FileNotFoundException, IOException {
         if (logReplayThread == null) {
             logReplayThread = new LogReplayThread(logfile);
@@ -250,25 +292,85 @@ public class SPLStandardMessageReceiver extends Thread {
         }
     }
 
+    /**
+     * Stops replaying a log file.
+     */
     public void stopReplaying() {
         if (logReplayThread != null) {
             logReplayThread.interrupt();
         }
     }
 
+    /**
+     * Pauses or unpauses the replaying of a log file.
+     */
     public void toggleReplayPaused() {
         if (logReplayThread != null) {
             logReplayThread.togglePause();
         }
     }
 
+    /**
+     * Returns whether the replaying of a log file is paused.
+     *
+     * @return boolean
+     */
     public boolean isReplayPaused() {
         return logReplayThread == null || logReplayThread.isPaused();
 
     }
 
+    /**
+     * Returns whether a log file is currently being replayed.
+     *
+     * @return boolean
+     */
     public boolean isReplaying() {
         return logReplayThread != null;
+    }
+
+    /**
+     * Creates a new log file to store received messages in.
+     */
+    public final void createLogfile() {
+        // Close current log file
+        closeLogfile();
+
+        // Determine file path
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
+        final File logDir = new File(LOG_DIRECTORY);
+        if (!logDir.exists() && !logDir.mkdirs()) {
+            logFile = new File("teamcomm_" + df.format(new Date(System.currentTimeMillis())) + ".log");
+        } else {
+            logFile = new File(logDir, "teamcomm_" + df.format(new Date(System.currentTimeMillis())) + ".log");
+        }
+    }
+
+    private void openLogfile() throws IOException {
+        // Open stream
+        if (logFile != null && logger == null) {
+            logger = new ObjectOutputStream(new FileOutputStream(logFile));
+        }
+    }
+
+    /**
+     * Closes the currently used log file.
+     */
+    public void closeLogfile() {
+        if (logger != null) {
+            try {
+                logger.close();
+            } catch (IOException e) {
+                Log.error("something went wrong while closing logfile: " + e.getMessage());
+            }
+            logger = null;
+        }
+        if (logFile != null) {
+            if (logFile.exists() && logFile.length() <= 4) {
+                logFile.delete();
+            }
+            logFile = null;
+        }
     }
 
     @Override
@@ -285,11 +387,13 @@ public class SPLStandardMessageReceiver extends Thread {
                 final SPLStandardMessage message;
                 final Class<? extends SPLStandardMessage> c = PluginLoader.getInstance().getMessageClass(p.team);
 
-                if (logger != null) {
+                if (logFile != null) {
                     try {
+                        openLogfile();
                         logger.writeObject(p);
                     } catch (IOException e) {
-                        Log.error("something went wrong while logging message packages: " + e.getMessage());
+                        Log.error("something went wrong while opening logfile: " + e.getMessage());
+                        closeLogfile();
                     }
                 }
 
@@ -310,13 +414,7 @@ public class SPLStandardMessageReceiver extends Thread {
             }
         } catch (InterruptedException ex) {
         } finally {
-            if (logger != null) {
-                try {
-                    logger.close();
-                } catch (IOException e) {
-                    Log.error("something went wrong while closing logfile: " + e.getMessage());
-                }
-            }
+            closeLogfile();
 
             for (final ReceiverThread receiver : receivers) {
                 receiver.interrupt();

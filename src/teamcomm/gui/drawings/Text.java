@@ -10,6 +10,7 @@ import teamcomm.gui.TextureLoader;
 import teamcomm.gui.TextureLoader.Texture;
 
 /**
+ * Helper class for drawing text.
  *
  * @author Felix Thielke
  */
@@ -19,10 +20,32 @@ public class Text {
     private static final int CHAR_HEIGHT_PX = 82;
     private static final double CHAR_PX_RATIO = (double) CHAR_WIDTH_PX / (double) CHAR_HEIGHT_PX;
 
+    /**
+     * Draw the given text at the given position. Only characters in the ASCII
+     * charset are allowed, others are ignored.
+     *
+     * @param gl OpenGL context
+     * @param text text to draw
+     * @param centerX center X coordinate at which the text is drawn
+     * @param centerY center Y coordinate at which the text is drawn
+     * @param size height of the font
+     */
     public static void drawText(final GL2 gl, final String text, final float centerX, final float centerY, final float size) {
         drawText(gl, text, centerX, centerY, size, new float[]{1, 1, 1, 1});
     }
 
+    /**
+     * Draw the given text at the given position. Only characters in the ASCII
+     * charset are allowed, others are ignored.
+     *
+     * @param gl OpenGL context
+     * @param text text to draw
+     * @param centerX center X coordinate at which the text is drawn
+     * @param centerY center Y coordinate at which the text is drawn
+     * @param size height of the font
+     * @param color array with rgb or rgba values describing the color of the
+     * text (color values are in the range [0.0f,1.0f])
+     */
     public static void drawText(final GL2 gl, final String text, final float centerX, final float centerY, final float size, final float[] color) {
         final FloatBuffer colorBuffer;
         if (color.length > 4) {

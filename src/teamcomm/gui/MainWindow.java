@@ -47,6 +47,8 @@ import teamcomm.gui.drawings.Drawing;
 import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
+ * Class for the main window of the application.
+ *
  * @author Felix Thielke
  */
 public class MainWindow extends JFrame implements Runnable {
@@ -66,6 +68,9 @@ public class MainWindow extends JFrame implements Runnable {
 
     private final JMenuItem[] logMenuItems = new JMenuItem[3];
 
+    /**
+     * Constructor.
+     */
     public MainWindow() {
         super("TeamCommunicationMonitor");
 
@@ -246,6 +251,9 @@ public class MainWindow extends JFrame implements Runnable {
                 } catch (InterruptedException ex) {
                 }
             }
+        } catch(Exception e) {
+            // for debug purposes
+            e.printStackTrace();
         } finally {
             // Terminate 3D rendering
             fieldView.terminate();
@@ -328,6 +336,8 @@ public class MainWindow extends JFrame implements Runnable {
 
         try {
             icon = new ImageIcon(Teams.getIcon(team));
+        } catch (NullPointerException e) {
+            return null;
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }

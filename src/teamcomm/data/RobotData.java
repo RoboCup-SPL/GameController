@@ -1,8 +1,8 @@
 package teamcomm.data;
 
 import data.GameControlData;
-import data.PlayerInfo;
 import data.SPLStandardMessage;
+import data.TeamInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,12 +15,23 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import teamcomm.PluginLoader;
 
 /**
+ * Singleton class managing the known information about communicating robots.
+ *
  * @author Felix Thielke
  */
 public class RobotData {
 
+    /**
+     * Index of the team playing on the left side of the field.
+     */
     public static final int TEAM_LEFT = 0;
+    /**
+     * Index of the team playing on the right side of the field.
+     */
     public static final int TEAM_RIGHT = 1;
+    /**
+     * Index of the virtual team containing illegaly communicating robots.
+     */
     public static final int TEAM_OTHER = 2;
 
     private static RobotData instance;
@@ -36,6 +47,11 @@ public class RobotData {
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 
+    /**
+     * Returns the only instance of the RobotData class.
+     *
+     * @return instance
+     */
     public static RobotData getInstance() {
         if (instance == null) {
             instance = new RobotData();
@@ -46,6 +62,9 @@ public class RobotData {
     private RobotData() {
     }
 
+    /**
+     * Resets all information about robots and teams.
+     */
     public void reset() {
         rwl.writeLock().lock();
         try {
@@ -60,6 +79,11 @@ public class RobotData {
         }
     }
 
+    /**
+     * Updates info about the game with a message from the GameController.
+     *
+     * @param data data sent by the GameController
+     */
     public void updateGameData(final GameControlData data) {
         boolean somethingChanged = false;
 
@@ -113,8 +137,8 @@ public class RobotData {
                 // Update penalties
                 for (int i = 0; i < 2; i++) {
                     for (final RobotState r : robots[i]) {
-                        if (r.getLastMessage() != null && r.getLastMessage().playerNum-1 < data.team[i].player.length) {
-                            r.setPenalty(data.team[i].player[r.getLastMessage().playerNum-1].penalty);
+                        if (r.getLastMessage() != null && r.getLastMessage().playerNum - 1 < data.team[i].player.length) {
+                            r.setPenalty(data.team[i].player[r.getLastMessage().playerNum - 1].penalty);
                         }
                     }
                 }
@@ -129,17 +153,26 @@ public class RobotData {
         }
 
         if (somethingChanged) {
-            PluginLoader.getInstance().update((int)data.team[0].teamNumber, (int)data.team[1].teamNumber);
-            
+            PluginLoader.getInstance().update((int) data.team[0].teamNumber, (int) data.team[1].teamNumber);
+
             synchronized (this) {
                 notifyAll();
             }
         }
     }
 
+    /**
+     * Handles a message that was received from a robot.
+     *
+     * @param address IP address of the sender
+     * @param teamNumber team number belonging to the port on which the message
+     * was received
+     * @param message received message
+     */
     public void receiveMessage(final String address, final int teamNumber, final SPLStandardMessage message) {
         rwl.writeLock().lock();
         try {
+            // update the team info if no GameController info is available
             if (message != null) {
                 for (int i = 0; i < 2; i++) {
                     if (teamNumbers[i] == 0) {
@@ -160,6 +193,7 @@ public class RobotData {
                 }
             }
 
+            // create the robot state if it does not yet exist
             RobotState r = robotsByAddress.get(address);
             if (r == null) {
                 r = new RobotState(address, teamNumber);
@@ -174,8 +208,10 @@ public class RobotData {
                 robotsByAddress.put(address, r);
             }
 
+            // let the robot state handle the message
             r.registerMessage(message);
 
+            // sort the robot data by player numbers
             for (int t = 0; t < 2; t++) {
                 if (r.getTeamNumber() == teamNumbers[t]) {
                     Collections.sort(robots[t], new Comparator<RobotState>() {
@@ -204,6 +240,10 @@ public class RobotData {
         }
     }
 
+    /**
+     * Remove information about robots who did not send any messages for a
+     * while.
+     */
     public void removeInactiveRobots() {
         rwl.writeLock().lock();
         try {
@@ -221,14 +261,29 @@ public class RobotData {
         }
     }
 
+    /**
+     * Lock the RobotData for reading. Call this before calling any of the
+     * methods for data retrieval in order to avoid synchronization issues.
+     */
     public void lockForReading() {
         rwl.readLock().lock();
     }
 
+    /**
+     * Unlock the RobotData after locking it via lockForReading().
+     */
     public void unlockForReading() {
         rwl.readLock().unlock();
     }
 
+    /**
+     * Returns an iterator for the robot states of the given team.
+     *
+     * @param team one of RobotData#TEAM_LEFT, RobotData#TEAM_RIGHT and
+     * RobotData#TEAM_OTHER
+     * @return an iterator for the robot states of the given team or null if no
+     * info about teams is available
+     */
     public Iterator<RobotState> getRobotsForTeam(final int team) {
         if (team >= 0 && team <= 2) {
             return robots[outputSide(team)].iterator();
@@ -237,10 +292,22 @@ public class RobotData {
         }
     }
 
+    /**
+     * Returns an iterator for the robot states of robots not associated with a
+     * playing team.
+     *
+     * @return iterator
+     */
     public Iterator<RobotState> getOtherRobots() {
         return robots[TEAM_OTHER].iterator();
     }
 
+    /**
+     * Returns the team numbers of the currently playing teams.
+     *
+     * @return team numbers of the currently playing teams or null if no info
+     * about teams is available
+     */
     public int[] getTeamNumbers() {
         if (teamNumbers[0] == 0) {
             return null;
@@ -253,17 +320,35 @@ public class RobotData {
         }
     }
 
+    /**
+     * Returns the team color of the given team.
+     *
+     * @param team one of RobotData#TEAM_LEFT, RobotData#TEAM_RIGHT and
+     * RobotData#TEAM_OTHER
+     * @return the team color
+     * @see TeamInfo#teamColor
+     */
     public int getTeamColor(final int team) {
-        if (team == 0 || team == 1) {
+        if (team == TEAM_LEFT || team == TEAM_RIGHT) {
             return teamColors[outputSide(team)];
         }
         throw new IllegalArgumentException("Invalid team");
     }
 
+    /**
+     * Returns whether the team sides are mirrored.
+     *
+     * @return boolean
+     */
     public boolean isMirrored() {
         return mirrored;
     }
 
+    /**
+     * Sets whether the team sides are mirrored.
+     *
+     * @param mirrored boolean
+     */
     public void setMirrored(final boolean mirrored) {
         this.mirrored = mirrored;
     }
