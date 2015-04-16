@@ -3,6 +3,7 @@ package teamcomm.data;
 import data.GameControlData;
 import data.SPLStandardMessage;
 import data.TeamInfo;
+import data.Teams;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import teamcomm.PluginLoader;
 
@@ -37,7 +39,7 @@ public class RobotData {
     private static RobotData instance;
 
     private final int[] teamNumbers = new int[]{0, 0};
-    private final int[] teamColors = new int[]{GameControlData.TEAM_BLUE, GameControlData.TEAM_RED};
+    private final Map<Integer, Integer> teamColors = new HashMap<Integer, Integer>();
 
     private boolean mirrored = false;
 
@@ -145,7 +147,7 @@ public class RobotData {
 
                 // Update team colors
                 for (int i = 0; i < 2; i++) {
-                    teamColors[i] = data.team[i].teamColor;
+                    teamColors.put((int) data.team[i].teamNumber, (int) data.team[i].teamColor);
                 }
             }
         } finally {
@@ -321,18 +323,40 @@ public class RobotData {
     }
 
     /**
-     * Returns the team color of the given team.
+     * Returns the team color of the given team. The team color is either sent
+     * by the game controller or given by the GameController configuration.
      *
-     * @param team one of RobotData#TEAM_LEFT, RobotData#TEAM_RIGHT and
-     * RobotData#TEAM_OTHER
+     * @param teamNumber number of the team
      * @return the team color
      * @see TeamInfo#teamColor
      */
-    public int getTeamColor(final int team) {
-        if (team == TEAM_LEFT || team == TEAM_RIGHT) {
-            return teamColors[outputSide(team)];
+    public int getTeamColor(final int teamNumber) {
+        Integer color = teamColors.get(teamNumber);
+        if (color == null) {
+            String[] colorStrings = null;
+            try {
+                colorStrings = Teams.getColors(teamNumber);
+            } catch (NullPointerException e) {
+            } catch (ArrayIndexOutOfBoundsException e) {
+            }
+            if (colorStrings == null || colorStrings.length < 1) {
+                if (teamNumber == teamNumbers[TEAM_RIGHT]) {
+                    return GameControlData.TEAM_RED;
+                } else {
+                    return GameControlData.TEAM_BLUE;
+                }
+            } else if (colorStrings[0].equals("blue")) {
+                return GameControlData.TEAM_BLUE;
+            } else if (colorStrings[0].equals("red")) {
+                return GameControlData.TEAM_RED;
+            } else if (colorStrings[0].equals("yellow")) {
+                return GameControlData.TEAM_YELLOW;
+            } else {
+                return GameControlData.TEAM_BLACK;
+            }
         }
-        throw new IllegalArgumentException("Invalid team");
+
+        return color;
     }
 
     /**

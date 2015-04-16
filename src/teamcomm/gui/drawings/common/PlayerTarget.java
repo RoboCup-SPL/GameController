@@ -3,8 +3,8 @@ package teamcomm.gui.drawings.common;
 import com.jogamp.opengl.GL2;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
-import java.util.Map;
 import teamcomm.data.RobotState;
+import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.PerPlayer;
 
 /**
@@ -16,7 +16,7 @@ public class PlayerTarget extends PerPlayer {
     private static final float CROSS_RADIUS = 0.1f;
 
     @Override
-    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
+    public void draw(final GL2 gl, final RobotState player, final Camera camera) {
         final SPLStandardMessage msg = player.getLastMessage();
         if (msg != null && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
             final float poseX = msg.pose[0] / 1000.f;

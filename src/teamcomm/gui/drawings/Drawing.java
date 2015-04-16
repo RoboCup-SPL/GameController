@@ -1,5 +1,7 @@
 package teamcomm.gui.drawings;
 
+import com.jogamp.opengl.GL2;
+
 /**
  * Abstract base class for drawings of the 3D field view.
  *
@@ -10,6 +12,8 @@ public abstract class Drawing {
     private boolean active = true;
 
     private int teamNumber = -1;
+
+    private boolean initialized = false;
 
     /**
      * Sets whether this drawing is drawn.
@@ -45,6 +49,29 @@ public abstract class Drawing {
      */
     public void setTeamNumber(final int teamNumber) {
         this.teamNumber = teamNumber;
+    }
+
+    /**
+     * Handles the initialization of the drawing.
+     *
+     * @param gl the OpenGL context this drawing will be drawn on
+     */
+    public final void initialize(final GL2 gl) {
+        if (!initialized) {
+            init(gl);
+            initialized = true;
+        }
+    }
+
+    /**
+     * Performs some initialization, like creating display lists for objects to
+     * be drawn etc. This method is meant to be overridden by subclasses that
+     * need initialization. It is guaranteed to be called once before the first
+     * call of the draw()-method.
+     *
+     * @param gl the OpenGL context this drawing will be drawn on
+     */
+    protected void init(final GL2 gl) {
     }
 
     /**

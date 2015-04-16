@@ -6,12 +6,11 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
-import java.util.Map;
 import teamcomm.data.RobotState;
-import teamcomm.gui.drawings.Models;
+import teamcomm.gui.Camera;
+import teamcomm.gui.RoSi2Loader;
 import teamcomm.gui.drawings.PerPlayer;
 
-@Models({"ball"})
 /**
  *
  * @author Felix Thielke
@@ -24,7 +23,12 @@ public class BallPerPlayer extends PerPlayer {
     private static final float MAX_BALLAGE = 5.0f;
 
     @Override
-    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
+    protected void init(GL2 gl) {
+        RoSi2Loader.getInstance().cacheModels(gl, new String[]{"ball"});
+    }
+
+    @Override
+    public void draw(final GL2 gl, final RobotState player, final Camera camera) {
         final SPLStandardMessage msg = player.getLastMessage();
         if (msg != null && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
             final float[] ball = {msg.ball[0] / 1000.f, msg.ball[1] / 1000.f};
@@ -39,7 +43,7 @@ public class BallPerPlayer extends PerPlayer {
             gl.glTranslatef(ball[0], ball[1], 0);
 
             // Draw ball
-            gl.glCallList(modelLists.get("ball"));
+            gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "ball"));
 
             // Draw ball velocity
             gl.glBegin(GL.GL_LINES);

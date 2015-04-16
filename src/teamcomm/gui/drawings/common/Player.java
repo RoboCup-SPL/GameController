@@ -4,13 +4,12 @@ import com.jogamp.opengl.GL2;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
-import java.util.Map;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
-import teamcomm.gui.drawings.Models;
+import teamcomm.gui.Camera;
+import teamcomm.gui.RoSi2Loader;
 import teamcomm.gui.drawings.PerPlayer;
 
-@Models({"robotBlue", "robotRed", "robotBlack", "robotYellow"})
 /**
  *
  * @author Felix Thielke
@@ -18,7 +17,12 @@ import teamcomm.gui.drawings.PerPlayer;
 public class Player extends PerPlayer {
 
     @Override
-    public void draw(final GL2 gl, final Map<String, Integer> modelLists, final RobotState player, final int side) {
+    protected void init(GL2 gl) {
+        RoSi2Loader.getInstance().cacheModels(gl, new String[]{"robotBlue", "robotRed", "robotBlack", "robotYellow"});
+    }
+
+    @Override
+    public void draw(final GL2 gl, final RobotState player, final Camera camera) {
         final SPLStandardMessage msg = player.getLastMessage();
         if (msg != null) {
             gl.glPushMatrix();
@@ -35,18 +39,18 @@ public class Player extends PerPlayer {
                 gl.glRotatef(90, 0, 1, 0);
             }
 
-            switch (RobotData.getInstance().getTeamColor(side)) {
+            switch (RobotData.getInstance().getTeamColor(player.getTeamNumber())) {
                 case GameControlData.TEAM_BLUE:
-                    gl.glCallList(modelLists.get("robotBlue"));
+                    gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotBlue"));
                     break;
                 case GameControlData.TEAM_RED:
-                    gl.glCallList(modelLists.get("robotRed"));
+                    gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotRed"));
                     break;
                 case GameControlData.TEAM_BLACK:
-                    gl.glCallList(modelLists.get("robotBlack"));
+                    gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotBlack"));
                     break;
                 case GameControlData.TEAM_YELLOW:
-                    gl.glCallList(modelLists.get("robotYellow"));
+                    gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotYellow"));
                     break;
             }
 

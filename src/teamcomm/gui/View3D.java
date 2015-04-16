@@ -7,30 +7,21 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.Animator;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
-import javax.xml.stream.XMLStreamException;
 import teamcomm.PluginLoader;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
 import teamcomm.gui.drawings.Drawing;
-import teamcomm.gui.drawings.Models;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Static;
 
@@ -41,11 +32,9 @@ import teamcomm.gui.drawings.Static;
  */
 public class View3D implements GLEventListener {
 
-    private static final float NEAR_PLANE = 1;
-    private static final float FAR_PLANE = 20;
-
     private final GLCanvas canvas;
     private final Animator animator;
+    private final Camera camera = new Camera();
 
     private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
 
@@ -65,12 +54,6 @@ public class View3D implements GLEventListener {
         }
     };
     private final List<Drawing> drawings = new LinkedList<Drawing>();
-
-    private final Map<String, Integer> objectLists = new HashMap<String, Integer>();
-
-    private float cameraTheta = 45;
-    private float cameraPhi = 0;
-    private float cameraRadius = 9;
 
     private int width = 0;
     private int height = 0;
@@ -109,18 +92,8 @@ public class View3D implements GLEventListener {
             public void mouseDragged(final MouseEvent e) {
                 if (lastPos != null) {
                     final float factor = 1.0f / 5.0f;
-                    cameraPhi += (e.getX() - lastPos[0]) * factor;
-                    if (cameraPhi < -90) {
-                        cameraPhi = -90;
-                    } else if (cameraPhi > 90) {
-                        cameraPhi = 90;
-                    }
-                    cameraTheta -= (e.getY() - lastPos[1]) * factor;
-                    if (cameraTheta < 0) {
-                        cameraTheta = 0;
-                    } else if (cameraTheta > 90) {
-                        cameraTheta = 90;
-                    }
+                    camera.addPhi((e.getX() - lastPos[0]) * factor);
+                    camera.addTheta(-(e.getY() - lastPos[1]) * factor);
                     lastPos = new int[]{e.getX(), e.getY()};
                 }
             }
@@ -131,18 +104,9 @@ public class View3D implements GLEventListener {
         canvas.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(final MouseWheelEvent e) {
-                cameraRadius -= e.getWheelRotation() * 0.05;
-                if (cameraRadius < NEAR_PLANE) {
-                    cameraRadius = NEAR_PLANE;
-                } else if (cameraRadius > FAR_PLANE - 5) {
-                    cameraRadius = FAR_PLANE - 5;
-                }
+                camera.addRadius(-e.getWheelRotation() * 0.05f);
             }
         });
-
-        // Setup common drawings
-        drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
-        Collections.sort(drawings, drawingComparator);
 
         // Start rendering
         animator.start();
@@ -220,40 +184,11 @@ public class View3D implements GLEventListener {
         // Set clear color
         gl.glClearColor(0.3f, 0.3f, 0.35f, 1.0f);
 
-        // Load display elements from scene file
-        final Set<String> requiredModels = new HashSet<String>();
+        // Setup common drawings
+        drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
+        Collections.sort(drawings, drawingComparator);
         for (final Drawing d : drawings) {
-            final Models annotation = d.getClass().getAnnotation(Models.class);
-            if (annotation != null) {
-                for (final String name : annotation.value()) {
-                    requiredModels.add(name);
-                }
-            }
-        }
-        try {
-            final RoSi2Element scene = RoSi2Element.parseFile("scene/TeamComm.ros2");
-            final List<RoSi2Element> elems = scene.findElements(requiredModels);
-            for (RoSi2Element elem : elems) {
-                objectLists.put(elem.getName(), elem.instantiate(gl).createDisplayList());
-            }
-        } catch (RoSi2Element.RoSi2ParseException ex) {
-            JOptionPane.showMessageDialog(null,
-                    ex.getMessage(),
-                    "Error loading scene",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
-        } catch (XMLStreamException ex) {
-            JOptionPane.showMessageDialog(null,
-                    ex.getMessage(),
-                    "Error loading scene",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                    ex.getMessage(),
-                    "Error loading scene",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
+            d.initialize(gl);
         }
     }
 
@@ -281,9 +216,7 @@ public class View3D implements GLEventListener {
 
         // Position camera
         gl.glLoadIdentity();
-        gl.glTranslatef(0, 0, -cameraRadius);
-        gl.glRotatef(-cameraTheta, 1, 0, 0);
-        gl.glRotatef(cameraPhi, 0, 0, 1);
+        camera.positionCamera(gl);
 
         // Lock robot states
         RobotData.getInstance().lockForReading();
@@ -297,6 +230,9 @@ public class View3D implements GLEventListener {
                 teamNumbers[1] = PluginLoader.TEAMNUMBER_COMMON;
                 drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
                 Collections.sort(drawings, drawingComparator);
+                for (final Drawing d : drawings) {
+                    d.initialize(gl);
+                }
             }
         } else {
             if (!((curTeamNumbers[0] == teamNumbers[0] && curTeamNumbers[1] == teamNumbers[1])
@@ -308,6 +244,9 @@ public class View3D implements GLEventListener {
                 drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[0]));
                 drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
                 Collections.sort(drawings, drawingComparator);
+                for (final Drawing d : drawings) {
+                    d.initialize(gl);
+                }
             }
         }
 
@@ -315,18 +254,20 @@ public class View3D implements GLEventListener {
         for (final Drawing d : drawings) {
             if (d.isActive()) {
                 if (d instanceof Static) {
-                    ((Static) d).draw(gl, objectLists);
+                    ((Static) d).draw(gl);
                 } else if (d instanceof PerPlayer) {
                     if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_LEFT]) {
                         for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
-                            ((PerPlayer) d).draw(gl, objectLists, iter.next(), RobotData.TEAM_LEFT);
+                            ((PerPlayer) d).draw(gl, iter.next(), camera);
                         }
                     }
                     if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_RIGHT]) {
                         gl.glRotatef(180, 0, 0, 1);
+                        camera.flip();
                         for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
-                            ((PerPlayer) d).draw(gl, objectLists, iter.next(), RobotData.TEAM_RIGHT);
+                            ((PerPlayer) d).draw(gl, iter.next(), camera);
                         }
+                        camera.flip();
                         gl.glRotatef(180, 0, 0, 1);
                     }
                 }
@@ -353,12 +294,7 @@ public class View3D implements GLEventListener {
         if (this.width != width || this.height != height) {
             this.width = width;
             this.height = height;
-            final GL2 gl = glad.getGL().getGL2();
-            final GLU glu = GLU.createGLU(gl);
-            gl.glMatrixMode(GL2.GL_PROJECTION);
-            gl.glLoadIdentity();
-            glu.gluPerspective(40, (double) width / (double) height, NEAR_PLANE, FAR_PLANE);
-            gl.glMatrixMode(GL2.GL_MODELVIEW);
+            camera.setupFrustum(glad.getGL().getGL2(), (double) width / (double) height);
         }
     }
 
