@@ -1,7 +1,7 @@
 package bhuman.message;
 
 import java.nio.ByteBuffer;
-import teamcomm.data.messages.AdvancedMessage;
+import teamcomm.data.AdvancedMessage;
 
 /**
  *

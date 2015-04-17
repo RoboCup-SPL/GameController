@@ -1,4 +1,4 @@
-package teamcomm.data.messages;
+package teamcomm.data;
 
 import data.SPLStandardMessage;
 

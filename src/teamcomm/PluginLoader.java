@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import teamcomm.data.messages.AdvancedMessage;
+import teamcomm.data.AdvancedMessage;
 import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Static;

@@ -25,7 +25,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.JOptionPane;
 import teamcomm.PluginLoader;
 import teamcomm.data.RobotData;
-import teamcomm.data.messages.AdvancedMessage;
+import teamcomm.data.AdvancedMessage;
 
 /**
  * Singleton class for the thread which handles messages from the robots. It
