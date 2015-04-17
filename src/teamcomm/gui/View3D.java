@@ -262,13 +262,11 @@ public class View3D implements GLEventListener {
                         }
                     }
                     if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_RIGHT]) {
-                        gl.glRotatef(180, 0, 0, 1);
-                        camera.flip();
+                        camera.flip(gl);
                         for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
                             ((PerPlayer) d).draw(gl, iter.next(), camera);
                         }
-                        camera.flip();
-                        gl.glRotatef(180, 0, 0, 1);
+                        camera.flip(gl);
                     }
                 }
             }
