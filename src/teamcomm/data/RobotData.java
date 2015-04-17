@@ -1,6 +1,7 @@
 package teamcomm.data;
 
 import data.GameControlData;
+import data.Rules;
 import data.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
@@ -155,7 +156,17 @@ public class RobotData {
         }
 
         if (somethingChanged) {
-            PluginLoader.getInstance().update((int) data.team[0].teamNumber, (int) data.team[1].teamNumber);
+            if (data != null) {
+                // (re)load plugins
+                PluginLoader.getInstance().update((int) data.team[0].teamNumber, (int) data.team[1].teamNumber);
+
+                // handle dropin games
+                if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
+                    Rules.league = Rules.LEAGUES[1];
+                } else {
+                    Rules.league = Rules.LEAGUES[0];
+                }
+            }
 
             synchronized (this) {
                 notifyAll();
@@ -187,7 +198,16 @@ public class RobotData {
                                 it.remove();
                             }
                         }
+
+                        // (re)load plugins
                         PluginLoader.getInstance().update(teamNumber);
+
+                        // handle dropin games
+                        if ((teamNumbers[0] == 0 || teamNumbers[0] == 98 || teamNumbers[0] == 99) && (teamNumbers[1] == 0 || teamNumbers[1] == 98 || teamNumbers[1] == 99)) {
+                            Rules.league = Rules.LEAGUES[1];
+                        } else {
+                            Rules.league = Rules.LEAGUES[0];
+                        }
                         break;
                     } else if (teamNumbers[i] == teamNumber) {
                         break;
@@ -255,6 +275,7 @@ public class RobotData {
                     final RobotState r = iter.next();
                     if (r.getMessageCount() > 10 && r.isInactive()) {
                         iter.remove();
+                        robotsByAddress.remove(r.getAddress());
                     }
                 }
             }

@@ -251,7 +251,7 @@ public class MainWindow extends JFrame implements Runnable {
                 } catch (InterruptedException ex) {
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             // for debug purposes
             e.printStackTrace();
         } finally {
@@ -477,8 +477,12 @@ public class MainWindow extends JFrame implements Runnable {
 
     private static String getTeamName(final SPLStandardMessage msg) {
         final String[] teamNames = Teams.getNames(true);
-        if (msg != null && msg.teamNum < teamNames.length) {
-            return ("Team " + teamNames[msg.teamNum]);
+        if (msg != null) {
+            if (msg.teamNum < teamNames.length) {
+                return ("Team " + teamNames[msg.teamNum]);
+            } else {
+                return ("Unknown Team (" + msg.teamNum + ")");
+            }
         } else {
             return "Unknown Team";
         }

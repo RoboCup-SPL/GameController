@@ -48,20 +48,12 @@ public class Camera {
         }
     }
 
-    public float getTheta() {
-        return theta;
-    }
-
-    public float getPhi() {
-        return phi;
-    }
-
-    public float getRadius() {
-        return radius;
-    }
-
-    public boolean isFlipped() {
-        return flipped;
+    public void setupFrustum(final GL2 gl, final double displayRatio) {
+        final GLU glu = GLU.createGLU(gl);
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+        glu.gluPerspective(40, displayRatio, NEAR_PLANE, FAR_PLANE);
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
     }
 
     public void positionCamera(final GL2 gl) {
@@ -73,13 +65,5 @@ public class Camera {
     public void turnTowardsCamera(final GL2 gl) {
         gl.glRotatef((flipped ? 180 : 0) - phi, 0, 0, 1);
         gl.glRotatef(theta, 1, 0, 0);
-    }
-
-    public void setupFrustum(final GL2 gl, final double displayRatio) {
-        final GLU glu = GLU.createGLU(gl);
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(40, displayRatio, NEAR_PLANE, FAR_PLANE);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
     }
 }

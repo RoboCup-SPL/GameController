@@ -180,16 +180,7 @@ public class Teams
     private static void readIcon(int team)
     {
         BufferedImage out = null;
-        File file = null;
-        for (int i=0; i< PIC_ENDING.length; i++) {
-            file = new File(PATH+Rules.league.leagueDirectory+"/"+team+"."+PIC_ENDING[i]);
-            if (file.exists()) {
-                break;
-            }
-            if (i == PIC_ENDING.length-1) {
-                file = null;
-            }
-        }
+        File file = getIconPath(team);
         if (file != null) {
             try{
                 out = ImageIO.read(file);
@@ -204,6 +195,22 @@ public class Teams
             graphics.fillRect(0, 0, out.getWidth(), out.getHeight());
         }
         instance.teams[getLeagueIndex()][team].icon = out;
+    }
+    
+    /**
+     * Returns the file path to a team's icon
+     * @param team The unique team number of the team you want the icon for.
+     * @return The team's icon.
+     */
+    public static File getIconPath(int team) {
+        for (final String ending : PIC_ENDING) {
+            final File file = new File(PATH+Rules.league.leagueDirectory+"/"+team+"."+ending);
+            if (file.exists()) {
+                return file;
+            }
+        }
+        
+        return null;
     }
     
     /**

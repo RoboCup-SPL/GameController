@@ -36,6 +36,16 @@ public class TextureLoader {
          * Flag indicating whether the texture has an alpha channel.
          */
         public final boolean hasAlpha;
+        
+        /**
+         * Width of the texture in pixels.
+         */
+        public final int width;
+        
+        /**
+         * Height of the texture in pixels.
+         */
+        public final int heigth;
 
         /**
          * Constructor.
@@ -43,10 +53,14 @@ public class TextureLoader {
          * @param id OpenGL texture id of the texture
          * @param hasAlpha flag indicating whether the texture has an alpha
          * channel
+         * @param width width of the texture in pixels
+         * @param height height of the texture in pixels
          */
-        public Texture(final int id, final boolean hasAlpha) {
+        public Texture(final int id, final boolean hasAlpha, final int width, final int height) {
             this.id = id;
             this.hasAlpha = hasAlpha;
+            this.width = width;
+            this.heigth = height;
         }
 
     }
@@ -113,7 +127,7 @@ public class TextureLoader {
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
         gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, hasAlpha ? 4 : 3, img.getWidth(), img.getHeight(), 0, hasAlpha ? GL.GL_BGRA : GL2.GL_BGR, GL.GL_UNSIGNED_BYTE, buffer);
         gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
-        tex = new Texture(textureId, hasAlpha);
+        tex = new Texture(textureId, hasAlpha, img.getWidth(), img.getHeight());
         map.put(filename.getAbsolutePath(), tex);
 
         return tex;
