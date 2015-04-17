@@ -1,10 +1,10 @@
 package bhuman.message;
 
-import bhuman.message.messages.Message;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.EnumMap;
 import java.util.Map;
+import util.Unsigned;
 
 /**
  *
@@ -29,23 +29,24 @@ public class MessageQueue {
         buf.rewind();
         buf.order(ByteOrder.LITTLE_ENDIAN);
 
-        timestamp = toUnsigned(buf.getInt());
-        ballTimeWhenLastSeen = toUnsigned(buf.getInt());
-        ballTimeWhenDisappeared = toUnsigned(buf.getInt());
+        timestamp = Unsigned.toUnsigned(buf.getInt());
+        ballTimeWhenLastSeen = Unsigned.toUnsigned(buf.getInt());
+        ballTimeWhenDisappeared = Unsigned.toUnsigned(buf.getInt());
         ballLastPerceptX = buf.getShort();
         ballLastPerceptY = buf.getShort();
         robotPoseDeviation = buf.getFloat();
-        robotPoseValidity = toUnsigned(buf.get());
+        robotPoseValidity = Unsigned.toUnsigned(buf.get());
 
-        usedSize = toUnsigned(buf.getInt());
+        usedSize = Unsigned.toUnsigned(buf.getInt());
         numberOfMessages = buf.getInt();
 
+        System.out.println("---");
         while (buf.hasRemaining()) {
-            final MessageID id = MessageID.values()[toUnsigned(buf.get())];
+            final MessageID id = MessageID.values()[Unsigned.toUnsigned(buf.get())];
             final int size = buf.get() | (buf.get() << 8) | (buf.get() << 16);
             final byte[] data = new byte[size];
             buf.get(data);
-            messages.put(id, Message.factory(id, data));
+            messages.put(id, Message.factory(id, ByteBuffer.wrap(data)));
         }
     }
 
@@ -87,13 +88,5 @@ public class MessageQueue {
 
     public Message getMessage(final MessageID id) {
         return messages.get(id);
-    }
-
-    private static short toUnsigned(final byte b) {
-        return (short) (b < 0 ? b + (2 << Byte.SIZE) : b);
-    }
-
-    private static long toUnsigned(final int i) {
-        return i < 0 ? i + (1l << (long) Integer.SIZE) : i;
     }
 }
