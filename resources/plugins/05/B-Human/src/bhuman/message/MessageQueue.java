@@ -2,7 +2,7 @@ package bhuman.message;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import util.Unsigned;
 
@@ -23,7 +23,7 @@ public class MessageQueue {
     private final long usedSize;
     private final int numberOfMessages;
 
-    private final Map<MessageID, Message> messages = new EnumMap<MessageID, Message>(MessageID.class);
+    private final Map<Class<?>, Message<? extends Message>> messages = new HashMap<Class<?>, Message<? extends Message>>();
 
     public MessageQueue(final ByteBuffer buf) {
         buf.rewind();
@@ -40,13 +40,15 @@ public class MessageQueue {
         usedSize = Unsigned.toUnsigned(buf.getInt());
         numberOfMessages = buf.getInt();
 
-        System.out.println("---");
         while (buf.hasRemaining()) {
             final MessageID id = MessageID.values()[Unsigned.toUnsigned(buf.get())];
             final int size = buf.get() | (buf.get() << 8) | (buf.get() << 16);
             final byte[] data = new byte[size];
             buf.get(data);
-            messages.put(id, Message.factory(id, ByteBuffer.wrap(data)));
+            final Message<? extends Message> msg = Message.factory(id, ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
+            if (msg != null) {
+                messages.put(msg.getClass(), msg);
+            }
         }
     }
 
@@ -86,7 +88,7 @@ public class MessageQueue {
         return numberOfMessages;
     }
 
-    public Message getMessage(final MessageID id) {
-        return messages.get(id);
+    public <T extends Message<T>> T getMessage(final Class<T> cls) {
+        return (T) messages.get(cls);
     }
 }
