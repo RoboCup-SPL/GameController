@@ -34,6 +34,10 @@ import javax.xml.stream.events.XMLEvent;
 import teamcomm.gui.TextureLoader.Texture;
 
 /**
+ * Class for parsing ros2 scene files. Instances of this class correspond to
+ * named scene elements and can be instantiated to RoSi2Drawabled which may be
+ * drawn in a OpenGL context.
+ *
  * @author Felix Thielke
  */
 public class RoSi2Element {
@@ -103,6 +107,11 @@ public class RoSi2Element {
         }
     }
 
+    /**
+     * Returns the name of this element.
+     *
+     * @return name
+     */
     public String getName() {
         return name;
     }
@@ -166,10 +175,27 @@ public class RoSi2Element {
         return foundElems;
     }
 
+    /**
+     * Instantiates this element as a drawable on the given OpenGL context.
+     *
+     * @param gl OpenGL context
+     * @return drawable
+     * @throws teamcomm.gui.RoSi2Element.RoSi2ParseException if instantiated
+     * attributes of the element could not be parsed
+     */
     public RoSi2Drawable instantiate(final GL2 gl) throws RoSi2ParseException {
         return instantiate(gl, null);
     }
 
+    /**
+     * Instantiates this element as a drawable on the given OpenGL context.
+     *
+     * @param gl OpenGL context
+     * @param vars variable assignments to use
+     * @return drawable
+     * @throws teamcomm.gui.RoSi2Element.RoSi2ParseException if instantiated
+     * attributes of the element could not be parsed
+     */
     public RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars) throws RoSi2ParseException {
         return instantiate(gl, vars, null);
     }
@@ -735,14 +761,26 @@ public class RoSi2Element {
         return value.toString();
     }
 
+    /**
+     * Abstract base class for drawable instantiations of elements read from
+     * ros2 files.
+     */
     public static abstract class RoSi2Drawable {
 
         private final GL2 gl;
+
+        /**
+         * Instantiated children of this element.
+         */
         protected final List<RoSi2Drawable> children;
 
         private final Rotation rotation;
         private final Translation translation;
 
+        /**
+         * Constructor which leaves the attributes uninitialized. Useful for
+         * drawables containinng only data.
+         */
         protected RoSi2Drawable() {
             gl = null;
             children = new LinkedList<RoSi2Drawable>();
@@ -750,14 +788,14 @@ public class RoSi2Element {
             translation = null;
         }
 
-        public RoSi2Drawable(final GL2 gl) {
+        private RoSi2Drawable(final GL2 gl) {
             this.gl = gl;
             children = new LinkedList<RoSi2Drawable>();
             rotation = null;
             translation = null;
         }
 
-        public RoSi2Drawable(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
+        private RoSi2Drawable(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
             this.gl = gl;
             this.children = children;
 
@@ -843,7 +881,7 @@ public class RoSi2Element {
         }
     }
 
-    public static class Compound extends RoSi2Drawable {
+    private static class Compound extends RoSi2Drawable {
 
         public Compound(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
             super(gl, children);
@@ -856,7 +894,7 @@ public class RoSi2Element {
 
     }
 
-    public static class Body extends RoSi2Drawable {
+    private static class Body extends RoSi2Drawable {
 
         public Body(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
             super(gl, children);
@@ -868,7 +906,7 @@ public class RoSi2Element {
         }
     }
 
-    public static class Translation extends RoSi2Drawable {
+    private static class Translation extends RoSi2Drawable {
 
         public final float[] translation;
 
@@ -883,7 +921,7 @@ public class RoSi2Element {
 
     }
 
-    public static class Rotation extends RoSi2Drawable {
+    private static class Rotation extends RoSi2Drawable {
 
         public final float[] rotation;
 
@@ -898,7 +936,7 @@ public class RoSi2Element {
 
     }
 
-    public static class Appearance extends RoSi2Drawable {
+    private static class Appearance extends RoSi2Drawable {
 
         protected final Surface surface;
 
@@ -930,7 +968,7 @@ public class RoSi2Element {
 
     }
 
-    public static class BoxAppearance extends Appearance {
+    private static class BoxAppearance extends Appearance {
 
         /**
          * The width of the box (cy).
@@ -1022,7 +1060,7 @@ public class RoSi2Element {
 
     }
 
-    public static class SphereAppearance extends Appearance {
+    private static class SphereAppearance extends Appearance {
 
         /**
          * The radius of the sphere.
@@ -1050,7 +1088,7 @@ public class RoSi2Element {
 
     }
 
-    public static class CylinderAppearance extends Appearance {
+    private static class CylinderAppearance extends Appearance {
 
         /**
          * The height of the cylinder.
@@ -1091,7 +1129,7 @@ public class RoSi2Element {
 
     }
 
-    public static class CapsuleAppearance extends Appearance {
+    private static class CapsuleAppearance extends Appearance {
 
         /**
          * The height of the capsule.
@@ -1130,7 +1168,7 @@ public class RoSi2Element {
 
     }
 
-    public static class ComplexAppearance extends Appearance {
+    private static class ComplexAppearance extends Appearance {
 
         private final Vertices vertices;
         private final Normals normals;
@@ -1291,7 +1329,7 @@ public class RoSi2Element {
 
     }
 
-    public static class Vertices extends RoSi2Drawable {
+    private static class Vertices extends RoSi2Drawable {
 
         public static class Vertex {
 
@@ -1323,7 +1361,7 @@ public class RoSi2Element {
 
     }
 
-    public static class Normals extends RoSi2Drawable {
+    private static class Normals extends RoSi2Drawable {
 
         public static class Normal extends Vertices.Vertex {
 
@@ -1364,7 +1402,7 @@ public class RoSi2Element {
 
     }
 
-    public static class TexCoords extends RoSi2Drawable {
+    private static class TexCoords extends RoSi2Drawable {
 
         /**
          * A point on a texture.
@@ -1405,7 +1443,7 @@ public class RoSi2Element {
 
     }
 
-    public static class PrimitiveGroup extends RoSi2Drawable {
+    private static class PrimitiveGroup extends RoSi2Drawable {
 
         private final int mode;
         private final List<Integer> vertices;
@@ -1422,7 +1460,7 @@ public class RoSi2Element {
 
     }
 
-    public static class Surface extends RoSi2Drawable {
+    private static class Surface extends RoSi2Drawable {
 
         public final float[] diffuseColor;
         public final float[] ambientColor;
@@ -1526,6 +1564,12 @@ public class RoSi2Element {
      *
      * @param filename path to the file to parse
      * @return Element representing the scene
+     * @throws teamcomm.gui.RoSi2Element.RoSi2ParseException if the file could
+     * not be parsed as a ros2 file
+     * @throws javax.xml.stream.XMLStreamException if the file could not be
+     * parsed as a XML file
+     * @throws java.io.FileNotFoundException if the file could not be found
+     * @throws java.io.IOException on other IO errors
      */
     public static RoSi2Element parseFile(final String filename) throws RoSi2ParseException, XMLStreamException, FileNotFoundException, IOException {
         // XML parser factory
@@ -1639,14 +1683,17 @@ public class RoSi2Element {
 
     }
 
+    /**
+     * Exception thrown if a ros2 file could not be parsed.
+     */
     public static class RoSi2ParseException extends Exception {
 
         private static final long serialVersionUID = 439895799292899819L;
 
-        public RoSi2ParseException() {
+        private RoSi2ParseException() {
         }
 
-        public RoSi2ParseException(final String message) {
+        private RoSi2ParseException(final String message) {
             super(message);
         }
 
