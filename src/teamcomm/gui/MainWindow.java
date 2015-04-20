@@ -43,7 +43,6 @@ import javax.swing.border.TitledBorder;
 import teamcomm.Main;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
-import teamcomm.gui.drawings.Drawing;
 import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
@@ -66,8 +65,6 @@ public class MainWindow extends JFrame implements Runnable {
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
     private final Map<String, JFrame> robotDetailPanels = new HashMap<String, JFrame>();
     
-    private final JMenu drawingsMenu = new JMenu("Drawings");
-
     private final JMenuItem[] logMenuItems = new JMenuItem[3];
 
     /**

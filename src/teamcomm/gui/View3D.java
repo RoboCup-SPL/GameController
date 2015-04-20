@@ -8,6 +8,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
+import data.Teams;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -16,6 +17,7 @@ import java.awt.event.MouseWheelListener;
 import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,13 +37,13 @@ import teamcomm.gui.drawings.Static;
  * @author Felix Thielke
  */
 public class View3D implements GLEventListener {
-
+    
     private final GLCanvas canvas;
     private final Animator animator;
     private final Camera camera = new Camera();
-
+    
     private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
-
+    
     private static final Comparator<Drawing> drawingComparator = new Comparator<Drawing>() {
         @Override
         public int compare(final Drawing o1, final Drawing o2) {
@@ -59,7 +61,7 @@ public class View3D implements GLEventListener {
     };
     private final List<Drawing> drawings = new LinkedList<Drawing>();
     private final JMenu drawingsMenu = new JMenu("Drawings");
-
+    
     private int width = 0;
     private int height = 0;
 
@@ -76,23 +78,23 @@ public class View3D implements GLEventListener {
 
         // Setup camera movement
         final MouseInputAdapter listener = new MouseInputAdapter() {
-
+            
             private int[] lastPos = null;
-
+            
             @Override
             public void mousePressed(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     lastPos = new int[]{e.getX(), e.getY()};
                 }
             }
-
+            
             @Override
             public void mouseReleased(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     lastPos = null;
                 }
             }
-
+            
             @Override
             public void mouseDragged(final MouseEvent e) {
                 if (lastPos != null) {
@@ -102,7 +104,7 @@ public class View3D implements GLEventListener {
                     lastPos = new int[]{e.getX(), e.getY()};
                 }
             }
-
+            
         };
         canvas.addMouseListener(listener);
         canvas.addMouseMotionListener(listener);
@@ -205,7 +207,7 @@ public class View3D implements GLEventListener {
      */
     @Override
     public void dispose(final GLAutoDrawable glad) {
-
+        
     }
 
     /**
@@ -303,9 +305,23 @@ public class View3D implements GLEventListener {
             camera.setupFrustum(glad.getGL().getGL2(), (double) width / (double) height);
         }
     }
-
+    
     private void updateDrawingsMenu() {
+        // Clear the current menu
         drawingsMenu.removeAll();
+
+        // Create submenus for teams
+        final String[] teamNames = Teams.getNames(false);
+        final HashMap<Integer, JMenu> submenus = new HashMap();
+        for (final int teamNumber : teamNumbers) {
+            if (teamNumber != PluginLoader.TEAMNUMBER_COMMON && teamNumber < teamNames.length) {
+                final JMenu submenu = new JMenu(teamNames[teamNumber]);
+                submenus.put(teamNumber, submenu);
+                drawingsMenu.add(submenu);
+            }
+        }
+
+        // Create menu items for drawings
         for (final Drawing d : drawings) {
             final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
             m.addItemListener(new ItemListener() {
@@ -314,10 +330,22 @@ public class View3D implements GLEventListener {
                     d.setActive(e.getStateChange() == ItemEvent.SELECTED);
                 }
             });
-            drawingsMenu.add(m);
+            final JMenu submenu = submenus.get(d.getTeamNumber());
+            if (submenu != null) {
+                submenu.add(m);
+            } else {
+                drawingsMenu.add(m);
+            }
+        }
+
+        // Remove empty submenus
+        for (final JMenu submenu : submenus.values()) {
+            if (submenu.getMenuComponentCount() == 0) {
+                drawingsMenu.remove(submenu);
+            }
         }
     }
-
+    
     public JMenu getDrawingsMenu() {
         return drawingsMenu;
     }
