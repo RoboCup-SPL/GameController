@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -105,9 +106,19 @@ public class PluginLoader {
      * @param teamNumbers numbers of the teams
      */
     public void update(final Set<Integer> teamNumbers) {
-        // Remove drawings for given teams so they will be reloaded
-        for (final int teamNumber : teamNumbers) {
-            drawings.put(teamNumber, null);
+        // Disallow reloading of plugins
+        // (maybe use a ServiceLoader in the future to allow reloading)
+        final Iterator<Integer> iter = teamNumbers.iterator();
+        while (iter.hasNext()) {
+            final int teamNumber = iter.next();
+            if (messageClasses.get(teamNumber) == null) {
+                final Collection<Drawing> ds = drawings.get(teamNumber);
+                if (ds != null && !ds.isEmpty()) {
+                    iter.remove();
+                }
+            } else {
+                iter.remove();
+            }
         }
 
         // Find dirs that correspond to team numbers
