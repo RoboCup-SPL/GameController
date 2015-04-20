@@ -5,7 +5,7 @@ import bhuman.message.data.ArrayReader;
 import bhuman.message.data.Eigen;
 import bhuman.message.data.EnumReader;
 import bhuman.message.data.NativeReaders;
-import bhuman.message.data.StreamReader;
+import bhuman.message.data.SimpleStreamReader;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -14,10 +14,17 @@ import java.util.List;
  *
  * @author Felix Thielke
  */
-
 public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
-    public static class Obstacle implements StreamReader<Obstacle> {
+
+    public static class Obstacle implements SimpleStreamReader<Obstacle> {
+
+        @Override
+        public int getStreamedSize() {
+            return NativeReaders.floatReader.getStreamedSize() * 3 + new Eigen.Vector2f().getStreamedSize() * 3 + new EnumReader<Type>(Type.class).getStreamedSize();
+        }
+
         public static enum Type {
+
             ULTRASOUND, GOALPOST, UNKNOWN, SOMEROBOT, OPPONENT, TEAMMATE, FALLENSOMEROBOT, FALLENOPPONENT, FALLENTEAMMATE
         }
 
@@ -27,9 +34,9 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
 
         @Override
         public Obstacle read(ByteBuffer stream) {
-        	covXX = NativeReaders.floatReader.read(stream);
-        	covYY = NativeReaders.floatReader.read(stream);
-        	covXY = NativeReaders.floatReader.read(stream);
+            covXX = NativeReaders.floatReader.read(stream);
+            covYY = NativeReaders.floatReader.read(stream);
+            covXY = NativeReaders.floatReader.read(stream);
 
             center = new Eigen.Vector2f().read(stream);
             left = new Eigen.Vector2f().read(stream);
@@ -45,6 +52,9 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
 
     @Override
     public ObstacleModelCompressed read(ByteBuffer stream) {
+        if ((stream.remaining() - 4) % new Obstacle().getStreamedSize() != 0) {
+            return null;
+        }
         obstacles = new ArrayReader<Obstacle>(Obstacle.class).read(stream);
         return this;
     }
