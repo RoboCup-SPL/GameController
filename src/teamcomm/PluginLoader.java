@@ -25,7 +25,7 @@ import teamcomm.gui.drawings.Static;
 
 /**
  * Singleton class for managing the loading of plugins.
- * 
+ *
  * @author Felix Thielke
  */
 public class PluginLoader {
@@ -50,7 +50,7 @@ public class PluginLoader {
 
     /**
      * Returns the only instance of the plugin loader.
-     * 
+     *
      * @return instance
      */
     public static PluginLoader getInstance() {
@@ -59,7 +59,7 @@ public class PluginLoader {
 
     /**
      * Returns the class of messages from the given team.
-     * 
+     *
      * @param teamNumber number of the team
      * @return class for instantiating messages from the given team
      */
@@ -68,10 +68,10 @@ public class PluginLoader {
 
         return c != null ? c : SPLStandardMessage.class;
     }
-    
+
     /**
      * Returns drawings for all teams.
-     * 
+     *
      * @return drawings
      */
     public Collection<Drawing> getCommonDrawings() {
@@ -80,7 +80,7 @@ public class PluginLoader {
 
     /**
      * Returns drawings for the given team.
-     * 
+     *
      * @param teamNumber number of the team
      * @return drawings
      */
@@ -92,7 +92,7 @@ public class PluginLoader {
 
     /**
      * Dynamically loads/reloads plugins of the given teams.
-     * 
+     *
      * @param teamNumbers numbers of the teams
      */
     public void update(final Integer... teamNumbers) {
@@ -101,10 +101,15 @@ public class PluginLoader {
 
     /**
      * Dynamically loads/reloads plugins of the given teams.
-     * 
+     *
      * @param teamNumbers numbers of the teams
      */
     public void update(final Set<Integer> teamNumbers) {
+        // Remove drawings for given teams so they will be reloaded
+        for (final int teamNumber : teamNumbers) {
+            drawings.put(teamNumber, null);
+        }
+
         // Find dirs that correspond to team numbers
         final File[] pluginDirs = pluginDir.listFiles(new FilenameFilter() {
             @Override
@@ -169,7 +174,7 @@ public class PluginLoader {
                     // Class is a message class: set it as default if no
                     // other message class exists for the team
                     if (!messageClasses.containsKey(teamNumber)) {
-                        messageClasses.put(teamNumber, (Class<AdvancedMessage>) cls);
+                        messageClasses.put(teamNumber, AdvancedMessage.class.cast(cls.newInstance()).getClass());
                     }
                 } else if (PerPlayer.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
                     // Class is a drawing: add it to the team drawings

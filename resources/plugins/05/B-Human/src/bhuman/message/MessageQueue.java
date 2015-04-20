@@ -42,7 +42,7 @@ public class MessageQueue {
 
         while (buf.hasRemaining()) {
             final MessageID id = MessageID.values()[Unsigned.toUnsigned(buf.get())];
-            final int size = buf.get() | (buf.get() << 8) | (buf.get() << 16);
+            final int size = Unsigned.toUnsigned(buf.get()) | (Unsigned.toUnsigned(buf.get()) << 8) | (Unsigned.toUnsigned(buf.get()) << 16);
             final byte[] data = new byte[size];
             buf.get(data);
             final Message<? extends Message> msg = Message.factory(id, ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
