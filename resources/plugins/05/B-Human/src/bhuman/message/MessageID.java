@@ -26,6 +26,7 @@ public enum MessageID {
     idFrameInfo,
     idGameInfo,
     idGoalPercept,
+    idGoalPercept2,
     idGroundContactState,
     idGroundTruthOdometryData,
     idGroundTruthWorldState,
@@ -66,6 +67,7 @@ public enum MessageID {
     idThrowInBall,
     idThumbnail,
     idZmp,
+    // ids used in team communication
     idNTPHeader,
     idNTPIdentifier,
     idNTPRequest,
@@ -79,6 +81,7 @@ public enum MessageID {
     idTeammateRoles,
     idTeammateTimeOfLastGroundContact,
     idWhistle,
+    // infrastructure
     idConsole,
     idDebugDataChangeRequest,
     idDebugDataResponse,
