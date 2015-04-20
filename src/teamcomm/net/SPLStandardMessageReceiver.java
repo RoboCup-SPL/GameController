@@ -72,7 +72,7 @@ public class SPLStandardMessageReceiver extends Thread {
             socket = new MulticastSocket(null);
             socket.setSoTimeout(200);
             socket.setReuseAddress(true);
-            socket.bind(new InetSocketAddress(getTeamport(team)));
+            socket.bind(new InetSocketAddress(localhost, getTeamport(team)));
 
             try {
                 // Join multicast group (for compatibility with SimRobot)
