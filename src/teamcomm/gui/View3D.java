@@ -8,6 +8,8 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -17,6 +19,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
 import javax.swing.event.MouseInputAdapter;
 import teamcomm.PluginLoader;
 import teamcomm.data.RobotData;
@@ -54,6 +58,7 @@ public class View3D implements GLEventListener {
         }
     };
     private final List<Drawing> drawings = new LinkedList<Drawing>();
+    private final JMenu drawingsMenu = new JMenu("Drawings");
 
     private int width = 0;
     private int height = 0;
@@ -190,6 +195,7 @@ public class View3D implements GLEventListener {
         for (final Drawing d : drawings) {
             d.initialize(gl);
         }
+        updateDrawingsMenu();
     }
 
     /**
@@ -233,6 +239,7 @@ public class View3D implements GLEventListener {
                 for (final Drawing d : drawings) {
                     d.initialize(gl);
                 }
+                updateDrawingsMenu();
             }
         } else {
             if (!((curTeamNumbers[0] == teamNumbers[0] && curTeamNumbers[1] == teamNumbers[1])
@@ -247,6 +254,7 @@ public class View3D implements GLEventListener {
                 for (final Drawing d : drawings) {
                     d.initialize(gl);
                 }
+                updateDrawingsMenu();
             }
         }
 
@@ -296,12 +304,21 @@ public class View3D implements GLEventListener {
         }
     }
 
-    /**
-     * Returns all drawings that are drawn in the field view.
-     *
-     * @return drawings
-     */
-    public List<Drawing> getDrawings() {
-        return drawings;
+    private void updateDrawingsMenu() {
+        drawingsMenu.removeAll();
+        for (final Drawing d : drawings) {
+            final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
+            m.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(final ItemEvent e) {
+                    d.setActive(e.getStateChange() == ItemEvent.SELECTED);
+                }
+            });
+            drawingsMenu.add(m);
+        }
+    }
+
+    public JMenu getDrawingsMenu() {
+        return drawingsMenu;
     }
 }

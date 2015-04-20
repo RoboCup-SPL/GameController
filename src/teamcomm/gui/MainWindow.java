@@ -65,6 +65,8 @@ public class MainWindow extends JFrame implements Runnable {
     private final JLabel[] teamLogos = new JLabel[]{new JLabel(), new JLabel()};
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
     private final Map<String, JFrame> robotDetailPanels = new HashMap<String, JFrame>();
+    
+    private final JMenu drawingsMenu = new JMenu("Drawings");
 
     private final JMenuItem[] logMenuItems = new JMenuItem[3];
 
@@ -211,25 +213,9 @@ public class MainWindow extends JFrame implements Runnable {
         viewMenu.add(mirrorOption);
 
         // Drawings
-        viewMenu.add(createDrawingsMenu());
+        viewMenu.add(fieldView.getDrawingsMenu());
 
         return viewMenu;
-    }
-
-    private JMenu createDrawingsMenu() {
-        final JMenu drawingsMenu = new JMenu("Drawings");
-        for (final Drawing d : fieldView.getDrawings()) {
-            final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
-            m.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(final ItemEvent e) {
-                    d.setActive(e.getStateChange() == ItemEvent.SELECTED);
-                }
-            });
-            drawingsMenu.add(m);
-        }
-
-        return drawingsMenu;
     }
 
     @Override
