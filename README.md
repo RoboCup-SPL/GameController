@@ -14,7 +14,7 @@ https://github.com/bhuman/GameController .
 
 To build it from the source code you may use Apache Ant.
 Just call "ant" in the main directory.
-	
+
 ## 2. Executing the Jar
 
 Double-click GameController.jar or run 
@@ -101,37 +101,37 @@ stoppages of play.
 
 While the GameController is running, you may use the following keys on the keyboard instead of pushing buttons:
 
-    Esc	      - press it twice to close the GameController
+    Esc       - press it twice to close the GameController
     Delete    - toggle test-mode (everything is legal, every button is visible and enabled)
     Backspace - undo last action
 
 only SPL
 
-    B	- out by blue
-    R	- out by red
+    B    - out by blue
+    R    - out by red
 
-    P	- pushing
-    L	- leaving the field
-    I	- fallen / inactive / local game stuck
-    D	- illegal defender
-    G   - kickoff goal 
-    O	- illegal ball contact
-    U	- request for pickup
-    C   - coach motion
-    T   - teammate pushing
-    S	- substitute
+    P    - pushing
+    L    - leaving the field
+    I    - fallen / inactive / local game stuck
+    D    - illegal defender
+    G    - kickoff goal 
+    O    - illegal ball contact
+    U    - request for pickup
+    C    - coach motion
+    T    - teammate pushing
+    S    - substitute
 
 only Humanoid-League
 
-    B	- out by blue
-    R	- out by red
+    B    - out by blue
+    R    - out by red
 
-    M	- ball manipulation
-    P	- physical contact
-    A	- illegal attack
-    D	- illegal defense
-    I	- service / incapable
-    S	- substitute
+    M    - ball manipulation
+    P    - physical contact
+    A    - illegal attack
+    D    - illegal defense
+    I    - service / incapable
+    S    - substitute
 
 
 ## 5. libgamectrl (SPL)
