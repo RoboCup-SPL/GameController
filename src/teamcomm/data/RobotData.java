@@ -379,6 +379,19 @@ public class RobotData {
 
         return color;
     }
+    
+    public String getTeamName(final Integer teamNumber) {
+        final String[] teamNames = Teams.getNames(true);
+        if (teamNumber != null) {
+            if (teamNumber < teamNames.length) {
+                return ("Team " + teamNames[teamNumber]);
+            } else {
+                return ("Unknown Team (" + teamNumber + ")");
+            }
+        } else {
+            return "Unknown Team";
+        }
+    }
 
     /**
      * Returns whether the team sides are mirrored.

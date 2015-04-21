@@ -1,5 +1,6 @@
 package bhuman.message;
 
+import bhuman.message.messages.BehaviorStatus;
 import java.nio.ByteBuffer;
 import teamcomm.data.AdvancedMessage;
 
@@ -15,7 +16,12 @@ public class BHumanMessage extends AdvancedMessage {
 
     @Override
     public String[] display() {
-        return null;
+        final BehaviorStatus status = queue.getMessage(BehaviorStatus.class);
+
+        return new String[]{
+            "Messages: " + queue.getNumberOfMessages(),
+            status == null ? null : "Role: " + status.role
+        };
     }
 
     @Override

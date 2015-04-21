@@ -1,6 +1,5 @@
 package teamcomm.gui;
 
-import data.SPLStandardMessage;
 import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,8 +12,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -63,8 +60,8 @@ public class MainWindow extends JFrame implements Runnable {
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
     private final JLabel[] teamLogos = new JLabel[]{new JLabel(), new JLabel()};
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
-    private final Map<String, JFrame> robotDetailPanels = new HashMap<String, JFrame>();
-    
+    private final Map<String, RobotDetailPanel> robotDetailPanels = new HashMap<String, RobotDetailPanel>();
+
     private final JMenuItem[] logMenuItems = new JMenuItem[3];
 
     /**
@@ -274,12 +271,12 @@ public class MainWindow extends JFrame implements Runnable {
                     updateRobotPanel(panel, robot);
                 }
 
-                JFrame detailPanel = robotDetailPanels.get(robot.getAddress());
+                RobotDetailPanel detailPanel = robotDetailPanels.get(robot.getAddress());
                 if (detailPanel == null) {
-                    detailPanel = createRobotDetailPanel(robot, panel);
+                    detailPanel = new RobotDetailPanel(robot, panel);
                     robotDetailPanels.put(robot.getAddress(), detailPanel);
                 } else {
-                    updateRobotDetailPanel(detailPanel, robot);
+                    detailPanel.update(robot);
                 }
 
                 if (teamPanels[team].getComponentCount() <= i + (team < 2 ? 1 : 0)) {
@@ -381,94 +378,4 @@ public class MainWindow extends JFrame implements Runnable {
         ((JLabel) panel.getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
         ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
     }
-
-    private JFrame createRobotDetailPanel(final RobotState robot, final JPanel anchor) {
-        final DecimalFormat df = new DecimalFormat("#.#####");
-        final JPanel panel = new JPanel();
-        final JFrame frame = new JFrame(robot.getAddress());
-        frame.setLocationByPlatform(true);
-        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        frame.setContentPane(panel);
-        anchor.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    frame.setVisible(true);
-                }
-            }
-        });
-
-        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        panel.add(new JLabel(getTeamName(robot.getLastMessage()), JLabel.LEFT));
-        panel.add(new JLabel("Player no: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().playerNum), JLabel.LEFT));
-        panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
-        panel.add(new JLabel("Per second: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
-        panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)", JLabel.LEFT));
-        panel.add(new JLabel(" ", JLabel.LEFT));
-        panel.add(new JLabel(robot.getLastMessage() == null ? "?" : (robot.getLastMessage().fallen ? "fallen" : "upright"), JLabel.LEFT));
-        panel.add(new JLabel("Activity: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().intention.toString()), JLabel.LEFT));
-        panel.add(new JLabel("Pos.X: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().pose[0])), JLabel.LEFT));
-        panel.add(new JLabel("Pos.Y: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().pose[1])), JLabel.LEFT));
-        panel.add(new JLabel("Pos.T: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().pose[2])), JLabel.LEFT));
-        panel.add(new JLabel("Target.X: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().walkingTo[0])), JLabel.LEFT));
-        panel.add(new JLabel("Target.Y: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().walkingTo[1])), JLabel.LEFT));
-        panel.add(new JLabel("Shot.X: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().shootingTo[0])), JLabel.LEFT));
-        panel.add(new JLabel("Shot.Y: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().shootingTo[1])), JLabel.LEFT));
-        panel.add(new JLabel("BallRel.X: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ball[0])), JLabel.LEFT));
-        panel.add(new JLabel("BallRel.Y: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ball[1])), JLabel.LEFT));
-        panel.add(new JLabel("BallVel.X: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ballVel[0])), JLabel.LEFT));
-        panel.add(new JLabel("BallVel.Y: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ballVel[1])), JLabel.LEFT));
-        panel.add(new JLabel("BallAge: " + (robot.getLastMessage() == null ? "?" : df.format(robot.getLastMessage().ballAge)) + "s", JLabel.LEFT));
-        panel.add(new JLabel(" ", JLabel.LEFT));
-        panel.add(new JLabel("Additional data: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().data.length + "B"), JLabel.LEFT));
-
-        frame.pack();
-        frame.setResizable(false);
-        return frame;
-    }
-
-    private void updateRobotDetailPanel(final JFrame frame, final RobotState robot) {
-        if (robot.getLastMessage() == null) {
-            return;
-        }
-
-        final JPanel panel = (JPanel) frame.getContentPane();
-        final DecimalFormat df = new DecimalFormat("#.#####");
-        ((JLabel) panel.getComponent(0)).setText(getTeamName(robot.getLastMessage()));
-        ((JLabel) panel.getComponent(1)).setText("Player no: " + robot.getLastMessage().playerNum);
-        ((JLabel) panel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
-        ((JLabel) panel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
-        ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
-        ((JLabel) panel.getComponent(6)).setText(robot.getLastMessage().fallen ? "fallen" : "upright");
-        ((JLabel) panel.getComponent(7)).setText("Activity: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().intention.toString()));
-        ((JLabel) panel.getComponent(8)).setText("Pos.X: " + df.format(robot.getLastMessage().pose[0]));
-        ((JLabel) panel.getComponent(9)).setText("Pos.Y: " + df.format(robot.getLastMessage().pose[1]));
-        ((JLabel) panel.getComponent(10)).setText("Pos.T: " + df.format(robot.getLastMessage().pose[2]));
-        ((JLabel) panel.getComponent(11)).setText("Target.X: " + df.format(robot.getLastMessage().walkingTo[0]));
-        ((JLabel) panel.getComponent(12)).setText("Target.Y: " + df.format(robot.getLastMessage().walkingTo[1]));
-        ((JLabel) panel.getComponent(13)).setText("Shot.X: " + df.format(robot.getLastMessage().shootingTo[0]));
-        ((JLabel) panel.getComponent(14)).setText("Shot.Y: " + df.format(robot.getLastMessage().shootingTo[1]));
-        ((JLabel) panel.getComponent(15)).setText("BallRel.X: " + df.format(robot.getLastMessage().ball[0]));
-        ((JLabel) panel.getComponent(16)).setText("BallRel.Y: " + df.format(robot.getLastMessage().ball[1]));
-        ((JLabel) panel.getComponent(17)).setText("BallVel.X: " + df.format(robot.getLastMessage().ballVel[0]));
-        ((JLabel) panel.getComponent(18)).setText("BallVel.Y: " + df.format(robot.getLastMessage().ballVel[1]));
-        ((JLabel) panel.getComponent(19)).setText("BallAge: " + robot.getLastMessage().ballAge);
-        ((JLabel) panel.getComponent(21)).setText("Additional data: " + robot.getLastMessage().data.length + "B");
-    }
-
-    private static String getTeamName(final SPLStandardMessage msg) {
-        final String[] teamNames = Teams.getNames(true);
-        if (msg != null) {
-            if (msg.teamNum < teamNames.length) {
-                return ("Team " + teamNames[msg.teamNum]);
-            } else {
-                return ("Unknown Team (" + msg.teamNum + ")");
-            }
-        } else {
-            return "Unknown Team";
-        }
-    }
-
 }

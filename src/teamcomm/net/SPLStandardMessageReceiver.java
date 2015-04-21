@@ -15,6 +15,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -72,7 +73,7 @@ public class SPLStandardMessageReceiver extends Thread {
             socket = new MulticastSocket(null);
             socket.setSoTimeout(200);
             socket.setReuseAddress(true);
-            socket.bind(new InetSocketAddress(localhost, getTeamport(team)));
+            socket.bind(new InetSocketAddress(getTeamport(team)));
 
             try {
                 // Join multicast group (for compatibility with SimRobot)
