@@ -109,6 +109,8 @@ only SPL
 
     B    - out by blue
     R    - out by red
+    Y    - out by yellow
+    K    - out by black
 
     P    - pushing
     L    - leaving the field
