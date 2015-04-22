@@ -40,7 +40,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.basic.BasicBorders;
 import teamcomm.Main;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
@@ -88,17 +90,16 @@ public class MainWindow extends JFrame implements Runnable {
         final Box left = new Box(BoxLayout.Y_AXIS);
         teamPanels[0].setLayout(new GridLayout(10, 1, 0, 5));
         left.add(teamPanels[0]);
-        left.add(new Box.Filler(new Dimension(0, ROBOTPANEL_H), new Dimension(0, ROBOTPANEL_H), new Dimension(0, 1000)));
+        left.add(new Box.Filler(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H), new Dimension(ROBOTPANEL_W, ROBOTPANEL_H), new Dimension(ROBOTPANEL_W, 1000)));
         final Box right = new Box(BoxLayout.Y_AXIS);
         teamPanels[1].setLayout(new GridLayout(10, 1, 0, 5));
         right.add(teamPanels[1]);
-        right.add(new Box.Filler(new Dimension(0, ROBOTPANEL_H), new Dimension(0, ROBOTPANEL_H), new Dimension(0, 1000)));
+        right.add(new Box.Filler(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H), new Dimension(ROBOTPANEL_W, ROBOTPANEL_H), new Dimension(ROBOTPANEL_W, 1000)));
         final Box bottom = new Box(BoxLayout.X_AXIS);
-        teamPanels[2].setLayout(new GridLayout(1, 10, 5, 0));
-        bottom.add(new Box.Filler(new Dimension(ROBOTPANEL_W, 0), new Dimension(ROBOTPANEL_W, 0), new Dimension(1000, 0)));
+        bottom.setBorder(new EmptyBorder(0, ROBOTPANEL_W, 0, ROBOTPANEL_W));
+        teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.LINE_AXIS));
         bottom.add(teamPanels[2]);
-        bottom.add(new Box.Filler(new Dimension(ROBOTPANEL_W, 0), new Dimension(ROBOTPANEL_W, 0), new Dimension(1000, 0)));
-
+        
         // Setup team logos
         teamPanels[0].add(teamLogos[0]);
         teamPanels[1].add(teamLogos[1]);
@@ -119,7 +120,7 @@ public class MainWindow extends JFrame implements Runnable {
         setJMenuBar(mb);
 
         // Display window
-        setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension(1172, 600));
         pack();
         try {
             Thread.sleep(100); // For compatibility with X11 (?)
