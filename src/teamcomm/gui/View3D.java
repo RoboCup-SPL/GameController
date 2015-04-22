@@ -121,7 +121,6 @@ public class View3D implements GLEventListener {
         // Enable VSync
         if (!isVSyncSupported()) {
             animator = new FPSAnimator(canvas, ANIMATION_FPS, true);
-            return;
         } else {
             animator = new Animator(canvas);
         }
