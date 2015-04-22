@@ -8,6 +8,8 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.AnimatorBase;
+import com.jogamp.opengl.util.FPSAnimator;
 import data.Teams;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -38,8 +40,10 @@ import teamcomm.gui.drawings.Static;
  */
 public class View3D implements GLEventListener {
 
+    private static final int ANIMATION_FPS = 60;
+
     private final GLCanvas canvas;
-    private final Animator animator;
+    private final AnimatorBase animator;
     private final Camera camera = new Camera();
 
     private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
@@ -70,11 +74,10 @@ public class View3D implements GLEventListener {
      */
     public View3D() {
         // Initialize GL canvas and animator
-        GLProfile glp = GLProfile.get(GLProfile.GL2);
-        GLCapabilities caps = new GLCapabilities(glp);
+        final GLProfile glp = GLProfile.get(GLProfile.GL2);
+        final GLCapabilities caps = new GLCapabilities(glp);
         canvas = new GLCanvas(caps);
         canvas.addGLEventListener(this);
-        animator = new Animator(canvas);
 
         // Setup camera movement
         final MouseInputAdapter listener = new MouseInputAdapter() {
@@ -115,8 +118,53 @@ public class View3D implements GLEventListener {
             }
         });
 
+        // Enable VSync
+        if (!isVSyncSupported()) {
+            animator = new FPSAnimator(canvas, ANIMATION_FPS, true);
+            return;
+        } else {
+            animator = new Animator(canvas);
+        }
+
         // Start rendering
         animator.start();
+    }
+
+    private static class TestListener implements GLEventListener {
+
+        public boolean vSync;
+
+        @Override
+        public void init(GLAutoDrawable glad) {
+            glad.getGL().setSwapInterval(1);
+            vSync = glad.getGL().getSwapInterval() == 1;
+        }
+
+        @Override
+        public void dispose(GLAutoDrawable glad) {
+        }
+
+        @Override
+        public void display(GLAutoDrawable glad) {
+        }
+
+        @Override
+        public void reshape(GLAutoDrawable glad, int i, int i1, int i2, int i3) {
+        }
+    }
+
+    private static boolean isVSyncSupported() {
+        final GLProfile glp = GLProfile.get(GLProfile.GL2);
+        final GLCapabilities caps = new GLCapabilities(glp);
+        final GLCanvas c = new GLCanvas(caps);
+        final TestListener listener = new TestListener();
+        c.addGLEventListener(listener);
+
+        final Animator anim = new Animator(c);
+        anim.start();
+        anim.stop();
+        System.out.println("VSync" + (!listener.vSync ? " not " : " ") + "supported");
+        return listener.vSync;
     }
 
     /**
@@ -146,7 +194,9 @@ public class View3D implements GLEventListener {
         final GL2 gl = glad.getGL().getGL2();
 
         // Enable VSync
-        gl.setSwapInterval(1);
+        if (animator instanceof Animator) {
+            gl.setSwapInterval(1);
+        }
 
         // enable depth test
         gl.glClearDepth(1.0f);
