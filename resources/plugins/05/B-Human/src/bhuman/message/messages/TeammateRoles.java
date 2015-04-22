@@ -16,7 +16,11 @@ public class TeammateRoles extends Message<TeammateRoles> {
 
     @Override
     public TeammateRoles read(final ByteBuffer stream) {
-        roles = new ArrayReader<Role>(Role.class).read(stream);
+        final ArrayReader<Role> reader = new ArrayReader<Role>(Role.class);
+        if(stream.remaining() != reader.getStreamedSize(stream)) {
+            return null;
+        }
+        roles = reader.read(stream);
         return this;
     }
 

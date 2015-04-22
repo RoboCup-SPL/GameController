@@ -4,13 +4,14 @@ import bhuman.message.data.Role;
 import bhuman.message.Message;
 import bhuman.message.data.EnumReader;
 import bhuman.message.data.NativeReaders;
+import bhuman.message.data.SimpleStreamReader;
 import java.nio.ByteBuffer;
 
 /**
  *
  * @author Felix Thielke
  */
-public class BehaviorStatus extends Message<BehaviorStatus> {
+public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStreamReader<BehaviorStatus> {
 
     public static enum Activity {
 
@@ -45,6 +46,15 @@ public class BehaviorStatus extends Message<BehaviorStatus> {
     public float estimatedTimeToReachBall;
     public int passTarget;
     public HeadControlFlags headControlFlags;
+
+    @Override
+    public int getStreamedSize() {
+        return new Role().getStreamedSize()
+                + new EnumReader<Activity>(Activity.class).getStreamedSize()
+                + NativeReaders.floatReader.getStreamedSize()
+                + NativeReaders.intReader.getStreamedSize()
+                + new EnumReader<HeadControlFlags>(HeadControlFlags.class).getStreamedSize();
+    }
 
     @Override
     public BehaviorStatus read(final ByteBuffer stream) {

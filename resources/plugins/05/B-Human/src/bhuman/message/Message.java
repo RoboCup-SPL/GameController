@@ -1,5 +1,6 @@
 package bhuman.message;
 
+import bhuman.message.data.SimpleStreamReader;
 import bhuman.message.data.StreamReader;
 import java.nio.ByteBuffer;
 import java.util.EnumMap;
@@ -30,6 +31,12 @@ public abstract class Message<T extends Message> implements StreamReader<T> {
         final Class<Message<? extends Message>> cls = classes.get(identifier);
         if (cls != null) {
             try {
+                Message<? extends Message> inst = cls.newInstance();
+                if (inst instanceof SimpleStreamReader) {
+                    if (data.remaining() != ((SimpleStreamReader) inst).getStreamedSize()) {
+                        return null;
+                    }
+                }
                 return cls.newInstance().read(data);
             } catch (SecurityException ex) {
             } catch (InstantiationException ex) {

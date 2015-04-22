@@ -10,10 +10,20 @@ import java.util.List;
  */
 public class ArrayReader<T> implements StreamReader<List<T>> {
 
-    private final Class<? extends StreamReader<T>> cls;
+    private final Class<? extends SimpleStreamReader<T>> cls;
 
-    public ArrayReader(final Class<? extends StreamReader<T>> cls) {
+    public ArrayReader(final Class<? extends SimpleStreamReader<T>> cls) {
         this.cls = cls;
+    }
+
+    public int getStreamedSize(final ByteBuffer stream) {
+        try {
+            return 4 + getElementCount(stream) * cls.newInstance().getStreamedSize();
+        } catch (InstantiationException ex) {
+        } catch (IllegalAccessException ex) {
+        }
+
+        return -1;
     }
 
     public int getElementCount(final ByteBuffer stream) {

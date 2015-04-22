@@ -5,7 +5,7 @@ import bhuman.message.data.ArrayReader;
 import bhuman.message.data.Eigen;
 import bhuman.message.data.EnumReader;
 import bhuman.message.data.NativeReaders;
-import bhuman.message.data.StreamReader;
+import bhuman.message.data.SimpleStreamReader;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class GoalPercept extends Message<GoalPercept> {
 
-    public static class GoalPost implements StreamReader<GoalPost> {
+    public static class GoalPost implements SimpleStreamReader<GoalPost> {
 
         public static enum Position {
 
@@ -25,6 +25,13 @@ public class GoalPercept extends Message<GoalPercept> {
         public Position position;
         public Eigen.Vector2i positionInImage;
         public Eigen.Vector2f positionOnField;
+
+        @Override
+        public int getStreamedSize() {
+            return new EnumReader<Position>(Position.class).getStreamedSize()
+                    + new Eigen.Vector2i().getStreamedSize()
+                    + new Eigen.Vector2f().getStreamedSize();
+        }
 
         @Override
         public GoalPost read(ByteBuffer stream) {
@@ -43,6 +50,11 @@ public class GoalPercept extends Message<GoalPercept> {
 
     @Override
     public GoalPercept read(ByteBuffer stream) {
+        final ArrayReader<GoalPost> reader = new ArrayReader<GoalPost>(GoalPost.class);
+        if (stream.remaining() != reader.getStreamedSize(stream) + NativeReaders.uintReader.getStreamedSize() * 2) {
+            return null;
+        }
+
         goalPosts = new ArrayReader<GoalPost>(GoalPost.class).read(stream);
         timeWhenGoalPostLastSeen = NativeReaders.uintReader.read(stream);
         timeWhenCompleteGoalLastSeen = NativeReaders.uintReader.read(stream);
