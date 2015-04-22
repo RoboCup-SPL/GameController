@@ -42,7 +42,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.plaf.basic.BasicBorders;
 import teamcomm.Main;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
@@ -66,7 +65,7 @@ public class MainWindow extends JFrame implements Runnable {
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
     private final JLabel[] teamLogos = new JLabel[]{new JLabel((Icon) null, SwingConstants.CENTER), new JLabel((Icon) null, SwingConstants.CENTER)};
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
-    private final Map<String, RobotDetailPanel> robotDetailPanels = new HashMap<String, RobotDetailPanel>();
+    private final Map<String, RobotDetailFrame> robotDetailFrames = new HashMap<String, RobotDetailFrame>();
 
     private final JMenuItem[] logMenuItems = new JMenuItem[3];
 
@@ -99,7 +98,7 @@ public class MainWindow extends JFrame implements Runnable {
         bottom.setBorder(new EmptyBorder(0, ROBOTPANEL_W, 0, ROBOTPANEL_W));
         teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.LINE_AXIS));
         bottom.add(teamPanels[2]);
-        
+
         // Setup team logos
         teamPanels[0].add(teamLogos[0]);
         teamPanels[1].add(teamLogos[1]);
@@ -120,7 +119,7 @@ public class MainWindow extends JFrame implements Runnable {
         setJMenuBar(mb);
 
         // Display window
-        setPreferredSize(new Dimension(1172, 600));
+        setPreferredSize(new Dimension(1442, 720));
         pack();
         try {
             Thread.sleep(100); // For compatibility with X11 (?)
@@ -286,10 +285,10 @@ public class MainWindow extends JFrame implements Runnable {
                     updateRobotPanel(panel, robot);
                 }
 
-                RobotDetailPanel detailPanel = robotDetailPanels.get(robot.getAddress());
+                RobotDetailFrame detailPanel = robotDetailFrames.get(robot.getAddress());
                 if (detailPanel == null) {
-                    detailPanel = new RobotDetailPanel(robot, panel);
-                    robotDetailPanels.put(robot.getAddress(), detailPanel);
+                    detailPanel = new RobotDetailFrame(robot, panel);
+                    robotDetailFrames.put(robot.getAddress(), detailPanel);
                 } else {
                     detailPanel.update(robot);
                 }
@@ -311,7 +310,7 @@ public class MainWindow extends JFrame implements Runnable {
 
         // Remove unused JPanels
         for (final String addr : robotAddresses) {
-            robotDetailPanels.remove(addr).dispose();
+            robotDetailFrames.remove(addr).dispose();
 
             final JPanel p = robotPanels.remove(addr);
             for (int i = 0; i < 3; i++) {

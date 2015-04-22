@@ -21,7 +21,7 @@ import teamcomm.data.RobotState;
  *
  * @author Felix Thielke
  */
-public class RobotDetailPanel extends JFrame {
+public class RobotDetailFrame extends JFrame {
 
     private static final long serialVersionUID = 4709653396291218508L;
 
@@ -34,7 +34,7 @@ public class RobotDetailPanel extends JFrame {
      * @param robot robot to create the frame for
      * @param anchor panel which triggers the frame on doubleclick
      */
-    public RobotDetailPanel(final RobotState robot, final JPanel anchor) {
+    public RobotDetailFrame(final RobotState robot, final JPanel anchor) {
         super(robot.getAddress());
 
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
