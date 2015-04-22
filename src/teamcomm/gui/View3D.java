@@ -11,6 +11,7 @@ import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
 import data.Teams;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -24,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.event.MouseInputAdapter;
 import teamcomm.PluginLoader;
@@ -41,6 +43,7 @@ import teamcomm.gui.drawings.Static;
 public class View3D implements GLEventListener {
 
     private static final int ANIMATION_FPS = 60;
+    private static Boolean vSyncSupported = null;
 
     private final GLCanvas canvas;
     private final AnimatorBase animator;
@@ -129,41 +132,44 @@ public class View3D implements GLEventListener {
         animator.start();
     }
 
-    private static class TestListener implements GLEventListener {
-
-        public boolean vSync;
-
-        @Override
-        public void init(GLAutoDrawable glad) {
-            glad.getGL().setSwapInterval(1);
-            vSync = glad.getGL().getSwapInterval() == 1;
-        }
-
-        @Override
-        public void dispose(GLAutoDrawable glad) {
-        }
-
-        @Override
-        public void display(GLAutoDrawable glad) {
-        }
-
-        @Override
-        public void reshape(GLAutoDrawable glad, int i, int i1, int i2, int i3) {
-        }
-    }
-
     private static boolean isVSyncSupported() {
-        final GLProfile glp = GLProfile.get(GLProfile.GL2);
-        final GLCapabilities caps = new GLCapabilities(glp);
-        final GLCanvas c = new GLCanvas(caps);
-        final TestListener listener = new TestListener();
-        c.addGLEventListener(listener);
+        if (vSyncSupported == null) {
+            final GLCanvas c = new GLCanvas(new GLCapabilities(GLProfile.get(GLProfile.GL2)));
+            c.addGLEventListener(new GLEventListener() {
+                @Override
+                public void init(GLAutoDrawable glad) {
+                    glad.getGL().setSwapInterval(1);
+                    vSyncSupported = glad.getGL().getSwapInterval() == 1;
+                }
 
-        final Animator anim = new Animator(c);
-        anim.start();
-        anim.stop();
-        System.out.println("VSync" + (!listener.vSync ? " not " : " ") + "supported");
-        return listener.vSync;
+                @Override
+                public void dispose(GLAutoDrawable glad) {
+                }
+
+                @Override
+                public void display(GLAutoDrawable glad) {
+                }
+
+                @Override
+                public void reshape(GLAutoDrawable glad, int i, int i1, int i2, int i3) {
+                }
+            });
+            final JFrame frame = new JFrame("test");
+            frame.add(c);
+            frame.setPreferredSize(new Dimension(100, 100));
+            frame.pack();
+            frame.setVisible(true);
+            final Animator anim = new Animator(c);
+            anim.start();
+            anim.setRunAsFastAsPossible(true);
+            anim.stop();
+            frame.dispose();
+
+            if (vSyncSupported == null) {
+                vSyncSupported = false;
+            }
+        }
+        return vSyncSupported;
     }
 
     /**
