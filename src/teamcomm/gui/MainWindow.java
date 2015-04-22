@@ -85,15 +85,19 @@ public class MainWindow extends JFrame implements Runnable {
         });
 
         // Setup team panels
-        teamPanels[0].setLayout(new GridLayout(10, 1, 0, 5));
         final Box left = new Box(BoxLayout.Y_AXIS);
+        teamPanels[0].setLayout(new GridLayout(10, 1, 0, 5));
         left.add(teamPanels[0]);
         left.add(new Box.Filler(new Dimension(0, ROBOTPANEL_H), new Dimension(0, ROBOTPANEL_H), new Dimension(0, 1000)));
-        teamPanels[1].setLayout(new GridLayout(10, 1, 0, 5));
         final Box right = new Box(BoxLayout.Y_AXIS);
+        teamPanels[1].setLayout(new GridLayout(10, 1, 0, 5));
         right.add(teamPanels[1]);
         right.add(new Box.Filler(new Dimension(0, ROBOTPANEL_H), new Dimension(0, ROBOTPANEL_H), new Dimension(0, 1000)));
-        teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.X_AXIS));
+        final Box bottom = new Box(BoxLayout.X_AXIS);
+        teamPanels[2].setLayout(new GridLayout(1, 10, 5, 0));
+        bottom.add(new Box.Filler(new Dimension(ROBOTPANEL_W, 0), new Dimension(ROBOTPANEL_W, 0), new Dimension(1000, 0)));
+        bottom.add(teamPanels[2]);
+        bottom.add(new Box.Filler(new Dimension(ROBOTPANEL_W, 0), new Dimension(ROBOTPANEL_W, 0), new Dimension(1000, 0)));
 
         // Setup team logos
         teamPanels[0].add(teamLogos[0]);
@@ -103,7 +107,7 @@ public class MainWindow extends JFrame implements Runnable {
         final JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.add(left, BorderLayout.WEST);
         contentPane.add(right, BorderLayout.EAST);
-        contentPane.add(teamPanels[2], BorderLayout.SOUTH);
+        contentPane.add(bottom, BorderLayout.SOUTH);
         contentPane.add(fieldView.getCanvas(), BorderLayout.CENTER);
         setContentPane(contentPane);
 
@@ -306,7 +310,7 @@ public class MainWindow extends JFrame implements Runnable {
 
         // Remove unused JPanels
         for (final String addr : robotAddresses) {
-            robotDetailPanels.remove(addr);
+            robotDetailPanels.remove(addr).dispose();
 
             final JPanel p = robotPanels.remove(addr);
             for (int i = 0; i < 3; i++) {

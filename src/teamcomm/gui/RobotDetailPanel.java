@@ -17,7 +17,7 @@ import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
 
 /**
- *
+ * Class for the windows showing detailed informations about robots.
  *
  * @author Felix Thielke
  */
@@ -28,15 +28,23 @@ public class RobotDetailPanel extends JFrame {
     private final JPanel leftPanel = new JPanel();
     private final JPanel rightPanel = new JPanel();
 
+    /**
+     * Constructor.
+     *
+     * @param robot robot to create the frame for
+     * @param anchor panel which triggers the frame on doubleclick
+     */
     public RobotDetailPanel(final RobotState robot, final JPanel anchor) {
         super(robot.getAddress());
 
-        setLocationByPlatform(true);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         anchor.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
+                    if(!isVisible()) {
+                        setLocationRelativeTo(anchor);
+                    }
                     setVisible(true);
                 }
             }
@@ -67,6 +75,11 @@ public class RobotDetailPanel extends JFrame {
         setResizable(false);
     }
 
+    /**
+     * Updates the frame with information of the given robot.
+     *
+     * @param robot robot state
+     */
     public final void update(final RobotState robot) {
         final SPLStandardMessage msg = robot.getLastMessage();
         if (msg == null) {

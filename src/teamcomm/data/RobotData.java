@@ -379,7 +379,13 @@ public class RobotData {
 
         return color;
     }
-    
+
+    /**
+     * Returns the team name of the given team.
+     *
+     * @param teamNumber number of the team
+     * @return the team name
+     */
     public String getTeamName(final Integer teamNumber) {
         final String[] teamNames = Teams.getNames(true);
         if (teamNumber != null) {
