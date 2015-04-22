@@ -1,104 +1,104 @@
 <?xml version = '1.0' encoding = 'utf-8'?>
 <!DOCTYPE project>
 <project default="jar">
-  <property name="src.dir"     value="src"/>
-  <property name="include.dir" value="include"/>
-  <property name="lib.dir"     value="lib"/>
-  <property name="deps.dir"    value="deps"/>
-  <property name="build.dir"   value="build"/>
-  <property name="classes.dir" value="${build.dir}/classes"/>
-  <property name="jar.dir"     value="${build.dir}/jar"/>
-  <property name="resources.dir"  value="resources" />
-  <property name="plugins.dir"  value="plugins" />
-  <property name="common_classes" value="common/ data/" />
+    <property name="src.dir"     value="src"/>
+    <property name="include.dir" value="include"/>
+    <property name="lib.dir"     value="lib"/>
+    <property name="deps.dir"    value="deps"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir"     value="${build.dir}/jar"/>
+    <property name="resources.dir"  value="resources" />
+    <property name="plugins.dir"  value="plugins" />
+    <property name="common_classes" value="common/ data/" />
 
-  <target name="clean">
-    <delete dir="${build.dir}" quiet="true" />
-  </target>
+    <target name="clean">
+        <delete dir="${build.dir}" quiet="true" />
+    </target>
 
-  <target name="compile">
-    <delete dir="${classes.dir}" quiet="true" />
-    <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.6" target="1.6" encoding="utf-8">
-        <compilerarg value="-Xlint:-options"/> <!-- ignore nagging about missing bootstrap class path -->
-        <classpath>
-            <pathelement path="${classpath}"/>
+    <target name="compile">
+        <delete dir="${classes.dir}" quiet="true" />
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.6" target="1.6" encoding="utf-8">
+            <compilerarg value="-Xlint:-options"/> <!-- ignore nagging about missing bootstrap class path -->
+            <classpath>
+                <pathelement path="${classpath}"/>
+                <fileset dir="${deps.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}" includes="${common_classes} controller/">
+            <manifest>
+                <attribute name="Main-Class" value="controller.Main"/>
+                <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
+            </manifest>
+        </jar>
+        <jar destfile="${jar.dir}/GameStateVisualizer.jar" basedir="${classes.dir}" includes="${common_classes} visualizer/">
+            <manifest>
+                <attribute name="Main-Class" value="visualizer.Main"/>
+                <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
+            </manifest>
+        </jar>
+        <jar destfile="${jar.dir}/LogAnalyzer.jar" basedir="${classes.dir}" includes="${common_classes} analyzer/">
+            <manifest>
+                <attribute name="Main-Class" value="analyzer.Main"/>
+                <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
+            </manifest>
+        </jar>
+        <jar destfile="${jar.dir}/TeamCommunicationMonitor.jar" basedir="${classes.dir}" includes="${common_classes} teamcomm/" excludes="teamcomm/gui/drawings/common/">
+            <manifest>
+                <attribute name="Main-Class" value="teamcomm.Main"/>
+                <attribute name="Author" value="Felix Thielke" />
+                <attribute name="Class-Path" value="deps/gluegen-rt.jar deps/jogl-all.jar" />
+            </manifest>
+        </jar>
+        <jar destfile="${jar.dir}/plugins/common.jar" basedir="${classes.dir}" includes="teamcomm/gui/drawings/common/">
+            <manifest>
+                <attribute name="Author" value="Felix Thielke" />
+            </manifest>
+        </jar>
+
+        <mkdir dir="${jar.dir}/lib"/>
+        <copy todir="${jar.dir}" overwrite="true">
+            <fileset dir="${resources.dir}">
+                <exclude name="${plugins.dir}/" />
+            </fileset>
+        </copy>
+        <copy todir="${jar.dir}/${plugins.dir}" overwrite="true">
+            <fileset dir="${resources.dir}/${plugins.dir}">
+                <include name="**/*.jar" />
+            </fileset>
+        </copy>
+        <copy todir="${jar.dir}/include" overwrite="true">
+            <fileset dir="${include.dir}" />
+        </copy>
+        <copy todir="${jar.dir}/deps" overwrite="true">
             <fileset dir="${deps.dir}">
                 <include name="**/*.jar"/>
             </fileset>
-        </classpath>
-    </javac>
-  </target>
-
-  <target name="jar" depends="compile">
-    <mkdir dir="${jar.dir}"/>
-    <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}" includes="${common_classes} controller/">
-      <manifest>
-        <attribute name="Main-Class" value="controller.Main"/>
-        <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
-      </manifest>
-    </jar>
-    <jar destfile="${jar.dir}/GameStateVisualizer.jar" basedir="${classes.dir}" includes="${common_classes} visualizer/">
-      <manifest>
-        <attribute name="Main-Class" value="visualizer.Main"/>
-        <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
-      </manifest>
-    </jar>
-    <jar destfile="${jar.dir}/LogAnalyzer.jar" basedir="${classes.dir}" includes="${common_classes} analyzer/">
-      <manifest>
-        <attribute name="Main-Class" value="analyzer.Main"/>
-        <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
-      </manifest>
-    </jar>
-    <jar destfile="${jar.dir}/TeamCommunicationMonitor.jar" basedir="${classes.dir}" includes="${common_classes} teamcomm/" excludes="teamcomm/gui/drawings/common/">
-      <manifest>
-        <attribute name="Main-Class" value="teamcomm.Main"/>
-        <attribute name="Author" value="Felix Thielke" />
-        <attribute name="Class-Path" value="deps/gluegen-rt.jar deps/jogl-all.jar" />
-      </manifest>
-    </jar>
-    <jar destfile="${jar.dir}/plugins/common.jar" basedir="${classes.dir}" includes="teamcomm/gui/drawings/common/">
-      <manifest>
-        <attribute name="Author" value="Felix Thielke" />
-      </manifest>
-    </jar>
-
-    <mkdir dir="${jar.dir}/lib"/>
-    <copy todir="${jar.dir}" overwrite="true">
-      <fileset dir="${resources.dir}">
-        <exclude name="${plugins.dir}/" />
-      </fileset>
-    </copy>
-    <copy todir="${jar.dir}/${plugins.dir}" overwrite="true">
-      <fileset dir="${resources.dir}/${plugins.dir}">
-        <include name="**/*.jar" />
-      </fileset>
-    </copy>
-    <copy todir="${jar.dir}/include" overwrite="true">
-      <fileset dir="${include.dir}" />
-    </copy>
-    <copy todir="${jar.dir}/deps" overwrite="true">
-      <fileset dir="${deps.dir}">
-        <include name="**/*.jar"/>
-      </fileset>
-    </copy>
-    <copy file="${lib.dir}/libgamectrl.so" tofile="${jar.dir}/lib/libgamectrl.so"/>
-    <copy file="README.md" tofile="${jar.dir}/README.txt"/>
-  </target>
+        </copy>
+        <copy file="${lib.dir}/libgamectrl.so" tofile="${jar.dir}/lib/libgamectrl.so"/>
+        <copy file="README.md" tofile="${jar.dir}/README.txt"/>
+    </target>
   
-  <target name="run" depends="jar">
-    <java jar="${jar.dir}/GameController.jar" fork="true"/>
-  </target>
+    <target name="run" depends="jar">
+        <java jar="${jar.dir}/GameController.jar" fork="true"/>
+    </target>
 
-  <target name="run_visualizer" depends="jar">
-    <java jar="${jar.dir}/GameStateVisualizer.jar" fork="true"/>
-  </target>
+    <target name="run_visualizer" depends="jar">
+        <java jar="${jar.dir}/GameStateVisualizer.jar" fork="true"/>
+    </target>
   
-  <target name="run_analyzer" depends="jar">
-    <java jar="${jar.dir}/LogAnalyzer.jar" fork="true"/>
-  </target>
+    <target name="run_analyzer" depends="jar">
+        <java jar="${jar.dir}/LogAnalyzer.jar" fork="true"/>
+    </target>
   
-  <target name="run_teamcomm" depends="jar">
-    <java jar="${jar.dir}/TeamCommunicationMonitor.jar" dir="${jar.dir}" fork="true"/>
-  </target>
+    <target name="run_teamcomm" depends="jar">
+        <java jar="${jar.dir}/TeamCommunicationMonitor.jar" dir="${jar.dir}" fork="true"/>
+    </target>
 </project>

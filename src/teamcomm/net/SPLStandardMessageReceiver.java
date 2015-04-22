@@ -412,6 +412,7 @@ public class SPLStandardMessageReceiver extends Thread {
                 } catch (IllegalAccessException ex) {
                     Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
                 }
+                Thread.yield();
             }
         } catch (InterruptedException ex) {
         } finally {

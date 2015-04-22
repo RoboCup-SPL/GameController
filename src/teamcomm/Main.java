@@ -1,7 +1,6 @@
 package teamcomm;
 
 import com.jogamp.opengl.GLProfile;
-import java.io.IOException;
 import java.net.SocketException;
 import javax.swing.JOptionPane;
 import teamcomm.gui.MainWindow;
@@ -45,8 +44,7 @@ public class Main {
         receiver = SPLStandardMessageReceiver.getInstance();
 
         // Initialize robot view part of the GUI
-        final Thread robotView = new Thread(new MainWindow());
-        robotView.setName("GUI");
+        final MainWindow robotView = new MainWindow();
 
         // Start threads
         gcDataReceiver.start();
@@ -66,14 +64,12 @@ public class Main {
         // Shutdown threads
         receiver.interrupt();
         gcDataReceiver.interrupt();
-        robotView.interrupt();
+        robotView.terminate();
 
         try {
             gcDataReceiver.join(1000);
-            robotView.join(1000);
             receiver.join(100);
         } catch (InterruptedException ex) {
-
         }
 
         System.exit(0);

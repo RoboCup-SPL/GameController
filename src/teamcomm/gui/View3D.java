@@ -7,11 +7,9 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
 import data.Teams;
-import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -21,11 +19,9 @@ import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.event.MouseInputAdapter;
 import teamcomm.PluginLoader;
@@ -43,7 +39,6 @@ import teamcomm.gui.drawings.Static;
 public class View3D implements GLEventListener {
 
     private static final int ANIMATION_FPS = 60;
-    private static Boolean vSyncSupported = null;
 
     private final GLCanvas canvas;
     private final AnimatorBase animator;
@@ -121,55 +116,9 @@ public class View3D implements GLEventListener {
             }
         });
 
-        // Enable VSync
-        if (!isVSyncSupported()) {
-            animator = new FPSAnimator(canvas, ANIMATION_FPS, true);
-        } else {
-            animator = new Animator(canvas);
-        }
-
         // Start rendering
+        animator = new FPSAnimator(canvas, ANIMATION_FPS);
         animator.start();
-    }
-
-    private static boolean isVSyncSupported() {
-        if (vSyncSupported == null) {
-            final GLCanvas c = new GLCanvas(new GLCapabilities(GLProfile.get(GLProfile.GL2)));
-            c.addGLEventListener(new GLEventListener() {
-                @Override
-                public void init(GLAutoDrawable glad) {
-                    glad.getGL().setSwapInterval(1);
-                    vSyncSupported = glad.getGL().getSwapInterval() == 1;
-                }
-
-                @Override
-                public void dispose(GLAutoDrawable glad) {
-                }
-
-                @Override
-                public void display(GLAutoDrawable glad) {
-                }
-
-                @Override
-                public void reshape(GLAutoDrawable glad, int i, int i1, int i2, int i3) {
-                }
-            });
-            final JFrame frame = new JFrame("test");
-            frame.add(c);
-            frame.setPreferredSize(new Dimension(100, 100));
-            frame.pack();
-            frame.setVisible(true);
-            final Animator anim = new Animator(c);
-            anim.start();
-            anim.setRunAsFastAsPossible(true);
-            anim.stop();
-            frame.dispose();
-
-            if (vSyncSupported == null) {
-                vSyncSupported = false;
-            }
-        }
-        return vSyncSupported;
     }
 
     /**
@@ -197,11 +146,6 @@ public class View3D implements GLEventListener {
     @Override
     public void init(final GLAutoDrawable glad) {
         final GL2 gl = glad.getGL().getGL2();
-
-        // Enable VSync
-        if (animator instanceof Animator) {
-            gl.setSwapInterval(1);
-        }
 
         // enable depth test
         gl.glClearDepth(1.0f);
@@ -281,9 +225,6 @@ public class View3D implements GLEventListener {
         gl.glLoadIdentity();
         camera.positionCamera(gl);
 
-        // Lock robot states
-        RobotData.getInstance().lockForReading();
-
         // Determine used drawings
         final int[] curTeamNumbers = RobotData.getInstance().getTeamNumbers();
         if (curTeamNumbers == null) {
@@ -322,23 +263,20 @@ public class View3D implements GLEventListener {
                     ((Static) d).draw(gl);
                 } else if (d instanceof PerPlayer) {
                     if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_LEFT]) {
-                        for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT); iter.hasNext();) {
-                            ((PerPlayer) d).draw(gl, iter.next(), camera);
+                        for (final RobotState r : RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT)) {
+                            ((PerPlayer) d).draw(gl, r, camera);
                         }
                     }
                     if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_RIGHT]) {
                         camera.flip(gl);
-                        for (final Iterator<RobotState> iter = RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT); iter.hasNext();) {
-                            ((PerPlayer) d).draw(gl, iter.next(), camera);
+                        for (final RobotState r : RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT)) {
+                            ((PerPlayer) d).draw(gl, r, camera);
                         }
                         camera.flip(gl);
                     }
                 }
             }
         }
-
-        // Unlock robot states
-        RobotData.getInstance().unlockForReading();
     }
 
     /**

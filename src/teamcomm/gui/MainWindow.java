@@ -19,11 +19,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -60,6 +64,9 @@ public class MainWindow extends JFrame implements Runnable {
     private static final int ROBOTPANEL_H = 105;
 
     private static final Map<Integer, ImageIcon> logos = new HashMap<Integer, ImageIcon>();
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private ScheduledFuture<?> taskHandle;
 
     private final View3D fieldView = new View3D();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
@@ -226,32 +233,25 @@ public class MainWindow extends JFrame implements Runnable {
         return viewMenu;
     }
 
+    public void start() {
+        taskHandle = scheduler.scheduleAtFixedRate(this, 0, 250, TimeUnit.MILLISECONDS);
+    }
+
+    public void terminate() {
+        taskHandle.cancel(false);
+        fieldView.terminate();
+    }
+
     @Override
     public void run() {
-        try {
-            while (!Thread.currentThread().isInterrupted()) {
-                if (!logMenuItems[0].isEnabled() && !SPLStandardMessageReceiver.getInstance().isReplaying()) {
-                    logMenuItems[0].setEnabled(true);
-                    logMenuItems[1].setEnabled(false);
-                    logMenuItems[2].setEnabled(false);
-                }
-
-                RobotData.getInstance().removeInactiveRobots();
-                RobotData.getInstance().lockForReading();
-                updateView();
-                RobotData.getInstance().unlockForReading();
-                try {
-                    Thread.sleep(1000 / 4);
-                } catch (InterruptedException ex) {
-                }
-            }
-        } catch (Exception e) {
-            // for debug purposes
-            e.printStackTrace();
-        } finally {
-            // Terminate 3D rendering
-            fieldView.terminate();
+        if (!logMenuItems[0].isEnabled() && !SPLStandardMessageReceiver.getInstance().isReplaying()) {
+            logMenuItems[0].setEnabled(true);
+            logMenuItems[1].setEnabled(false);
+            logMenuItems[2].setEnabled(false);
         }
+
+        RobotData.getInstance().removeInactiveRobots();
+        updateView();
     }
 
     private void updateView() {
@@ -259,7 +259,7 @@ public class MainWindow extends JFrame implements Runnable {
         final Set<String> robotAddresses = new LinkedHashSet<String>(robotPanels.keySet());
 
         for (int team = 0; team < 3; team++) {
-            final Iterator<RobotState> robots;
+            final Collection<RobotState> robots;
             if (team < 2) {
                 if (teamNumbers == null) {
                     teamLogos[team].setIcon(null);
@@ -272,9 +272,7 @@ public class MainWindow extends JFrame implements Runnable {
             }
 
             int i = 0;
-            while (robots.hasNext()) {
-                final RobotState robot = robots.next();
-
+            for (final RobotState robot : robots) {
                 robotAddresses.remove(robot.getAddress());
 
                 JPanel panel = robotPanels.get(robot.getAddress());

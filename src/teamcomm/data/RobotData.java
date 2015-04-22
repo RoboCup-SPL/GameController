@@ -6,6 +6,7 @@ import data.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -145,14 +146,16 @@ public class RobotData {
                         }
                     }
                 }
-
-                // Update team colors
-                for (int i = 0; i < 2; i++) {
-                    teamColors.put((int) data.team[i].teamNumber, (int) data.team[i].teamColor);
-                }
             }
         } finally {
             rwl.writeLock().unlock();
+        }
+
+        // Update team colors
+        if (data != null) {
+            for (int i = 0; i < 2; i++) {
+                teamColors.put((int) data.team[i].teamNumber, (int) data.team[i].teamColor);
+            }
         }
 
         if (somethingChanged) {
@@ -183,12 +186,12 @@ public class RobotData {
      * @param message received message
      */
     public void receiveMessage(final String address, final int teamNumber, final SPLStandardMessage message) {
-        rwl.writeLock().lock();
-        try {
-            // update the team info if no GameController info is available
-            if (message != null) {
-                for (int i = 0; i < 2; i++) {
-                    if (teamNumbers[i] == 0) {
+        // update the team info if no GameController info is available
+        if (message != null) {
+            for (int i = 0; i < 2; i++) {
+                if (teamNumbers[i] == 0) {
+                    rwl.writeLock().lock();
+                    try {
                         teamNumbers[i] = teamNumber;
                         ListIterator<RobotState> it = robots[TEAM_OTHER].listIterator();
                         while (it.hasNext()) {
@@ -198,28 +201,34 @@ public class RobotData {
                                 it.remove();
                             }
                         }
-
-                        // (re)load plugins
-                        PluginLoader.getInstance().update(teamNumber);
-
-                        // handle dropin games
-                        if ((teamNumbers[0] == 0 || teamNumbers[0] == 98 || teamNumbers[0] == 99) && (teamNumbers[1] == 0 || teamNumbers[1] == 98 || teamNumbers[1] == 99)) {
-                            Rules.league = Rules.LEAGUES[1];
-                        } else {
-                            Rules.league = Rules.LEAGUES[0];
-                        }
-                        break;
-                    } else if (teamNumbers[i] == teamNumber) {
-                        break;
+                    } finally {
+                        rwl.writeLock().unlock();
                     }
+
+                    // (re)load plugins
+                    PluginLoader.getInstance().update(teamNumber);
+
+                    // handle dropin games
+                    if ((teamNumbers[0] == 0 || teamNumbers[0] == 98 || teamNumbers[0] == 99) && (teamNumbers[1] == 0 || teamNumbers[1] == 98 || teamNumbers[1] == 99)) {
+                        Rules.league = Rules.LEAGUES[1];
+                    } else {
+                        Rules.league = Rules.LEAGUES[0];
+                    }
+                    break;
+                } else if (teamNumbers[i] == teamNumber) {
+                    break;
                 }
             }
+        }
 
-            // create the robot state if it does not yet exist
-            RobotState r = robotsByAddress.get(address);
-            if (r == null) {
-                r = new RobotState(address, teamNumber);
+        // create the robot state if it does not yet exist
+        RobotState r = robotsByAddress.get(address);
+        final boolean newRobot = r == null;
+        if (newRobot) {
+            r = new RobotState(address, teamNumber);
 
+            rwl.writeLock().lock();
+            try {
                 if (teamNumber == teamNumbers[0]) {
                     robots[0].add(r);
                 } else if (teamNumber == teamNumbers[1]) {
@@ -228,31 +237,38 @@ public class RobotData {
                     robots[2].add(r);
                 }
                 robotsByAddress.put(address, r);
+            } finally {
+                rwl.writeLock().unlock();
             }
+        }
 
+        rwl.writeLock().lock();
+        try {
             // let the robot state handle the message
             r.registerMessage(message);
 
             // sort the robot data by player numbers
-            for (int t = 0; t < 2; t++) {
-                if (r.getTeamNumber() == teamNumbers[t]) {
-                    Collections.sort(robots[t], new Comparator<RobotState>() {
-                        @Override
-                        public int compare(RobotState o1, RobotState o2) {
-                            if (o1.getLastMessage() == null) {
-                                if (o2.getLastMessage() == null) {
-                                    return 0;
+            /*if (newRobot) {
+                for (int t = 0; t < 2; t++) {
+                    if (r.getTeamNumber() == teamNumbers[t]) {
+                        Collections.sort(robots[t], new Comparator<RobotState>() {
+                            @Override
+                            public int compare(RobotState o1, RobotState o2) {
+                                if (o1.getLastMessage() == null) {
+                                    if (o2.getLastMessage() == null) {
+                                        return 0;
+                                    }
+                                    return -1;
+                                } else if (o2.getLastMessage() == null) {
+                                    return 1;
                                 }
-                                return -1;
-                            } else if (o2.getLastMessage() == null) {
-                                return 1;
+                                return o1.getLastMessage().playerNum - o2.getLastMessage().playerNum;
                             }
-                            return o1.getLastMessage().playerNum - o2.getLastMessage().playerNum;
-                        }
-                    });
-                    break;
+                        });
+                        break;
+                    }
                 }
-            }
+            }*/
         } finally {
             rwl.writeLock().unlock();
         }
@@ -270,7 +286,7 @@ public class RobotData {
         rwl.writeLock().lock();
         try {
             for (int i = 0; i < 3; i++) {
-                final ListIterator<RobotState> iter = robots[i].listIterator();
+                final Iterator<RobotState> iter = robots[i].iterator();
                 while (iter.hasNext()) {
                     final RobotState r = iter.next();
                     if (r.getMessageCount() > 10 && r.isInactive()) {
@@ -285,21 +301,6 @@ public class RobotData {
     }
 
     /**
-     * Lock the RobotData for reading. Call this before calling any of the
-     * methods for data retrieval in order to avoid synchronization issues.
-     */
-    public void lockForReading() {
-        rwl.readLock().lock();
-    }
-
-    /**
-     * Unlock the RobotData after locking it via lockForReading().
-     */
-    public void unlockForReading() {
-        rwl.readLock().unlock();
-    }
-
-    /**
      * Returns an iterator for the robot states of the given team.
      *
      * @param team one of RobotData#TEAM_LEFT, RobotData#TEAM_RIGHT and
@@ -307,9 +308,14 @@ public class RobotData {
      * @return an iterator for the robot states of the given team or null if no
      * info about teams is available
      */
-    public Iterator<RobotState> getRobotsForTeam(final int team) {
+    public Collection<RobotState> getRobotsForTeam(final int team) {
         if (team >= 0 && team <= 2) {
-            return robots[outputSide(team)].iterator();
+            rwl.readLock().lock();
+            try {
+                return new LinkedList<RobotState>(robots[outputSide(team)]);
+            } finally {
+                rwl.readLock().unlock();
+            }
         } else {
             return null;
         }
@@ -321,8 +327,13 @@ public class RobotData {
      *
      * @return iterator
      */
-    public Iterator<RobotState> getOtherRobots() {
-        return robots[TEAM_OTHER].iterator();
+    public Collection<RobotState> getOtherRobots() {
+        rwl.readLock().lock();
+        try {
+            return new LinkedList<RobotState>(robots[TEAM_OTHER]);
+        } finally {
+            rwl.readLock().unlock();
+        }
     }
 
     /**
