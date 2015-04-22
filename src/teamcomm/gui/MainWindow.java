@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
@@ -81,8 +83,14 @@ public class MainWindow extends JFrame implements Runnable {
         });
 
         // Setup team panels
-        teamPanels[0].setLayout(new BoxLayout(teamPanels[0], BoxLayout.Y_AXIS));
+        teamPanels[0].setLayout(new GridLayout(7, 1, 0, 5));
+        final Box left = new Box(BoxLayout.Y_AXIS);
+        left.add(teamPanels[0]);
+        left.add(new Box.Filler(new Dimension(0, ROBOTPANEL_H), new Dimension(0, ROBOTPANEL_H), new Dimension(0, 1000)));
         teamPanels[1].setLayout(new BoxLayout(teamPanels[1], BoxLayout.Y_AXIS));
+        final Box right = new Box(BoxLayout.Y_AXIS);
+        right.add(teamPanels[1]);
+        right.add(new Box.Filler(new Dimension(0, ROBOTPANEL_H), new Dimension(0, ROBOTPANEL_H), new Dimension(0, 1000)));
         teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.X_AXIS));
 
         // Setup team logos
@@ -91,8 +99,8 @@ public class MainWindow extends JFrame implements Runnable {
 
         // Setup content pane
         final JPanel contentPane = new JPanel(new BorderLayout());
-        contentPane.add(teamPanels[0], BorderLayout.WEST);
-        contentPane.add(teamPanels[1], BorderLayout.EAST);
+        contentPane.add(left, BorderLayout.WEST);
+        contentPane.add(right, BorderLayout.EAST);
         contentPane.add(teamPanels[2], BorderLayout.SOUTH);
         contentPane.add(fieldView.getCanvas(), BorderLayout.CENTER);
         setContentPane(contentPane);
@@ -362,7 +370,6 @@ public class MainWindow extends JFrame implements Runnable {
         panel.add(new JLabel("Current mps: " + df.format(robot.getRecentMessageCount()), JLabel.LEFT));
         panel.add(new JLabel("Average mps: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
         panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)", JLabel.LEFT));
-
         return panel;
     }
 
