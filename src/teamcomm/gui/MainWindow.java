@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -38,6 +39,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import teamcomm.Main;
 import teamcomm.data.RobotData;
@@ -60,7 +62,7 @@ public class MainWindow extends JFrame implements Runnable {
 
     private final View3D fieldView = new View3D();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
-    private final JLabel[] teamLogos = new JLabel[]{new JLabel(), new JLabel()};
+    private final JLabel[] teamLogos = new JLabel[]{new JLabel((Icon) null, SwingConstants.CENTER), new JLabel((Icon) null, SwingConstants.CENTER)};
     private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
     private final Map<String, RobotDetailPanel> robotDetailPanels = new HashMap<String, RobotDetailPanel>();
 
@@ -83,11 +85,11 @@ public class MainWindow extends JFrame implements Runnable {
         });
 
         // Setup team panels
-        teamPanels[0].setLayout(new GridLayout(7, 1, 0, 5));
+        teamPanels[0].setLayout(new GridLayout(10, 1, 0, 5));
         final Box left = new Box(BoxLayout.Y_AXIS);
         left.add(teamPanels[0]);
         left.add(new Box.Filler(new Dimension(0, ROBOTPANEL_H), new Dimension(0, ROBOTPANEL_H), new Dimension(0, 1000)));
-        teamPanels[1].setLayout(new BoxLayout(teamPanels[1], BoxLayout.Y_AXIS));
+        teamPanels[1].setLayout(new GridLayout(10, 1, 0, 5));
         final Box right = new Box(BoxLayout.Y_AXIS);
         right.add(teamPanels[1]);
         right.add(new Box.Filler(new Dimension(0, ROBOTPANEL_H), new Dimension(0, ROBOTPANEL_H), new Dimension(0, 1000)));
@@ -329,12 +331,7 @@ public class MainWindow extends JFrame implements Runnable {
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
-        float scaleFactor;
-        if (icon.getImage().getWidth(null) > icon.getImage().getHeight(null)) {
-            scaleFactor = (float) (ROBOTPANEL_W) / icon.getImage().getWidth(null);
-        } else {
-            scaleFactor = (float) (ROBOTPANEL_H) / icon.getImage().getHeight(null);
-        }
+        final float scaleFactor = Math.min((float) (ROBOTPANEL_W) / icon.getImage().getWidth(null), (float) (ROBOTPANEL_H) / icon.getImage().getHeight(null));
 
         // getScaledInstance/SCALE_SMOOTH does not work with all color models, so we need to convert image
         BufferedImage image = (BufferedImage) icon.getImage();
@@ -361,8 +358,6 @@ public class MainWindow extends JFrame implements Runnable {
         final JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setMinimumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-        panel.setMaximumSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
         panel.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
 
         panel.add(new JLabel("Player no: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().playerNum), JLabel.LEFT));
@@ -379,10 +374,12 @@ public class MainWindow extends JFrame implements Runnable {
         }
 
         final DecimalFormat df = new DecimalFormat("#.#####");
-        ((JLabel) panel.getComponent(0)).setText("Player no: " + robot.getLastMessage().playerNum);
-        ((JLabel) panel.getComponent(1)).setText("Messages: " + robot.getMessageCount());
-        ((JLabel) panel.getComponent(2)).setText("Current mps: " + df.format(robot.getRecentMessageCount()));
-        ((JLabel) panel.getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
-        ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
+        synchronized (panel.getTreeLock()) {
+            ((JLabel) panel.getComponent(0)).setText("Player no: " + robot.getLastMessage().playerNum);
+            ((JLabel) panel.getComponent(1)).setText("Messages: " + robot.getMessageCount());
+            ((JLabel) panel.getComponent(2)).setText("Current mps: " + df.format(robot.getRecentMessageCount()));
+            ((JLabel) panel.getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
+            ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
+        }
     }
 }
