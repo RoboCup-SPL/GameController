@@ -289,13 +289,15 @@ public class MainWindow extends JFrame implements Runnable {
                     detailPanel.update(robot);
                 }
 
-                if (teamPanels[team].getComponentCount() <= i + (team < 2 ? 1 : 0)) {
-                    teamPanels[team].add(panel);
-                    panel.revalidate();
-                } else if (panel != teamPanels[team].getComponent(i + (team < 2 ? 1 : 0))) {
-                    teamPanels[team].remove(panel);
-                    teamPanels[team].add(panel, i + (team < 2 ? 1 : 0));
-                    panel.revalidate();
+                synchronized (teamPanels[team].getTreeLock()) {
+                    if (teamPanels[team].getComponentCount() <= i + (team < 2 ? 1 : 0)) {
+                        teamPanels[team].add(panel);
+                        panel.revalidate();
+                    } else if (panel != teamPanels[team].getComponent(i + (team < 2 ? 1 : 0))) {
+                        teamPanels[team].remove(panel);
+                        teamPanels[team].add(panel, i + (team < 2 ? 1 : 0));
+                        panel.revalidate();
+                    }
                 }
 
                 i++;
@@ -308,7 +310,9 @@ public class MainWindow extends JFrame implements Runnable {
 
             final JPanel p = robotPanels.remove(addr);
             for (int i = 0; i < 3; i++) {
-                teamPanels[i].remove(p);
+                synchronized (teamPanels[i].getTreeLock()) {
+                    teamPanels[i].remove(p);
+                }
             }
         }
 
