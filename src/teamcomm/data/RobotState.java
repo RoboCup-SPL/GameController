@@ -3,6 +3,7 @@ package teamcomm.data;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.LinkedList;
+import javax.swing.event.EventListenerList;
 import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
@@ -22,6 +23,8 @@ public class RobotState {
     private final int teamNumber;
     private byte penalty = PlayerInfo.PENALTY_NONE;
 
+    private final EventListenerList listeners = new EventListenerList();
+
     /**
      * Constructor.
      *
@@ -40,6 +43,7 @@ public class RobotState {
      * @param message received message or null if the message was invalid
      */
     public void registerMessage(final SPLStandardMessage message) {
+        System.out.println(address + ": " + (message == null ? "illegal" : "valid"));
         if (message == null) {
             illegalMessageCount++;
         } else {
@@ -47,6 +51,10 @@ public class RobotState {
         }
         recentMessageTimestamps.addFirst(System.currentTimeMillis());
         messageCount++;
+
+        for (final RobotStateEventListener listener : listeners.getListeners(RobotStateEventListener.class)) {
+            listener.robotStateChanged(new RobotStateEvent(this));
+        }
     }
 
     /**
@@ -175,5 +183,13 @@ public class RobotState {
      */
     public void setPenalty(final byte penalty) {
         this.penalty = penalty;
+    }
+
+    public void addListener(final RobotStateEventListener listener) {
+        listeners.add(RobotStateEventListener.class, listener);
+    }
+
+    public void removeListener(final RobotStateEventListener listener) {
+        listeners.remove(RobotStateEventListener.class, listener);
     }
 }

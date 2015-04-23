@@ -1,8 +1,8 @@
 package teamcomm.gui;
 
+import common.Log;
 import data.Teams;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -18,17 +18,12 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -44,8 +39,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import teamcomm.Main;
 import teamcomm.data.RobotData;
 import teamcomm.data.RobotState;
@@ -56,23 +52,18 @@ import teamcomm.net.SPLStandardMessageReceiver;
  *
  * @author Felix Thielke
  */
-public class MainWindow extends JFrame implements Runnable {
+public class MainWindow extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 6549981924840180076L;
 
-    private static final int ROBOTPANEL_W = 175;
-    private static final int ROBOTPANEL_H = 105;
-
     private static final Map<Integer, ImageIcon> logos = new HashMap<Integer, ImageIcon>();
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private ScheduledFuture<?> taskHandle;
+    private final Timer timer = new Timer(250, this);
 
     private final View3D fieldView = new View3D();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
     private final JLabel[] teamLogos = new JLabel[]{new JLabel((Icon) null, SwingConstants.CENTER), new JLabel((Icon) null, SwingConstants.CENTER)};
-    private final Map<String, JPanel> robotPanels = new HashMap<String, JPanel>();
-    private final Map<String, RobotDetailFrame> robotDetailFrames = new HashMap<String, RobotDetailFrame>();
+    private final Map<String, RobotPanel> robotPanels = new HashMap<String, RobotPanel>();
 
     private final JMenuItem[] logMenuItems = new JMenuItem[3];
 
@@ -81,7 +72,9 @@ public class MainWindow extends JFrame implements Runnable {
      */
     public MainWindow() {
         super("TeamCommunicationMonitor");
+    }
 
+    private void initialize() {
         // Setup window
         setLocationByPlatform(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -96,13 +89,13 @@ public class MainWindow extends JFrame implements Runnable {
         final Box left = new Box(BoxLayout.Y_AXIS);
         teamPanels[0].setLayout(new GridLayout(10, 1, 0, 5));
         left.add(teamPanels[0]);
-        left.add(new Box.Filler(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H), new Dimension(ROBOTPANEL_W, ROBOTPANEL_H), new Dimension(ROBOTPANEL_W, 1000)));
+        left.add(new Box.Filler(new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, 1000)));
         final Box right = new Box(BoxLayout.Y_AXIS);
         teamPanels[1].setLayout(new GridLayout(10, 1, 0, 5));
         right.add(teamPanels[1]);
-        right.add(new Box.Filler(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H), new Dimension(ROBOTPANEL_W, ROBOTPANEL_H), new Dimension(ROBOTPANEL_W, 1000)));
+        right.add(new Box.Filler(new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, 1000)));
         final Box bottom = new Box(BoxLayout.X_AXIS);
-        bottom.setBorder(new EmptyBorder(0, ROBOTPANEL_W, 0, ROBOTPANEL_W));
+        bottom.setBorder(new EmptyBorder(0, RobotPanel.PANEL_WIDTH, 0, RobotPanel.PANEL_WIDTH));
         teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.LINE_AXIS));
         bottom.add(teamPanels[2]);
 
@@ -128,10 +121,6 @@ public class MainWindow extends JFrame implements Runnable {
         // Display window
         setPreferredSize(new Dimension(1442, 720));
         pack();
-        try {
-            Thread.sleep(100); // For compatibility with X11 (?)
-        } catch (InterruptedException ex) {
-        }
         setVisible(true);
     }
 
@@ -234,16 +223,32 @@ public class MainWindow extends JFrame implements Runnable {
     }
 
     public void start() {
-        taskHandle = scheduler.scheduleAtFixedRate(this, 0, 250, TimeUnit.MILLISECONDS);
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    // Initialize
+                    initialize();
+
+                    // Start Swing timer
+                    timer.setRepeats(true);
+                    timer.start();
+                }
+            });
+        } catch (InterruptedException ex) {
+            Log.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+        } catch (InvocationTargetException ex) {
+            Log.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+        }
     }
 
     public void terminate() {
-        taskHandle.cancel(false);
+        timer.stop();
         fieldView.terminate();
     }
 
     @Override
-    public void run() {
+    public void actionPerformed(final ActionEvent e) {
         if (!logMenuItems[0].isEnabled() && !SPLStandardMessageReceiver.getInstance().isReplaying()) {
             logMenuItems[0].setEnabled(true);
             logMenuItems[1].setEnabled(false);
@@ -275,20 +280,10 @@ public class MainWindow extends JFrame implements Runnable {
             for (final RobotState robot : robots) {
                 robotAddresses.remove(robot.getAddress());
 
-                JPanel panel = robotPanels.get(robot.getAddress());
+                RobotPanel panel = robotPanels.get(robot.getAddress());
                 if (panel == null) {
-                    panel = createRobotPanel(robot);
+                    panel = new RobotPanel(robot);
                     robotPanels.put(robot.getAddress(), panel);
-                } else {
-                    updateRobotPanel(panel, robot);
-                }
-
-                RobotDetailFrame detailPanel = robotDetailFrames.get(robot.getAddress());
-                if (detailPanel == null) {
-                    detailPanel = new RobotDetailFrame(robot, panel);
-                    robotDetailFrames.put(robot.getAddress(), detailPanel);
-                } else {
-                    detailPanel.update(robot);
                 }
 
                 synchronized (teamPanels[team].getTreeLock()) {
@@ -308,14 +303,13 @@ public class MainWindow extends JFrame implements Runnable {
 
         // Remove unused JPanels
         for (final String addr : robotAddresses) {
-            robotDetailFrames.remove(addr).dispose();
-
-            final JPanel p = robotPanels.remove(addr);
+            final RobotPanel p = robotPanels.remove(addr);
             for (int i = 0; i < 3; i++) {
                 synchronized (teamPanels[i].getTreeLock()) {
                     teamPanels[i].remove(p);
                 }
             }
+            p.dispose();
         }
 
         // Repaint the team panels
@@ -337,7 +331,7 @@ public class MainWindow extends JFrame implements Runnable {
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
-        final float scaleFactor = Math.min((float) (ROBOTPANEL_W) / icon.getImage().getWidth(null), (float) (ROBOTPANEL_H) / icon.getImage().getHeight(null));
+        final float scaleFactor = Math.min((float) (RobotPanel.PANEL_WIDTH) / icon.getImage().getWidth(null), (float) (RobotPanel.PANEL_HEIGHT) / icon.getImage().getHeight(null));
 
         // getScaledInstance/SCALE_SMOOTH does not work with all color models, so we need to convert image
         BufferedImage image = (BufferedImage) icon.getImage();
@@ -357,35 +351,5 @@ public class MainWindow extends JFrame implements Runnable {
         logos.put(team, icon);
 
         return icon;
-    }
-
-    private JPanel createRobotPanel(final RobotState robot) {
-        final DecimalFormat df = new DecimalFormat("#.#####");
-        final JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setPreferredSize(new Dimension(ROBOTPANEL_W, ROBOTPANEL_H));
-
-        panel.add(new JLabel("Player no: " + (robot.getLastMessage() == null ? "?" : robot.getLastMessage().playerNum), JLabel.LEFT));
-        panel.add(new JLabel("Messages: " + robot.getMessageCount(), JLabel.LEFT));
-        panel.add(new JLabel("Current mps: " + df.format(robot.getRecentMessageCount()), JLabel.LEFT));
-        panel.add(new JLabel("Average mps: " + df.format(robot.getMessagesPerSecond()), JLabel.LEFT));
-        panel.add(new JLabel("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)", JLabel.LEFT));
-        return panel;
-    }
-
-    private void updateRobotPanel(final JPanel panel, final RobotState robot) {
-        if (robot.getLastMessage() == null) {
-            return;
-        }
-
-        final DecimalFormat df = new DecimalFormat("#.#####");
-        synchronized (panel.getTreeLock()) {
-            ((JLabel) panel.getComponent(0)).setText("Player no: " + robot.getLastMessage().playerNum);
-            ((JLabel) panel.getComponent(1)).setText("Messages: " + robot.getMessageCount());
-            ((JLabel) panel.getComponent(2)).setText("Current mps: " + df.format(robot.getRecentMessageCount()));
-            ((JLabel) panel.getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
-            ((JLabel) panel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
-        }
     }
 }

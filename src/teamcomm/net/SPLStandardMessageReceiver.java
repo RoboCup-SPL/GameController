@@ -22,6 +22,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.JOptionPane;
 import teamcomm.PluginLoader;
@@ -71,16 +72,25 @@ public class SPLStandardMessageReceiver extends Thread {
 
             // Bind socket to team port
             socket = new MulticastSocket(null);
-            socket.setSoTimeout(200);
             socket.setReuseAddress(true);
-            socket.bind(new InetSocketAddress(getTeamport(team)));
+            socket.bind(new InetSocketAddress("0.0.0.0", getTeamport(team)));
 
             try {
-                // Join multicast group (for compatibility with SimRobot)
-                final byte[] addr = localhost.getAddress();
-                addr[0] = (byte) 239;
-                final InetAddress address = InetAddress.getByAddress(addr);
-                socket.joinGroup(address);
+                // Join multicast group on all network interfaces (for compatibility with SimRobot)
+                socket.joinGroup(InetAddress.getByName("239.0.0.1"));
+                final byte[] localaddr = InetAddress.getLocalHost().getAddress();
+                localaddr[0] = (byte) 239;
+                socket.joinGroup(InetAddress.getByAddress(localaddr));
+                final Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+                while (nis.hasMoreElements()) {
+                    final NetworkInterface ni = nis.nextElement();
+                    final Enumeration<InetAddress> addrs = ni.getInetAddresses();
+                    while (addrs.hasMoreElements()) {
+                        final byte[] addr = addrs.nextElement().getAddress();
+                        addr[0] = (byte) 239;
+                        socket.joinGroup(InetAddress.getByAddress(addr));
+                    }
+                }
             } catch (SocketException ex) {
                 // Ignore, because this is only for testing and does not work everywhere
             }
@@ -95,7 +105,7 @@ public class SPLStandardMessageReceiver extends Thread {
                     socket.receive(packet);
 
                     if (logReplayThread == null) {
-                        if (packet.getAddress().equals(localhost) || packet.getAddress().getAddress()[0] != 10) {
+                        if (packet.getAddress().getAddress()[0] != 10) {
                             queue.add(new NetPackage("10.0." + team + "." + buffer[5], team, buffer));
                         } else {
                             queue.add(new NetPackage(packet.getAddress().getHostAddress(), team, buffer));
@@ -214,7 +224,6 @@ public class SPLStandardMessageReceiver extends Thread {
     }
 
     private static final long beginTimestamp = System.currentTimeMillis();
-    private final InetAddress localhost;
 
     private static SPLStandardMessageReceiver instance;
 
@@ -237,15 +246,6 @@ public class SPLStandardMessageReceiver extends Thread {
     public SPLStandardMessageReceiver() throws IOException {
         // Create log file
         createLogfile();
-
-        // Determine local IP address
-        InetAddress addr;
-        try {
-            addr = InetAddress.getLocalHost();
-        } catch (UnknownHostException ex) {
-            addr = InetAddress.getByName("127.0.0.1");
-        }
-        this.localhost = addr;
 
         // Create receiver threads
         for (int i = 0; i < MAX_TEAMNUMBER; i++) {
