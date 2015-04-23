@@ -256,8 +256,8 @@ public class SPLStandardMessage implements Serializable {
                     if (numOfDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
                         errors.add("custom data size too large");
                     }
-                    if(buffer.remaining() != numOfDataBytes) {
-                        errors.add("custom data size is not as named: " + buffer.remaining() + " instead of " + numOfDataBytes);
+                    if(buffer.remaining() < numOfDataBytes) {
+                        errors.add("custom data size is smaller than named: " + buffer.remaining() + " instead of " + numOfDataBytes);
                     }
                     data = new byte[numOfDataBytes];
                     buffer.get(data, 0, numOfDataBytes);
@@ -266,7 +266,7 @@ public class SPLStandardMessage implements Serializable {
                 }
             }
         } catch (RuntimeException e) {
-            errors.add("error while reading message");
+            errors.add("error while reading message: " + e.getClass().getSimpleName() + e.getMessage());
         }
 
         return errors.isEmpty();
