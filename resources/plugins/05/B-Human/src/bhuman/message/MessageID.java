@@ -50,6 +50,7 @@ public enum MessageID {
     idOdometryData,
     idOpponentTeamInfo,
     idOwnTeamInfo,
+    idPenaltyMarkPercept,
     idPlayersPercept,
     idReceivedSPLStandardMessages,
     idRobotHealth,
