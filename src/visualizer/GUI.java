@@ -335,7 +335,9 @@ public class GUI extends JFrame
         
         switch (data.secGameState) {
             case GameControlData.STATE2_NORMAL:
-                if (data.firstHalf == GameControlData.C_TRUE) {
+                if (Rules.league.dropInPlayerMode) {
+                    state = "";
+                } else if (data.firstHalf == GameControlData.C_TRUE) {
                     if (data.gameState == GameControlData.STATE_FINISHED) {
                         state = "Half Time";
                     } else {
