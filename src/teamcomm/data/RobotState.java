@@ -162,7 +162,7 @@ public class RobotState {
      * @return boolean
      */
     public boolean isInactive() {
-        return recentMessageTimestamps.isEmpty();
+        return recentMessageTimestamps.isEmpty() || recentMessageTimestamps.getFirst() < System.currentTimeMillis()-2000;
     }
 
     /**

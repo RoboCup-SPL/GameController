@@ -3,6 +3,8 @@ package data;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SPLStandardMessage implements Serializable {
 
@@ -120,6 +122,8 @@ public class SPLStandardMessage implements Serializable {
     // buffer for arbitrary data
     public byte[] data;
 
+    public List<String> errors = new LinkedList<String>();
+
     public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -162,18 +166,21 @@ public class SPLStandardMessage implements Serializable {
             buffer.get(header);
             this.header = new String(header);
             if (!this.header.equals(SPL_STANDARD_MESSAGE_STRUCT_HEADER)) {
-                return false;
+                errors.add("wrong header");
             } else {
                 version = buffer.get();
                 if (version != SPL_STANDARD_MESSAGE_STRUCT_VERSION) {
-                    return false;
+                    errors.add("wrong version");
                 } else {
                     playerNum = buffer.get();
                     if (playerNum < 1 || playerNum > 5) {
-                        return false;
+                        errors.add("player number not within [1,5]");
                     }
 
                     teamNum = buffer.get();
+                    if (teamNum < 0) {
+                        errors.add("team number not set");
+                    }
 
                     switch (buffer.get()) {
                         case 0:
@@ -183,7 +190,7 @@ public class SPLStandardMessage implements Serializable {
                             fallen = true;
                             break;
                         default:
-                            return false;
+                            errors.add("invalid fallen state");
                     }
 
                     pose = new float[3];
@@ -211,34 +218,46 @@ public class SPLStandardMessage implements Serializable {
 
                     this.suggestion = new Suggestion[SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
                     for (int i = 0; i < SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; i++) {
-                        final int s = (int) buffer.get();
-                        if (s >= Suggestion.values().length) {
-                            return false;
+                        int s = (int) buffer.get();
+                        if (s == -1) {
+                            s = 0;
+                        }
+                        if (s < 0 || s >= Suggestion.values().length) {
+                            errors.add("invalid suggestion");
                         }
                         this.suggestion[i] = Suggestion.values()[s];
                     }
 
                     int intention = (int) buffer.get();
-                    if (intention >= Intention.values().length) {
-                        return false;
+                    if (intention < 0 || intention >= Intention.values().length) {
+                        errors.add("invalid intention");
                     }
                     this.intention = Intention.values()[intention];
 
                     averageWalkSpeed = buffer.getShort();
+                    if (averageWalkSpeed < 0) {
+                        errors.add("invalid average walk speed");
+                    }
                     maxKickDistance = buffer.getShort();
+                    if (maxKickDistance < 0) {
+                        errors.add("invalid maximum kick distance");
+                    }
 
                     currentPositionConfidence = buffer.get();
                     if (currentPositionConfidence < 0 || currentPositionConfidence > 100) {
-                        return false;
+                        errors.add("invalid position confidence");
                     }
                     currentSideConfidence = buffer.get();
                     if (currentSideConfidence < 0 || currentSideConfidence > 100) {
-                        return false;
+                        errors.add("invalid side confidence");
                     }
 
                     short numOfDataBytes = buffer.getShort();
                     if (numOfDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
-                        return false;
+                        errors.add("custom data size too large");
+                    }
+                    if(buffer.remaining() != numOfDataBytes) {
+                        errors.add("custom data size is not as named: " + buffer.remaining() + " instead of " + numOfDataBytes);
                     }
                     data = new byte[numOfDataBytes];
                     buffer.get(data, 0, numOfDataBytes);
@@ -247,7 +266,9 @@ public class SPLStandardMessage implements Serializable {
                 }
             }
         } catch (RuntimeException e) {
-            return false;
+            errors.add("error while reading message");
         }
+
+        return errors.isEmpty();
     }
 }

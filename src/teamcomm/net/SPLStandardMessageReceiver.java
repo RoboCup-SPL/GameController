@@ -3,6 +3,7 @@ package teamcomm.net;
 import common.Log;
 import data.SPLStandardMessage;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -404,6 +405,18 @@ public class SPLStandardMessageReceiver extends Thread {
                     valid = message.fromByteArray(ByteBuffer.wrap(p.message));
                     if (message instanceof AdvancedMessage && valid) {
                         ((AdvancedMessage) message).init();
+                    }
+
+                    if (!valid) {
+                        try {
+                            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream("error_" + p.team + "_" + p.host));
+                            for (String msg : message.errors) {
+                                stream.write((msg + "\n").getBytes());
+                            }
+                            stream.close();
+                        } catch (IOException ex) {
+
+                        }
                     }
 
                     RobotData.getInstance().receiveMessage(p.host, valid ? message.teamNum : p.team, valid ? message : null);
