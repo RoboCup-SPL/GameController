@@ -43,7 +43,6 @@ public class RobotState {
      * @param message received message or null if the message was invalid
      */
     public void registerMessage(final SPLStandardMessage message) {
-        System.out.println(address + ": " + (message == null ? "illegal" : "valid"));
         if (message == null) {
             illegalMessageCount++;
         } else {
@@ -162,7 +161,7 @@ public class RobotState {
      * @return boolean
      */
     public boolean isInactive() {
-        return recentMessageTimestamps.isEmpty() || recentMessageTimestamps.getFirst() < System.currentTimeMillis()-2000;
+        return recentMessageTimestamps.isEmpty() || recentMessageTimestamps.getFirst() < System.currentTimeMillis() - 2000;
     }
 
     /**
