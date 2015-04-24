@@ -105,10 +105,17 @@ public class GameState {
 
                                 final Collection<RobotState> team = robots.get(r.getTeamNumber());
                                 team.remove(r);
+
                                 if (r.getTeamNumber() == teamNumbers[TEAM_LEFT]) {
                                     changed |= CHANGED_LEFT;
+                                    if (team.isEmpty() && lastGameControlData == null) {
+                                        teamNumbers[TEAM_LEFT] = 0;
+                                    }
                                 } else if (r.getTeamNumber() == teamNumbers[TEAM_RIGHT]) {
                                     changed |= CHANGED_RIGHT;
+                                    if (team.isEmpty() && lastGameControlData == null) {
+                                        teamNumbers[TEAM_RIGHT] = 0;
+                                    }
                                 } else {
                                     changed |= CHANGED_OTHER;
                                 }
