@@ -161,6 +161,8 @@ public class GameState {
         if (data == null) {
             if (lastGameControlData != null) {
                 synchronized (teamNumbers) {
+                    teamNumbers[TEAM_LEFT] = 0;
+                    teamNumbers[TEAM_RIGHT] = 0;
                     int s = 0;
                     for (final Entry<Integer, Collection<RobotState>> entry : robots.entrySet()) {
                         if (!entry.getValue().isEmpty()) {
@@ -209,7 +211,8 @@ public class GameState {
                 }
 
                 // Open a new logfile
-                Logger.getInstance().createLogfile(getTeamName((int) data.team[0].teamNumber, false) + "_" + getTeamName((int) data.team[1].teamNumber, false));
+                final String[] teamNames = Teams.getNames(false);
+                Logger.getInstance().createLogfile(teamNames[data.team[0].teamNumber] + "_" + teamNames[data.team[1].teamNumber]);
             }
         }
         lastGameControlData = data;
@@ -423,8 +426,8 @@ public class GameState {
      * @param teamNumber number of the team
      * @return the team name
      */
-    public String getTeamName(final Integer teamNumber, final boolean withTeamNumber) {
-        final String[] teamNames = Teams.getNames(withTeamNumber);
+    public String getTeamName(final Integer teamNumber) {
+        final String[] teamNames = Teams.getNames(true);
         if (teamNumber != null) {
             if (teamNumber < teamNames.length) {
                 return ("Team " + teamNames[teamNumber]);

@@ -6,7 +6,6 @@ import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.LinkedList;
 import javax.swing.event.EventListenerList;
-import teamcomm.net.SPLStandardMessageReceiver;
 import teamcomm.net.logging.LogReplayer;
 
 /**
@@ -15,8 +14,8 @@ import teamcomm.net.logging.LogReplayer;
  * @author Felix Thielke
  */
 public class RobotState {
-    
-    public static final int MILLISECONDS_UNTIL_INACTIVE = 5000;
+
+    public static final int MILLISECONDS_UNTIL_INACTIVE = 2000;
 
     private final String address;
     private SPLStandardMessage lastMessage;

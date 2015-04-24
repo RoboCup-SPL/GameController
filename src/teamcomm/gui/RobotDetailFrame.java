@@ -115,7 +115,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
         } else {
             final DecimalFormat df = new DecimalFormat("#.#####");
             synchronized (leftPanel.getTreeLock()) {
-                ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName((int) msg.teamNum, true));
+                ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber()));
                 ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + msg.playerNum);
                 ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
                 ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
@@ -178,7 +178,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
     private void setIllegalValues() {
         final DecimalFormat df = new DecimalFormat("#.#####");
         synchronized (leftPanel.getTreeLock()) {
-            ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(null, true));
+            ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber()));
             ((JLabel) leftPanel.getComponent(1)).setText("Player no: ?");
             ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
             ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));

@@ -1,5 +1,6 @@
 - fix bugs
-  - logging / replaying had problems; check if these are still present
+  - when replaying a log the first seconds are skipped
+- begin / end recording logs when GameController is in ready / finished state
 - better replaying of logfiles:
   - controls in a seperate always-on-top window
   - fast forward

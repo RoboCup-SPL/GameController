@@ -50,7 +50,7 @@ public class Logger {
 
             // Determine file name
             final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
-            final String fileName = "teamcomm_" + (name == null || name.isEmpty() ? "" : (name + "_")) + df.format(new Date(System.currentTimeMillis())) + ".log";
+            final String fileName = "teamcomm_" + df.format(new Date(System.currentTimeMillis())) + (name == null || name.isEmpty() ? "" : ("_" + name)) + ".log";
 
             // Determine file path
             final File logDir = new File(LOG_DIRECTORY);
