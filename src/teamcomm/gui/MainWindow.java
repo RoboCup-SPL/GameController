@@ -44,7 +44,7 @@ import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
-import teamcomm.net.SPLStandardMessageReceiver;
+import teamcomm.net.logging.LogReplayer;
 
 /**
  * Class for the main window of the application.
@@ -163,7 +163,7 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
                 int returnVal = fc.showOpenDialog(frame);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     try {
-                        SPLStandardMessageReceiver.getInstance().replayLog(fc.getSelectedFile());
+                        LogReplayer.replayLog(fc.getSelectedFile());
                         logMenuItems[0].setEnabled(false);
                         logMenuItems[1].setEnabled(true);
                         logMenuItems[2].setEnabled(true);
@@ -180,8 +180,8 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
         logMenuItems[1].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                SPLStandardMessageReceiver.getInstance().toggleReplayPaused();
-                if (SPLStandardMessageReceiver.getInstance().isReplayPaused()) {
+                LogReplayer.toggleReplayPaused();
+                if (LogReplayer.isReplayPaused()) {
                     logMenuItems[1].setText("Continue replaying");
                 } else {
                     logMenuItems[1].setText("Pause replaying");
@@ -193,7 +193,7 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
         logMenuItems[2].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                SPLStandardMessageReceiver.getInstance().stopReplaying();
+                LogReplayer.stopReplaying();
             }
         });
         logMenuItems[2].setEnabled(false);
@@ -251,7 +251,7 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (!logMenuItems[0].isEnabled() && !SPLStandardMessageReceiver.getInstance().isReplaying()) {
+        if (!logMenuItems[0].isEnabled() && !LogReplayer.isReplaying()) {
             logMenuItems[0].setEnabled(true);
             logMenuItems[1].setEnabled(false);
             logMenuItems[2].setEnabled(false);

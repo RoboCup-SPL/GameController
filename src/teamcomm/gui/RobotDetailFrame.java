@@ -25,9 +25,9 @@ import teamcomm.data.event.RobotStateEventListener;
  * @author Felix Thielke
  */
 public class RobotDetailFrame extends JFrame implements RobotStateEventListener {
-    
+
     private static final long serialVersionUID = 4709653396291218508L;
-    
+
     private final RobotState robot;
     private final JPanel leftPanel = new JPanel();
     private final JPanel rightPanel = new JPanel();
@@ -40,11 +40,11 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
      */
     public RobotDetailFrame(final RobotState robot, final JPanel anchor) {
         super(robot.getAddress());
-        
+
         this.robot = robot;
-        
+
         final RobotStateEventListener listener = this;
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -60,32 +60,32 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                         }
                     }
                 });
-                
+
                 final JPanel contentPane = new JPanel();
                 setContentPane(contentPane);
-                
+
                 contentPane.setLayout(new GridLayout(1, 2, 0, 5));
                 contentPane.add(leftPanel);
-                
+
                 contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
-                
+
                 leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
                 rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-                
+
                 for (int i = 0; i < 22; i++) {
                     leftPanel.add(new JLabel(" ", JLabel.LEFT));
                 }
-                
+
                 update();
-                
+
                 pack();
                 setResizable(false);
-                
+
                 robot.addListener(listener);
             }
         });
     }
-    
+
     @Override
     public void robotStateChanged(final RobotStateEvent e) {
         if (isVisible()) {
@@ -93,12 +93,12 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
             repaint();
         }
     }
-    
+
     public void destroy() {
         setVisible(false);
         robot.removeListener(this);
     }
-    
+
     @Override
     public void dispose() {
         super.dispose();
@@ -115,7 +115,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
         } else {
             final DecimalFormat df = new DecimalFormat("#.#####");
             synchronized (leftPanel.getTreeLock()) {
-                ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName((int) msg.teamNum));
+                ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName((int) msg.teamNum, true));
                 ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + msg.playerNum);
                 ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
                 ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
@@ -137,7 +137,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                 ((JLabel) leftPanel.getComponent(21)).setText("Additional data: " + msg.data.length + "B (" + (msg.data.length * 100 / SPLStandardMessage.SPL_STANDARD_MESSAGE_DATA_SIZE) + "%)");
             }
         }
-        
+
         if (msg instanceof AdvancedMessage) {
             final String[] data = ((AdvancedMessage) msg).display();
             if (data != null && data.length != 0) {
@@ -149,7 +149,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                     for (int i = componentCount - 1; i >= data.length; i++) {
                         rightPanel.remove(i);
                     }
-                    
+
                     for (int i = 0; i < data.length; i++) {
                         if (data[i] != null) {
                             if (data[i].isEmpty()) {
@@ -160,7 +160,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                         }
                     }
                 }
-                
+
                 if (getContentPane().getComponentCount() == 1) {
                     getContentPane().add(rightPanel);
                     pack();
@@ -174,11 +174,11 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
             pack();
         }
     }
-    
+
     private void setIllegalValues() {
         final DecimalFormat df = new DecimalFormat("#.#####");
         synchronized (leftPanel.getTreeLock()) {
-            ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(null));
+            ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(null, true));
             ((JLabel) leftPanel.getComponent(1)).setText("Player no: ?");
             ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
             ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));

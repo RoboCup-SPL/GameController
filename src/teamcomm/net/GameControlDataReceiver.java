@@ -10,10 +10,11 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import teamcomm.data.GameState;
+import teamcomm.net.logging.LogReplayer;
 
 /**
  * Class for the thread which receives messages from the GameController.
- * 
+ *
  * @author Felix Thielke
  */
 public class GameControlDataReceiver extends Thread {
@@ -24,12 +25,12 @@ public class GameControlDataReceiver extends Thread {
 
     /**
      * Constructor.
-     * 
+     *
      * @throws SocketException if the socket cannot be bound
      */
     public GameControlDataReceiver() throws SocketException {
         setName("GameControlDataReceiver");
-        
+
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
         datagramSocket.setSoTimeout(GAMECONTROLLER_TIMEOUT);
@@ -43,15 +44,19 @@ public class GameControlDataReceiver extends Thread {
                 final ByteBuffer buffer = ByteBuffer.wrap(new byte[GameControlData.SIZE]);
                 final DatagramPacket packet = new DatagramPacket(buffer.array(), buffer.array().length);
                 datagramSocket.receive(packet);
-                buffer.rewind();
 
-                final GameControlData data = new GameControlData();
-                if (data.fromByteArray(buffer)) {
-                    GameState.getInstance().updateGameData(data);
+                if (!LogReplayer.isReplaying()) {
+                    buffer.rewind();
+                    final GameControlData data = new GameControlData();
+                    if (data.fromByteArray(buffer)) {
+                        GameState.getInstance().updateGameData(data);
+                    }
                 }
             } catch (SocketTimeoutException e) {
-                // GameController data is only valid for a limited amount of time
-                GameState.getInstance().updateGameData(null);
+                if (!LogReplayer.isReplaying()) {
+                    // GameController data is only valid for a limited amount of time
+                    GameState.getInstance().updateGameData(null);
+                }
             } catch (IOException e) {
                 Log.error("something went wrong while receiving the game controller packages : " + e.getMessage());
             }

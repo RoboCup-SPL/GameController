@@ -1,4 +1,9 @@
-- logging of GameController messages
-- better replaying of logfiles
+- fix bugs
+  - logging / replaying has problems
+  - GameInfo.reset() does not work
+- better replaying of logfiles:
+  - controls in a seperate always-on-top window
+  - fast forward
+  - rewind (?)
 - display details about illegal messages
 - visualize more B-Human messages (debug drawings?)

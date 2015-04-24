@@ -21,7 +21,8 @@ import javax.swing.event.EventListenerList;
 import teamcomm.PluginLoader;
 import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
-import teamcomm.net.SPLStandardMessageReceiver;
+import teamcomm.net.logging.LogReplayer;
+import teamcomm.net.logging.Logger;
 
 /**
  * Singleton class managing the known information about communicating robots.
@@ -93,7 +94,7 @@ public class GameState {
         taskHandle = scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                if (!(SPLStandardMessageReceiver.getInstance().isReplaying() && SPLStandardMessageReceiver.getInstance().isReplayPaused())) {
+                if (!(LogReplayer.isReplaying() && LogReplayer.isReplayPaused())) {
                     int changed = 0;
 
                     synchronized (robotsByAddress) {
@@ -137,6 +138,7 @@ public class GameState {
      * Resets all information about robots and teams.
      */
     public void reset() {
+        lastGameControlData = null;
         synchronized (teamNumbers) {
             teamNumbers[0] = 0;
             teamNumbers[1] = 0;
@@ -170,6 +172,7 @@ public class GameState {
                     }
                 }
                 changed = CHANGED_LEFT | CHANGED_RIGHT | CHANGED_OTHER;
+                Logger.getInstance().createLogfile();
             }
         } else {
             if (lastGameControlData == null) {
@@ -204,9 +207,17 @@ public class GameState {
                 } else {
                     Rules.league = Rules.LEAGUES[0];
                 }
+
+                // Open a new logfile
+                Logger.getInstance().createLogfile(getTeamName((int) data.team[0].teamNumber, false) + "_" + getTeamName((int) data.team[1].teamNumber, false));
             }
         }
         lastGameControlData = data;
+
+        // Log the GameController data
+        if (data != null || changed != 0) {
+            Logger.getInstance().log(data);
+        }
 
         // send events
         sendEvents(changed);
@@ -403,8 +414,8 @@ public class GameState {
      * @param teamNumber number of the team
      * @return the team name
      */
-    public String getTeamName(final Integer teamNumber) {
-        final String[] teamNames = Teams.getNames(true);
+    public String getTeamName(final Integer teamNumber, final boolean withTeamNumber) {
+        final String[] teamNames = Teams.getNames(withTeamNumber);
         if (teamNumber != null) {
             if (teamNumber < teamNames.length) {
                 return ("Team " + teamNames[teamNumber]);

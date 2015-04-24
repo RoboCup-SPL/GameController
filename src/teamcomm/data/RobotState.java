@@ -7,6 +7,7 @@ import data.SPLStandardMessage;
 import java.util.LinkedList;
 import javax.swing.event.EventListenerList;
 import teamcomm.net.SPLStandardMessageReceiver;
+import teamcomm.net.logging.LogReplayer;
 
 /**
  * Class representing the state of a robot.
@@ -89,7 +90,7 @@ public class RobotState {
      */
     public int getRecentMessageCount() {
         final long cut;
-        if (SPLStandardMessageReceiver.getInstance().isReplaying() && SPLStandardMessageReceiver.getInstance().isReplayPaused()) {
+        if (LogReplayer.isReplaying() && LogReplayer.isReplayPaused()) {
             cut = 0;
         } else {
             cut = System.currentTimeMillis() - 1000;

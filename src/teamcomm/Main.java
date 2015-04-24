@@ -7,6 +7,7 @@ import teamcomm.data.GameState;
 import teamcomm.gui.MainWindow;
 import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.SPLStandardMessageReceiver;
+import teamcomm.net.logging.Logger;
 
 /**
  * @author Felix Thielke
@@ -62,18 +63,21 @@ public class Main {
         } catch (InterruptedException ex) {
         }
 
-        // Shutdown threads
+        // Shutdown threads and clean up
         GameState.getInstance().shutdown();
         receiver.interrupt();
         gcDataReceiver.interrupt();
         robotView.terminate();
+        Logger.getInstance().closeLogfile();
 
+        // Try to join receiver threads
         try {
             gcDataReceiver.join(1000);
-            receiver.join(100);
+            receiver.join(1000);
         } catch (InterruptedException ex) {
         }
 
+        // Force exit
         System.exit(0);
     }
 
