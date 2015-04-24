@@ -77,7 +77,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
 
     public void dispose() {
         robot.removeListener(this);
-        detailFrame.dispose();
+        detailFrame.destroy();
     }
 
     public String getRobotAddress() {

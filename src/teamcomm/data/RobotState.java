@@ -14,6 +14,8 @@ import teamcomm.net.SPLStandardMessageReceiver;
  * @author Felix Thielke
  */
 public class RobotState {
+    
+    public static final int MILLISECONDS_UNTIL_INACTIVE = 5000;
 
     private final String address;
     private SPLStandardMessage lastMessage;
@@ -166,12 +168,12 @@ public class RobotState {
 
     /**
      * Returns whether this robot is considered inactive because he did not send
-     * any messages for a while. This while is currently defined as one second.
+     * any messages for a while.
      *
      * @return boolean
      */
     public boolean isInactive() {
-        return lastMessageTimestamp < System.currentTimeMillis() - 1000;
+        return lastMessageTimestamp < System.currentTimeMillis() - MILLISECONDS_UNTIL_INACTIVE;
     }
 
     /**

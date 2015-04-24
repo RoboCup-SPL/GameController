@@ -16,12 +16,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.nio.FloatBuffer;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.event.MouseInputAdapter;
@@ -48,8 +49,8 @@ public class View3D implements GLEventListener, TeamEventListener {
     private final Camera camera = new Camera();
 
     private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
-    private Collection<RobotState> leftRobots = new LinkedList<RobotState>();
-    private Collection<RobotState> rightRobots = new LinkedList<RobotState>();
+    private final Set<RobotState> leftRobots = new HashSet<RobotState>();
+    private final Set<RobotState> rightRobots = new HashSet<RobotState>();
 
     private static final Comparator<Drawing> drawingComparator = new Comparator<Drawing>() {
         @Override
@@ -245,14 +246,18 @@ public class View3D implements GLEventListener, TeamEventListener {
                         ((Static) d).draw(gl);
                     } else if (d instanceof PerPlayer) {
                         if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == teamNumbers[GameState.TEAM_LEFT]) {
-                            for (final RobotState r : leftRobots) {
-                                ((PerPlayer) d).draw(gl, r, camera);
+                            synchronized (leftRobots) {
+                                for (final RobotState r : leftRobots) {
+                                    ((PerPlayer) d).draw(gl, r, camera);
+                                }
                             }
                         }
                         if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == teamNumbers[GameState.TEAM_RIGHT]) {
                             camera.flip(gl);
-                            for (final RobotState r : rightRobots) {
-                                ((PerPlayer) d).draw(gl, r, camera);
+                            synchronized (rightRobots) {
+                                for (final RobotState r : rightRobots) {
+                                    ((PerPlayer) d).draw(gl, r, camera);
+                                }
                             }
                             camera.flip(gl);
                         }
@@ -352,9 +357,15 @@ public class View3D implements GLEventListener, TeamEventListener {
             }
 
             if (e.side == GameState.TEAM_LEFT) {
-                leftRobots = e.players;
+                synchronized (leftRobots) {
+                    leftRobots.clear();
+                    leftRobots.addAll(e.players);
+                }
             } else {
-                rightRobots = e.players;
+                synchronized (rightRobots) {
+                    rightRobots.clear();
+                    rightRobots.addAll(e.players);
+                }
             }
         }
     }
