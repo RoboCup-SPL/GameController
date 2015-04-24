@@ -1,6 +1,5 @@
 - fix bugs
-  - logging / replaying has problems
-  - GameInfo.reset() does not work
+  - logging / replaying had problems; check if these are still present
 - better replaying of logfiles:
   - controls in a seperate always-on-top window
   - fast forward

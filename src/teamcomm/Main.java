@@ -7,6 +7,7 @@ import teamcomm.data.GameState;
 import teamcomm.gui.MainWindow;
 import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.SPLStandardMessageReceiver;
+import teamcomm.net.logging.LogReplayer;
 import teamcomm.net.logging.Logger;
 
 /**
@@ -68,6 +69,7 @@ public class Main {
         receiver.interrupt();
         gcDataReceiver.interrupt();
         robotView.terminate();
+        LogReplayer.stopReplaying();
         Logger.getInstance().closeLogfile();
 
         // Try to join receiver threads

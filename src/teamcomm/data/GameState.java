@@ -292,6 +292,9 @@ public class GameState {
     }
 
     private void sendEvents(final int changed) {
+        boolean leftSent = false;
+        boolean rightSent = false;
+
         if ((changed & CHANGED_OTHER) != 0) {
             final Collection<RobotState> rs = new TreeSet<RobotState>(playerNumberComparator);
             synchronized (robotsByAddress) {
@@ -303,6 +306,7 @@ public class GameState {
                                 list.add(r);
                             }
                             fireEvent(new TeamEvent(this, outputSide(TEAM_LEFT), teamNumbers[TEAM_LEFT], list));
+                            leftSent = true;
                         }
                     } else if (entry.getKey() == teamNumbers[TEAM_RIGHT]) {
                         if ((changed & CHANGED_RIGHT) != 0) {
@@ -311,6 +315,7 @@ public class GameState {
                                 list.add(r);
                             }
                             fireEvent(new TeamEvent(this, outputSide(TEAM_RIGHT), teamNumbers[TEAM_RIGHT], list));
+                            rightSent = true;
                         }
                     } else {
                         for (final RobotState r : entry.getValue()) {
@@ -320,7 +325,9 @@ public class GameState {
                 }
             }
             fireEvent(new TeamEvent(this, TEAM_OTHER, 0, rs));
-        } else if ((changed & CHANGED_LEFT) != 0) {
+        }
+
+        if (!leftSent && (changed & CHANGED_LEFT) != 0) {
             final Collection<RobotState> rs;
             synchronized (robotsByAddress) {
                 rs = robots.get(teamNumbers[TEAM_LEFT]);
@@ -332,7 +339,9 @@ public class GameState {
                 }
             }
             fireEvent(new TeamEvent(this, outputSide(TEAM_LEFT), teamNumbers[TEAM_LEFT], list));
-        } else if ((changed & CHANGED_RIGHT) != 0) {
+        }
+
+        if (!rightSent && (changed & CHANGED_RIGHT) != 0) {
             final Collection<RobotState> rs;
             synchronized (robotsByAddress) {
                 rs = robots.get(teamNumbers[TEAM_RIGHT]);

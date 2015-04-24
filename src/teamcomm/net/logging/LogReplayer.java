@@ -31,14 +31,14 @@ public class LogReplayer extends Thread {
     }
 
     private void togglePause() {
-        synchronized (stream) {
+        synchronized (this) {
             if (pausedTimestamp == 0) {
                 pausedTimestamp = System.currentTimeMillis();
             } else {
                 pausedOffset += System.currentTimeMillis() - pausedTimestamp;
                 pausedTimestamp = 0;
             }
-            stream.notifyAll();
+            notifyAll();
         }
     }
 
@@ -70,8 +70,8 @@ public class LogReplayer extends Thread {
                 final long timestamp = stream.readLong();
                 while (true) {
                     while (isPaused()) {
-                        synchronized (stream) {
-                            stream.wait();
+                        synchronized (this) {
+                            wait();
                         }
                     }
                     final long diff = timestamp - (System.currentTimeMillis() - (startTimestamp + pausedOffset));
