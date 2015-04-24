@@ -126,7 +126,7 @@ public class GameState {
                     sendEvents(changed);
                 }
             }
-        }, 5, RobotState.MILLISECONDS_UNTIL_INACTIVE / 2, TimeUnit.MILLISECONDS);
+        }, RobotState.MILLISECONDS_UNTIL_INACTIVE * 2, RobotState.MILLISECONDS_UNTIL_INACTIVE / 2, TimeUnit.MILLISECONDS);
     }
 
     public void shutdown() {
@@ -193,23 +193,23 @@ public class GameState {
 
             teamColors.put((int) data.team[0].teamNumber, (int) data.team[0].teamColor);
             teamColors.put((int) data.team[1].teamNumber, (int) data.team[1].teamColor);
+
+            if (changed != 0) {
+                // (re)load plugins
+                PluginLoader.getInstance().update((int) data.team[0].teamNumber, (int) data.team[1].teamNumber);
+
+                // handle dropin games
+                if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
+                    Rules.league = Rules.LEAGUES[1];
+                } else {
+                    Rules.league = Rules.LEAGUES[0];
+                }
+            }
         }
         lastGameControlData = data;
 
-        if (changed != 0) {
-            // (re)load plugins
-            PluginLoader.getInstance().update((int) data.team[0].teamNumber, (int) data.team[1].teamNumber);
-
-            // handle dropin games
-            if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
-                Rules.league = Rules.LEAGUES[1];
-            } else {
-                Rules.league = Rules.LEAGUES[0];
-            }
-
-            // send events
-            sendEvents(changed);
-        }
+        // send events
+        sendEvents(changed);
     }
 
     /**

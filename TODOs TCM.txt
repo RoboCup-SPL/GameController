@@ -1,0 +1,4 @@
+- logging of GameController messages
+- better replaying of logfiles
+- display details about illegal messages
+- visualize more B-Human messages (debug drawings?)
