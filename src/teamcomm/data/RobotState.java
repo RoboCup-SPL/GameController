@@ -1,5 +1,7 @@
 package teamcomm.data;
 
+import teamcomm.data.event.RobotStateEvent;
+import teamcomm.data.event.RobotStateEventListener;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.LinkedList;
@@ -15,12 +17,14 @@ public class RobotState {
 
     private final String address;
     private SPLStandardMessage lastMessage;
+    private long lastMessageTimestamp;
     private final LinkedList<Long> recentMessageTimestamps = new LinkedList<Long>();
     private final LinkedList<Integer> messagesPerSecond = new LinkedList<Integer>();
     private long lastMpsTest = 0;
     private int messageCount = 0;
     private int illegalMessageCount = 0;
     private final int teamNumber;
+    private Integer playerNumber = null;
     private byte penalty = PlayerInfo.PENALTY_NONE;
 
     private final EventListenerList listeners = new EventListenerList();
@@ -47,8 +51,10 @@ public class RobotState {
             illegalMessageCount++;
         } else {
             lastMessage = message;
+            playerNumber = (int) message.playerNum;
         }
-        recentMessageTimestamps.addFirst(System.currentTimeMillis());
+        lastMessageTimestamp = System.currentTimeMillis();
+        recentMessageTimestamps.addFirst(lastMessageTimestamp);
         messageCount++;
 
         for (final RobotStateEventListener listener : listeners.getListeners(RobotStateEventListener.class)) {
@@ -154,6 +160,10 @@ public class RobotState {
         return teamNumber;
     }
 
+    public Integer getPlayerNumber() {
+        return playerNumber;
+    }
+
     /**
      * Returns whether this robot is considered inactive because he did not send
      * any messages for a while. This while is currently defined as one second.
@@ -161,7 +171,7 @@ public class RobotState {
      * @return boolean
      */
     public boolean isInactive() {
-        return recentMessageTimestamps.isEmpty() || recentMessageTimestamps.getFirst() < System.currentTimeMillis() - 2000;
+        return lastMessageTimestamp < System.currentTimeMillis() - 1000;
     }
 
     /**

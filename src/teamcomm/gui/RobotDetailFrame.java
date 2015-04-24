@@ -14,10 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import teamcomm.data.AdvancedMessage;
-import teamcomm.data.RobotData;
+import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
-import teamcomm.data.RobotStateEvent;
-import teamcomm.data.RobotStateEventListener;
+import teamcomm.data.event.RobotStateEvent;
+import teamcomm.data.event.RobotStateEventListener;
 
 /**
  * Class for the windows showing detailed information about robots.
@@ -110,7 +110,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
         } else {
             final DecimalFormat df = new DecimalFormat("#.#####");
             synchronized (leftPanel.getTreeLock()) {
-                ((JLabel) leftPanel.getComponent(0)).setText(RobotData.getInstance().getTeamName((int) msg.teamNum));
+                ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName((int) msg.teamNum));
                 ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + msg.playerNum);
                 ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
                 ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
@@ -173,7 +173,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
     private void setIllegalValues() {
         final DecimalFormat df = new DecimalFormat("#.#####");
         synchronized (leftPanel.getTreeLock()) {
-            ((JLabel) leftPanel.getComponent(0)).setText(RobotData.getInstance().getTeamName(null));
+            ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(null));
             ((JLabel) leftPanel.getComponent(1)).setText("Player no: ?");
             ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
             ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));

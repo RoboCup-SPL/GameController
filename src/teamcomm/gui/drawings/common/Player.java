@@ -4,7 +4,7 @@ import com.jogamp.opengl.GL2;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
-import teamcomm.data.RobotData;
+import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
 import teamcomm.gui.RoSi2Loader;
@@ -39,7 +39,7 @@ public class Player extends PerPlayer {
                 gl.glRotatef(90, 0, 1, 0);
             }
 
-            switch (RobotData.getInstance().getTeamColor(player.getTeamNumber())) {
+            switch (GameState.getInstance().getTeamColor(player.getTeamNumber())) {
                 case GameControlData.TEAM_BLUE:
                     gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotBlue"));
                     break;

@@ -9,7 +9,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import teamcomm.data.RobotData;
+import teamcomm.data.GameState;
 
 /**
  * Class for the thread which receives messages from the GameController.
@@ -47,11 +47,11 @@ public class GameControlDataReceiver extends Thread {
 
                 final GameControlData data = new GameControlData();
                 if (data.fromByteArray(buffer)) {
-                    RobotData.getInstance().updateGameData(data);
+                    GameState.getInstance().updateGameData(data);
                 }
             } catch (SocketTimeoutException e) {
                 // GameController data is only valid for a limited amount of time
-                RobotData.getInstance().updateGameData(null);
+                GameState.getInstance().updateGameData(null);
             } catch (IOException e) {
                 Log.error("something went wrong while receiving the game controller packages : " + e.getMessage());
             }

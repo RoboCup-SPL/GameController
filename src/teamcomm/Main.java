@@ -3,6 +3,7 @@ package teamcomm;
 import com.jogamp.opengl.GLProfile;
 import java.net.SocketException;
 import javax.swing.JOptionPane;
+import teamcomm.data.GameState;
 import teamcomm.gui.MainWindow;
 import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.SPLStandardMessageReceiver;
@@ -62,6 +63,7 @@ public class Main {
         }
 
         // Shutdown threads
+        GameState.getInstance().shutdown();
         receiver.interrupt();
         gcDataReceiver.interrupt();
         robotView.terminate();

@@ -19,11 +19,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -43,8 +40,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import teamcomm.Main;
-import teamcomm.data.RobotData;
+import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
+import teamcomm.data.event.TeamEvent;
+import teamcomm.data.event.TeamEventListener;
 import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
@@ -52,7 +51,7 @@ import teamcomm.net.SPLStandardMessageReceiver;
  *
  * @author Felix Thielke
  */
-public class MainWindow extends JFrame implements ActionListener {
+public class MainWindow extends JFrame implements ActionListener, TeamEventListener {
 
     private static final long serialVersionUID = 6549981924840180076L;
 
@@ -122,6 +121,9 @@ public class MainWindow extends JFrame implements ActionListener {
         setPreferredSize(new Dimension(1442, 720));
         pack();
         setVisible(true);
+
+        // Listen for robot events
+        GameState.getInstance().addListener(this);
     }
 
     private JMenu createFileMenu() {
@@ -130,7 +132,7 @@ public class MainWindow extends JFrame implements ActionListener {
         i.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RobotData.getInstance().reset();
+                GameState.getInstance().reset();
             }
         });
         i.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
@@ -207,11 +209,11 @@ public class MainWindow extends JFrame implements ActionListener {
         final JMenu viewMenu = new JMenu("View");
 
         // Mirroring
-        final JCheckBoxMenuItem mirrorOption = new JCheckBoxMenuItem("Mirror", RobotData.getInstance().isMirrored());
+        final JCheckBoxMenuItem mirrorOption = new JCheckBoxMenuItem("Mirror", GameState.getInstance().isMirrored());
         mirrorOption.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(final ItemEvent e) {
-                RobotData.getInstance().setMirrored(e.getStateChange() == ItemEvent.SELECTED);
+                GameState.getInstance().setMirrored(e.getStateChange() == ItemEvent.SELECTED);
             }
         });
         viewMenu.add(mirrorOption);
@@ -254,68 +256,6 @@ public class MainWindow extends JFrame implements ActionListener {
             logMenuItems[1].setEnabled(false);
             logMenuItems[2].setEnabled(false);
         }
-
-        RobotData.getInstance().removeInactiveRobots();
-        updateView();
-    }
-
-    private void updateView() {
-        final int[] teamNumbers = RobotData.getInstance().getTeamNumbers();
-        final Set<String> robotAddresses = new LinkedHashSet<String>(robotPanels.keySet());
-
-        for (int team = 0; team < 3; team++) {
-            final Collection<RobotState> robots;
-            if (team < 2) {
-                if (teamNumbers == null) {
-                    teamLogos[team].setIcon(null);
-                } else {
-                    teamLogos[team].setIcon(getTeamIcon(teamNumbers[team]));
-                }
-                robots = RobotData.getInstance().getRobotsForTeam(team);
-            } else {
-                robots = RobotData.getInstance().getOtherRobots();
-            }
-
-            int i = 0;
-            for (final RobotState robot : robots) {
-                robotAddresses.remove(robot.getAddress());
-
-                RobotPanel panel = robotPanels.get(robot.getAddress());
-                if (panel == null) {
-                    panel = new RobotPanel(robot);
-                    robotPanels.put(robot.getAddress(), panel);
-                }
-
-                synchronized (teamPanels[team].getTreeLock()) {
-                    if (teamPanels[team].getComponentCount() <= i + (team < 2 ? 1 : 0)) {
-                        teamPanels[team].add(panel);
-                        panel.revalidate();
-                    } else if (panel != teamPanels[team].getComponent(i + (team < 2 ? 1 : 0))) {
-                        teamPanels[team].remove(panel);
-                        teamPanels[team].add(panel, i + (team < 2 ? 1 : 0));
-                        panel.revalidate();
-                    }
-                }
-
-                i++;
-            }
-        }
-
-        // Remove unused JPanels
-        for (final String addr : robotAddresses) {
-            final RobotPanel p = robotPanels.remove(addr);
-            for (int i = 0; i < 3; i++) {
-                synchronized (teamPanels[i].getTreeLock()) {
-                    teamPanels[i].remove(p);
-                }
-            }
-            p.dispose();
-        }
-
-        // Repaint the team panels
-        for (final JPanel panel : teamPanels) {
-            panel.repaint();
-        }
     }
 
     private ImageIcon getTeamIcon(final int team) {
@@ -351,5 +291,42 @@ public class MainWindow extends JFrame implements ActionListener {
         logos.put(team, icon);
 
         return icon;
+    }
+
+    @Override
+    public void teamChanged(final TeamEvent e) {
+        if (e.side != GameState.TEAM_OTHER) {
+            teamLogos[e.side].setIcon(getTeamIcon(e.teamNumber));
+        }
+
+        int i = 0;
+        for (final RobotState r : e.players) {
+            RobotPanel panel = robotPanels.get(r.getAddress());
+            if (panel == null) {
+                panel = new RobotPanel(r);
+                robotPanels.put(r.getAddress(), panel);
+            }
+
+            synchronized (teamPanels[e.side].getTreeLock()) {
+                if (teamPanels[e.side].getComponentCount() <= i + (e.side < 2 ? 1 : 0)) {
+                    teamPanels[e.side].add(panel);
+                    panel.revalidate();
+                } else if (panel != teamPanels[e.side].getComponent(i + (e.side < 2 ? 1 : 0))) {
+                    teamPanels[e.side].remove(panel);
+                    teamPanels[e.side].add(panel, i + (e.side < 2 ? 1 : 0));
+                    panel.revalidate();
+                }
+            }
+
+            i++;
+        }
+
+        synchronized (teamPanels[e.side].getTreeLock()) {
+            while (e.players.size() < teamPanels[e.side].getComponentCount() - (e.side < 2 ? 1 : 0)) {
+                final RobotPanel panel = (RobotPanel) teamPanels[e.side].getComponent(e.players.size());
+                robotPanels.remove(panel.getRobotAddress());
+                panel.dispose();
+            }
+        }
     }
 }

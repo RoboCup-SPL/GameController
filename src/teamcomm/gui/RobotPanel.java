@@ -9,8 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import teamcomm.data.RobotState;
-import teamcomm.data.RobotStateEvent;
-import teamcomm.data.RobotStateEventListener;
+import teamcomm.data.event.RobotStateEvent;
+import teamcomm.data.event.RobotStateEventListener;
 
 /**
  * Class for the panel showing basic information about robots.
@@ -78,6 +78,10 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
     public void dispose() {
         robot.removeListener(this);
         detailFrame.dispose();
+    }
+
+    public String getRobotAddress() {
+        return robot.getAddress();
     }
 
 }

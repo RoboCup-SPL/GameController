@@ -27,7 +27,7 @@ import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.JOptionPane;
 import teamcomm.PluginLoader;
-import teamcomm.data.RobotData;
+import teamcomm.data.GameState;
 import teamcomm.data.AdvancedMessage;
 
 /**
@@ -167,7 +167,7 @@ public class SPLStandardMessageReceiver extends Thread {
 
                 queue.clear();
                 Thread.sleep(100);
-                RobotData.getInstance().reset();
+                GameState.getInstance().reset();
 
                 final NetPackage pFirst = (NetPackage) replayLog.readObject();
                 pausedOffset -= pFirst.timestamp;
@@ -215,7 +215,7 @@ public class SPLStandardMessageReceiver extends Thread {
                     Thread.sleep(100);
                 } catch (InterruptedException ex) {
                 }
-                RobotData.getInstance().reset();
+                GameState.getInstance().reset();
 
                 createLogfile();
 
@@ -419,7 +419,7 @@ public class SPLStandardMessageReceiver extends Thread {
                         }
                     }
 
-                    RobotData.getInstance().receiveMessage(p.host, valid ? message.teamNum : p.team, valid ? message : null);
+                    GameState.getInstance().receiveMessage(p.host, valid ? message.teamNum : p.team, valid ? message : null);
                 } catch (InstantiationException ex) {
                     Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
                 } catch (IllegalAccessException ex) {

@@ -1,4 +1,4 @@
-package teamcomm.data;
+package teamcomm.data.event;
 
 import java.util.EventObject;
 

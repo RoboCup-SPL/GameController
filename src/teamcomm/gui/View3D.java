@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.nio.FloatBuffer;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,8 +26,10 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.event.MouseInputAdapter;
 import teamcomm.PluginLoader;
-import teamcomm.data.RobotData;
+import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
+import teamcomm.data.event.TeamEvent;
+import teamcomm.data.event.TeamEventListener;
 import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Static;
@@ -36,7 +39,7 @@ import teamcomm.gui.drawings.Static;
  *
  * @author Felix Thielke
  */
-public class View3D implements GLEventListener {
+public class View3D implements GLEventListener, TeamEventListener {
 
     private static final int ANIMATION_FPS = 60;
 
@@ -45,6 +48,8 @@ public class View3D implements GLEventListener {
     private final Camera camera = new Camera();
 
     private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
+    private Collection<RobotState> leftRobots = new LinkedList<RobotState>();
+    private Collection<RobotState> rightRobots = new LinkedList<RobotState>();
 
     private static final Comparator<Drawing> drawingComparator = new Comparator<Drawing>() {
         @Override
@@ -197,6 +202,9 @@ public class View3D implements GLEventListener {
             d.initialize(gl);
         }
         updateDrawingsMenu();
+
+        // Listen for robot events
+        GameState.getInstance().addListener(this);
     }
 
     /**
@@ -225,54 +233,29 @@ public class View3D implements GLEventListener {
         gl.glLoadIdentity();
         camera.positionCamera(gl);
 
-        // Determine used drawings
-        final int[] curTeamNumbers = RobotData.getInstance().getTeamNumbers();
-        if (curTeamNumbers == null) {
-            if (teamNumbers[0] != PluginLoader.TEAMNUMBER_COMMON || teamNumbers[1] != PluginLoader.TEAMNUMBER_COMMON) {
-                drawings.clear();
-                teamNumbers[0] = PluginLoader.TEAMNUMBER_COMMON;
-                teamNumbers[1] = PluginLoader.TEAMNUMBER_COMMON;
-                drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
-                Collections.sort(drawings, drawingComparator);
-                for (final Drawing d : drawings) {
-                    d.initialize(gl);
-                }
-                updateDrawingsMenu();
-            }
-        } else {
-            if (!((curTeamNumbers[0] == teamNumbers[0] && curTeamNumbers[1] == teamNumbers[1])
-                    || (curTeamNumbers[0] == teamNumbers[1] && curTeamNumbers[1] == teamNumbers[0]))) {
-                drawings.clear();
-                teamNumbers[0] = curTeamNumbers[0];
-                teamNumbers[1] = curTeamNumbers[1];
-                drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
-                drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[0]));
-                drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
-                Collections.sort(drawings, drawingComparator);
-                for (final Drawing d : drawings) {
-                    d.initialize(gl);
-                }
-                updateDrawingsMenu();
-            }
-        }
-
         // Render drawings
-        for (final Drawing d : drawings) {
-            if (d.isActive()) {
-                if (d instanceof Static) {
-                    ((Static) d).draw(gl);
-                } else if (d instanceof PerPlayer) {
-                    if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_LEFT]) {
-                        for (final RobotState r : RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_LEFT)) {
-                            ((PerPlayer) d).draw(gl, r, camera);
+        synchronized (drawings) {
+            for (final Drawing d : drawings) {
+                // Initialize if needed
+                d.initialize(gl);
+
+                // Draw
+                if (d.isActive()) {
+                    if (d instanceof Static) {
+                        ((Static) d).draw(gl);
+                    } else if (d instanceof PerPlayer) {
+                        if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == teamNumbers[GameState.TEAM_LEFT]) {
+                            for (final RobotState r : leftRobots) {
+                                ((PerPlayer) d).draw(gl, r, camera);
+                            }
                         }
-                    }
-                    if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == curTeamNumbers[RobotData.TEAM_RIGHT]) {
-                        camera.flip(gl);
-                        for (final RobotState r : RobotData.getInstance().getRobotsForTeam(RobotData.TEAM_RIGHT)) {
-                            ((PerPlayer) d).draw(gl, r, camera);
+                        if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == teamNumbers[GameState.TEAM_RIGHT]) {
+                            camera.flip(gl);
+                            for (final RobotState r : rightRobots) {
+                                ((PerPlayer) d).draw(gl, r, camera);
+                            }
+                            camera.flip(gl);
                         }
-                        camera.flip(gl);
                     }
                 }
             }
@@ -346,5 +329,33 @@ public class View3D implements GLEventListener {
      */
     public JMenu getDrawingsMenu() {
         return drawingsMenu;
+    }
+
+    @Override
+    public void teamChanged(final TeamEvent e) {
+        if (e.side != GameState.TEAM_OTHER) {
+            if (teamNumbers[e.side] != (e.teamNumber == 0 ? PluginLoader.TEAMNUMBER_COMMON : e.teamNumber)) {
+                teamNumbers[e.side] = e.teamNumber == 0 ? PluginLoader.TEAMNUMBER_COMMON : e.teamNumber;
+
+                synchronized (drawings) {
+                    drawings.clear();
+                    drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
+                    if (teamNumbers[0] != PluginLoader.TEAMNUMBER_COMMON) {
+                        drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[0]));
+                    }
+                    if (teamNumbers[1] != PluginLoader.TEAMNUMBER_COMMON) {
+                        drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
+                    }
+                    Collections.sort(drawings, drawingComparator);
+                    updateDrawingsMenu();
+                }
+            }
+
+            if (e.side == GameState.TEAM_LEFT) {
+                leftRobots = e.players;
+            } else {
+                rightRobots = e.players;
+            }
+        }
     }
 }
