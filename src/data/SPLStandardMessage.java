@@ -166,15 +166,15 @@ public class SPLStandardMessage implements Serializable {
             buffer.get(header);
             this.header = new String(header);
             if (!this.header.equals(SPL_STANDARD_MESSAGE_STRUCT_HEADER)) {
-                errors.add("wrong header");
+                errors.add("wrong header; expected " + SPL_STANDARD_MESSAGE_STRUCT_HEADER + ", is: " + this.header);
             } else {
                 version = buffer.get();
                 if (version != SPL_STANDARD_MESSAGE_STRUCT_VERSION) {
-                    errors.add("wrong version");
+                    errors.add("wrong version; expected " + SPL_STANDARD_MESSAGE_STRUCT_VERSION + ", is: " + version);
                 } else {
                     playerNum = buffer.get();
-                    if (playerNum < 1 || playerNum > 5) {
-                        errors.add("player number not within [1,5]");
+                    if (playerNum < 1 || playerNum > 6) {
+                        errors.add("player number not within [1,6]; is: " + playerNum);
                     }
 
                     teamNum = buffer.get();
@@ -182,7 +182,8 @@ public class SPLStandardMessage implements Serializable {
                         errors.add("team number not set");
                     }
 
-                    switch (buffer.get()) {
+                    final byte fallenState = buffer.get();
+                    switch (fallenState) {
                         case 0:
                             fallen = false;
                             break;
@@ -190,7 +191,7 @@ public class SPLStandardMessage implements Serializable {
                             fallen = true;
                             break;
                         default:
-                            errors.add("invalid fallen state");
+                            errors.add("invalid fallen state; expected 0 or 1, is: " + fallenState);
                     }
 
                     pose = new float[3];
@@ -223,40 +224,42 @@ public class SPLStandardMessage implements Serializable {
                             s = 0;
                         }
                         if (s < 0 || s >= Suggestion.values().length) {
-                            errors.add("invalid suggestion");
+                            errors.add("invalid suggestion; expected value in [0," + (Suggestion.values().length - 1) + "], is: " + s);
+                        } else {
+                            this.suggestion[i] = Suggestion.values()[s];
                         }
-                        this.suggestion[i] = Suggestion.values()[s];
                     }
 
                     int intention = (int) buffer.get();
                     if (intention < 0 || intention >= Intention.values().length) {
-                        errors.add("invalid intention");
+                        errors.add("invalid intention; expected value in [0," + (Intention.values().length - 1) + "], is: " + intention);
+                    } else {
+                        this.intention = Intention.values()[intention];
                     }
-                    this.intention = Intention.values()[intention];
 
                     averageWalkSpeed = buffer.getShort();
                     if (averageWalkSpeed < 0) {
-                        errors.add("invalid average walk speed");
+                        errors.add("invalid average walk speed, is: " + averageWalkSpeed);
                     }
                     maxKickDistance = buffer.getShort();
                     if (maxKickDistance < 0) {
-                        errors.add("invalid maximum kick distance");
+                        errors.add("invalid maximum kick distance, is: " + maxKickDistance);
                     }
 
                     currentPositionConfidence = buffer.get();
                     if (currentPositionConfidence < 0 || currentPositionConfidence > 100) {
-                        errors.add("invalid position confidence");
+                        errors.add("invalid position confidence; expected in [0,100], is: " + currentPositionConfidence);
                     }
                     currentSideConfidence = buffer.get();
                     if (currentSideConfidence < 0 || currentSideConfidence > 100) {
-                        errors.add("invalid side confidence");
+                        errors.add("invalid side confidence; expected in [0,100], is: " + currentPositionConfidence);
                     }
 
                     short numOfDataBytes = buffer.getShort();
                     if (numOfDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
-                        errors.add("custom data size too large");
+                        errors.add("custom data size too large; allowed up to " + SPL_STANDARD_MESSAGE_DATA_SIZE + ", is: " + numOfDataBytes);
                     }
-                    if(buffer.remaining() < numOfDataBytes) {
+                    if (buffer.remaining() < numOfDataBytes) {
                         errors.add("custom data size is smaller than named: " + buffer.remaining() + " instead of " + numOfDataBytes);
                     }
                     data = new byte[numOfDataBytes];
