@@ -65,7 +65,7 @@ public class GameState {
         public int compare(RobotState o1, RobotState o2) {
             if (o1.getPlayerNumber() == null) {
                 if (o2.getPlayerNumber() == null) {
-                    return 0;
+                    return o1.hashCode() - o2.hashCode();
                 }
                 return -1;
             } else if (o2.getPlayerNumber() == null) {
