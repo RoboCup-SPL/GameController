@@ -1,6 +1,5 @@
 * fix bugs
 * display details about illegal messages
-* begin / end recording logs when GameController is in ready / finished state
 * better replaying of logfiles:
   - controls in a seperate always-on-top window
   - fast forward
