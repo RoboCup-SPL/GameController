@@ -148,9 +148,44 @@ public class MainWindow extends JFrame implements TeamEventListener, LogReplayEv
         return fileMenu;
     }
 
+    private LogReplayFrame logReplayFrame;
+
     private JMenu createLogMenu() {
         final JFrame frame = this;
         final JMenu logMenu = new JMenu("Log");
+        final JMenuItem replayWindow = new JMenuItem("Replay log file");
+        logMenu.add(replayWindow);
+        replayWindow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                if (logReplayFrame == null) {
+                    final JFileChooser fc = new JFileChooser(new File(new File(".").getAbsoluteFile(), "logs_teamcomm"));
+                    if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            LogReplayer.getInstance().open(fc.getSelectedFile());
+                            LogReplayer.getInstance().setPlaybackSpeed(1);
+                            logMenuItems[0].setEnabled(false);
+                            logMenuItems[1].setEnabled(true);
+                            logMenuItems[2].setEnabled(true);
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Error opening log file.",
+                                    ex.getClass().getSimpleName(),
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    logReplayFrame = new LogReplayFrame(frame);
+                    logReplayFrame.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            LogReplayer.getInstance().removeListener(logReplayFrame);
+                            logReplayFrame = null;
+                            LogReplayer.getInstance().close();
+                        }
+                    });
+                }
+            }
+        });
         logMenuItems[0] = new JMenuItem("Replay log file");
         logMenuItems[1] = new JMenuItem("Pause replaying");
         logMenuItems[2] = new JMenuItem("Stop replaying");

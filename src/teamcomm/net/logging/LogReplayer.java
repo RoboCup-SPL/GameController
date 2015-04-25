@@ -89,4 +89,8 @@ public class LogReplayer {
     public void addListener(final LogReplayEventListener listener) {
         listeners.add(LogReplayEventListener.class, listener);
     }
+
+    public void removeListener(final LogReplayEventListener listener) {
+        listeners.remove(LogReplayEventListener.class, listener);
+    }
 }
