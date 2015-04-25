@@ -1,7 +1,6 @@
 package teamcomm.gui;
 
 import common.Log;
-import data.Teams;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -265,7 +264,7 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
         }
 
         try {
-            icon = new ImageIcon(Teams.getIcon(team));
+            icon = new ImageIcon(GameState.getInstance().getTeamIcon(team));
         } catch (NullPointerException e) {
             return null;
         } catch (ArrayIndexOutOfBoundsException e) {

@@ -1,9 +1,9 @@
-- fix bugs
-  - when replaying a log the first seconds are skipped
-- begin / end recording logs when GameController is in ready / finished state
-- better replaying of logfiles:
+* fix bugs
+* display details about illegal messages
+* begin / end recording logs when GameController is in ready / finished state
+* better replaying of logfiles:
   - controls in a seperate always-on-top window
   - fast forward
   - rewind (?)
-- display details about illegal messages
-- visualize more B-Human messages (debug drawings?)
+* complete JavaDoc (again)
+* visualize more B-Human messages (debug drawings?)

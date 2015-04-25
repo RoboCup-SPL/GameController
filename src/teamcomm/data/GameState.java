@@ -5,6 +5,7 @@ import data.Rules;
 import data.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
+import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -207,16 +208,9 @@ public class GameState {
                 if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
                     // Open a new logfile
                     Logger.getInstance().createLogfile("Drop-in");
-
-                    // set rules to drop-in
-                    Rules.league = Rules.LEAGUES[1];
                 } else {
                     // Open a new logfile
-                    final String[] teamNames = Teams.getNames(false);
-                    Logger.getInstance().createLogfile(teamNames[data.team[0].teamNumber] + "_" + teamNames[data.team[1].teamNumber]);
-
-                    // reset rules
-                    Rules.league = Rules.LEAGUES[0];
+                    Logger.getInstance().createLogfile(getTeamName((int) data.team[0].teamNumber, false, false) + "_" + getTeamName((int) data.team[1].teamNumber, false, false));
                 }
             }
         }
@@ -251,13 +245,6 @@ public class GameState {
 
                         // (re)load plugins
                         PluginLoader.getInstance().update(teamNumber);
-
-                        // handle dropin games
-                        if ((teamNumbers[0] == 0 || teamNumbers[0] == 98 || teamNumbers[0] == 99) && (teamNumbers[1] == 0 || teamNumbers[1] == 98 || teamNumbers[1] == 99)) {
-                            Rules.league = Rules.LEAGUES[1];
-                        } else {
-                            Rules.league = Rules.LEAGUES[0];
-                        }
 
                         changed = i + 1 | CHANGED_OTHER;
                         break;
@@ -401,6 +388,11 @@ public class GameState {
         if (color == null) {
             String[] colorStrings = null;
             try {
+                if (teamNumber == 98 || teamNumber == 99) {
+                    Rules.league = Rules.LEAGUES[1];
+                } else {
+                    Rules.league = Rules.LEAGUES[0];
+                }
                 colorStrings = Teams.getColors(teamNumber);
             } catch (NullPointerException e) {
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -431,17 +423,31 @@ public class GameState {
      * @param teamNumber number of the team
      * @return the team name
      */
-    public String getTeamName(final Integer teamNumber) {
-        final String[] teamNames = Teams.getNames(true);
+    public String getTeamName(final Integer teamNumber, final boolean withNumber, final boolean withPrefix) {
+        if (teamNumber == 98 || teamNumber == 99) {
+            Rules.league = Rules.LEAGUES[1];
+        } else {
+            Rules.league = Rules.LEAGUES[0];
+        }
+        final String[] teamNames = Teams.getNames(withNumber);
         if (teamNumber != null) {
-            if (teamNumber < teamNames.length) {
-                return ("Team " + teamNames[teamNumber]);
+            if (teamNumber < teamNames.length && teamNames[teamNumber] != null) {
+                return ((withPrefix ? "Team " : "") + teamNames[teamNumber]);
             } else {
-                return ("Unknown Team (" + teamNumber + ")");
+                return ("Unknown" + (withPrefix ? " Team" : "") + (withNumber ? " (" + teamNumber + ")" : ""));
             }
         } else {
-            return "Unknown Team";
+            return "Unknown" + (withPrefix ? " Team" : "");
         }
+    }
+
+    public BufferedImage getTeamIcon(final int teamNumber) {
+        if (teamNumber == 98 || teamNumber == 99) {
+            Rules.league = Rules.LEAGUES[1];
+        } else {
+            Rules.league = Rules.LEAGUES[0];
+        }
+        return Teams.getIcon(teamNumber);
     }
 
     /**
@@ -459,7 +465,10 @@ public class GameState {
      * @param mirrored boolean
      */
     public void setMirrored(final boolean mirrored) {
-        this.mirrored = mirrored;
+        if (mirrored != this.mirrored) {
+            this.mirrored = mirrored;
+            sendEvents(CHANGED_LEFT | CHANGED_RIGHT);
+        }
     }
 
     private int outputSide(final int side) {

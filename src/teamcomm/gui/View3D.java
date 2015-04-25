@@ -9,7 +9,6 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
-import data.Teams;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -292,16 +291,18 @@ public class View3D implements GLEventListener, TeamEventListener {
         drawingsMenu.removeAll();
 
         // Create submenus for teams
-        final String[] teamNames = Teams.getNames(false);
         final HashMap<Integer, JMenu> submenus = new HashMap<Integer, JMenu>();
         for (final int teamNumber : teamNumbers) {
-            if (teamNumber != PluginLoader.TEAMNUMBER_COMMON && teamNumber < teamNames.length) {
-                final JMenu submenu = new JMenu(teamNames[teamNumber]);
-                submenus.put(teamNumber, submenu);
-                drawingsMenu.add(submenu);
+            if (teamNumber != PluginLoader.TEAMNUMBER_COMMON) {
+                final String name = GameState.getInstance().getTeamName(teamNumber, false, false);
+                if (!name.equals("Unknown")) {
+                    final JMenu submenu = new JMenu(name);
+                    submenus.put(teamNumber, submenu);
+                    drawingsMenu.add(submenu);
+                }
             }
         }
-
+ 
         // Create menu items for drawings
         for (final Drawing d : drawings) {
             final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
