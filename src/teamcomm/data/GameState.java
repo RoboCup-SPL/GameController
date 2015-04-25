@@ -205,14 +205,19 @@ public class GameState {
 
                 // handle dropin games
                 if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
+                    // Open a new logfile
+                    Logger.getInstance().createLogfile("Drop-in");
+
+                    // set rules to drop-in
                     Rules.league = Rules.LEAGUES[1];
                 } else {
+                    // Open a new logfile
+                    final String[] teamNames = Teams.getNames(false);
+                    Logger.getInstance().createLogfile(teamNames[data.team[0].teamNumber] + "_" + teamNames[data.team[1].teamNumber]);
+
+                    // reset rules
                     Rules.league = Rules.LEAGUES[0];
                 }
-
-                // Open a new logfile
-                final String[] teamNames = Teams.getNames(false);
-                Logger.getInstance().createLogfile(teamNames[data.team[0].teamNumber] + "_" + teamNames[data.team[1].teamNumber]);
             }
         }
         lastGameControlData = data;
