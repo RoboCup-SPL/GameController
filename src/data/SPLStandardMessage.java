@@ -264,8 +264,6 @@ public class SPLStandardMessage implements Serializable {
                     }
                     data = new byte[numOfDataBytes];
                     buffer.get(data, 0, numOfDataBytes);
-
-                    return true;
                 }
             }
         } catch (RuntimeException e) {
