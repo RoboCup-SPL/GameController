@@ -3,6 +3,7 @@ package teamcomm.net.logging;
 import common.Log;
 import data.GameControlData;
 import java.io.BufferedInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,13 +22,11 @@ public class LogReplayer extends Thread {
     private static LogReplayer replayer;
 
     private final ObjectInputStream stream;
-    private final BufferedInputStream bufStream;
     private long pausedTimestamp = 0;
     private long pausedOffset = 0;
 
     private LogReplayer(final File logfile) throws IOException {
-        bufStream = new BufferedInputStream(new FileInputStream(logfile));
-        stream = new ObjectInputStream(bufStream);
+        stream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(logfile)));
     }
 
     private void togglePause() {
@@ -50,23 +49,10 @@ public class LogReplayer extends Thread {
     public void run() {
         try {
             final long startTimestamp = System.currentTimeMillis();
-            bufStream.mark(10);
-            if (bufStream.read() < 0) {
-                return;
-            }
-            bufStream.reset();
             SPLStandardMessageReceiver.getInstance().clearPackageQueue();
             Thread.sleep(100);
             GameState.getInstance().reset();
-            final long firstTimestamp = stream.readLong();
-            pausedOffset -= firstTimestamp;
-            readObject();
             while (!isInterrupted()) {
-                bufStream.mark(10);
-                if (bufStream.read() < 0) {
-                    break;
-                }
-                bufStream.reset();
                 final long timestamp = stream.readLong();
                 while (true) {
                     while (isPaused()) {
@@ -82,6 +68,7 @@ public class LogReplayer extends Thread {
                 }
                 readObject();
             }
+        } catch (EOFException e) {
         } catch (IOException e) {
             Log.error("error while reading log file: " + e.getMessage());
         } catch (ClassNotFoundException e) {
@@ -89,7 +76,6 @@ public class LogReplayer extends Thread {
         } catch (InterruptedException ex) {
         } finally {
             try {
-                bufStream.close();
                 stream.close();
             } catch (IOException e) {
             }
