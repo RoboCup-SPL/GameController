@@ -160,7 +160,7 @@ public class SPLStandardMessageReceiver extends Thread {
                         ((AdvancedMessage) message).init();
                     }
 
-                    if (!valid) {
+                    if (!valid && !LogReplayer.isReplaying()) {
                         try {
                             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream("error_" + p.team + "_" + p.host));
                             for (String msg : message.errors) {
