@@ -36,13 +36,14 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import teamcomm.Main;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
+import teamcomm.net.logging.LogReplayEvent;
+import teamcomm.net.logging.LogReplayEventListener;
 import teamcomm.net.logging.LogReplayer;
 
 /**
@@ -50,13 +51,11 @@ import teamcomm.net.logging.LogReplayer;
  *
  * @author Felix Thielke
  */
-public class MainWindow extends JFrame implements ActionListener, TeamEventListener {
+public class MainWindow extends JFrame implements TeamEventListener, LogReplayEventListener {
 
     private static final long serialVersionUID = 6549981924840180076L;
 
     private static final Map<Integer, ImageIcon> logos = new HashMap<Integer, ImageIcon>();
-
-    private final Timer timer = new Timer(250, this);
 
     private final View3D fieldView = new View3D();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
@@ -162,7 +161,8 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
                 int returnVal = fc.showOpenDialog(frame);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     try {
-                        LogReplayer.replayLog(fc.getSelectedFile());
+                        LogReplayer.getInstance().open(fc.getSelectedFile());
+                        LogReplayer.getInstance().setPlaybackSpeed(1);
                         logMenuItems[0].setEnabled(false);
                         logMenuItems[1].setEnabled(true);
                         logMenuItems[2].setEnabled(true);
@@ -179,8 +179,8 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
         logMenuItems[1].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                LogReplayer.toggleReplayPaused();
-                if (LogReplayer.isReplayPaused()) {
+                LogReplayer.getInstance().setPlaybackSpeed(LogReplayer.getInstance().isPaused() ? 1 : 0);
+                if (LogReplayer.getInstance().isPaused()) {
                     logMenuItems[1].setText("Continue replaying");
                 } else {
                     logMenuItems[1].setText("Pause replaying");
@@ -192,7 +192,7 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
         logMenuItems[2].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                LogReplayer.stopReplaying();
+                LogReplayer.getInstance().close();
             }
         });
         logMenuItems[2].setEnabled(false);
@@ -230,10 +230,6 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
                 public void run() {
                     // Initialize
                     initialize();
-
-                    // Start Swing timer
-                    timer.setRepeats(true);
-                    timer.start();
                 }
             });
         } catch (InterruptedException ex) {
@@ -244,16 +240,21 @@ public class MainWindow extends JFrame implements ActionListener, TeamEventListe
     }
 
     public void terminate() {
-        timer.stop();
         fieldView.terminate();
     }
 
     @Override
-    public void actionPerformed(final ActionEvent e) {
-        if (!logMenuItems[0].isEnabled() && !LogReplayer.isReplaying()) {
+    public void loggingStatus(final LogReplayEvent e) {
+        if (e.paused) {
+            logMenuItems[1].setText("Continue replaying");
+        } else {
+            logMenuItems[1].setText("Pause replaying");
+        }
+        if (e.atEnd) {
             logMenuItems[0].setEnabled(true);
             logMenuItems[1].setEnabled(false);
             logMenuItems[2].setEnabled(false);
+            LogReplayer.getInstance().close();
         }
     }
 

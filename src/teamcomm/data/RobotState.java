@@ -89,7 +89,7 @@ public class RobotState {
      */
     public int getRecentMessageCount() {
         final long cut;
-        if (LogReplayer.isReplaying() && LogReplayer.isReplayPaused()) {
+        if (LogReplayer.getInstance().isReplaying() && LogReplayer.getInstance().isPaused()) {
             cut = 0;
         } else {
             cut = System.currentTimeMillis() - 1000;

@@ -95,7 +95,7 @@ public class GameState {
         taskHandle = scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                if (!(LogReplayer.isReplaying() && LogReplayer.isReplayPaused())) {
+                if (!(LogReplayer.getInstance().isReplaying() && LogReplayer.getInstance().isPaused())) {
                     int changed = 0;
 
                     synchronized (robotsByAddress) {

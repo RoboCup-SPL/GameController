@@ -44,7 +44,7 @@ public class Logger {
      * Creates a new log file to store received messages in.
      */
     public final void createLogfile(final String name) {
-        if (!LogReplayer.isReplaying()) {
+        if (!LogReplayer.getInstance().isReplaying()) {
             // Close current log file
             closeLogfile();
 
@@ -68,7 +68,7 @@ public class Logger {
      * Closes the currently used log file.
      */
     public void closeLogfile() {
-        if (!LogReplayer.isReplaying()) {
+        if (!LogReplayer.getInstance().isReplaying()) {
             synchronized (this) {
                 if (logger != null) {
                     try {
@@ -97,7 +97,7 @@ public class Logger {
     }
 
     public <T extends Serializable> void log(final Class<T> cls, final T p) {
-        if (!LogReplayer.isReplaying()) {
+        if (!LogReplayer.getInstance().isReplaying()) {
             boolean error = false;
             synchronized (this) {
                 if (logFile != null) {

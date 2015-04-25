@@ -76,7 +76,7 @@ public class SPLStandardMessageReceiver extends Thread {
                     final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
 
-                    if (!LogReplayer.isReplaying()) {
+                    if (!LogReplayer.getInstance().isReplaying()) {
                         if (packet.getAddress().getAddress()[0] != 10) {
                             queue.add(new SPLStandardMessagePackage("10.0." + team + "." + buffer[5], team, buffer));
                         } else {
@@ -160,7 +160,7 @@ public class SPLStandardMessageReceiver extends Thread {
                         ((AdvancedMessage) message).init();
                     }
 
-                    if (!valid && !LogReplayer.isReplaying()) {
+                    if (!valid && !LogReplayer.getInstance().isReplaying()) {
                         try {
                             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream("error_" + p.team + "_" + p.host));
                             for (String msg : message.errors) {

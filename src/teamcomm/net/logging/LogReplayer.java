@@ -1,159 +1,92 @@
 package teamcomm.net.logging;
 
-import common.Log;
-import data.GameControlData;
-import java.io.BufferedInputStream;
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import javax.swing.event.EventListenerList;
 import teamcomm.data.GameState;
-import teamcomm.net.SPLStandardMessagePackage;
 import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
  *
  * @author Felix Thielke
  */
-public class LogReplayer extends Thread {
+public class LogReplayer {
 
-    private static LogReplayer replayer;
+    private static final LogReplayer instance = new LogReplayer();
 
-    private final ObjectInputStream stream;
-    private long pausedTimestamp = 0;
-    private long pausedOffset = 0;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private ScheduledFuture<?> taskHandle;
 
-    private LogReplayer(final File logfile) throws IOException {
-        stream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(logfile)));
+    private LogReplayTask task;
+
+    private final EventListenerList listeners = new EventListenerList();
+
+    public static LogReplayer getInstance() {
+        return instance;
     }
 
-    private void togglePause() {
-        synchronized (this) {
-            if (pausedTimestamp == 0) {
-                pausedTimestamp = System.currentTimeMillis();
-            } else {
-                pausedOffset += System.currentTimeMillis() - pausedTimestamp;
-                pausedTimestamp = 0;
-            }
-            notifyAll();
+    public void open(final File logfile) throws FileNotFoundException, IOException {
+        // Close currently opened log
+        if (task != null && taskHandle != null) {
+            taskHandle.cancel(false);
+            task.close();
+        }
+
+        // Drain package queue of SPLStandardMessageReceiver
+        SPLStandardMessageReceiver.getInstance().clearPackageQueue();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+        }
+
+        // Reset GameState
+        GameState.getInstance().reset();
+
+        // Open new log
+        task = new LogReplayTask(logfile, listeners);
+        taskHandle = scheduler.scheduleAtFixedRate(task, LogReplayTask.PLAYBACK_TASK_DELAY, LogReplayTask.PLAYBACK_TASK_DELAY, TimeUnit.MILLISECONDS);
+    }
+
+    public boolean isReplaying() {
+        return task != null;
+    }
+
+    public boolean isPaused() {
+        return task == null || task.isPaused();
+    }
+
+    public void setPlaybackSpeed(final float factor) {
+        if (task != null) {
+            task.setPlaybackSpeed(factor);
         }
     }
 
-    private boolean isPaused() {
-        return pausedTimestamp > 0;
-    }
+    public void close() {
+        if (task != null) {
+            // Close currently opened log
+            taskHandle.cancel(false);
+            task.close();
+            task = null;
+            taskHandle = null;
 
-    @Override
-    public void run() {
-        try {
-            final long startTimestamp = System.currentTimeMillis();
-            SPLStandardMessageReceiver.getInstance().clearPackageQueue();
-            Thread.sleep(100);
-            GameState.getInstance().reset();
-            while (!isInterrupted()) {
-                final long timestamp = stream.readLong();
-                while (true) {
-                    while (isPaused()) {
-                        synchronized (this) {
-                            wait();
-                        }
-                    }
-                    final long diff = timestamp - (System.currentTimeMillis() - (startTimestamp + pausedOffset));
-                    if (diff <= 0) {
-                        break;
-                    }
-                    Thread.sleep(diff);
-                }
-                readObject();
-            }
-        } catch (EOFException e) {
-        } catch (IOException e) {
-            Log.error("error while reading log file: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            Log.error("error while reading log file: " + e.getMessage());
-        } catch (InterruptedException ex) {
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {
-            }
+            // Drain package queue of SPLStandardMessageReceiver
             SPLStandardMessageReceiver.getInstance().clearPackageQueue();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
             }
+
+            // Reset GameState
             GameState.getInstance().reset();
-            replayer = null;
         }
     }
 
-    private void readObject() throws IOException, ClassNotFoundException {
-        final boolean notNull = stream.readBoolean();
-        if (notNull) {
-            final Object o = stream.readObject();
-            if (o instanceof SPLStandardMessagePackage) {
-                SPLStandardMessageReceiver.getInstance().addToPackageQueue((SPLStandardMessagePackage) o);
-            } else if (o instanceof GameControlData) {
-                GameState.getInstance().updateGameData((GameControlData) o);
-            }
-        } else {
-            switch (stream.readInt()) {
-                case 1:
-                    GameState.getInstance().updateGameData(null);
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Starts replaying the given log file.
-     *
-     * @param logfile path to the file
-     * @throws FileNotFoundException if the file could not be found
-     * @throws IOException if an error occured while reading the file
-     */
-    public static void replayLog(final File logfile) throws FileNotFoundException, IOException {
-        if (replayer == null) {
-            replayer = new LogReplayer(logfile);
-            replayer.start();
-        }
-    }
-
-    /**
-     * Stops replaying a log file.
-     */
-    public static void stopReplaying() {
-        if (replayer != null) {
-            replayer.interrupt();
-        }
-    }
-
-    /**
-     * Pauses or unpauses the replaying of a log file.
-     */
-    public static void toggleReplayPaused() {
-        if (replayer != null) {
-            replayer.togglePause();
-        }
-    }
-
-    /**
-     * Returns whether the replaying of a log file is paused.
-     *
-     * @return boolean
-     */
-    public static boolean isReplayPaused() {
-        return replayer == null || replayer.isPaused();
-    }
-
-    /**
-     * Returns whether a log file is currently being replayed.
-     *
-     * @return boolean
-     */
-    public static boolean isReplaying() {
-        return replayer != null;
+    public void addListener(final LogReplayEventListener listener) {
+        listeners.add(LogReplayEventListener.class, listener);
     }
 }

@@ -45,7 +45,7 @@ public class GameControlDataReceiver extends Thread {
                 final DatagramPacket packet = new DatagramPacket(buffer.array(), buffer.array().length);
                 datagramSocket.receive(packet);
 
-                if (!LogReplayer.isReplaying()) {
+                if (!LogReplayer.getInstance().isReplaying()) {
                     buffer.rewind();
                     final GameControlData data = new GameControlData();
                     if (data.fromByteArray(buffer)) {
@@ -53,7 +53,7 @@ public class GameControlDataReceiver extends Thread {
                     }
                 }
             } catch (SocketTimeoutException e) {
-                if (!LogReplayer.isReplaying()) {
+                if (!LogReplayer.getInstance().isReplaying()) {
                     // GameController data is only valid for a limited amount of time
                     GameState.getInstance().updateGameData(null);
                 }

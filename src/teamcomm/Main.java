@@ -69,7 +69,7 @@ public class Main {
         receiver.interrupt();
         gcDataReceiver.interrupt();
         robotView.terminate();
-        LogReplayer.stopReplaying();
+        LogReplayer.getInstance().close();
         Logger.getInstance().closeLogfile();
 
         // Try to join receiver threads
