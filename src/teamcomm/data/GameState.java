@@ -205,8 +205,8 @@ public class GameState {
                 final Collection<RobotState> teamRobots = robots.get((int) team.teamNumber);
                 if (teamRobots != null) {
                     for (final RobotState r : teamRobots) {
-                        if (r.getPlayerNumber() < team.player.length) {
-                            r.setPenalty(team.player[r.getPlayerNumber()].penalty);
+                        if (r.getPlayerNumber() <= team.player.length) {
+                            r.setPenalty(team.player[r.getPlayerNumber() - 1].penalty);
                         }
                     }
                 }
