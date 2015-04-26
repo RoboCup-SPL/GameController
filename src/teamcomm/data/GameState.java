@@ -200,6 +200,18 @@ public class GameState {
             teamColors.put((int) data.team[0].teamNumber, (int) data.team[0].teamColor);
             teamColors.put((int) data.team[1].teamNumber, (int) data.team[1].teamColor);
 
+            // Update penalties
+            for (final TeamInfo team : data.team) {
+                final Collection<RobotState> teamRobots = robots.get((int) team.teamNumber);
+                if (teamRobots != null) {
+                    for (final RobotState r : teamRobots) {
+                        if (r.getPlayerNumber() < team.player.length) {
+                            r.setPenalty(team.player[r.getPlayerNumber()].penalty);
+                        }
+                    }
+                }
+            }
+
             // Open a new logfile for the current GameController state if the
             // state changed from or to initial/finished
             if (data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {
