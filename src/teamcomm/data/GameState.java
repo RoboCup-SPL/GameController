@@ -216,18 +216,29 @@ public class GameState {
 
             // Open a new logfile for the current GameController state if the
             // state changed from or to initial/finished
+            final StringBuilder logfileName;
+            if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
+                logfileName = new StringBuilder("Drop-in_");
+                if (data.firstHalf == GameControlData.C_TRUE) {
+                    logfileName.append("1st");
+                } else {
+                    logfileName.append("2nd");
+                }
+                logfileName.append("Half");
+            } else {
+                if (data.firstHalf == GameControlData.C_TRUE) {
+                    logfileName = new StringBuilder(getTeamName((int) data.team[0].teamNumber, false, false)).append("_").append(getTeamName((int) data.team[1].teamNumber, false, false)).append("_1st");
+                } else {
+                    logfileName = new StringBuilder(getTeamName((int) data.team[1].teamNumber, false, false)).append("_").append(getTeamName((int) data.team[0].teamNumber, false, false)).append("_2nd");
+                }
+                logfileName.append("Half");
+            }
             if (data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {
-                if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
-                    Logger.getInstance().createLogfile("Drop-in_" + (data.firstHalf == GameControlData.C_TRUE ? "1st" : "2nd") + "Half");
-                } else {
-                    Logger.getInstance().createLogfile(getTeamName((int) data.team[0].teamNumber, false, false) + "_" + getTeamName((int) data.team[1].teamNumber, false, false) + "_" + (data.firstHalf == GameControlData.C_TRUE ? "1st" : "2nd") + "Half");
-                }
-            } else if ((data.gameState == GameControlData.STATE_INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_INITIAL)) || (data.gameState == GameControlData.STATE_FINISHED && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_FINISHED))) {
-                if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
-                    Logger.getInstance().createLogfile("Drop-in_" + (data.firstHalf == GameControlData.C_TRUE ? "1st" : "2nd") + "Half_" + (data.gameState == GameControlData.STATE_INITIAL ? "initial" : "finished"));
-                } else {
-                    Logger.getInstance().createLogfile(getTeamName((int) data.team[0].teamNumber, false, false) + "_" + getTeamName((int) data.team[1].teamNumber, false, false) + "_" + (data.firstHalf == GameControlData.C_TRUE ? "1st" : "2nd") + "Half_" + (data.gameState == GameControlData.STATE_INITIAL ? "initial" : "finished"));
-                }
+                Logger.getInstance().createLogfile(logfileName.toString());
+            } else if (data.gameState == GameControlData.STATE_INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_INITIAL)) {
+                Logger.getInstance().createLogfile(logfileName.append("_initial").toString());
+            } else if (data.gameState == GameControlData.STATE_FINISHED && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_FINISHED)) {
+                Logger.getInstance().createLogfile(logfileName.append("_finished").toString());
             }
 
             if (changed != 0) {
