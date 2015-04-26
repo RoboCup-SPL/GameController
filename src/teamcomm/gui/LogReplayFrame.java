@@ -34,7 +34,7 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
     private final JLabel stateLabel = new JLabel("Paused");
     private final JLabel timeLabel = new JLabel("00:00");
 
-    private final JButton rewindFastButton = new JButton("<<");
+    private final JButton fastRewindButton = new JButton("<<");
     private final JButton rewindButton = new JButton("<");
     private final JButton pauseButton = new JButton("||");
     private final JButton playButton = new JButton(">");
@@ -77,7 +77,7 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                 contentPane.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(0, 32767)));
 
                 final JPanel controlsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-                rewindFastButton.addActionListener(new ActionListener() {
+                fastRewindButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         if (lastSpeed < 0) {
@@ -87,7 +87,7 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                         }
                     }
                 });
-                controlsPanel.add(rewindFastButton);
+                controlsPanel.add(fastRewindButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
                 rewindButton.addActionListener(new ActionListener() {
                     @Override
@@ -138,13 +138,13 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
     @Override
     public void logReplayStatus(final LogReplayEvent e) {
         if (e.atBeginning) {
-            rewindFastButton.setEnabled(false);
+            fastRewindButton.setEnabled(false);
             rewindButton.setEnabled(false);
         } else {
-            rewindFastButton.setEnabled(true);
+            fastRewindButton.setEnabled(true);
             if (e.playbackSpeed <= -2) {
                 if (e.playbackSpeed <= -MAX_REPLAY_SPEED) {
-                    rewindFastButton.setEnabled(false);
+                    fastRewindButton.setEnabled(false);
                 }
                 rewindButton.setEnabled(true);
                 stateLabel.setText("Fast rewind " + e.playbackSpeed + "x");
@@ -179,7 +179,17 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
         }
         if (e.playbackSpeed == 0) {
             pauseButton.setEnabled(false);
-            stateLabel.setText("Paused");
+            final StringBuilder text = new StringBuilder("Paused");
+            if (e.atBeginning) {
+                if (e.atEnd) {
+                    text.append(" (no data)");
+                } else {
+                    text.append(" (beginning)");
+                }
+            } else if (e.atEnd) {
+                text.append(" (end)");
+            }
+            stateLabel.setText(text.toString());
         } else {
             pauseButton.setEnabled(true);
         }
@@ -193,7 +203,7 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
 
     @Override
     public void logReplayStarted() {
-        rewindFastButton.setEnabled(false);
+        fastRewindButton.setEnabled(false);
         rewindButton.setEnabled(false);
         pauseButton.setEnabled(false);
         playButton.setEnabled(true);
