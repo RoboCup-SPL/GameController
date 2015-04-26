@@ -129,6 +129,10 @@ public class SPLStandardMessage implements Serializable {
     public boolean playerNumValid = false;
     public boolean teamNumValid = false;
     public boolean fallenValid = false;
+    public boolean poseValid = false;
+    public boolean walkingToValid = false;
+    public boolean shootingToValid = false;
+    public boolean ballValid = false;
     public boolean[] suggestionValid = new boolean[SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
     public boolean intentionValid = false;
     public boolean averageWalkSpeedValid = false;
@@ -223,14 +227,23 @@ public class SPLStandardMessage implements Serializable {
                     pose[0] = buffer.getFloat();
                     pose[1] = buffer.getFloat();
                     pose[2] = buffer.getFloat();
+                    if (!Float.isNaN(pose[0]) && !Float.isNaN(pose[1]) && !Float.isNaN(pose[2])) {
+                        poseValid = true;
+                    }
 
                     walkingTo = new float[2];
                     walkingTo[0] = buffer.getFloat();
                     walkingTo[1] = buffer.getFloat();
+                    if (!Float.isNaN(walkingTo[0]) && !Float.isNaN(walkingTo[1])) {
+                        walkingToValid = true;
+                    }
 
                     shootingTo = new float[2];
                     shootingTo[0] = buffer.getFloat();
                     shootingTo[1] = buffer.getFloat();
+                    if (!Float.isNaN(shootingTo[0]) && !Float.isNaN(shootingTo[1])) {
+                        shootingToValid = true;
+                    }
 
                     ballAge = buffer.getFloat();
 
@@ -241,6 +254,9 @@ public class SPLStandardMessage implements Serializable {
                     ballVel = new float[2];
                     ballVel[0] = buffer.getFloat();
                     ballVel[1] = buffer.getFloat();
+                    if (!Float.isNaN(ballAge) && !Float.isNaN(ball[0]) && !Float.isNaN(ball[1]) && !Float.isNaN(ballVel[0]) && !Float.isNaN(ballVel[1])) {
+                        ballValid = true;
+                    }
 
                     this.suggestion = new Suggestion[SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
                     for (int i = 0; i < SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; i++) {
@@ -310,7 +326,7 @@ public class SPLStandardMessage implements Serializable {
             errors.add("error while reading message: " + e.getClass().getSimpleName() + e.getMessage());
         }
 
-        valid = headerValid && versionValid && playerNumValid && teamNumValid && fallenValid && intentionValid && averageWalkSpeedValid && maxKickDistanceValid && currentPositionConfidenceValid && currentSideConfidenceValid && dataValid;
+        valid = headerValid && versionValid && playerNumValid && teamNumValid && fallenValid && poseValid && walkingToValid && shootingToValid && ballValid && intentionValid && averageWalkSpeedValid && maxKickDistanceValid && currentPositionConfidenceValid && currentSideConfidenceValid && dataValid;
         if (valid) {
             for (final boolean v : suggestionValid) {
                 if (!v) {

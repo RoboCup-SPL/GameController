@@ -30,7 +30,7 @@ public class BallPerPlayer extends PerPlayer {
     @Override
     public void draw(final GL2 gl, final RobotState player, final Camera camera) {
         final SPLStandardMessage msg = player.getLastMessage();
-        if (msg != null && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
+        if (msg != null && msg.poseValid && msg.ballValid && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
             final float[] ball = {msg.ball[0] / 1000.f, msg.ball[1] / 1000.f};
 
             gl.glPushMatrix();

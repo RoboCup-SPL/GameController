@@ -17,7 +17,7 @@ public class PlayerNumber extends PerPlayer {
     @Override
     public void draw(final GL2 gl, final RobotState player, final Camera camera) {
         final SPLStandardMessage msg = player.getLastMessage();
-        if (msg != null && msg.playerNumValid) {
+        if (msg != null && msg.playerNumValid && msg.poseValid) {
             gl.glPushMatrix();
 
             if (player.getPenalty() != PlayerInfo.PENALTY_NONE) {

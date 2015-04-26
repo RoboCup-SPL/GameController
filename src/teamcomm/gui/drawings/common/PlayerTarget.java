@@ -18,7 +18,7 @@ public class PlayerTarget extends PerPlayer {
     @Override
     public void draw(final GL2 gl, final RobotState player, final Camera camera) {
         final SPLStandardMessage msg = player.getLastMessage();
-        if (msg != null && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
+        if (msg != null && msg.poseValid && msg.walkingToValid && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
             final float poseX = msg.pose[0] / 1000.f;
             final float poseY = msg.pose[1] / 1000.f;
             final float walkingToX = msg.walkingTo[0] / 1000.f;
