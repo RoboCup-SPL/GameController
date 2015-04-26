@@ -2,8 +2,6 @@ package teamcomm.net;
 
 import common.Log;
 import data.SPLStandardMessage;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -159,18 +157,19 @@ public class SPLStandardMessageReceiver extends Thread {
                         ((AdvancedMessage) message).init();
                     }
 
-                    if (!message.valid && !LogReplayer.getInstance().isReplaying()) {
-                        try {
-                            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream("error_" + p.team + "_" + p.host));
-                            for (String msg : message.errors) {
-                                stream.write((msg + "\n").getBytes());
-                            }
-                            stream.close();
-                        } catch (IOException ex) {
+                    /*
+                     if (!message.valid && !LogReplayer.getInstance().isReplaying()) {
+                     try {
+                     BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream("error_" + p.team + "_" + p.host));
+                     for (String msg : message.errors) {
+                     stream.write((msg + "\n").getBytes());
+                     }
+                     stream.close();
+                     } catch (IOException ex) {
 
-                        }
-                    }
-
+                     }
+                     }
+                     */
                     GameState.getInstance().receiveMessage(p.host, message.teamNumValid ? message.teamNum : p.team, message);
                 } catch (InstantiationException ex) {
                     Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
