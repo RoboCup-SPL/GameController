@@ -94,8 +94,7 @@ class LogReplayTask implements Runnable {
                 if (forward) {
                     while (currentPosition >= curObject.time) {
                         handleObject(curObject);
-                        next();
-                        if (curObject == null) {
+                        if (!next()) {
                             synchronized (this) {
                                 playbackFactor = 0;
                             }
@@ -105,8 +104,7 @@ class LogReplayTask implements Runnable {
                 } else {
                     while (currentPosition <= curObject.time) {
                         handleObject(curObject);
-                        prev();
-                        if (curObject == null) {
+                        if (!prev()) {
                             synchronized (this) {
                                 playbackFactor = 0;
                             }
@@ -126,16 +124,18 @@ class LogReplayTask implements Runnable {
         }
     }
 
-    private void prev() {
+    private boolean prev() {
         if (!prevObjects.isEmpty()) {
             if (curObject != null) {
                 nextObjects.push(curObject);
             }
             curObject = prevObjects.pollFirst();
+            return true;
         }
+        return false;
     }
 
-    private void next() {
+    private boolean next() {
         LoggedObject obj = nextObjects.pollFirst();
         if (obj == null && stream != null) {
             try {
@@ -172,7 +172,9 @@ class LogReplayTask implements Runnable {
                 prevObjects.push(curObject);
             }
             curObject = obj;
+            return true;
         }
+        return false;
     }
 
     private void handleObject(final LoggedObject obj) {

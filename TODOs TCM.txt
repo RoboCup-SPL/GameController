@@ -1,6 +1,5 @@
 * fix bugs
   - under some circumstances a team can be both left and right team
-  - log file replaying hangs at the end of the log after fast forwarding
 * display details about illegal messages
 * better replaying of logfiles:
   - controls in a seperate always-on-top window
