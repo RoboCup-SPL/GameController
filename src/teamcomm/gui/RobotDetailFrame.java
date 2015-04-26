@@ -153,16 +153,18 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                 }
                 if (msg.averageWalkSpeedValid) {
                     ((JLabel) leftPanel.getComponent(13)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(13)).setText("Avg. walk speed: " + msg.averageWalkSpeed + "mm/s");
                 } else {
                     ((JLabel) leftPanel.getComponent(13)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(13)).setText("Avg. walk speed: " + msg.averageWalkSpeed);
                 }
-                ((JLabel) leftPanel.getComponent(13)).setText("Avg. walk speed: " + msg.averageWalkSpeed);
                 if (msg.maxKickDistanceValid) {
                     ((JLabel) leftPanel.getComponent(14)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(14)).setText("Max. kick distance: " + msg.maxKickDistance + "mm");
                 } else {
                     ((JLabel) leftPanel.getComponent(14)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(14)).setText("Max. kick distance: " + msg.maxKickDistance);
                 }
-                ((JLabel) leftPanel.getComponent(14)).setText("Max. kick distance: " + msg.maxKickDistance);
 
                 for (int i = 0; i < 5; i++) {
                     if (msg.suggestionValid[i]) {

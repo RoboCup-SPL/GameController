@@ -40,6 +40,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
         final JPanel panel = this;
         final RobotStateEventListener listener = this;
 
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(getForeground()), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
         setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
@@ -66,16 +67,14 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
     private void update() {
         final DecimalFormat df = new DecimalFormat("#.#####");
 
-        if (robot.getLastMessage() == null || !robot.getLastMessage().valid) {
-            setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.red), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
-        } else {
-            setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
-        }
         synchronized (getTreeLock()) {
             ((JLabel) getComponent(0)).setText("Player no: " + robot.getPlayerNumber());
             ((JLabel) getComponent(1)).setText("Messages: " + robot.getMessageCount());
             ((JLabel) getComponent(2)).setText("Current mps: " + df.format(robot.getRecentMessageCount()));
             ((JLabel) getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
+            if (robot.getLastMessage() == null || !robot.getLastMessage().valid) {
+                ((JLabel) getComponent(4)).setForeground(Color.red);
+            }
             ((JLabel) getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
         }
     }
