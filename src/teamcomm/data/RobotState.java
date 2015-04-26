@@ -49,10 +49,12 @@ public class RobotState {
      * @param message received message or null if the message was invalid
      */
     public void registerMessage(final SPLStandardMessage message) {
-        if (message == null) {
+        if (!message.valid) {
             illegalMessageCount++;
         } else {
             lastMessage = message;
+        }
+        if(message.playerNumValid) {
             playerNumber = (int) message.playerNum;
         }
         lastMessageTimestamp = System.currentTimeMillis();

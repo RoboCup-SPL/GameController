@@ -153,14 +153,13 @@ public class SPLStandardMessageReceiver extends Thread {
 
                 // Handle message
                 try {
-                    final boolean valid;
                     message = c.newInstance();
-                    valid = message.fromByteArray(ByteBuffer.wrap(p.message));
-                    if (message instanceof AdvancedMessage && valid) {
+                    message.fromByteArray(ByteBuffer.wrap(p.message));
+                    if (message instanceof AdvancedMessage && message.valid) {
                         ((AdvancedMessage) message).init();
                     }
 
-                    if (!valid && !LogReplayer.getInstance().isReplaying()) {
+                    if (!message.valid && !LogReplayer.getInstance().isReplaying()) {
                         try {
                             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream("error_" + p.team + "_" + p.host));
                             for (String msg : message.errors) {
@@ -172,7 +171,7 @@ public class SPLStandardMessageReceiver extends Thread {
                         }
                     }
 
-                    GameState.getInstance().receiveMessage(p.host, valid ? message.teamNum : p.team, valid ? message : null);
+                    GameState.getInstance().receiveMessage(p.host, message.teamNumValid ? message.teamNum : p.team, message);
                 } catch (InstantiationException ex) {
                     Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
                 } catch (IllegalAccessException ex) {

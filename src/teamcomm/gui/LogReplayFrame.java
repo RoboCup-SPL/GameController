@@ -81,7 +81,7 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                 });
                 controlsPanel.add(rewindFastButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                rewindFastButton.addActionListener(new ActionListener() {
+                rewindButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LogReplayer.getInstance().setPlaybackSpeed(-1);
@@ -89,7 +89,7 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                 });
                 controlsPanel.add(rewindButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                rewindFastButton.addActionListener(new ActionListener() {
+                pauseButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LogReplayer.getInstance().setPlaybackSpeed(0);
@@ -97,7 +97,7 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                 });
                 controlsPanel.add(pauseButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                rewindFastButton.addActionListener(new ActionListener() {
+                playButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LogReplayer.getInstance().setPlaybackSpeed(1);
@@ -105,7 +105,7 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                 });
                 controlsPanel.add(playButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                rewindFastButton.addActionListener(new ActionListener() {
+                fastForwardButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LogReplayer.getInstance().setPlaybackSpeed(2);

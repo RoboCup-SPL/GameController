@@ -244,7 +244,7 @@ public class GameState {
         int changed = 0;
 
         // update the team info if no GameController info is available
-        if (lastGameControlData == null && message != null) {
+        if (lastGameControlData == null) {
             synchronized (teamNumbers) {
                 for (int i = 0; i < 2; i++) {
                     if (teamNumbers[i] == 0) {

@@ -159,6 +159,20 @@ public class SPLStandardMessage implements Serializable {
         return buffer.array();
     }
 
+    public boolean valid = false;
+    public boolean headerValid = false;
+    public boolean versionValid = false;
+    public boolean playerNumValid = false;
+    public boolean teamNumValid = false;
+    public boolean fallenValid = false;
+    public boolean suggestionValid = false;
+    public boolean intentionValid = false;
+    public boolean averageWalkSpeedValid = false;
+    public boolean maxKickDistanceValid = false;
+    public boolean currentPositionConfidenceValid = false;
+    public boolean currentSideConfidenceValid = false;
+    public boolean dataValid = false;
+
     public boolean fromByteArray(ByteBuffer buffer) {
         try {
             buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -168,27 +182,37 @@ public class SPLStandardMessage implements Serializable {
             if (!this.header.equals(SPL_STANDARD_MESSAGE_STRUCT_HEADER)) {
                 errors.add("wrong header; expected " + SPL_STANDARD_MESSAGE_STRUCT_HEADER + ", is: " + this.header);
             } else {
+                headerValid = true;
+
                 version = buffer.get();
                 if (version != SPL_STANDARD_MESSAGE_STRUCT_VERSION) {
                     errors.add("wrong version; expected " + SPL_STANDARD_MESSAGE_STRUCT_VERSION + ", is: " + version);
                 } else {
+                    versionValid = true;
+
                     playerNum = buffer.get();
                     if (playerNum < 1 || playerNum > 6) {
                         errors.add("player number not within [1,6]; is: " + playerNum);
+                    } else {
+                        playerNumValid = true;
                     }
 
                     teamNum = buffer.get();
                     if (teamNum < 0) {
                         errors.add("team number not set");
+                    } else {
+                        teamNumValid = true;
                     }
 
                     final byte fallenState = buffer.get();
                     switch (fallenState) {
                         case 0:
                             fallen = false;
+                            fallenValid = true;
                             break;
                         case 1:
                             fallen = true;
+                            fallenValid = true;
                             break;
                         default:
                             errors.add("invalid fallen state; expected 0 or 1, is: " + fallenState);
@@ -218,6 +242,7 @@ public class SPLStandardMessage implements Serializable {
                     ballVel[1] = buffer.getFloat();
 
                     this.suggestion = new Suggestion[SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
+                    suggestionValid = true;
                     for (int i = 0; i < SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; i++) {
                         int s = (int) buffer.get();
                         if (s == -1) {
@@ -225,6 +250,7 @@ public class SPLStandardMessage implements Serializable {
                         }
                         if (s < 0 || s >= Suggestion.values().length) {
                             errors.add("invalid suggestion; expected value in [0," + (Suggestion.values().length - 1) + "], is: " + s);
+                            suggestionValid = false;
                         } else {
                             this.suggestion[i] = Suggestion.values()[s];
                         }
@@ -235,41 +261,56 @@ public class SPLStandardMessage implements Serializable {
                         errors.add("invalid intention; expected value in [0," + (Intention.values().length - 1) + "], is: " + intention);
                     } else {
                         this.intention = Intention.values()[intention];
+                        intentionValid = true;
                     }
 
                     averageWalkSpeed = buffer.getShort();
                     if (averageWalkSpeed < 0) {
                         errors.add("invalid average walk speed, is: " + averageWalkSpeed);
+                    } else {
+                        averageWalkSpeedValid = true;
                     }
                     maxKickDistance = buffer.getShort();
                     if (maxKickDistance < 0) {
                         errors.add("invalid maximum kick distance, is: " + maxKickDistance);
+                    } else {
+                        maxKickDistanceValid = true;
                     }
 
                     currentPositionConfidence = buffer.get();
                     if (currentPositionConfidence < 0 || currentPositionConfidence > 100) {
                         errors.add("invalid position confidence; expected in [0,100], is: " + currentPositionConfidence);
+                    } else {
+                        currentPositionConfidenceValid = true;
                     }
                     currentSideConfidence = buffer.get();
                     if (currentSideConfidence < 0 || currentSideConfidence > 100) {
                         errors.add("invalid side confidence; expected in [0,100], is: " + currentPositionConfidence);
+                    } else {
+                        currentSideConfidenceValid = true;
                     }
 
                     short numOfDataBytes = buffer.getShort();
+                    boolean dValid = true;
                     if (numOfDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
                         errors.add("custom data size too large; allowed up to " + SPL_STANDARD_MESSAGE_DATA_SIZE + ", is: " + numOfDataBytes);
+                        dValid = false;
                     }
                     if (buffer.remaining() < numOfDataBytes) {
                         errors.add("custom data size is smaller than named: " + buffer.remaining() + " instead of " + numOfDataBytes);
+                        dValid = false;
                     }
                     data = new byte[numOfDataBytes];
                     buffer.get(data, 0, numOfDataBytes);
+                    dataValid = dValid;
                 }
             }
         } catch (RuntimeException e) {
             errors.add("error while reading message: " + e.getClass().getSimpleName() + e.getMessage());
         }
 
-        return errors.isEmpty();
+        valid = headerValid && versionValid && playerNumValid && teamNumValid && fallenValid && suggestionValid && intentionValid && averageWalkSpeedValid && maxKickDistanceValid && currentPositionConfidenceValid && currentSideConfidenceValid && dataValid;
+
+        return valid;
     }
 }
