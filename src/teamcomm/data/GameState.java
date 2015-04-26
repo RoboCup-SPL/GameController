@@ -108,18 +108,20 @@ public class GameState {
                                 final Collection<RobotState> team = robots.get(r.getTeamNumber());
                                 team.remove(r);
 
-                                if (r.getTeamNumber() == teamNumbers[TEAM_LEFT]) {
-                                    changed |= CHANGED_LEFT;
-                                    if (team.isEmpty() && lastGameControlData == null) {
-                                        teamNumbers[TEAM_LEFT] = 0;
+                                synchronized (teamNumbers) {
+                                    if (r.getTeamNumber() == teamNumbers[TEAM_LEFT]) {
+                                        changed |= CHANGED_LEFT;
+                                        if (team.isEmpty() && lastGameControlData == null) {
+                                            teamNumbers[TEAM_LEFT] = 0;
+                                        }
+                                    } else if (r.getTeamNumber() == teamNumbers[TEAM_RIGHT]) {
+                                        changed |= CHANGED_RIGHT;
+                                        if (team.isEmpty() && lastGameControlData == null) {
+                                            teamNumbers[TEAM_RIGHT] = 0;
+                                        }
+                                    } else {
+                                        changed |= CHANGED_OTHER;
                                     }
-                                } else if (r.getTeamNumber() == teamNumbers[TEAM_RIGHT]) {
-                                    changed |= CHANGED_RIGHT;
-                                    if (team.isEmpty() && lastGameControlData == null) {
-                                        teamNumbers[TEAM_RIGHT] = 0;
-                                    }
-                                } else {
-                                    changed |= CHANGED_OTHER;
                                 }
                             }
                         }
@@ -373,24 +375,6 @@ public class GameState {
     private void fireEvent(final TeamEvent e) {
         for (final TeamEventListener listener : listeners.getListeners(TeamEventListener.class)) {
             listener.teamChanged(e);
-        }
-    }
-
-    /**
-     * Returns the team numbers of the currently playing teams.
-     *
-     * @return team numbers of the currently playing teams or null if no info
-     * about teams is available
-     */
-    public int[] getTeamNumbers() {
-        if (teamNumbers[0] == 0) {
-            return null;
-        } else {
-            if (mirrored) {
-                return new int[]{teamNumbers[1], teamNumbers[0]};
-            } else {
-                return teamNumbers.clone();
-            }
         }
     }
 

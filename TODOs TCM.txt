@@ -1,5 +1,6 @@
 * fix bugs
-  - under some circumstances a team can be both left and right team
+  - under some circumstances a team can be both left and right team (unable to reproduce this - does this still happen?)
+* display actually interesting information in detail windows
 * display details about illegal messages
 * complete JavaDoc (again)
 * visualize more B-Human messages (debug drawings?)
