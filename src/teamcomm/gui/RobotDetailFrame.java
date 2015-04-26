@@ -31,6 +31,7 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
     private final RobotState robot;
     private final JPanel leftPanel = new JPanel();
     private final JPanel rightPanel = new JPanel();
+    private final Color defaultColor = new JLabel("test").getForeground();
 
     /**
      * Constructor.
@@ -67,12 +68,12 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                 contentPane.setLayout(new GridLayout(1, 2, 0, 5));
                 contentPane.add(leftPanel);
 
-                contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
+                contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(defaultColor), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
 
                 leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
                 rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
-                for (int i = 0; i < 22; i++) {
+                for (int i = 0; i < 23; i++) {
                     leftPanel.add(new JLabel(" ", JLabel.LEFT));
                 }
 
@@ -110,31 +111,76 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
      */
     private void update() {
         final SPLStandardMessage msg = robot.getLastMessage();
-        if (msg == null) {
-            setIllegalValues();
-        } else {
+        if (msg != null) {
             final DecimalFormat df = new DecimalFormat("#.#####");
             synchronized (leftPanel.getTreeLock()) {
                 ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
                 ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + robot.getPlayerNumber());
                 ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
                 ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
+                if (!msg.valid) {
+                    ((JLabel) leftPanel.getComponent(4)).setForeground(Color.red);
+                }
                 ((JLabel) leftPanel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
-                ((JLabel) leftPanel.getComponent(6)).setText(msg.fallen ? "fallen" : "upright");
-                ((JLabel) leftPanel.getComponent(7)).setText("Activity: " + msg.intention.toString());
-                ((JLabel) leftPanel.getComponent(8)).setText("Pos.X: " + df.format(msg.pose[0]));
-                ((JLabel) leftPanel.getComponent(9)).setText("Pos.Y: " + df.format(msg.pose[1]));
-                ((JLabel) leftPanel.getComponent(10)).setText("Pos.T: " + df.format(msg.pose[2]));
-                ((JLabel) leftPanel.getComponent(11)).setText("Target.X: " + df.format(msg.walkingTo[0]));
-                ((JLabel) leftPanel.getComponent(12)).setText("Target.Y: " + df.format(msg.walkingTo[1]));
-                ((JLabel) leftPanel.getComponent(13)).setText("Shot.X: " + df.format(msg.shootingTo[0]));
-                ((JLabel) leftPanel.getComponent(14)).setText("Shot.Y: " + df.format(msg.shootingTo[1]));
-                ((JLabel) leftPanel.getComponent(15)).setText("BallRel.X: " + df.format(msg.ball[0]));
-                ((JLabel) leftPanel.getComponent(16)).setText("BallRel.Y: " + df.format(msg.ball[1]));
-                ((JLabel) leftPanel.getComponent(17)).setText("BallVel.X: " + df.format(msg.ballVel[0]));
-                ((JLabel) leftPanel.getComponent(18)).setText("BallVel.Y: " + df.format(msg.ballVel[1]));
-                ((JLabel) leftPanel.getComponent(19)).setText("BallAge: " + msg.ballAge);
-                ((JLabel) leftPanel.getComponent(21)).setText("Additional data: " + msg.data.length + "B (" + (msg.data.length * 100 / SPLStandardMessage.SPL_STANDARD_MESSAGE_DATA_SIZE) + "%)");
+                if (msg.fallenValid) {
+                    ((JLabel) leftPanel.getComponent(6)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(6)).setText(msg.fallen ? "fallen" : "upright");
+                } else {
+                    ((JLabel) leftPanel.getComponent(6)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(6)).setText("unknown state");
+                }
+                if (msg.intentionValid) {
+                    ((JLabel) leftPanel.getComponent(7)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(7)).setText("Activity: " + msg.intention.toString());
+                } else {
+                    ((JLabel) leftPanel.getComponent(7)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(7)).setText("Activity: ?");
+                }
+                ((JLabel) leftPanel.getComponent(9)).setText("Confidence:");
+                if (msg.currentPositionConfidenceValid) {
+                    ((JLabel) leftPanel.getComponent(10)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(10)).setText("Position: " + msg.currentPositionConfidence + "%");
+                } else {
+                    ((JLabel) leftPanel.getComponent(10)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(10)).setText("Position: " + msg.currentPositionConfidence);
+                }
+                if (msg.currentSideConfidenceValid) {
+                    ((JLabel) leftPanel.getComponent(11)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(11)).setText("Side: " + msg.currentSideConfidence + "%");
+                } else {
+                    ((JLabel) leftPanel.getComponent(11)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(11)).setText("Side: " + msg.currentSideConfidence);
+                }
+                if (msg.averageWalkSpeedValid) {
+                    ((JLabel) leftPanel.getComponent(13)).setForeground(defaultColor);
+                } else {
+                    ((JLabel) leftPanel.getComponent(13)).setForeground(Color.red);
+                }
+                ((JLabel) leftPanel.getComponent(13)).setText("Avg. walk speed: " + msg.averageWalkSpeed);
+                if (msg.maxKickDistanceValid) {
+                    ((JLabel) leftPanel.getComponent(14)).setForeground(defaultColor);
+                } else {
+                    ((JLabel) leftPanel.getComponent(14)).setForeground(Color.red);
+                }
+                ((JLabel) leftPanel.getComponent(14)).setText("Max. kick distance: " + msg.maxKickDistance);
+
+                for (int i = 0; i < 5; i++) {
+                    if (msg.suggestionValid[i]) {
+                        ((JLabel) leftPanel.getComponent(16 + i)).setForeground(defaultColor);
+                        ((JLabel) leftPanel.getComponent(16 + i)).setText("Suggestion " + (i + 1) + ": " + msg.suggestion[i].toString());
+                    } else {
+                        ((JLabel) leftPanel.getComponent(16 + i)).setForeground(Color.red);
+                        ((JLabel) leftPanel.getComponent(16 + i)).setText("Suggestion " + (i + 1) + ": ?");
+                    }
+                }
+
+                if (msg.dataValid) {
+                    ((JLabel) leftPanel.getComponent(22)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(22)).setText("Additional data: " + msg.data.length + "B (" + (msg.data.length * 100 / SPLStandardMessage.SPL_STANDARD_MESSAGE_DATA_SIZE) + "%)");
+                } else {
+                    ((JLabel) leftPanel.getComponent(22)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(22)).setText("Additional data: " + msg.nominalDataBytes + "B");
+                }
             }
         }
 
@@ -172,32 +218,6 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
         } else if (getContentPane().getComponentCount() == 2) {
             getContentPane().remove(rightPanel);
             pack();
-        }
-    }
-
-    private void setIllegalValues() {
-        final DecimalFormat df = new DecimalFormat("#.#####");
-        synchronized (leftPanel.getTreeLock()) {
-            ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
-            ((JLabel) leftPanel.getComponent(1)).setText("Player no: ?");
-            ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
-            ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
-            ((JLabel) leftPanel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
-            ((JLabel) leftPanel.getComponent(6)).setText("unknown state");
-            ((JLabel) leftPanel.getComponent(7)).setText("Activity: ?");
-            ((JLabel) leftPanel.getComponent(8)).setText("Pos.X: ?");
-            ((JLabel) leftPanel.getComponent(9)).setText("Pos.Y: ?");
-            ((JLabel) leftPanel.getComponent(10)).setText("Pos.T: ?");
-            ((JLabel) leftPanel.getComponent(11)).setText("Target.X: ?");
-            ((JLabel) leftPanel.getComponent(12)).setText("Target.Y: ?");
-            ((JLabel) leftPanel.getComponent(13)).setText("Shot.X: ?");
-            ((JLabel) leftPanel.getComponent(14)).setText("Shot.Y: ?");
-            ((JLabel) leftPanel.getComponent(15)).setText("BallRel.X: ?");
-            ((JLabel) leftPanel.getComponent(16)).setText("BallRel.Y: ?");
-            ((JLabel) leftPanel.getComponent(17)).setText("BallVel.X: ?");
-            ((JLabel) leftPanel.getComponent(18)).setText("BallVel.Y: ?");
-            ((JLabel) leftPanel.getComponent(19)).setText("BallAge: ?");
-            ((JLabel) leftPanel.getComponent(21)).setText("Additional data: ?");
         }
     }
 }

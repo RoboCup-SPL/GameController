@@ -120,7 +120,22 @@ public class SPLStandardMessage implements Serializable {
     public byte currentSideConfidence;
 
     // buffer for arbitrary data
+    public int nominalDataBytes;
     public byte[] data;
+
+    public boolean valid = false;
+    public boolean headerValid = false;
+    public boolean versionValid = false;
+    public boolean playerNumValid = false;
+    public boolean teamNumValid = false;
+    public boolean fallenValid = false;
+    public boolean[] suggestionValid = new boolean[SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
+    public boolean intentionValid = false;
+    public boolean averageWalkSpeedValid = false;
+    public boolean maxKickDistanceValid = false;
+    public boolean currentPositionConfidenceValid = false;
+    public boolean currentSideConfidenceValid = false;
+    public boolean dataValid = false;
 
     public List<String> errors = new LinkedList<String>();
 
@@ -158,20 +173,6 @@ public class SPLStandardMessage implements Serializable {
 
         return buffer.array();
     }
-
-    public boolean valid = false;
-    public boolean headerValid = false;
-    public boolean versionValid = false;
-    public boolean playerNumValid = false;
-    public boolean teamNumValid = false;
-    public boolean fallenValid = false;
-    public boolean suggestionValid = false;
-    public boolean intentionValid = false;
-    public boolean averageWalkSpeedValid = false;
-    public boolean maxKickDistanceValid = false;
-    public boolean currentPositionConfidenceValid = false;
-    public boolean currentSideConfidenceValid = false;
-    public boolean dataValid = false;
 
     public boolean fromByteArray(ByteBuffer buffer) {
         try {
@@ -242,7 +243,6 @@ public class SPLStandardMessage implements Serializable {
                     ballVel[1] = buffer.getFloat();
 
                     this.suggestion = new Suggestion[SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
-                    suggestionValid = true;
                     for (int i = 0; i < SPL_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; i++) {
                         int s = (int) buffer.get();
                         if (s == -1) {
@@ -250,9 +250,10 @@ public class SPLStandardMessage implements Serializable {
                         }
                         if (s < 0 || s >= Suggestion.values().length) {
                             errors.add("invalid suggestion; expected value in [0," + (Suggestion.values().length - 1) + "], is: " + s);
-                            suggestionValid = false;
+                            suggestionValid[i] = false;
                         } else {
                             this.suggestion[i] = Suggestion.values()[s];
+                            suggestionValid[i] = true;
                         }
                     }
 
@@ -290,18 +291,18 @@ public class SPLStandardMessage implements Serializable {
                         currentSideConfidenceValid = true;
                     }
 
-                    short numOfDataBytes = buffer.getShort();
+                    nominalDataBytes = buffer.getShort();
                     boolean dValid = true;
-                    if (numOfDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
-                        errors.add("custom data size too large; allowed up to " + SPL_STANDARD_MESSAGE_DATA_SIZE + ", is: " + numOfDataBytes);
+                    if (nominalDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
+                        errors.add("custom data size too large; allowed up to " + SPL_STANDARD_MESSAGE_DATA_SIZE + ", is: " + nominalDataBytes);
                         dValid = false;
                     }
-                    if (buffer.remaining() < numOfDataBytes) {
-                        errors.add("custom data size is smaller than named: " + buffer.remaining() + " instead of " + numOfDataBytes);
+                    if (buffer.remaining() < nominalDataBytes) {
+                        errors.add("custom data size is smaller than named: " + buffer.remaining() + " instead of " + nominalDataBytes);
                         dValid = false;
                     }
-                    data = new byte[numOfDataBytes];
-                    buffer.get(data, 0, numOfDataBytes);
+                    data = new byte[nominalDataBytes];
+                    buffer.get(data, 0, nominalDataBytes);
                     dataValid = dValid;
                 }
             }
@@ -309,7 +310,15 @@ public class SPLStandardMessage implements Serializable {
             errors.add("error while reading message: " + e.getClass().getSimpleName() + e.getMessage());
         }
 
-        valid = headerValid && versionValid && playerNumValid && teamNumValid && fallenValid && suggestionValid && intentionValid && averageWalkSpeedValid && maxKickDistanceValid && currentPositionConfidenceValid && currentSideConfidenceValid && dataValid;
+        valid = headerValid && versionValid && playerNumValid && teamNumValid && fallenValid && intentionValid && averageWalkSpeedValid && maxKickDistanceValid && currentPositionConfidenceValid && currentSideConfidenceValid && dataValid;
+        if (valid) {
+            for (final boolean v : suggestionValid) {
+                if (!v) {
+                    valid = false;
+                    return false;
+                }
+            }
+        }
 
         return valid;
     }

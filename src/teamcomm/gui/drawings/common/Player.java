@@ -34,7 +34,7 @@ public class Player extends PerPlayer {
                 gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
             }
 
-            if (msg.fallen) {
+            if (msg.fallenValid && msg.fallen) {
                 gl.glTranslatef(0, 0, 0.05f);
                 gl.glRotatef(90, 0, 1, 0);
             }
