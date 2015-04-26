@@ -27,6 +27,8 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
 
     private static final long serialVersionUID = -2837554836011688982L;
 
+    private static final float MAX_REPLAY_SPEED = 128;
+
     private final JFrame parent;
 
     private final JLabel stateLabel = new JLabel("Paused");
@@ -37,6 +39,8 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
     private final JButton pauseButton = new JButton("||");
     private final JButton playButton = new JButton(">");
     private final JButton fastForwardButton = new JButton(">>");
+
+    private float lastSpeed = 0;
 
     public LogReplayFrame(final JFrame parent) {
         super("Replay log file");
@@ -76,7 +80,11 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                 rewindFastButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        LogReplayer.getInstance().setPlaybackSpeed(-2);
+                        if (lastSpeed < 0) {
+                            LogReplayer.getInstance().setPlaybackSpeed(Math.max(lastSpeed * 2, -MAX_REPLAY_SPEED));
+                        } else {
+                            LogReplayer.getInstance().setPlaybackSpeed(-2);
+                        }
                     }
                 });
                 controlsPanel.add(rewindFastButton);
@@ -108,7 +116,11 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                 fastForwardButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        LogReplayer.getInstance().setPlaybackSpeed(2);
+                        if (lastSpeed > 0) {
+                            LogReplayer.getInstance().setPlaybackSpeed(Math.min(lastSpeed * 2, MAX_REPLAY_SPEED));
+                        } else {
+                            LogReplayer.getInstance().setPlaybackSpeed(2);
+                        }
                     }
                 });
                 controlsPanel.add(fastForwardButton);
@@ -129,12 +141,14 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
             rewindFastButton.setEnabled(false);
             rewindButton.setEnabled(false);
         } else {
+            rewindFastButton.setEnabled(true);
             if (e.playbackSpeed <= -2) {
-                rewindFastButton.setEnabled(false);
+                if (e.playbackSpeed <= -MAX_REPLAY_SPEED) {
+                    rewindFastButton.setEnabled(false);
+                }
                 rewindButton.setEnabled(true);
-                stateLabel.setText("Fast rewind");
+                stateLabel.setText("Fast rewind " + e.playbackSpeed + "x");
             } else {
-                rewindFastButton.setEnabled(true);
                 if (e.playbackSpeed < 0) {
                     rewindButton.setEnabled(false);
                     stateLabel.setText("Rewinding");
@@ -147,12 +161,14 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
             playButton.setEnabled(false);
             fastForwardButton.setEnabled(false);
         } else {
+            fastForwardButton.setEnabled(true);
             if (e.playbackSpeed >= 2) {
-                fastForwardButton.setEnabled(false);
+                if (e.playbackSpeed >= MAX_REPLAY_SPEED) {
+                    fastForwardButton.setEnabled(false);
+                }
                 playButton.setEnabled(true);
-                stateLabel.setText("Fast forward");
+                stateLabel.setText("Fast forward " + e.playbackSpeed + "x");
             } else {
-                fastForwardButton.setEnabled(true);
                 if (e.playbackSpeed > 0) {
                     playButton.setEnabled(false);
                     stateLabel.setText("Playing");
@@ -171,6 +187,8 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
         final int minutes = (int) (e.timePosition / 60000);
         final byte seconds = (byte) ((e.timePosition / 1000) % 60);
         timeLabel.setText((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+
+        lastSpeed = e.playbackSpeed;
     }
 
     @Override

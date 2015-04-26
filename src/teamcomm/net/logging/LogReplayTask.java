@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
 import javax.swing.event.EventListenerList;
 import teamcomm.data.GameState;
 import teamcomm.net.SPLStandardMessagePackage;
@@ -44,8 +44,8 @@ class LogReplayTask implements Runnable {
 
     private final EventListenerList listeners;
 
-    private final Queue<LoggedObject> prevObjects = new LinkedList<LoggedObject>();
-    private final Queue<LoggedObject> nextObjects = new LinkedList<LoggedObject>();
+    private final Deque<LoggedObject> prevObjects = new LinkedList<LoggedObject>();
+    private final Deque<LoggedObject> nextObjects = new LinkedList<LoggedObject>();
     private LoggedObject curObject;
 
     private ObjectInputStream stream;
@@ -84,43 +84,41 @@ class LogReplayTask implements Runnable {
     @Override
     public void run() {
         if (curObject != null) {
-            final boolean forward;
-            synchronized (this) {
-                if (playbackFactor == 0) {
-                    return;
-                } else {
+            if (!isPaused()) {
+                final boolean forward;
+                synchronized (this) {
                     forward = playbackFactor > 0;
+                    currentPosition += (long) ((float) PLAYBACK_TASK_DELAY * playbackFactor);
                 }
-                currentPosition += (long) ((float) PLAYBACK_TASK_DELAY * playbackFactor);
-            }
 
-            if (forward) {
-                while (currentPosition >= curObject.time) {
-                    handleObject(curObject);
-                    next();
-                    if (curObject == null) {
-                        synchronized (this) {
-                            playbackFactor = 0;
+                if (forward) {
+                    while (currentPosition >= curObject.time) {
+                        handleObject(curObject);
+                        next();
+                        if (curObject == null) {
+                            synchronized (this) {
+                                playbackFactor = 0;
+                            }
+                            break;
                         }
-                        break;
                     }
-                }
-            } else {
-                while (currentPosition <= curObject.time) {
-                    handleObject(curObject);
-                    prev();
-                    if (curObject == null) {
-                        synchronized (this) {
-                            playbackFactor = 0;
+                } else {
+                    while (currentPosition <= curObject.time) {
+                        handleObject(curObject);
+                        prev();
+                        if (curObject == null) {
+                            synchronized (this) {
+                                playbackFactor = 0;
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             }
 
             final LogReplayEvent e;
             synchronized (this) {
-                e = new LogReplayEvent(this, currentPosition, prevObjects.isEmpty(), nextObjects.isEmpty(), playbackFactor);
+                e = new LogReplayEvent(this, currentPosition, prevObjects.isEmpty(), stream == null && nextObjects.isEmpty(), playbackFactor);
             }
             for (final LogReplayEventListener listener : listeners.getListeners(LogReplayEventListener.class)) {
                 listener.logReplayStatus(e);
@@ -129,24 +127,23 @@ class LogReplayTask implements Runnable {
     }
 
     private void prev() {
-        if (curObject != null) {
-            nextObjects.add(curObject);
+        if (!prevObjects.isEmpty()) {
+            if (curObject != null) {
+                nextObjects.push(curObject);
+            }
+            curObject = prevObjects.pollFirst();
         }
-        curObject = prevObjects.poll();
     }
 
     private void next() {
-        if (curObject != null) {
-            prevObjects.add(curObject);
-        }
-        curObject = nextObjects.poll();
-        if (curObject == null && stream != null) {
+        LoggedObject obj = nextObjects.pollFirst();
+        if (obj == null && stream != null) {
             try {
                 final long time = stream.readLong();
                 if (stream.readBoolean()) {
-                    curObject = new LoggedObject(time, stream.readObject());
+                    obj = new LoggedObject(time, stream.readObject());
                 } else {
-                    curObject = new LoggedObject(time, stream.readInt());
+                    obj = new LoggedObject(time, stream.readInt());
                 }
             } catch (EOFException e) {
                 try {
@@ -169,6 +166,12 @@ class LogReplayTask implements Runnable {
                 }
                 stream = null;
             }
+        }
+        if (obj != null) {
+            if (curObject != null) {
+                prevObjects.push(curObject);
+            }
+            curObject = obj;
         }
     }
 
