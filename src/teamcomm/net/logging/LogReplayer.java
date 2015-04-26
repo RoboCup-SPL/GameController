@@ -35,6 +35,9 @@ public class LogReplayer {
         if (task != null && taskHandle != null) {
             taskHandle.cancel(false);
             task.close();
+            for (final LogReplayEventListener listener : listeners.getListeners(LogReplayEventListener.class)) {
+                listener.logReplayEnded();
+            }
         }
 
         // Drain package queue of SPLStandardMessageReceiver
@@ -50,6 +53,9 @@ public class LogReplayer {
         // Open new log
         task = new LogReplayTask(logfile, listeners);
         taskHandle = scheduler.scheduleAtFixedRate(task, LogReplayTask.PLAYBACK_TASK_DELAY, LogReplayTask.PLAYBACK_TASK_DELAY, TimeUnit.MILLISECONDS);
+        for (final LogReplayEventListener listener : listeners.getListeners(LogReplayEventListener.class)) {
+            listener.logReplayStarted();
+        }
     }
 
     public boolean isReplaying() {
@@ -73,6 +79,11 @@ public class LogReplayer {
             task.close();
             task = null;
             taskHandle = null;
+
+            // Send close event
+            for (final LogReplayEventListener listener : listeners.getListeners(LogReplayEventListener.class)) {
+                listener.logReplayEnded();
+            }
 
             // Drain package queue of SPLStandardMessageReceiver
             SPLStandardMessageReceiver.getInstance().clearPackageQueue();

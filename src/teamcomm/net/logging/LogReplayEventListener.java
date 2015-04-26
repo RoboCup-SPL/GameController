@@ -8,5 +8,9 @@ import java.util.EventListener;
  */
 public interface LogReplayEventListener extends EventListener {
 
-    public void loggingStatus(LogReplayEvent e);
+    public void logReplayStatus(LogReplayEvent e);
+
+    public void logReplayStarted();
+
+    public void logReplayEnded();
 }

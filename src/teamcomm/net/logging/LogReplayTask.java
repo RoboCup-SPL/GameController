@@ -118,9 +118,12 @@ class LogReplayTask implements Runnable {
                 }
             }
 
-            final LogReplayEvent e = new LogReplayEvent(this, currentPosition, isPaused(), prevObjects.isEmpty(), nextObjects.isEmpty());
+            final LogReplayEvent e;
+            synchronized (this) {
+                e = new LogReplayEvent(this, currentPosition, prevObjects.isEmpty(), nextObjects.isEmpty(), playbackFactor);
+            }
             for (final LogReplayEventListener listener : listeners.getListeners(LogReplayEventListener.class)) {
-                listener.loggingStatus(e);
+                listener.logReplayStatus(e);
             }
         }
     }

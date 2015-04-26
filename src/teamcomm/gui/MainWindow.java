@@ -42,8 +42,6 @@ import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
-import teamcomm.net.logging.LogReplayEvent;
-import teamcomm.net.logging.LogReplayEventListener;
 import teamcomm.net.logging.LogReplayer;
 
 /**
@@ -51,7 +49,7 @@ import teamcomm.net.logging.LogReplayer;
  *
  * @author Felix Thielke
  */
-public class MainWindow extends JFrame implements TeamEventListener, LogReplayEventListener {
+public class MainWindow extends JFrame implements TeamEventListener {
 
     private static final long serialVersionUID = 6549981924840180076L;
 
@@ -62,7 +60,7 @@ public class MainWindow extends JFrame implements TeamEventListener, LogReplayEv
     private final JLabel[] teamLogos = new JLabel[]{new JLabel((Icon) null, SwingConstants.CENTER), new JLabel((Icon) null, SwingConstants.CENTER)};
     private final Map<String, RobotPanel> robotPanels = new HashMap<String, RobotPanel>();
 
-    private final JMenuItem[] logMenuItems = new JMenuItem[3];
+    private final LogReplayFrame logReplayFrame = new LogReplayFrame(this);
 
     /**
      * Constructor.
@@ -148,59 +146,18 @@ public class MainWindow extends JFrame implements TeamEventListener, LogReplayEv
         return fileMenu;
     }
 
-    private LogReplayFrame logReplayFrame;
-
     private JMenu createLogMenu() {
         final JFrame frame = this;
         final JMenu logMenu = new JMenu("Log");
-        final JMenuItem replayWindow = new JMenuItem("Replay log file");
-        logMenu.add(replayWindow);
-        replayWindow.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                if (logReplayFrame == null) {
-                    final JFileChooser fc = new JFileChooser(new File(new File(".").getAbsoluteFile(), "logs_teamcomm"));
-                    if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-                        try {
-                            LogReplayer.getInstance().open(fc.getSelectedFile());
-                            LogReplayer.getInstance().setPlaybackSpeed(1);
-                            logMenuItems[0].setEnabled(false);
-                            logMenuItems[1].setEnabled(true);
-                            logMenuItems[2].setEnabled(true);
-                        } catch (IOException ex) {
-                            JOptionPane.showMessageDialog(null,
-                                    "Error opening log file.",
-                                    ex.getClass().getSimpleName(),
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                    logReplayFrame = new LogReplayFrame(frame);
-                    logReplayFrame.addWindowListener(new WindowAdapter() {
-                        @Override
-                        public void windowClosed(WindowEvent e) {
-                            LogReplayer.getInstance().removeListener(logReplayFrame);
-                            logReplayFrame = null;
-                            LogReplayer.getInstance().close();
-                        }
-                    });
-                }
-            }
-        });
-        logMenuItems[0] = new JMenuItem("Replay log file");
-        logMenuItems[1] = new JMenuItem("Pause replaying");
-        logMenuItems[2] = new JMenuItem("Stop replaying");
-        logMenuItems[0].addActionListener(new ActionListener() {
+        final JMenuItem replayItem = new JMenuItem("Replay log file");
+        logMenu.add(replayItem);
+        replayItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final JFileChooser fc = new JFileChooser(new File(new File(".").getAbsoluteFile(), "logs_teamcomm"));
-                int returnVal = fc.showOpenDialog(frame);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
                     try {
                         LogReplayer.getInstance().open(fc.getSelectedFile());
-                        LogReplayer.getInstance().setPlaybackSpeed(1);
-                        logMenuItems[0].setEnabled(false);
-                        logMenuItems[1].setEnabled(true);
-                        logMenuItems[2].setEnabled(true);
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null,
                                 "Error opening log file.",
@@ -210,31 +167,7 @@ public class MainWindow extends JFrame implements TeamEventListener, LogReplayEv
                 }
             }
         });
-        logMenu.add(logMenuItems[0]);
-        logMenuItems[1].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                LogReplayer.getInstance().setPlaybackSpeed(LogReplayer.getInstance().isPaused() ? 1 : 0);
-                if (LogReplayer.getInstance().isPaused()) {
-                    logMenuItems[1].setText("Continue replaying");
-                } else {
-                    logMenuItems[1].setText("Pause replaying");
-                }
-            }
-        });
-        logMenuItems[1].setEnabled(false);
-        logMenu.add(logMenuItems[1]);
-        logMenuItems[2].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                LogReplayer.getInstance().close();
-            }
-        });
-        logMenuItems[2].setEnabled(false);
-        logMenu.add(logMenuItems[2]);
-        logMenuItems[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
-        logMenuItems[1].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
-        logMenuItems[2].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
+        replayItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 
         return logMenu;
     }
@@ -276,21 +209,6 @@ public class MainWindow extends JFrame implements TeamEventListener, LogReplayEv
 
     public void terminate() {
         fieldView.terminate();
-    }
-
-    @Override
-    public void loggingStatus(final LogReplayEvent e) {
-        if (e.paused) {
-            logMenuItems[1].setText("Continue replaying");
-        } else {
-            logMenuItems[1].setText("Pause replaying");
-        }
-        if (e.atEnd) {
-            logMenuItems[0].setEnabled(true);
-            logMenuItems[1].setEnabled(false);
-            logMenuItems[2].setEnabled(false);
-            LogReplayer.getInstance().close();
-        }
     }
 
     private ImageIcon getTeamIcon(final int team) {

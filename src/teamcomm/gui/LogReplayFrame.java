@@ -2,17 +2,22 @@ package teamcomm.gui;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import teamcomm.net.logging.LogReplayEvent;
 import teamcomm.net.logging.LogReplayEventListener;
+import teamcomm.net.logging.LogReplayer;
 
 /**
  *
@@ -22,21 +27,34 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
 
     private static final long serialVersionUID = -2837554836011688982L;
 
+    private final JFrame parent;
+
     private final JLabel stateLabel = new JLabel("Paused");
     private final JLabel timeLabel = new JLabel("00:00");
 
-    private final JToggleButton rewindFastButton = new JToggleButton("<<", false);
-    private final JToggleButton rewindButton = new JToggleButton("<", false);
-    private final JToggleButton pauseButton = new JToggleButton("||", true);
-    private final JToggleButton playButton = new JToggleButton(">", false);
-    private final JToggleButton fastForwardButton = new JToggleButton(">>", false);
+    private final JButton rewindFastButton = new JButton("<<");
+    private final JButton rewindButton = new JButton("<");
+    private final JButton pauseButton = new JButton("||");
+    private final JButton playButton = new JButton(">");
+    private final JButton fastForwardButton = new JButton(">>");
 
     public LogReplayFrame(final JFrame parent) {
         super("Replay log file");
 
+        this.parent = parent;
+        final LogReplayFrame frame = this;
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                setDefaultCloseOperation(HIDE_ON_CLOSE);
+                addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        LogReplayer.getInstance().close();
+                    }
+                });
+
                 final JPanel contentPane = new JPanel();
                 contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
                 contentPane.setBorder(new EmptyBorder(5, 5, 10, 5));
@@ -55,28 +73,122 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
                 contentPane.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(0, 32767)));
 
                 final JPanel controlsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+                rewindFastButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        LogReplayer.getInstance().setPlaybackSpeed(-2);
+                    }
+                });
                 controlsPanel.add(rewindFastButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+                rewindFastButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        LogReplayer.getInstance().setPlaybackSpeed(-1);
+                    }
+                });
                 controlsPanel.add(rewindButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+                rewindFastButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        LogReplayer.getInstance().setPlaybackSpeed(0);
+                    }
+                });
                 controlsPanel.add(pauseButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+                rewindFastButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        LogReplayer.getInstance().setPlaybackSpeed(1);
+                    }
+                });
                 controlsPanel.add(playButton);
                 controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+                rewindFastButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        LogReplayer.getInstance().setPlaybackSpeed(2);
+                    }
+                });
                 controlsPanel.add(fastForwardButton);
                 contentPane.add(controlsPanel);
 
-                setLocationRelativeTo(parent);
                 setAlwaysOnTop(true);
                 setResizable(false);
                 pack();
-                setVisible(true);
+
+                LogReplayer.getInstance().addListener(frame);
             }
         });
     }
 
     @Override
-    public void loggingStatus(LogReplayEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void logReplayStatus(final LogReplayEvent e) {
+        if (e.atBeginning) {
+            rewindFastButton.setEnabled(false);
+            rewindButton.setEnabled(false);
+        } else {
+            if (e.playbackSpeed <= -2) {
+                rewindFastButton.setEnabled(false);
+                rewindButton.setEnabled(true);
+                stateLabel.setText("Fast rewind");
+            } else {
+                rewindFastButton.setEnabled(true);
+                if (e.playbackSpeed < 0) {
+                    rewindButton.setEnabled(false);
+                    stateLabel.setText("Rewinding");
+                } else {
+                    rewindButton.setEnabled(true);
+                }
+            }
+        }
+        if (e.atEnd) {
+            playButton.setEnabled(false);
+            fastForwardButton.setEnabled(false);
+        } else {
+            if (e.playbackSpeed >= 2) {
+                fastForwardButton.setEnabled(false);
+                playButton.setEnabled(true);
+                stateLabel.setText("Fast forward");
+            } else {
+                fastForwardButton.setEnabled(true);
+                if (e.playbackSpeed > 0) {
+                    playButton.setEnabled(false);
+                    stateLabel.setText("Playing");
+                } else {
+                    playButton.setEnabled(true);
+                }
+            }
+        }
+        if (e.playbackSpeed == 0) {
+            pauseButton.setEnabled(false);
+            stateLabel.setText("Paused");
+        } else {
+            pauseButton.setEnabled(true);
+        }
+
+        final int minutes = (int) (e.timePosition / 60000);
+        final byte seconds = (byte) ((e.timePosition / 1000) % 60);
+        timeLabel.setText((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+    }
+
+    @Override
+    public void logReplayStarted() {
+        rewindFastButton.setEnabled(false);
+        rewindButton.setEnabled(false);
+        pauseButton.setEnabled(false);
+        playButton.setEnabled(true);
+        fastForwardButton.setEnabled(true);
+        stateLabel.setText("Paused");
+        timeLabel.setText("00:00");
+
+        setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    @Override
+    public void logReplayEnded() {
+        setVisible(false);
     }
 }
