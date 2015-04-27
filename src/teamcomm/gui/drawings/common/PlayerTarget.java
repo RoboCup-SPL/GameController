@@ -28,23 +28,45 @@ public class PlayerTarget extends PerPlayer {
             gl.glColor3f(0, 0, 0);
             gl.glNormal3f(0, 0, 1);
 
-            // Draw line from player to target
+            // Draw line from player to walking target
             gl.glBegin(GL2.GL_LINES);
-            gl.glVertex3f(poseX, poseY, 0);
-            gl.glVertex3f(walkingToX, walkingToY, 0);
+            gl.glVertex2f(poseX, poseY);
+            gl.glVertex2f(walkingToX, walkingToY);
             gl.glEnd();
 
-            // Draw cross on target
+            // Draw cross on walking target
             gl.glTranslatef(walkingToX, walkingToY, 0);
             gl.glBegin(GL2.GL_LINES);
-            gl.glVertex3f(-CROSS_RADIUS, -CROSS_RADIUS, 0);
-            gl.glVertex3f(CROSS_RADIUS, CROSS_RADIUS, 0);
-            gl.glEnd();
-            gl.glBegin(GL2.GL_LINES);
-            gl.glVertex3f(-CROSS_RADIUS, CROSS_RADIUS, 0);
-            gl.glVertex3f(CROSS_RADIUS, -CROSS_RADIUS, 0);
+            gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
+            gl.glVertex2f(CROSS_RADIUS, CROSS_RADIUS);
+            gl.glVertex2f(-CROSS_RADIUS, CROSS_RADIUS);
+            gl.glVertex2f(CROSS_RADIUS, -CROSS_RADIUS);
             gl.glEnd();
             gl.glTranslatef(-walkingToX, -walkingToY, 0);
+
+            // Set color
+            gl.glColor3f(1, 0, 0);
+
+            // Draw line from player to shooting target
+            if (msg.shootingToValid) {
+                final float shootingToX = msg.shootingTo[0] / 1000.f;
+                final float shootingToY = msg.shootingTo[1] / 1000.f;
+
+                gl.glBegin(GL2.GL_LINES);
+                gl.glVertex2f(poseX, poseY);
+                gl.glVertex2f(shootingToX, shootingToY);
+                gl.glEnd();
+
+                // Draw cross on shooting target
+                gl.glTranslatef(shootingToX, shootingToY, 0);
+                gl.glBegin(GL2.GL_LINES);
+                gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
+                gl.glVertex2f(CROSS_RADIUS, CROSS_RADIUS);
+                gl.glVertex2f(-CROSS_RADIUS, CROSS_RADIUS);
+                gl.glVertex2f(CROSS_RADIUS, -CROSS_RADIUS);
+                gl.glEnd();
+                gl.glTranslatef(-shootingToX, -shootingToY, 0);
+            }
         }
     }
 
