@@ -98,6 +98,7 @@ class LogReplayTask implements Runnable {
                             synchronized (this) {
                                 playbackFactor = 0;
                             }
+                            currentPosition = curObject.time;
                             break;
                         }
                     }
@@ -108,6 +109,7 @@ class LogReplayTask implements Runnable {
                             synchronized (this) {
                                 playbackFactor = 0;
                             }
+                            currentPosition = curObject.time;
                             break;
                         }
                     }
