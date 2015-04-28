@@ -1,5 +1,6 @@
 package bhuman.message;
 
+import data.SPLStandardMessage;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import util.Unsigned;
  */
 public class MessageQueue {
 
+    private final String robotIdentifier;
+
     private final long timestamp;
     private final long ballTimeWhenLastSeen;
     private final long ballTimeWhenDisappeared;
@@ -23,9 +26,13 @@ public class MessageQueue {
     private final long usedSize;
     private final int numberOfMessages;
 
+    private static final Map<String, Map<Class<?>, Message<? extends Message>>> cachedMessages = new HashMap<String, Map<Class<?>, Message<? extends Message>>>();
+
     private final Map<Class<?>, Message<? extends Message>> messages = new HashMap<Class<?>, Message<? extends Message>>();
 
-    public MessageQueue(final ByteBuffer buf) {
+    public MessageQueue(final SPLStandardMessage origin, final ByteBuffer buf) {
+        robotIdentifier = origin.teamNum + "," + origin.playerNum;
+
         buf.rewind();
         buf.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -90,5 +97,22 @@ public class MessageQueue {
 
     public <T extends Message<T>> T getMessage(final Class<T> cls) {
         return (T) messages.get(cls);
+    }
+
+    public <T extends Message<T>> T getCachedMessage(final Class<T> cls) {
+        Map<Class<?>, Message<? extends Message>> cache = cachedMessages.get(robotIdentifier);
+        if (cache == null) {
+            cache = new HashMap<Class<?>, Message<? extends Message>>();
+            cachedMessages.put(robotIdentifier, cache);
+        }
+
+        T message = (T) messages.get(cls);
+        if (message != null) {
+            cache.put(cls, message);
+        } else {
+            message = (T) cache.get(cls);
+        }
+
+        return message;
     }
 }

@@ -20,7 +20,7 @@ public abstract class NativeReaders {
     public static final SimpleStreamReader<Long> uintReader = new UIntReader();
     public static final SimpleStreamReader<Float> floatReader = new FloatReader();
     public static final SimpleStreamReader<Double> doubleReader = new DoubleReader();
-    public static final StreamReader<String> stringReader = new StringReader();
+    public static final StringReader stringReader = new StringReader();
 
     private static class BoolReader implements SimpleStreamReader<Boolean> {
 
@@ -31,7 +31,7 @@ public abstract class NativeReaders {
 
         @Override
         public Boolean read(final ByteBuffer stream) {
-            return stream.get() == 0;
+            return stream.get() != 0;
         }
 
     }
@@ -162,7 +162,15 @@ public abstract class NativeReaders {
 
     }
 
-    private static class StringReader implements StreamReader<String> {
+    public static class StringReader implements StreamReader<String> {
+
+        public int getStreamedSize(final ByteBuffer stream) {
+            return 4 + getLength(stream);
+        }
+
+        public int getLength(final ByteBuffer stream) {
+            return stream.getInt(stream.position());
+        }
 
         @Override
         public String read(final ByteBuffer stream) {
@@ -180,6 +188,266 @@ public abstract class NativeReaders {
             }
         }
 
+    }
+
+    public static class SimpleStringReader implements SimpleStreamReader<String> {
+
+        private final int count;
+
+        public SimpleStringReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count;
+        }
+
+        @Override
+        public String read(final ByteBuffer stream) {
+            final byte[] bytes = new byte[count];
+            stream.get(bytes);
+            try {
+                return new String(bytes, "ISO-8859-1");
+            } catch (UnsupportedEncodingException ex) {
+                try {
+                    return new String(bytes, "US-ASCII");
+                } catch (UnsupportedEncodingException e) {
+                    return new String(bytes);
+                }
+            }
+        }
+
+    }
+
+    public static class BoolArrayReader implements SimpleStreamReader<boolean[]> {
+
+        public final int count;
+
+        public BoolArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count;
+        }
+
+        @Override
+        public boolean[] read(ByteBuffer stream) {
+            final boolean[] arr = new boolean[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = stream.get() != 0;
+            }
+            return arr;
+        }
+    }
+
+    public static class CharArrayReader implements SimpleStreamReader<char[]> {
+
+        public final int count;
+
+        public CharArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count;
+        }
+
+        @Override
+        public char[] read(ByteBuffer stream) {
+            final char[] arr = new char[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = (char) stream.get();
+            }
+            return arr;
+        }
+    }
+
+    public static class SCharArrayReader implements SimpleStreamReader<byte[]> {
+
+        public final int count;
+
+        public SCharArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count;
+        }
+
+        @Override
+        public byte[] read(ByteBuffer stream) {
+            final byte[] arr = new byte[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = stream.get();
+            }
+            return arr;
+        }
+    }
+
+    public static class UCharArrayReader implements SimpleStreamReader<short[]> {
+
+        public final int count;
+
+        public UCharArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count;
+        }
+
+        @Override
+        public short[] read(ByteBuffer stream) {
+            final short[] arr = new short[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = Unsigned.toUnsigned(stream.get());
+            }
+            return arr;
+        }
+    }
+
+    public static class ShortArrayReader implements SimpleStreamReader<short[]> {
+
+        public final int count;
+
+        public ShortArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count * 2;
+        }
+
+        @Override
+        public short[] read(ByteBuffer stream) {
+            final short[] arr = new short[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = stream.getShort();
+            }
+            return arr;
+        }
+    }
+
+    public static class UShortArrayReader implements SimpleStreamReader<int[]> {
+
+        public final int count;
+
+        public UShortArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count * 2;
+        }
+
+        @Override
+        public int[] read(ByteBuffer stream) {
+            final int[] arr = new int[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = Unsigned.toUnsigned(stream.getShort());
+            }
+            return arr;
+        }
+    }
+
+    public static class IntArrayReader implements SimpleStreamReader<int[]> {
+
+        public final int count;
+
+        public IntArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count * 4;
+        }
+
+        @Override
+        public int[] read(ByteBuffer stream) {
+            final int[] arr = new int[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = stream.getInt();
+            }
+            return arr;
+        }
+    }
+
+    public static class UIntArrayReader implements SimpleStreamReader<long[]> {
+
+        public final int count;
+
+        public UIntArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count * 4;
+        }
+
+        @Override
+        public long[] read(ByteBuffer stream) {
+            final long[] arr = new long[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = Unsigned.toUnsigned(stream.getInt());
+            }
+            return arr;
+        }
+    }
+
+    public static class FloatArrayReader implements SimpleStreamReader<float[]> {
+
+        public final int count;
+
+        public FloatArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count * 4;
+        }
+
+        @Override
+        public float[] read(ByteBuffer stream) {
+            final float[] arr = new float[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = stream.getFloat();
+            }
+            return arr;
+        }
+    }
+
+    public static class DoubleArrayReader implements SimpleStreamReader<double[]> {
+
+        public final int count;
+
+        public DoubleArrayReader(final int count) {
+            this.count = count;
+        }
+
+        @Override
+        public int getStreamedSize() {
+            return count * 8;
+        }
+
+        @Override
+        public double[] read(ByteBuffer stream) {
+            final double[] arr = new double[count];
+            for (int i = 0; i < count; i++) {
+                arr[i] = stream.getDouble();
+            }
+            return arr;
+        }
     }
 
 }

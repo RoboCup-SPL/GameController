@@ -54,7 +54,7 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
     
     @Override
     public ObstacleModelCompressed read(ByteBuffer stream) {
-        final ArrayReader<Obstacle> reader = new ArrayReader<Obstacle>(Obstacle.class);
+        final ArrayReader<Obstacle> reader = new ArrayReader<Obstacle>(new Obstacle());
         if (stream.remaining() != reader.getStreamedSize(stream)) {
             return null;
         }

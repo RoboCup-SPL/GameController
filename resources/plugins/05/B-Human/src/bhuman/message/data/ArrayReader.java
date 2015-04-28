@@ -10,20 +10,18 @@ import java.util.List;
  */
 public class ArrayReader<T> implements StreamReader<List<T>> {
 
-    private final Class<? extends SimpleStreamReader<T>> cls;
+    private final SimpleStreamReader<T> reader;
 
-    public ArrayReader(final Class<? extends SimpleStreamReader<T>> cls) {
-        this.cls = cls;
+    public ArrayReader(final SimpleStreamReader<T> reader) {
+        this.reader = reader;
+    }
+
+    public ArrayReader(final Class<? extends SimpleStreamReader<T>> cls) throws InstantiationException, IllegalAccessException {
+        this.reader = cls.newInstance();
     }
 
     public int getStreamedSize(final ByteBuffer stream) {
-        try {
-            return 4 + getElementCount(stream) * cls.newInstance().getStreamedSize();
-        } catch (InstantiationException ex) {
-        } catch (IllegalAccessException ex) {
-        }
-
-        return -1;
+        return 4 + getElementCount(stream) * reader.getStreamedSize();
     }
 
     public int getElementCount(final ByteBuffer stream) {
@@ -35,13 +33,7 @@ public class ArrayReader<T> implements StreamReader<List<T>> {
         final int count = stream.getInt();
         final ArrayList<T> elems = new ArrayList<T>(count);
         for (int i = 0; i < count; i++) {
-            try {
-                elems.add(cls.newInstance().read(stream));
-            } catch (InstantiationException ex) {
-                throw new RuntimeException(ex);
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
+            elems.add(reader.read(stream));
         }
         return elems;
     }
