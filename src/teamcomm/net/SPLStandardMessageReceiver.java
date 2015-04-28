@@ -153,6 +153,11 @@ public class SPLStandardMessageReceiver extends Thread {
                 try {
                     message = c.newInstance();
                     message.fromByteArray(ByteBuffer.wrap(p.message));
+                    if(message.teamNumValid && message.teamNum != p.team) {
+                        message.teamNumValid = false;
+                        message.valid = false;
+                    }
+                    
                     if (message instanceof AdvancedMessage && message.valid) {
                         ((AdvancedMessage) message).init();
                     }
