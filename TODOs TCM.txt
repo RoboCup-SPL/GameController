@@ -1,4 +1,1 @@
 * complete JavaDoc (again)
-* B-Human plugin
-  - check if positions of goalposts are correct
-  - visualize more B-Human messages (debug drawings?)
