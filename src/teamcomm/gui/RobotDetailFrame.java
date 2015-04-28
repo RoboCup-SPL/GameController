@@ -118,7 +118,13 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
             final DecimalFormat df = new DecimalFormat("#.#####");
             synchronized (leftPanel.getTreeLock()) {
                 ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
-                ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + robot.getPlayerNumber());
+                if (robot.getPlayerNumber() == null || !msg.playerNumValid) {
+                    ((JLabel) leftPanel.getComponent(1)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + msg.playerNum);
+                } else {
+                    ((JLabel) leftPanel.getComponent(1)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + robot.getPlayerNumber());
+                }
                 ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
                 ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
                 if (!msg.valid) {

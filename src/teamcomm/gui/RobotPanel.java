@@ -34,6 +34,8 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
     private final RobotState robot;
     private final RobotDetailFrame detailFrame;
 
+    private final Color defaultColor = new JLabel("test").getForeground();
+
     /**
      * Constructor.
      *
@@ -75,12 +77,20 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
         final DecimalFormat df = new DecimalFormat("#.#####");
 
         synchronized (getTreeLock()) {
-            ((JLabel) getComponent(0)).setText("Player no: " + robot.getPlayerNumber());
+            if (robot.getPlayerNumber() == null || (robot.getLastMessage() != null && !robot.getLastMessage().playerNumValid)) {
+                ((JLabel) getComponent(0)).setForeground(Color.red);
+                ((JLabel) getComponent(0)).setText("Player no: " + (robot.getLastMessage() != null ? robot.getLastMessage().playerNum : "invalid"));
+            } else {
+                ((JLabel) getComponent(0)).setForeground(defaultColor);
+                ((JLabel) getComponent(0)).setText("Player no: " + robot.getPlayerNumber());
+            }
             ((JLabel) getComponent(1)).setText("Messages: " + robot.getMessageCount());
             ((JLabel) getComponent(2)).setText("Current mps: " + df.format(robot.getRecentMessageCount()));
             ((JLabel) getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
             if (robot.getLastMessage() == null || !robot.getLastMessage().valid) {
                 ((JLabel) getComponent(4)).setForeground(Color.red);
+            } else {
+                ((JLabel) getComponent(4)).setForeground(defaultColor);
             }
             ((JLabel) getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
         }
