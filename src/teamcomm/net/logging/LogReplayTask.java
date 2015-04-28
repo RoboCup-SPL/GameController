@@ -16,6 +16,7 @@ import teamcomm.net.SPLStandardMessagePackage;
 import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
+ * Task handling the replaying of a log file.
  *
  * @author Felix Thielke
  */

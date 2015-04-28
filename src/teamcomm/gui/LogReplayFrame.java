@@ -20,6 +20,8 @@ import teamcomm.net.logging.LogReplayEventListener;
 import teamcomm.net.logging.LogReplayer;
 
 /**
+ * Class for an always-on-top window containing controls for replaying the
+ * contents of a log file.
  *
  * @author Felix Thielke
  */
@@ -42,6 +44,12 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
 
     private float lastSpeed = 0;
 
+    /**
+     * Constructor.
+     *
+     * @param parent a window in the center of which this window is initially
+     * positioned
+     */
     public LogReplayFrame(final JFrame parent) {
         super("Replay log file");
 

@@ -36,12 +36,12 @@ public class TextureLoader {
          * Flag indicating whether the texture has an alpha channel.
          */
         public final boolean hasAlpha;
-        
+
         /**
          * Width of the texture in pixels.
          */
         public final int width;
-        
+
         /**
          * Height of the texture in pixels.
          */

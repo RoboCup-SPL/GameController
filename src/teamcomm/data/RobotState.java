@@ -15,6 +15,10 @@ import teamcomm.net.logging.LogReplayer;
  */
 public class RobotState {
 
+    /**
+     * Amount of time after which a robot will be considered inactive if it did
+     * not send any messages.
+     */
     public static final int MILLISECONDS_UNTIL_INACTIVE = 2000;
 
     private final String address;
@@ -163,6 +167,11 @@ public class RobotState {
         return teamNumber;
     }
 
+    /**
+     * Returns the player number of the robot or null if it did not send any.
+     *
+     * @return player number or null
+     */
     public Integer getPlayerNumber() {
         return playerNumber;
     }
@@ -197,10 +206,21 @@ public class RobotState {
         this.penalty = penalty;
     }
 
+    /**
+     * Registeres a GUI component as a listener receiving events when this robot
+     * sends a message.
+     *
+     * @param listener component
+     */
     public void addListener(final RobotStateEventListener listener) {
         listeners.add(RobotStateEventListener.class, listener);
     }
 
+    /**
+     * Removes an event listener from this robot.
+     *
+     * @param listener listener
+     */
     public void removeListener(final RobotStateEventListener listener) {
         listeners.remove(RobotStateEventListener.class, listener);
     }

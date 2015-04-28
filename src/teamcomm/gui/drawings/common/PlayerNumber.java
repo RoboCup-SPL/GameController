@@ -9,6 +9,7 @@ import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Text;
 
 /**
+ * Drawing for the player number of a robot.
  *
  * @author Felix Thielke
  */

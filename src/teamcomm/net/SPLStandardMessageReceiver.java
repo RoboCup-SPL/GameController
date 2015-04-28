@@ -23,8 +23,7 @@ import teamcomm.net.logging.Logger;
 /**
  * Singleton class for the thread which handles messages from the robots. It
  * spawns one thread for listening on each team port up to team number 100 and
- * processes the messages received by these threads. It also handles logging and
- * replaying of log files.
+ * processes the messages received by these threads.
  *
  * @author Felix Thielke
  */
@@ -153,11 +152,11 @@ public class SPLStandardMessageReceiver extends Thread {
                 try {
                     message = c.newInstance();
                     message.fromByteArray(ByteBuffer.wrap(p.message));
-                    if(message.teamNumValid && message.teamNum != p.team) {
+                    if (message.teamNumValid && message.teamNum != p.team) {
                         message.teamNumValid = false;
                         message.valid = false;
                     }
-                    
+
                     if (message instanceof AdvancedMessage && message.valid) {
                         ((AdvancedMessage) message).init();
                     }
@@ -199,12 +198,24 @@ public class SPLStandardMessageReceiver extends Thread {
         }
     }
 
+    /**
+     * Adds the given package to the queue in order to be processed.
+     *
+     * @param p package
+     */
     public void addToPackageQueue(final SPLStandardMessagePackage p) {
         queue.add(p);
     }
 
+    /**
+     * Removes all pending packages from the queue.
+     */
     public void clearPackageQueue() {
         queue.clear();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+        }
     }
 
     private static int getTeamport(final int teamNumber) {

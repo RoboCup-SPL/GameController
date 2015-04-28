@@ -1,6 +1,5 @@
 package teamcomm.gui;
 
-import common.Log;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -17,7 +16,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Box;
@@ -67,6 +65,14 @@ public class MainWindow extends JFrame implements TeamEventListener {
      */
     public MainWindow() {
         super("TeamCommunicationMonitor");
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                // Initialize
+                initialize();
+            }
+        });
     }
 
     private void initialize() {
@@ -191,22 +197,9 @@ public class MainWindow extends JFrame implements TeamEventListener {
         return viewMenu;
     }
 
-    public void start() {
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    // Initialize
-                    initialize();
-                }
-            });
-        } catch (InterruptedException ex) {
-            Log.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
-        } catch (InvocationTargetException ex) {
-            Log.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
-        }
-    }
-
+    /**
+     * Terminates the view.
+     */
     public void terminate() {
         fieldView.terminate();
     }

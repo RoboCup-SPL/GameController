@@ -95,6 +95,9 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
         }
     }
 
+    /**
+     * Releases resources of this frame.
+     */
     public void destroy() {
         setVisible(false);
         robot.removeListener(this);

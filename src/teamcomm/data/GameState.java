@@ -133,6 +133,10 @@ public class GameState {
         }, RobotState.MILLISECONDS_UNTIL_INACTIVE * 2, RobotState.MILLISECONDS_UNTIL_INACTIVE / 2, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Shuts down the thread which removes inactive robots. To be called before
+     * the program exits.
+     */
     public void shutdown() {
         taskHandle.cancel(false);
     }
@@ -435,6 +439,9 @@ public class GameState {
      * Returns the team name of the given team.
      *
      * @param teamNumber number of the team
+     * @param withNumber whether the team number should be in the returned
+     * string
+     * @param withPrefix whether the pre- or suffix "Team" should be included
      * @return the team name
      */
     public String getTeamName(final Integer teamNumber, final boolean withNumber, final boolean withPrefix) {
@@ -455,6 +462,12 @@ public class GameState {
         }
     }
 
+    /**
+     * Returns the icon of the given team.
+     *
+     * @param teamNumber number of the team
+     * @return icon as a BufferedImage
+     */
     public BufferedImage getTeamIcon(final int teamNumber) {
         if (teamNumber == 98 || teamNumber == 99) {
             Rules.league = Rules.LEAGUES[1];
@@ -489,6 +502,12 @@ public class GameState {
         return mirrored ? (side == 0 ? 1 : (side == 1 ? 0 : side)) : side;
     }
 
+    /**
+     * Registeres a GUI component as a listener receiving events about team
+     * changes.
+     *
+     * @param listener component
+     */
     public void addListener(final TeamEventListener listener) {
         listeners.add(TeamEventListener.class, listener);
         sendEvents(CHANGED_LEFT | CHANGED_RIGHT | CHANGED_OTHER);

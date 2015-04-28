@@ -11,9 +11,9 @@ import teamcomm.net.logging.LogReplayer;
 import teamcomm.net.logging.Logger;
 
 /**
- * @author Felix Thielke
- *
  * The team communication monitor starts in this class.
+ *
+ * @author Felix Thielke
  */
 public class Main {
 
@@ -52,7 +52,6 @@ public class Main {
         // Start threads
         gcDataReceiver.start();
         receiver.start();
-        robotView.start();
 
         // Wait for shutdown
         try {

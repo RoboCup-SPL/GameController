@@ -12,10 +12,11 @@ import teamcomm.gui.RoSi2Loader;
 import teamcomm.gui.drawings.PerPlayer;
 
 /**
+ * Drawing for the ball as seen by a robot.
  *
  * @author Felix Thielke
  */
-public class BallPerPlayer extends PerPlayer {
+public class Ball extends PerPlayer {
 
     private static final float ROBOT_HEAD_Z = 0.5f;
     private static final float BALL_RADIUS = 0.0325f;

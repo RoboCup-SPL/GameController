@@ -21,7 +21,14 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
 
     private static final long serialVersionUID = 6656251707032959704L;
 
+    /**
+     * Width of a robot panel.
+     */
     public static final int PANEL_WIDTH = 175;
+
+    /**
+     * Height of a robot panel.
+     */
     public static final int PANEL_HEIGHT = 105;
 
     private final RobotState robot;
@@ -79,11 +86,19 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
         }
     }
 
+    /**
+     * Releases resources of this panel.
+     */
     public void dispose() {
         robot.removeListener(this);
         detailFrame.destroy();
     }
 
+    /**
+     * Returns the IP address of the robot associated with this panel.
+     *
+     * @return IP address
+     */
     public String getRobotAddress() {
         return robot.getAddress();
     }

@@ -12,6 +12,7 @@ import java.util.Date;
 import teamcomm.net.SPLStandardMessagePackage;
 
 /**
+ * Singleton class for logging received messages.
  *
  * @author Felix Thielke
  */
@@ -29,6 +30,11 @@ public class Logger {
         createLogfile();
     }
 
+    /**
+     * Returns the only instance of the logger.
+     *
+     * @return instance
+     */
     public static Logger getInstance() {
         return instance;
     }
@@ -42,6 +48,8 @@ public class Logger {
 
     /**
      * Creates a new log file to store received messages in.
+     *
+     * @param name string appended to the name of the new log file
      */
     public final void createLogfile(final String name) {
         if (!LogReplayer.getInstance().isReplaying()) {
@@ -88,14 +96,31 @@ public class Logger {
         }
     }
 
+    /**
+     * Logs the given SPLStandardMessage package.
+     *
+     * @param p package
+     */
     public void log(final SPLStandardMessagePackage p) {
         log(SPLStandardMessagePackage.class, p);
     }
 
+    /**
+     * Logs the given message from the GameController.
+     *
+     * @param p game control data
+     */
     public void log(final GameControlData p) {
         log(GameControlData.class, p);
     }
 
+    /**
+     * Logs the given package.
+     *
+     * @param <T> type of the package
+     * @param cls class of the package
+     * @param p package
+     */
     public <T extends Serializable> void log(final Class<T> cls, final T p) {
         if (!LogReplayer.getInstance().isReplaying()) {
             boolean error = false;
@@ -134,6 +159,12 @@ public class Logger {
         }
     }
 
+    /**
+     * Returns the unique log ID for the given class.
+     *
+     * @param cls Class
+     * @return id
+     */
     public static int getIDForClass(final Class<?> cls) {
         if (cls.equals(GameControlData.class)) {
             return 1;

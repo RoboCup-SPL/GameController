@@ -8,6 +8,7 @@ import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.PerPlayer;
 
 /**
+ * Drawing for the walking and shooting targets of a player.
  *
  * @author Felix Thielke
  */

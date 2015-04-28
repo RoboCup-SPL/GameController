@@ -12,6 +12,7 @@ import teamcomm.data.GameState;
 import teamcomm.net.SPLStandardMessageReceiver;
 
 /**
+ * Singleton class for replaying log files.
  *
  * @author Felix Thielke
  */
@@ -26,10 +27,22 @@ public class LogReplayer {
 
     private final EventListenerList listeners = new EventListenerList();
 
+    /**
+     * Returns the only instance of this class.
+     *
+     * @return instance
+     */
     public static LogReplayer getInstance() {
         return instance;
     }
 
+    /**
+     * Opens a log file.
+     *
+     * @param logfile file
+     * @throws FileNotFoundException if the file could not be found
+     * @throws IOException if an other I/O error happened
+     */
     public void open(final File logfile) throws FileNotFoundException, IOException {
         // Close currently opened log
         if (task != null && taskHandle != null) {
@@ -42,10 +55,6 @@ public class LogReplayer {
 
         // Drain package queue of SPLStandardMessageReceiver
         SPLStandardMessageReceiver.getInstance().clearPackageQueue();
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException ex) {
-        }
 
         // Reset GameState
         GameState.getInstance().reset();
@@ -58,20 +67,38 @@ public class LogReplayer {
         }
     }
 
+    /**
+     * Returns whether a log file is currently opened.
+     *
+     * @return boolean
+     */
     public boolean isReplaying() {
         return task != null;
     }
 
+    /**
+     * Returns whether the replay of a log file iis currently closed.
+     *
+     * @return boolean
+     */
     public boolean isPaused() {
         return task == null || task.isPaused();
     }
 
+    /**
+     * Sets the speed of the playback.
+     *
+     * @param factor playback speed. 1 is normal speed, 0 is paused.
+     */
     public void setPlaybackSpeed(final float factor) {
         if (task != null) {
             task.setPlaybackSpeed(factor);
         }
     }
 
+    /**
+     * Closes the currently opened log file.
+     */
     public void close() {
         if (task != null) {
             // Close currently opened log
@@ -87,20 +114,27 @@ public class LogReplayer {
 
             // Drain package queue of SPLStandardMessageReceiver
             SPLStandardMessageReceiver.getInstance().clearPackageQueue();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-            }
 
             // Reset GameState
             GameState.getInstance().reset();
         }
     }
 
+    /**
+     * Adds a listener to receive events about log replaying.
+     *
+     * @param listener listener
+     * @see LogReplayEvent
+     */
     public void addListener(final LogReplayEventListener listener) {
         listeners.add(LogReplayEventListener.class, listener);
     }
 
+    /**
+     * Removes an event listener.
+     *
+     * @param listener listener
+     */
     public void removeListener(final LogReplayEventListener listener) {
         listeners.remove(LogReplayEventListener.class, listener);
     }

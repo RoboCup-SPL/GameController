@@ -11,6 +11,7 @@ import teamcomm.gui.RoSi2Loader;
 import teamcomm.gui.drawings.PerPlayer;
 
 /**
+ * Drawing for a robot.
  *
  * @author Felix Thielke
  */

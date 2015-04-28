@@ -302,7 +302,7 @@ public class View3D implements GLEventListener, TeamEventListener {
                 }
             }
         }
- 
+
         // Create menu items for drawings
         for (final Drawing d : drawings) {
             final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
