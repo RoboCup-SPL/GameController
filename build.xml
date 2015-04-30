@@ -8,6 +8,7 @@
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
+    <property name="doc.dir"     value="${build.dir}/doc"/>
     <property name="resources.dir"  value="resources" />
     <property name="plugins.dir"  value="plugins" />
     <property name="common_classes" value="common/ data/" />
@@ -100,5 +101,17 @@
   
     <target name="run_teamcomm" depends="jar">
         <java jar="${jar.dir}/TeamCommunicationMonitor.jar" dir="${jar.dir}" fork="true"/>
+    </target>
+    
+    <target name="javadoc">
+        <mkdir dir="${doc.dir}"/>
+        <javadoc access="public" author="true" destdir="${doc.dir}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="*" source="1.6" sourcepath="${src.dir}" splitindex="true" use="true" version="true">
+            <classpath>
+                <pathelement path="${classpath}"/>
+                <fileset dir="${deps.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javadoc>
     </target>
 </project>
