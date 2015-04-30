@@ -73,6 +73,7 @@
         <copy todir="${jar.dir}/${plugins.dir}" overwrite="true">
             <fileset dir="${resources.dir}/${plugins.dir}">
                 <include name="**/*.jar" />
+                <include name="**/resources/**" />
             </fileset>
         </copy>
         <copy todir="${jar.dir}/include" overwrite="true">
