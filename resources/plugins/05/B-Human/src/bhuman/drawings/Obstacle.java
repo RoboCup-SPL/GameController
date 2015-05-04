@@ -11,7 +11,7 @@ import teamcomm.gui.drawings.PerPlayer;
 
 /**
  *
- * @author Felix Thielke
+ * @author Florian Maaß
  */
 public class Obstacle extends PerPlayer {
 
@@ -64,14 +64,14 @@ public class Obstacle extends PerPlayer {
                     gl.glRotatef(msg.pose[2], 0, 0, 1);
 
                     // Translate to obstacle
-                    gl.glBegin(gl.GL_LINE_STRIP);
+                    gl.glBegin(GL2.GL_LINE_STRIP);
                     gl.glVertex3f(obstacle.left.x / 1000.f, obstacle.left.y / 1000.f, 0.f);
                     gl.glVertex3f(obstacle.center.x / 1000.f, obstacle.center.y / 1000.f, 0.f);
                     gl.glVertex3f(obstacle.right.x / 1000.f, obstacle.right.y / 1000.f, 0.f);
                     gl.glEnd();
 
                     // Draw line from obstacle to robot to determine which player saw that obstacle
-                    gl.glBegin(gl.GL_LINES);
+                    gl.glBegin(GL2.GL_LINES);
                     gl.glVertex3f(0.f, 0.f, 0.f);
                     gl.glVertex3f(obstacle.center.x / 1000.f, obstacle.center.y / 1000.f, 0.f);
                     gl.glEnd();
