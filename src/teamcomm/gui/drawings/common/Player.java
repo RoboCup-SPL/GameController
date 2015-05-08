@@ -30,14 +30,15 @@ public class Player extends PerPlayer {
 
             if (player.getPenalty() != PlayerInfo.PENALTY_NONE) {
                 gl.glTranslatef(-msg.playerNum, -3.5f, 0);
+                gl.glRotatef(-90, 0, 0, 1);
             } else {
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
                 gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
-            }
 
-            if (msg.fallenValid && msg.fallen) {
-                gl.glTranslatef(0, 0, 0.05f);
-                gl.glRotatef(90, 0, 1, 0);
+                if (msg.fallenValid && msg.fallen) {
+                    gl.glTranslatef(0, 0, 0.05f);
+                    gl.glRotatef(90, 0, 1, 0);
+                }
             }
 
             switch (GameState.getInstance().getTeamColor(player.getTeamNumber())) {
