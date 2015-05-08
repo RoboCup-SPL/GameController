@@ -242,7 +242,7 @@ public class View3D implements GLEventListener, TeamEventListener {
                 // Draw
                 if (d.isActive()) {
                     if (d instanceof Static) {
-                        ((Static) d).draw(gl);
+                        ((Static) d).draw(gl, camera);
                     } else if (d instanceof PerPlayer) {
                         if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == teamNumbers[GameState.TEAM_LEFT]) {
                             synchronized (leftRobots) {

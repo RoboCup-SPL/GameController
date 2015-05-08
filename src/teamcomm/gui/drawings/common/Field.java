@@ -1,6 +1,7 @@
 package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
+import teamcomm.gui.Camera;
 import teamcomm.gui.RoSi2Loader;
 import teamcomm.gui.drawings.Static;
 
@@ -17,7 +18,7 @@ public class Field extends Static {
     }
 
     @Override
-    public void draw(final GL2 gl) {
+    public void draw(final GL2 gl, final Camera camera) {
         gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "field"));
     }
 

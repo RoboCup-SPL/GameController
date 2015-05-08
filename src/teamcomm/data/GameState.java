@@ -436,6 +436,15 @@ public class GameState {
     }
 
     /**
+     * Returns the most recently received GameControlData.
+     *
+     * @return GameControlData of null if none was received recently
+     */
+    public GameControlData getLastGameControlData() {
+        return lastGameControlData;
+    }
+
+    /**
      * Returns the team name of the given team.
      *
      * @param teamNumber number of the team
