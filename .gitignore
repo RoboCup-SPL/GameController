@@ -1,5 +1,3 @@
-/build
-/nbproject
+build/
+nbproject/
 *~
-/resources/plugins/05/B-Human/nbproject
-/resources/plugins/05/B-Human/build
