@@ -26,7 +26,7 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
         }
 
         public static enum Type {
-            
+
             GOALPOST, UNKNOWN, SOMEROBOT, OPPONENT, TEAMMATE, FALLENSOMEROBOT, FALLENOPPONENT, FALLENTEAMMATE
         }
 
@@ -39,13 +39,16 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
             covXX = NativeReaders.floatReader.read(stream);
             covYY = NativeReaders.floatReader.read(stream);
             covXY = NativeReaders.floatReader.read(stream);
-            
+
             center = new Eigen.Vector2f().read(stream);
             left = new Eigen.Vector2f().read(stream);
             right = new Eigen.Vector2f().read(stream);
-            
+
             type = new EnumReader<Type>(Type.class).read(stream);
-            
+            if (type == null) {
+                return null;
+            }
+
             return this;
         }
     }
@@ -59,6 +62,7 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
             return null;
         }
         obstacles = reader.read(stream);
+        obstacles.remove(null);
         return this;
     }
 }
