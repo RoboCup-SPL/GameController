@@ -15,25 +15,25 @@ import java.util.List;
  * @author Felix Thielke
  */
 public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
-    
+
     public static class Obstacle implements SimpleStreamReader<Obstacle> {
-        
+
         @Override
         public int getStreamedSize() {
             return NativeReaders.floatReader.getStreamedSize() * 3
                     + new Eigen.Vector2f().getStreamedSize() * 3
                     + new EnumReader<Type>(Type.class).getStreamedSize();
         }
-        
+
         public static enum Type {
             
-            ULTRASOUND, GOALPOST, UNKNOWN, SOMEROBOT, OPPONENT, TEAMMATE, FALLENSOMEROBOT, FALLENOPPONENT, FALLENTEAMMATE
+            GOALPOST, UNKNOWN, SOMEROBOT, OPPONENT, TEAMMATE, FALLENSOMEROBOT, FALLENOPPONENT, FALLENTEAMMATE
         }
-        
+
         public float covXX, covYY, covXY;
         public Eigen.Vector2f center, left, right;
         public Type type;
-        
+
         @Override
         public Obstacle read(ByteBuffer stream) {
             covXX = NativeReaders.floatReader.read(stream);
@@ -49,9 +49,9 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
             return this;
         }
     }
-    
+
     public List<Obstacle> obstacles;
-    
+
     @Override
     public ObstacleModelCompressed read(ByteBuffer stream) {
         final ArrayReader<Obstacle> reader = new ArrayReader<Obstacle>(new Obstacle());

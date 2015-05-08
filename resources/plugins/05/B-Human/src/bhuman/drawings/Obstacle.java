@@ -36,9 +36,6 @@ public class Obstacle extends PerPlayer {
                 for (final ObstacleModelCompressed.Obstacle obstacle : obstacleModel.obstacles) {
                     // Set color
                     switch (obstacle.type) {
-                        case ULTRASOUND:
-                            gl.glColor4f(0.f, 0.f, 1.f, OPACITY);
-                            break;
                         case GOALPOST:
                             gl.glColor4f(1.f, 1.f, 0.f, OPACITY);
                             break;
@@ -55,7 +52,7 @@ public class Obstacle extends PerPlayer {
                             gl.glColor4f(0.f, 1.f, 1.f, OPACITY);
                             break;
                         default:
-                            gl.glColor4f(0.f, 0.f, 0.f, OPACITY);
+                            gl.glColor4f(0.f, 0.f, 1.f, OPACITY);
                             break;
                     }
 
