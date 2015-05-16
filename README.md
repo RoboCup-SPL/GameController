@@ -15,7 +15,10 @@ https://github.com/bhuman/GameController .
 To build it from the source code you may use Apache Ant.
 Just call "ant" in the main directory.
 
-## 2. Executing the Jar
+
+## 2. GameController
+
+### Executing the Jar
 
 Double-click GameController.jar or run 
 
@@ -28,7 +31,6 @@ Usage: `java -jar GameController.jar {options}`
     (-w | --window)                 select window mode (default is fullscreen)
 
 
-## 3. Usage
 ### Start Dialog
 
 Select your league. The default can be specified as a command line parameter (see above).
@@ -105,7 +107,7 @@ penalty taker or by pressing "Finish" if the shot failed. In both cases, a penal
 in the state "Finished". Press "Set" again to start the next shot.
 
 
-## 4. Shortcuts
+### Shortcuts
 
 While the GameController is running, you may use the following keys on the keyboard instead
 of pushing buttons:
@@ -145,7 +147,27 @@ only Humanoid-League
     S    - substitute
 
 
-## 5. libgamectrl (SPL)
+## 3. GameStateVisualizer
+
+### Executing the Jar
+
+Double-click GameStateVisualizer.jar or run 
+
+Usage: `java -jar GameStateVisualizer.jar {options}`
+
+    (-h | --help)                   display help
+    (-l | --league) (spl | spl_dropin | hl_kid | hl_teen | hl_adult)
+                                    select league (default is spl)
+
+### Shortcuts
+
+In addition to the usual keyboard combinations to terminate the application
+(Alt+F4 / Cmd+Q), pressing F11 toggles between the normal mode and the test
+mode. In the latter, the messages sent by the GameController are dumped on
+the screen.
+
+
+## 4. libgamectrl (SPL)
 
 libgamectrl automatically provides the GameController packets in ALMemory. 
 It also implements the return channel of the GameController. It handles the 
@@ -199,7 +221,8 @@ the right foot bumper. The state is shown by the right foot LED, and only in
 the Initial state. An active GameController will overwrite these settings.
 
 
-## 6. Coach Messages
+
+## 5. Coach Messages
 
 The coach broadcasts messages as defined in SPLCoachMessage.h to the UDP port
 SPL_COACH_MESSAGE_PORT through the wireless network. Players are not permitted
@@ -214,7 +237,7 @@ The GameStateVisualizer also displays the coach messages.
 Please note that the field "team" now contains the team number, not the color.
 
 
-## 7. Misc
+## 6. Misc
 
 The format of the packets the GameController broadcasts and receives at port
 GAMECONTROLLER_PORT is defined in the file RoboCupGameControlData.h. It differs
@@ -235,7 +258,7 @@ from the version used in 2014 in several ways:
   stopped).
 
 
-## 8. Known Issues
+## 7. Known Issues
 
 There are still a number of issues left:
 
