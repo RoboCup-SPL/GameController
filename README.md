@@ -97,9 +97,18 @@ to the clock to increase the game time in one-minute steps. This is only availab
 stoppages of play.
 
 
+### Penalty Shootout
+
+In the penalty shootout, press "Set" and place the robots in their correct locations. Press
+"Play" to start a single shot. The penalty shot is ended by either pressing "+" for the 
+penalty taker or by pressing "Finish" if the shot failed. In both cases, a penalty shot ends
+in the state "Finished". Press "Set" again to start the next shot.
+
+
 ## 4. Shortcuts
 
-While the GameController is running, you may use the following keys on the keyboard instead of pushing buttons:
+While the GameController is running, you may use the following keys on the keyboard instead
+of pushing buttons:
 
     Esc       - press it twice to close the GameController
     Delete    - toggle test-mode (everything is legal, every button is visible and enabled)
@@ -210,6 +219,9 @@ Please note that the field "team" now contains the team number, not the color.
 The format of the packets the GameController broadcasts and receives at port
 GAMECONTROLLER_PORT is defined in the file RoboCupGameControlData.h. It differs
 from the version used in 2014 in several ways:
+
+- Inside the messages, teams are now identified by their number rather than their 
+  color (e.g. kickOffTeam, dropInTeam).
 
 - SPLCoachMessage as well as TeamInfo now have a sequence number of 1 byte which
   is set by the coach.
