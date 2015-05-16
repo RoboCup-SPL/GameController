@@ -6,14 +6,15 @@ import data.Rules;
 /**
  * @author Michel Bartsch
  * 
- * The game-state-visualizer-programm starts in this class.
- * The main components are initialised here.
+ * The game-state-visualizer-program starts in this class.
+ * The main components are initialized here.
  */
 public class Main
 {        
-    private static final String HELP = "Usage: java -jar GameController.jar <options>"
-            + "\n  [-h | --help]                   display help"
-            + "\n  [-l | --league] <league-dir>    given league is preselected";
+    private static final String HELP_TEMPLATE = "Usage: java -jar GameStateVisualizer.jar {options}"
+            + "\n  (-h | --help)                   display help"
+            + "\n  (-l | --league) %s%sselect league (default is spl)"
+            + "\n";
     private static final String COMMAND_HELP = "--help";
     private static final String COMMAND_HELP_SHORT = "-h";
     private final static String COMMAND_LEAGUE = "--league";
@@ -32,7 +33,16 @@ public class Main
         if ((args.length > 0)
                 && ((args[0].equalsIgnoreCase(COMMAND_HELP_SHORT))
                   || (args[0].equalsIgnoreCase(COMMAND_HELP))) ) {
-            System.out.println(HELP);
+            String leagues = "";
+            for (Rules rules : Rules.LEAGUES) {
+                leagues += (leagues.equals("") ? "" : " | ") + rules.leagueDirectory;
+            }
+            if (leagues.contains("|")) {
+                leagues = "(" + leagues + ")";
+            }
+            System.out.printf(HELP_TEMPLATE, leagues, leagues.length() < 17
+                              ? "                ".substring(leagues.length())
+                              : "\n                                  ");
             System.exit(0);
         }
         if ((args.length >= 2) && ((args[0].equals(COMMAND_LEAGUE_SHORT)) || (args[0].equals(COMMAND_LEAGUE)))) {
