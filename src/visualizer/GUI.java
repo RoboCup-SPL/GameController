@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -23,6 +24,7 @@ import javax.swing.JFrame;
 import common.Log;
 import data.GameControlData;
 import data.Rules;
+import data.SPL;
 import data.Teams;
 
 /**
@@ -84,23 +86,8 @@ public class GUI extends JFrame
         } else {
             devices[IS_OSX && !IS_APPLE_JAVA ? 0 : devices.length-1].setFullScreenWindow(this);
         }
-
-        for (String format : new String [] {".png", ".jpeg", ".jpg"}) {
-            try {
-                background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND+format));
-            } catch (IOException e) {
-            }
-        }
-        if (background == null) {
-            Log.error("Unable to load background image");
-        }
-        float scaleFactor = (float)getWidth()/background.getWidth();
-        Image tmp = (new ImageIcon(background).getImage()).getScaledInstance(
-                (int)(background.getWidth()*scaleFactor),
-                (int)(background.getHeight()*scaleFactor),
-                Image.SCALE_SMOOTH);
-        background = new BufferedImage((int) (background.getWidth() * scaleFactor), (int) (background.getWidth() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
-        background.getGraphics().drawImage(tmp, 0, 0, null);
+        
+        loadBackground();
         
         testFont = new Font(TEST_FONT, Font.PLAIN, (int)(TEST_FONT_SIZE*getWidth()));
         standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*getWidth()));
@@ -156,6 +143,21 @@ public class GUI extends JFrame
     public synchronized void update(GameControlData data)
     {
         this.data = data;
+        
+        // Automatically switch between SPL regular soccer and drop-in competitions
+        if (data != null && Rules.league instanceof SPL && 
+                (!Rules.league.dropInPlayerMode && (data.team[0].teamNumber >= 98 || data.team[1].teamNumber >= 98) ||
+                        Rules.league.dropInPlayerMode && data.team[0].teamNumber < 98 && data.team[1].teamNumber < 98)) {
+            for (Rules league : Rules.LEAGUES) {
+                if (league != Rules.league && league instanceof SPL) {
+                    Rules.league = league;
+                    break;
+                }
+            }
+            Teams.readTeams();
+            loadBackground();
+        }
+        
         do {
             do {
                 Graphics g = bufferStrategy.getDrawGraphics();
@@ -539,5 +541,25 @@ public class GUI extends JFrame
         int displaySeconds = Math.abs(seconds) % 60;
         int displayMinutes = Math.abs(seconds) / 60;
         return (seconds < 0 ? "-" : "") + String.format("%02d:%02d", displayMinutes, displaySeconds);
+    }
+    
+    private void loadBackground() {
+        this.background = null;
+        for (String format : new String [] {".png", ".jpeg", ".jpg"}) {
+            try {
+                this.background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND+format));
+            } catch (IOException e) {
+            }
+        }
+        if (this.background == null) {
+            Log.error("Unable to load background image");
+        }
+        float scaleFactor = (float)getWidth()/background.getWidth();
+        Image tmp = (new ImageIcon(background).getImage()).getScaledInstance(
+                (int)(background.getWidth()*scaleFactor),
+                (int)(background.getHeight()*scaleFactor),
+                Image.SCALE_SMOOTH);
+        background = new BufferedImage((int) (background.getWidth() * scaleFactor), (int) (background.getWidth() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
+        background.getGraphics().drawImage(tmp, 0, 0, null);
     }
 }
