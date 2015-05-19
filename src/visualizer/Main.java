@@ -23,7 +23,7 @@ public class Main
     private static Listener listener;
 
     /**
-     * The programm starts here.
+     * The program starts here.
      * 
      * @param args  This is ignored.
      */
@@ -61,7 +61,7 @@ public class Main
     }
     
     /**
-     * This should be called when the programm is shutting down to close
+     * This should be called when the program is shutting down to close
      * sockets and finally exit.
      */
     public static void exit()
