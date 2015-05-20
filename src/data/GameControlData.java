@@ -31,6 +31,7 @@ public class GameControlData implements Serializable
     
     public static final byte GAME_ROUNDROBIN = 0;
     public static final byte GAME_PLAYOFF = 1;
+    public static final byte GAME_DROPIN = 2;
 
     public static final byte STATE_INITIAL = 0;
     public static final byte STATE_READY = 1;
@@ -83,7 +84,7 @@ public class GameControlData implements Serializable
     // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
     public byte packetNumber = 0;
     public byte playersPerTeam = (byte)Rules.league.teamSize;   // The number of players on a team
-    public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF)
+    public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_DROPIN)
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
     public byte kickOffTeam;                                    // the next team to kick off
@@ -93,9 +94,6 @@ public class GameControlData implements Serializable
     public short secsRemaining = (short) Rules.league.halfTime; // estimate of number of seconds remaining in the half
     public short secondaryTime = 0;                             // sub-time (remaining in ready state etc.) in seconds
     public TeamInfo[] team = new TeamInfo[2];
-    
-    
-    
     
     /**
      * Creates a new GameControlData.
@@ -223,6 +221,7 @@ public class GameControlData implements Serializable
         switch (gameType) {
             case GAME_ROUNDROBIN: temp = "round robin"; break;
             case GAME_PLAYOFF:    temp = "playoff";   break;
+            case GAME_DROPIN:    temp = "drop-in";   break;
             default: temp = "undefinied("+gameType+")";
         }
         out += "           gameType: "+temp+"\n";

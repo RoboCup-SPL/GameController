@@ -141,7 +141,8 @@ public class GameController
         data.team[1].teamColor = input.outTeamColor[1];
         data.kickOffTeam = (byte)input.outTeam[0];
         data.colorChangeAuto = input.outAutoColorChange;
-        data.gameType = input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
+        data.gameType = Rules.league.dropInPlayerMode ? GameControlData.GAME_DROPIN
+                : input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
 
         try {
             //sender
@@ -181,7 +182,8 @@ public class GameController
             Log.init(logFile.getPath());
         }
         Log.toFile("League = "+Rules.league.leagueName);
-        Log.toFile("Game type = "+ (data.gameType == GameControlData.GAME_ROUNDROBIN ? "round robin" : "play-off"));
+        Log.toFile("Game type = "+ (data.gameType == GameControlData.GAME_ROUNDROBIN ? "round robin"
+                : data.gameType == GameControlData.GAME_PLAYOFF ?  "play-off" : "drop-in"));
         Log.toFile("Auto color change = "+data.colorChangeAuto);
         Log.toFile("Using broadcast address " + outBroadcastAddress);
 

@@ -147,9 +147,7 @@ public class GUI extends JFrame
         this.data = data;
         
         // Automatically switch between SPL regular soccer and drop-in competitions
-        if (data != null && Rules.league instanceof SPL && 
-                (!Rules.league.dropInPlayerMode && (data.team[0].teamNumber >= 98 || data.team[1].teamNumber >= 98) ||
-                        Rules.league.dropInPlayerMode && data.team[0].teamNumber < 98 && data.team[1].teamNumber < 98)) {
+        if (data != null && (data.gameType == GameControlData.GAME_DROPIN) != Rules.league.dropInPlayerMode) {
             for (Rules league : Rules.LEAGUES) {
                 if (league != Rules.league && league instanceof SPL) {
                     Rules.league = league;
