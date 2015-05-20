@@ -6,7 +6,6 @@ import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
-import controller.ui.GCGUI;
 import controller.ui.GUI;
 import controller.ui.KeyboardListener;
 import controller.ui.StartInput;
@@ -192,7 +191,7 @@ public class GameController
                 + " (" + Rules.league.teamColorName[data.team[0].teamColor]
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
                 + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
-        GCGUI gui = new GUI(input.outFullscreen, data);
+        GUI gui = new GUI(input.outFullscreen, data);
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);
@@ -227,6 +226,7 @@ public class GameController
             Log.error("Error while trying to close the log.");
         }
 
+        gui.dispose();
         System.exit(0);
     }
 }
