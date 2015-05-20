@@ -55,7 +55,7 @@ public class Bootstrap {
                         + " * Enum containing all MessageIDs used for serialization.\n"
                         + " *\n"
                         + " * @author Felix Thielke\n"
-                        + " * @version " + Instant.now().toString() + "\n"
+                        //+ " * @version " + Instant.now().toString() + "\n"
                         + " */\n"
                         + "public enum MessageID {\n"
                         + "\n"

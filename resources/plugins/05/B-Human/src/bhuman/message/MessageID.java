@@ -4,7 +4,6 @@ package bhuman.message;
  * Enum containing all MessageIDs used for serialization.
  *
  * @author Felix Thielke
- * @version 2015-05-19T16:47:35.147Z
  */
 public enum MessageID {
 
