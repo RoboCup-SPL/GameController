@@ -658,8 +658,8 @@ public class GUI extends JFrame implements GCGUI
         if (fullscreen) {
             setUndecorated(true);
             GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-            devices[0].setFullScreenWindow(this);
-            if (IS_OSX) {
+            devices[IS_OSX && !IS_APPLE_JAVA ? devices.length - 1 : 0].setFullScreenWindow(this);
+            if (IS_APPLE_JAVA) {
                 setVisible(false); // without this, keyboard input is missing on OS X
             }
         }
