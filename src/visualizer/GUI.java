@@ -56,6 +56,8 @@ public class GUI extends JFrame
 
     /** Available screens. */
     private static final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+    private static final GraphicsDevice device = devices[devices[0].equals(
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()) ? devices.length - 1 : 0];
 
     BufferStrategy bufferStrategy;
     /** If testmode is on to just display whole GameControlData. */
@@ -78,13 +80,13 @@ public class GUI extends JFrame
      */
     GUI()
     {
-        super(WINDOW_TITLE, devices[IS_OSX && !IS_APPLE_JAVA ? 0 : devices.length - 1].getDefaultConfiguration());
+        super(WINDOW_TITLE, device.getDefaultConfiguration());
         
         setUndecorated(true);
         if (IS_APPLE_JAVA && devices.length != 1) {
-            setSize(devices[devices.length-1].getDefaultConfiguration().getBounds().getSize());
+            setSize(device.getDefaultConfiguration().getBounds().getSize());
         } else {
-            devices[IS_OSX && !IS_APPLE_JAVA ? 0 : devices.length-1].setFullScreenWindow(this);
+            device.setFullScreenWindow(this);
         }
         
         loadBackground();

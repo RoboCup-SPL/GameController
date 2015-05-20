@@ -258,7 +258,7 @@ public class GUI extends JFrame implements GCGUI
      * @param fullscreen    If true, the GUI tries to start using the full
      *                      size of the screen. Actually this means changing
      *                      the display`s resolution to the GUI`s size.
-     * @param data      The startig data.
+     * @param data      The starting data.
      */
     public GUI(boolean fullscreen, GameControlData data)
     {
@@ -657,8 +657,7 @@ public class GUI extends JFrame implements GCGUI
         //fullscreen
         if (fullscreen) {
             setUndecorated(true);
-            GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-            devices[IS_OSX && !IS_APPLE_JAVA ? devices.length - 1 : 0].setFullScreenWindow(this);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
             if (IS_APPLE_JAVA) {
                 setVisible(false); // without this, keyboard input is missing on OS X
             }
