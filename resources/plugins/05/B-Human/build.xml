@@ -20,6 +20,7 @@
     </target>
 
     <target name="compile" depends="generate">
+        <delete dir="${classes.dir}" quiet="true" />
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" excludes="bootstrap/" includeantruntime="false" source="1.6" target="1.6" encoding="utf-8">
             <compilerarg value="-Xlint:-options"/> <!-- ignore nagging about missing bootstrap class path -->
