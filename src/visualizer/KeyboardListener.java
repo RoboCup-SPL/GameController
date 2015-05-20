@@ -65,7 +65,7 @@ public class KeyboardListener implements KeyEventDispatcher
     {
         switch (key) {
                 case KeyEvent.VK_F10:
-                    Main.exit();
+                    GameStateVisualizer.exit();
                     break;
                 case KeyEvent.VK_F11:
                     gui.toggleTestmode();

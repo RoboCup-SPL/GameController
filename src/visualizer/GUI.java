@@ -99,7 +99,7 @@ public class GUI extends JFrame
         {
             @Override
             public void windowClosing(WindowEvent e) {
-                Main.exit();
+                GameStateVisualizer.exit();
             }
         });
         

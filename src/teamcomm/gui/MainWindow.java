@@ -35,7 +35,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import teamcomm.Main;
+import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.data.event.TeamEvent;
@@ -82,7 +82,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                Main.shutdown();
+                TeamCommunicationMonitor.shutdown();
             }
         });
 
@@ -143,7 +143,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
         i.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Main.shutdown();
+                TeamCommunicationMonitor.shutdown();
                 setVisible(false);
             }
         });

@@ -9,7 +9,7 @@ import data.Rules;
  * The game-state-visualizer-program starts in this class.
  * The main components are initialized here.
  */
-public class Main
+public class GameStateVisualizer
 {        
     private static final String HELP_TEMPLATE = "Usage: java -jar GameStateVisualizer.jar {options}"
             + "\n  (-h | --help)                   display help"

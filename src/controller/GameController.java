@@ -23,14 +23,13 @@ import java.util.regex.Pattern;
 
 import javax.swing.*;
 
-
 /**
  * @author Michel Bartsch
  * 
  * The programm starts in this class.
  * The main components are initialised here.
  */
-public class Main
+public class GameController
 {
     /**
      * The version of the GameController.
@@ -59,12 +58,15 @@ public class Main
     private static final String COMMAND_WINDOW_SHORT = "-w";
     
     /**
-     * The programm starts here.
+     * The program starts here.
      * 
      * @param args  This is ignored.
      */
     public static void main(String[] args)
     {
+        // Do not just System.exit(0) on Macs when selecting GameController/Quit
+        System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
+
         //commands
         String outBroadcastAddress = DEFAULT_BROADCAST;
         boolean windowMode = false;

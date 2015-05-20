@@ -7,10 +7,10 @@ import java.util.LinkedList;
 /**
  * @author Michel Bartsch
  * 
- * The log-analyzer-programm starts in this class.
- * The main components are initialised here.
+ * The log-analyzer-program starts in this class.
+ * The main components are initialized here.
  */
-public class Main
+public class LogAnalyzer
 {
     /* Path the the log files to analyze. */
     public final static String PATH = "logs";
@@ -25,7 +25,7 @@ public class Main
     public static FileWriter writer;
     
     /**
-     * The programm starts here.
+     * The program starts here.
      * 
      * @param args  This is ignored.
      */

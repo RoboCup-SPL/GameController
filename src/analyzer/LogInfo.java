@@ -106,7 +106,7 @@ public class LogInfo
      */
     private boolean isRealVersion()
     {
-        return version == null ? false : version.equals(controller.Main.version);
+        return version == null ? false : version.equals(controller.GameController.version);
     }
     
     /**

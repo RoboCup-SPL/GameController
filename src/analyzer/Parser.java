@@ -231,9 +231,9 @@ public class Parser
                 }
             }
             try{
-                Main.writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+player+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
+                LogAnalyzer.writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+player+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
             } catch (IOException e) {
-                Log.error("cannot write to file "+Main.stats);
+                Log.error("cannot write to file "+LogAnalyzer.stats);
             }
         }
     }

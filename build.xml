@@ -35,25 +35,25 @@
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}" includes="${common_classes} controller/">
             <manifest>
-                <attribute name="Main-Class" value="controller.Main"/>
+                <attribute name="Main-Class" value="controller.GameController"/>
                 <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
             </manifest>
         </jar>
         <jar destfile="${jar.dir}/GameStateVisualizer.jar" basedir="${classes.dir}" includes="${common_classes} visualizer/">
             <manifest>
-                <attribute name="Main-Class" value="visualizer.Main"/>
+                <attribute name="Main-Class" value="visualizer.GameStateVisualizer"/>
                 <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
             </manifest>
         </jar>
         <jar destfile="${jar.dir}/LogAnalyzer.jar" basedir="${classes.dir}" includes="${common_classes} analyzer/">
             <manifest>
-                <attribute name="Main-Class" value="analyzer.Main"/>
+                <attribute name="Main-Class" value="analyzer.LogAnalyzer"/>
                 <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
             </manifest>
         </jar>
         <jar destfile="${jar.dir}/TeamCommunicationMonitor.jar" basedir="${classes.dir}" includes="${common_classes} teamcomm/" excludes="teamcomm/gui/drawings/common/">
             <manifest>
-                <attribute name="Main-Class" value="teamcomm.Main"/>
+                <attribute name="Main-Class" value="teamcomm.TeamCommunicationMonitor"/>
                 <attribute name="Author" value="Felix Thielke" />
                 <attribute name="Class-Path" value="deps/gluegen-rt.jar deps/jogl-all.jar" />
             </manifest>

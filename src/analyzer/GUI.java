@@ -147,7 +147,7 @@ public class GUI extends JFrame implements ListSelectionListener
     {
         selection.clearSelection();
         list.removeAllElements();
-        for (LogInfo log : Main.logs) {
+        for (LogInfo log : LogAnalyzer.logs) {
             list.addElement(new CheckListItem(log+"", log.isRealLog()));
         }
     }
@@ -158,17 +158,17 @@ public class GUI extends JFrame implements ListSelectionListener
      */
     private void clean()
     {
-        File droppedDir = new File(Main.PATH_DROPPED);
+        File droppedDir = new File(LogAnalyzer.PATH_DROPPED);
         if (!droppedDir.isDirectory()) {
             droppedDir.mkdir();
         }
         int i = 0;
-        for (LogInfo log : Main.logs) {
+        for (LogInfo log : LogAnalyzer.logs) {
             if (!((CheckListItem)list.getElementAt(i++)).selected) {
-                log.file.renameTo(new File(Main.PATH_DROPPED+"/"+log.file.getName()));
+                log.file.renameTo(new File(LogAnalyzer.PATH_DROPPED+"/"+log.file.getName()));
             }
         }
-        Main.load();
+        LogAnalyzer.load();
         updateList();
     }
     
@@ -182,26 +182,26 @@ public class GUI extends JFrame implements ListSelectionListener
         if (fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }
-        Main.stats = fc.getSelectedFile();
+        LogAnalyzer.stats = fc.getSelectedFile();
         try {
-            Main.stats.createNewFile();
-            Main.writer = new FileWriter(Main.stats);
-            Main.writer.write("datetime,action,team,player,blue,red\n");
+            LogAnalyzer.stats.createNewFile();
+            LogAnalyzer.writer = new FileWriter(LogAnalyzer.stats);
+            LogAnalyzer.writer.write("datetime,action,team,player,blue,red\n");
         } catch (IOException e) {
-            Log.error("Cannot create and open/write to file "+Main.stats);
+            Log.error("Cannot create and open/write to file "+LogAnalyzer.stats);
             return;
         }
         int i = 0;
-        for (LogInfo log : Main.logs) {
+        for (LogInfo log : LogAnalyzer.logs) {
             if (((CheckListItem)list.getElementAt(i++)).selected) {
                 Parser.statistic(log);
             }
         }
         try{
-            Main.writer.flush();
-            Main.writer.close();
+            LogAnalyzer.writer.flush();
+            LogAnalyzer.writer.close();
         } catch (IOException e) {
-            Log.error("cannot close file "+Main.stats);
+            Log.error("cannot close file "+LogAnalyzer.stats);
         }
         JOptionPane.showMessageDialog(null, "Done");
     }
@@ -211,7 +211,7 @@ public class GUI extends JFrame implements ListSelectionListener
     {
         int i = selection.getMinSelectionIndex();
         if (i >= 0) {
-            info.setText(Main.logs.get(i).getInfo());
+            info.setText(LogAnalyzer.logs.get(i).getInfo());
         } else {
             info.setText("");
         }

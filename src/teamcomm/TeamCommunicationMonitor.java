@@ -15,7 +15,7 @@ import teamcomm.net.logging.Logger;
  *
  * @author Felix Thielke
  */
-public class Main {
+public class TeamCommunicationMonitor {
 
     private static boolean shutdown = false;
     private static final Object shutdownMutex = new Object();
