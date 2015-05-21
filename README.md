@@ -38,10 +38,16 @@ Select your league. The default can be specified as a command line parameter (se
 Pick the two teams that are playing. They have to be different teams. If you are 
 practicing alone, use the "Invisibles" as second team.
 
-SPL: The left team will always play with the jerseys that are specified first in the file
-teams.cfg. The right team will also play with its primary jerseys unless their color is
-the same as the jersey color of the left team. Then, the secondary jerseys will be used
-instead. You also have to select whether you play a game in the preliminaries or a 
+SPL: The GameController automatically selects the jersey colors: If only one team has 
+custom jerseys (defined in the file "teams.cfg"), its jersey color is picked first,
+otherwise the jersey color of the left is picked first. For both teams, the first jersey
+color that they have and, if picking second, that does not conflict with the jersey color
+of the opponent is selected in the following sequence:
+
+* Left team: custom 1, custom 2, blue, red
+* Right team: custom 1, custom 2, red, blue
+
+You also have to select whether you play a game in the preliminaries or a 
 play-off game. In the preliminaries the clock will continue to run during game stoppages
 and there will be no penalty shootout in case of a draw. In play-off games, the clock
 will be stopped and there may be penalty shootout. In addition, kick-offs will be 
