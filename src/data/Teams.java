@@ -137,7 +137,8 @@ public class Teams
                 String value = line.split("=")[1];
                 String[] values = value.split(",");
                 instance.teams[getLeagueIndex()][key] = new Info(values[0],
-                        values.length == 3 ? new String[]{values[1], values[2]} : null);
+                        values.length >= 3 ? new String[]{values[1], values[2]} 
+                        : values.length == 2 ? new String[] {values[1]} : new String[0]);
             }
         } catch (IOException e) {
             Log.error("cannot load "+PATH+Rules.league.leagueDirectory+"/"+CONFIG);
