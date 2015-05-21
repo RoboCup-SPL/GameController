@@ -370,13 +370,19 @@ public class StartInput extends JFrame implements Serializable
     private void updateBackgrounds()
     {
         String[] colorNames = new String[2];
-        String[] colors = Teams.getColors(outTeam[0]);
-        colorNames[0] = colors.length > 0 ? colors[0] : "blue";
+        if (Teams.getColors(outTeam[0]).length == 0 &&
+                Teams.getColors(outTeam[1]).length > 0) {
+            colorNames[1] = Teams.getColors(outTeam[1])[0];
+            colorNames[0] = colorNames[1].equals("blue") ? "red" : "blue";
+        } else {
+            String[] colors = Teams.getColors(outTeam[0]);
+            colorNames[0] = colors.length > 0 ? colors[0] : "blue";
+            colors = Teams.getColors(outTeam[1]);
+            colors = colors.length >= 2 ? colors : colors.length == 1 
+                    ? new String[] {colors[0], "red"} : new String[]{"red", "blue"};
+            colorNames[1] = colors[0].equals(colorNames[0]) ? colors[1] : colors[0];
+        }
         teamContainer[0].setImage(getImage(0, colorNames[0]));
-        colors = Teams.getColors(outTeam[1]);
-        colors = colors.length >= 2 ? colors : colors.length == 1 
-                ? new String[] {colors[0], "red"} : new String[]{"red", "blue"};
-        colorNames[1] = colors[0].equals(colorNames[0]) ? colors[1] : colors[0];
         teamContainer[1].setImage(getImage(1, colorNames[1]));
         for (int i = 0; i < 2; ++i) {
             if (colorNames[i].equals("blue")) {
