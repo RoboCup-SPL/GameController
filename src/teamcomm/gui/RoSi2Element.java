@@ -93,7 +93,7 @@ public class RoSi2Element {
         this(path, tag, null, null, namedElements);
     }
 
-    private RoSi2Element(final File path, final String tag, final String name, final Iterator iter, final Map<String, RoSi2Element> namedElements) {
+    private RoSi2Element(final File path, final String tag, final String name, final Iterator<Attribute> iter, final Map<String, RoSi2Element> namedElements) {
         this.filepath = path;
         this.tag = tag;
         this.name = name;
@@ -101,7 +101,7 @@ public class RoSi2Element {
 
         if (iter != null) {
             while (iter.hasNext()) {
-                final Attribute attr = (Attribute) iter.next();
+                final Attribute attr = iter.next();
                 attributes.put(attr.getName().getLocalPart(), attr.getValue());
             }
         }
@@ -788,13 +788,6 @@ public class RoSi2Element {
             translation = null;
         }
 
-        private RoSi2Drawable(final GL2 gl) {
-            this.gl = gl;
-            children = new LinkedList<RoSi2Drawable>();
-            rotation = null;
-            translation = null;
-        }
-
         private RoSi2Drawable(final GL2 gl, final List<RoSi2Drawable> children) throws RoSi2ParseException {
             this.gl = gl;
             this.children = children;
@@ -1337,10 +1330,6 @@ public class RoSi2Element {
             public float y;
             public float z;
 
-            public Vertex() {
-                this(0, 0, 0);
-            }
-
             public Vertex(final float x, final float y, final float z) {
                 this.x = x;
                 this.y = y;
@@ -1621,7 +1610,8 @@ public class RoSi2Element {
                         } else {
                             // Create and add element
                             final String name = getXmlAttribute(e, "name", false);
-                            final RoSi2Element elem = new RoSi2Element(inputFileStack.getFirst().path, tag, name, e.getAttributes(), namedElements);
+                            @SuppressWarnings("unchecked")
+                            final RoSi2Element elem = new RoSi2Element(inputFileStack.getFirst().path, tag, name, (Iterator<Attribute>) e.getAttributes(), namedElements);
                             if (name != null && !withinSceneElement) {
                                 namedElements.put(tag + '#' + name, elem);
                             }

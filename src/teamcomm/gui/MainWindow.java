@@ -58,6 +58,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
     private final JLabel[] teamLogos = new JLabel[]{new JLabel((Icon) null, SwingConstants.CENTER), new JLabel((Icon) null, SwingConstants.CENTER)};
     private final Map<String, RobotPanel> robotPanels = new HashMap<String, RobotPanel>();
 
+    @SuppressWarnings("unused")
     private final LogReplayFrame logReplayFrame = new LogReplayFrame(this);
 
     /**

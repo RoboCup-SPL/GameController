@@ -174,6 +174,7 @@ public class PluginLoader {
                     classNames.add(entry.getName().substring(0, entry.getName().length() - 6).replaceAll("/", "\\."));
                 }
             }
+            jar.close();
 
             // Load classes from jar
             final URLClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()});
@@ -205,6 +206,7 @@ public class PluginLoader {
                     drawingsForTeam.add(d);
                 }
             }
+            loader.close();
         } catch (Exception ex) {
             Log.error(ex.getClass().getSimpleName() + ": Could not open plugin " + file.getPath() + ": " + ex.getMessage());
         }
