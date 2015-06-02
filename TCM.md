@@ -91,11 +91,11 @@ TeamCommunicationMonitor.jar in their classpath.
 The first class found which extends `teamcomm.data.AdvancedMessage` is supposed
 to be the message class of the team. Whenever the TCM receives a packet from a
 robot of the team it is first read as a SPLStandardMessage, then cast to the
-message class of the team and its init() method is called.
+message class of the team and its `init()` method is called.
 This method may be used to parse the contents of the custom data array of the
 SPLStandardMessage into separate fields so they are easily usable later on.
 
-The display() method of the message class is supposed to return an array of
+The `display()` method of the message class is supposed to return an array of
 strings which should be displayed in the detail window of the robot which sent
 the message. Each string is written in a seperate line.
 
@@ -104,31 +104,32 @@ The TCM uses all classes in the plugin jars which extend
 `teamcomm.gui.drawings.PerPlayer` as drawings which per frame are drawn once for
 each robot of the team.
 
-These classes override the methods init() (optional), hasAlpha(), getPriority()
-and draw(). The TCM instantiates each class exactly once and calls its methods
-as follows:
-* init() is called once when the object is instantiated (i.e. when the plugin
+These classes override the methods `init()` (optional), `hasAlpha()`,
+`getPriority()` and `draw()`. The TCM instantiates each class exactly once and
+calls its methods as follows:
+
+* `init()` is called once when the object is instantiated (i.e. when the plugin
   was just loaded).
-  This method may be used to load models or other resources needed for the
-  drawing.
-* hasAlpha() is supposed to return true iff the drawing contains transparency.
-  This information is needed so the TCM can set up the rendering order so that
-  transparent objects are drawn after opaque objects.
-* getPriority() is supposed to return a priority for the drawing if it contains
-  transparency. This is needed in order to achieve the correct rendering order
-  of objects containing transparency. The priority value should be higher the
-  farther away the object is from the viewer.
-  Make sure to align your priorities to those of the default drawings:
-  The field drawing has a priority of 1000, the ball drawing 500 and the player
-  number drawing 10.
-* draw() does the actual drawing. Its parameters are the OpenGL 2.0 context it
+    * This method may be used to load models or other resources needed for the
+      drawing.
+* `hasAlpha()` is supposed to return true iff the drawing contains transparency.
+    * This information is needed so the TCM can set up the rendering order so
+	  that transparent objects are drawn after opaque objects.
+* `getPriority()` is supposed to return a priority for the drawing if it
+  contains transparency. This is needed in order to achieve the correct
+  rendering order of objects containing transparency. The priority value should
+  be higher the farther away the object is from the viewer.
+    * Make sure to align your priorities to those of the default drawings:
+      The field drawing has a priority of 1000, the ball drawing 500 and the
+	  player number drawing 10.
+* `draw()` does the actual drawing. Its parameters are the OpenGL 2.0 context it
   should draw on, the current state of the robot for which the drawing is drawn
   and a camera object.
-  When draw() is called, the OpenGL modelview matrix is initially set up so that
-  the x axis points towards the opponent goal and (0,0,0) is the center of the
-  field. When implementing your own drawings, make sure that you reset the
-  modelview matrix to this (e.g. using glPushMatrix()/glPopMatrix()) when your
-  draw() method returns.
+    * When `draw()` is called, the OpenGL modelview matrix is initially set up
+	  so that the x axis points towards the opponent goal and (0,0,0) is the
+	  center of the field. When implementing your own drawings, make sure that
+	  you reset the modelview matrix to this (e.g. using `glPushMatrix()` /
+	  `glPopMatrix()`) when your `draw()` method returns.
 
 Apart from per player drawings, teams may also write static drawings which are
 drawn only once per frame like the field drawing. For this, the drawings extend
@@ -136,19 +137,19 @@ drawn only once per frame like the field drawing. For this, the drawings extend
 For static drawings the x axis initially always points towards the goal of the
 right team.
 
-The camera object that the draw() method of drawings receives is useful only
-because of its method turnTowardsCamera() which rotates the modelview matrix so
-that the x axis points to the right and the y axis to the top of the screen of
-the viewer. This is useful for displaying text or images.
+The camera object that the `draw()` method of drawings receives is useful only
+because of its method `turnTowardsCamera()` which rotates the modelview matrix
+so that the x axis points to the right and the y axis to the top of the screen
+of the viewer. This is useful for displaying text or images.
 
 The package `teamcomm.gui.drawings` also contains some utility classes which can
 be used by drawings:
-* TextureLoader manages the loading of textures from image files
-* Text allows to draw ASCII text
-* Image allows to draw a textured 2D surface with the correct aspect ratio of
+* `TextureLoader` manages the loading of textures from image files
+* `Text` allows to draw ASCII text
+* `Image` allows to draw a textured 2D surface with the correct aspect ratio of
   the given texture
-* RoSi2Loader manages the loading of models from ros2 files as used by B-Human's
-  Simulator SimRobot.
+* `RoSi2Loader` manages the loading of models from ros2 files as used by
+  B-Human's Simulator SimRobot
 
 Refer to the common drawings in `teamcomm.gui.drawings.common` for example
 implementations of drawings. By the way, these are not compiled into the
