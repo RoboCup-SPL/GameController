@@ -4,6 +4,7 @@ The TeamCommunicationMonitor (TCM) is a tool for visualizing the data
 communicated by robots during SPL games.
 
 It serves two main purposes:
+
 1. offering diagnostic data such as which robots are communicating on which
    team ports and whether the data that is sent by these conforms to the
    SPLStandardMessage, which is the standard communication protocol in the SPL
@@ -18,6 +19,7 @@ using Apache Ant.
 
 The jar file does not check for command line parameters, so it may be executed
 by simply calling:
+
 `java -jar TeamCommunicationMonitor.jar`
 
 It depends on the JOGAMP JOGL library (see http://jogamp.org/jogl/www/) for
