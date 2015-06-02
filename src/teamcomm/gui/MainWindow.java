@@ -116,7 +116,6 @@ public class MainWindow extends JFrame implements TeamEventListener {
         // Add menu bar
         final JMenuBar mb = new JMenuBar();
         mb.add(createFileMenu());
-        mb.add(createLogMenu());
         mb.add(createViewMenu());
         setJMenuBar(mb);
 
@@ -131,38 +130,23 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
-        JMenuItem i = new JMenuItem("Reset");
-        i.addActionListener(new ActionListener() {
+        final JMenuItem resetItem = new JMenuItem("Reset");
+        resetItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GameState.getInstance().reset();
             }
         });
-        i.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
-        fileMenu.add(i);
-        i = new JMenuItem("Exit");
-        i.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TeamCommunicationMonitor.shutdown();
-                setVisible(false);
-            }
-        });
-        fileMenu.add(i);
-
-        return fileMenu;
-    }
-
-    private JMenu createLogMenu() {
-        final JFrame frame = this;
-        final JMenu logMenu = new JMenu("Log");
+        resetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+        fileMenu.add(resetItem);
+        
         final JMenuItem replayItem = new JMenuItem("Replay log file");
-        logMenu.add(replayItem);
+        fileMenu.add(replayItem);
         replayItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final JFileChooser fc = new JFileChooser(new File(new File(".").getAbsoluteFile(), "logs_teamcomm"));
-                if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+                if (fc.showOpenDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
                     try {
                         LogReplayer.getInstance().open(fc.getSelectedFile());
                     } catch (IOException ex) {
@@ -175,8 +159,18 @@ public class MainWindow extends JFrame implements TeamEventListener {
             }
         });
         replayItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+        
+        final JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TeamCommunicationMonitor.shutdown();
+                setVisible(false);
+            }
+        });
+        fileMenu.add(exitItem);
 
-        return logMenu;
+        return fileMenu;
     }
 
     private JMenu createViewMenu() {

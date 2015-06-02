@@ -2,7 +2,6 @@ package teamcomm.gui.drawings;
 
 import com.jogamp.opengl.GL2;
 import java.nio.FloatBuffer;
-import teamcomm.gui.TextureLoader;
 
 /**
  * Helper class for drawing images.

@@ -1,4 +1,4 @@
-package teamcomm.gui;
+package teamcomm.gui.drawings;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;

@@ -1,4 +1,4 @@
-package teamcomm.gui;
+package teamcomm.gui.drawings;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -31,7 +31,7 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import teamcomm.gui.TextureLoader.Texture;
+import teamcomm.gui.drawings.TextureLoader.Texture;
 
 /**
  * Class for parsing ros2 scene files. Instances of this class correspond to

@@ -2,7 +2,7 @@ package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
 import teamcomm.gui.Camera;
-import teamcomm.gui.RoSi2Loader;
+import teamcomm.gui.drawings.RoSi2Loader;
 import teamcomm.gui.drawings.Static;
 
 /**

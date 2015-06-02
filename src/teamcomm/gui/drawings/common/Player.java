@@ -7,7 +7,7 @@ import data.SPLStandardMessage;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
-import teamcomm.gui.RoSi2Loader;
+import teamcomm.gui.drawings.RoSi2Loader;
 import teamcomm.gui.drawings.PerPlayer;
 
 /**

@@ -173,7 +173,22 @@ mode. In the latter, the messages sent by the GameController are dumped on
 the screen.
 
 
-## 4. libgamectrl (SPL)
+## 4. TeamCommunicationMonitor
+
+The TeamCommunicationMonitor (TCM) is a tool for visualizing the data
+communicated by robots during SPL games.
+
+It serves two main purposes:
+1. offering diagnostic data such as which robots are communicating on which
+   team ports and whether the data that is sent by these conforms to the
+   SPLStandardMessage, which is the standard communication protocol in the SPL
+2. visualizing the data that was sent via SPLStandardMessages in both textual
+   and graphical form.
+
+For more info see [TCM](TCM.md).
+
+
+## 5. libgamectrl (SPL)
 
 libgamectrl automatically provides the GameController packets in ALMemory. 
 It also implements the return channel of the GameController. It handles the 
@@ -228,7 +243,7 @@ the Initial state. An active GameController will overwrite these settings.
 
 
 
-## 5. Coach Messages
+## 6. Coach Messages
 
 The coach broadcasts messages as defined in SPLCoachMessage.h to the UDP port
 SPL_COACH_MESSAGE_PORT through the wireless network. Players are not permitted
@@ -243,7 +258,7 @@ The GameStateVisualizer also displays the coach messages.
 Please note that the field "team" now contains the team number, not the color.
 
 
-## 6. Misc
+## 7. Misc
 
 The format of the packets the GameController broadcasts and receives at port
 GAMECONTROLLER_PORT is defined in the file RoboCupGameControlData.h. It differs
@@ -264,7 +279,7 @@ from the version used in 2014 in several ways:
   stopped).
 
 
-## 7. Known Issues
+## 8. Known Issues
 
 There are still a number of issues left:
 

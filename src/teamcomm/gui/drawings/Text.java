@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.charset.Charset;
 import javax.swing.JOptionPane;
-import teamcomm.gui.TextureLoader;
-import teamcomm.gui.TextureLoader.Texture;
+import teamcomm.gui.drawings.TextureLoader.Texture;
 
 /**
  * Helper class for drawing text.
