@@ -8,7 +8,7 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import teamcomm.gui.Camera;
 import teamcomm.data.RobotState;
-import teamcomm.gui.TextureLoader;
+import teamcomm.gui.drawings.TextureLoader;
 import teamcomm.gui.drawings.Image;
 import teamcomm.gui.drawings.PerPlayer;
 
