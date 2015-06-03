@@ -115,22 +115,22 @@ calls its methods as follows:
       drawing.
 * `hasAlpha()` is supposed to return true iff the drawing contains transparency.
     * This information is needed so that the TCM can set up the rendering order
-	  to draw transparent objects after opaque objects.
+      to draw transparent objects after opaque objects.
 * `getPriority()` is supposed to return a priority for the drawing if it
   contains transparency. This is needed in order to achieve the correct
   rendering order of objects containing transparency. The priority value should
   be higher the farther away the object is from the viewer.
     * Make sure to align your priorities to those of the default drawings:
       The field drawing has a priority of 1000, the ball drawing has 500, and
-	  the player number drawing has 10.
+      the player number drawing has 10.
 * `draw()` does the actual drawing. Its parameters are the OpenGL 2.0 context it
   should draw on, the current state of the robot for which the drawing is drawn,
   and a camera object.
     * When `draw()` is called, the OpenGL modelview matrix is initially set up
-	  so that the x axis points towards the opponent goal and (0,0,0) is the
-	  center of the field. When implementing your own drawings, make sure that
-	  you reset the modelview matrix to this (e.g. using `glPushMatrix()` /
-	  `glPopMatrix()`) when your `draw()` method returns.
+      so that the x axis points towards the opponent goal and (0,0,0) is the
+      center of the field. When implementing your own drawings, make sure that
+      you reset the modelview matrix to this (e.g. using `glPushMatrix()` /
+      `glPopMatrix()`) when your `draw()` method returns.
 
 Apart from per player drawings, teams may also write static drawings that are
 drawn only once per frame like the field drawing. For this, the drawings extend
