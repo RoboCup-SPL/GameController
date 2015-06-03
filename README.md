@@ -271,13 +271,12 @@ from the version used in 2014 in several ways:
 - SPLCoachMessage as well as TeamInfo now have a sequence number of 1 byte which
   is set by the coach.
 
-- Coach messages now have a data packet size of 80 bytes instead of 40 (actually
-  it is 81 bytes, but only for memory alignment reasons). 
+- Coach messages now have a data packet size of 81 bytes instead of 40. 
 
 - RoboCupGameControlData now has the gameType flag, which indicates whether the
-  current game is a round-robin game (time does not stop + no whistles) or a
-  play-off game, i.e. a (quarter / semi) final (whistle is used + time is
-  stopped).
+  current game is a round-robin game (time does not stop + no whistles), a 
+  drop-in player game (the same, but only one half), or a play-off game, i.e.
+  a (quarter / semi) final (whistle is used + time is stopped).
 
 
 ## 8. Known Issues
