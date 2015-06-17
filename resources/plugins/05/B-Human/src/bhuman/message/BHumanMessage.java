@@ -28,6 +28,7 @@ public class BHumanMessage extends AdvancedMessage {
             display.add("Location: " + health.location);
             display.add("Configuration: " + health.configuration);
             display.add("Battery: " + health.batteryLevel + "%");
+            display.add("Hottest joint: " + health.jointWithMaxTemperature.toString() + " (" + health.maxJointTemperature + "°C)");
             display.add("");
         }
         if (status != null) {
