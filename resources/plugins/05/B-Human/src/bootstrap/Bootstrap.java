@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Instant;
 
 /**
  *
@@ -62,13 +61,15 @@ public class Bootstrap {
                 );
 
                 String line = messageIDs_h.readLine().trim();
-                while (!line.startsWith(");")) {
+                while (!line.startsWith("});")) {
                     if (!line.isEmpty() && !line.startsWith("//") && !line.startsWith("numOf")) {
                         final String[] split = line.split("=", 2);
                         if (split.length == 2) {
                             split[0] = split[0].trim() + split[1].substring(Math.max(0, split[1].indexOf(','))).trim();
                         }
-                        messageID_java.write("    " + split[0] + "\n");
+                        if(!split[0].startsWith("{")) {
+                            messageID_java.write("    " + split[0] + "\n");
+                        }
                     }
 
                     line = messageIDs_h.readLine().trim();
