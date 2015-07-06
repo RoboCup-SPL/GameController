@@ -286,10 +286,11 @@ private:
             else
             {
               player.penalty = PENALTY_NONE;
-              gameCtrlData.state = STATE_PLAYING;
               if(now - whenPacketWasReceived < GAMECONTROLLER_TIMEOUT &&
                  send(GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE))
                 whenPacketWasSent = now;
+              else
+                gameCtrlData.state = STATE_PLAYING;
             }
             publish();
           }
