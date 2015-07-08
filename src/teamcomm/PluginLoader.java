@@ -206,7 +206,10 @@ public class PluginLoader {
                     drawingsForTeam.add(d);
                 }
             }
-            loader.close();
+            // Java 6 does not support closing of URLClassLoaders.
+            // As it goes out of scope immediately, not closing it does not hurt
+            // on Java 7 and 8 either.
+            // loader.close();
         } catch (Exception ex) {
             Log.error(ex.getClass().getSimpleName() + ": Could not open plugin " + file.getPath() + ": " + ex.getMessage());
         }

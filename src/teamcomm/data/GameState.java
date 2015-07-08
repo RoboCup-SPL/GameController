@@ -275,17 +275,24 @@ public class GameState {
         // update the team info if no GameController info is available
         if (lastGameControlData == null) {
             synchronized (teamNumbers) {
+                boolean exists = false;
                 for (int i = 0; i < 2; i++) {
-                    if (teamNumbers[i] == 0) {
-                        teamNumbers[i] = teamNumber;
-
-                        // (re)load plugins
-                        PluginLoader.getInstance().update(teamNumber);
-
-                        changed = i + 1 | CHANGED_OTHER;
+                    if (teamNumbers[i] == teamNumber) {
+                        exists = true;
                         break;
-                    } else if (teamNumbers[i] == teamNumber) {
-                        break;
+                    }
+                }
+                if (!exists) {
+                    for (int i = 0; i < 2; i++) {
+                        if (teamNumbers[i] == 0) {
+                            teamNumbers[i] = teamNumber;
+
+                            // (re)load plugins
+                            PluginLoader.getInstance().update(teamNumber);
+
+                            changed = i + 1 | CHANGED_OTHER;
+                            break;
+                        }
                     }
                 }
             }
