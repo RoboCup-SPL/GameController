@@ -46,6 +46,8 @@ public class Goal extends PerPlayer {
 
                     // Translate to goalpost
                     gl.glPushMatrix();
+                    gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
+                    gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
                     gl.glTranslatef(post.positionOnField.x / 1000.0f, post.positionOnField.y / 1000.0f, 0);
 
                     // Draw post
@@ -53,9 +55,9 @@ public class Goal extends PerPlayer {
 
                     // Draw cylinder from goalpost to robot
                     gl.glColor4f(1, 1, 1, OPACITY / 3.0f);
-                    gl.glRotatef((float) Math.toDegrees(Math.atan2(msg.pose[1] - post.positionOnField.y, msg.pose[0] - post.positionOnField.x)), 0, 0, 1);
+                    gl.glRotatef((float) Math.toDegrees(Math.atan2(-post.positionOnField.y, -post.positionOnField.x)), 0, 0, 1);
                     gl.glRotatef(90, 0, 1, 0);
-                    final double distance = Math.sqrt(Math.pow(msg.pose[0] / 1000.0f - post.positionOnField.x / 1000.0f, 2) + Math.pow(msg.pose[1] / 1000.0f - post.positionOnField.y / 1000.0f, 2));
+                    final double distance = Math.sqrt(Math.pow(post.positionOnField.x / 1000.0f, 2) + Math.pow(post.positionOnField.y / 1000.0f, 2));
                     glu.gluCylinder(q, GOALPOST_RADIUS, GOALPOST_RADIUS, distance, 16, 1);
 
                     // Translate back
