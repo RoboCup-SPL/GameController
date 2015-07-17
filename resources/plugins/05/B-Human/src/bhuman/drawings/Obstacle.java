@@ -58,7 +58,7 @@ public class Obstacle extends PerPlayer {
 
                     gl.glPushMatrix();
                     gl.glTranslatef(msg.pose[0] / 1000.0f, msg.pose[1] / 1000.f, 0);
-                    gl.glRotatef(msg.pose[2], 0, 0, 1);
+                    gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
 
                     // Translate to obstacle
                     gl.glBegin(GL2.GL_LINE_STRIP);
