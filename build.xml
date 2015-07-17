@@ -20,7 +20,7 @@
     <target name="compile">
         <delete dir="${classes.dir}" quiet="true" />
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.6" target="1.6" encoding="utf-8" debug="true" debuglevel="lines,vars,source">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.7" target="1.7" encoding="utf-8" debug="true" debuglevel="lines,vars,source">
             <compilerarg value="-Xlint:-options"/> <!-- ignore nagging about missing bootstrap class path -->
             <classpath>
                 <pathelement path="${classpath}"/>
@@ -106,7 +106,7 @@
     
     <target name="javadoc">
         <mkdir dir="${doc.dir}"/>
-        <javadoc access="public" author="true" destdir="${doc.dir}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="*" source="1.6" sourcepath="${src.dir}" splitindex="true" use="true" version="true">
+        <javadoc access="public" author="true" destdir="${doc.dir}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="*" source="1.7" sourcepath="${src.dir}" splitindex="true" use="true" version="true">
             <classpath>
                 <pathelement path="${classpath}"/>
                 <fileset dir="${deps.dir}">

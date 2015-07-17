@@ -15,6 +15,8 @@ https://github.com/bhuman/GameController .
 To build it from the source code you may use Apache Ant.
 Just call "ant" in the main directory.
 
+Building the source code requires the JDK 1.7 or newer.
+
 
 ## 2. GameController
 
