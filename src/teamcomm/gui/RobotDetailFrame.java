@@ -199,12 +199,11 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
             final String[] data = ((AdvancedMessage) msg).display();
             if (data != null && data.length != 0) {
                 synchronized (rightPanel.getTreeLock()) {
-                    final int componentCount = rightPanel.getComponentCount() - 6;
-                    for (int i = componentCount; i < data.length; i++) {
+                    while (rightPanel.getComponentCount() < data.length + 6) {
                         rightPanel.add(new JLabel(" ", JLabel.LEFT));
                     }
-                    for (int i = componentCount - 1; i >= data.length; i++) {
-                        rightPanel.remove(i);
+                    while (rightPanel.getComponentCount() > data.length + 6) {
+                        rightPanel.remove(rightPanel.getComponentCount() - 1);
                     }
 
                     for (int i = 0; i < data.length; i++) {
