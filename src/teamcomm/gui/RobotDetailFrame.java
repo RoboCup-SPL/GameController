@@ -117,7 +117,13 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
         if (msg != null) {
             final DecimalFormat df = new DecimalFormat("#.#####");
             synchronized (leftPanel.getTreeLock()) {
-                ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
+                if (!msg.teamNumValid || msg.teamNum != robot.getTeamNumber()) {
+                    ((JLabel) leftPanel.getComponent(1)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(1)).setText("Team no: " + msg.teamNum);
+                } else {
+                    ((JLabel) leftPanel.getComponent(1)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
+                }
                 if (robot.getPlayerNumber() == null || !msg.playerNumValid) {
                     ((JLabel) leftPanel.getComponent(1)).setForeground(Color.red);
                     ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + msg.playerNum);
@@ -191,6 +197,38 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                 } else {
                     ((JLabel) leftPanel.getComponent(22)).setForeground(Color.red);
                     ((JLabel) leftPanel.getComponent(22)).setText("Additional data: " + msg.nominalDataBytes + "B");
+                }
+
+                if (!msg.poseValid) {
+                    while (leftPanel.getComponentCount() < 24) {
+                        leftPanel.add(new JLabel(" ", JLabel.LEFT));
+                    }
+                    ((JLabel) leftPanel.getComponent(23)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(23)).setText("Invalid pose: x" + df.format(msg.pose[0]) + " y" + df.format(msg.pose[1]) + " t" + df.format(msg.pose[2]));
+                }
+
+                if (!msg.walkingToValid) {
+                    while (leftPanel.getComponentCount() < 25) {
+                        leftPanel.add(new JLabel(" ", JLabel.LEFT));
+                    }
+                    ((JLabel) leftPanel.getComponent(24)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(24)).setText("Invalid walking target: x" + df.format(msg.walkingTo[0]) + " y" + df.format(msg.walkingTo[1]));
+                }
+
+                if (!msg.shootingToValid) {
+                    while (leftPanel.getComponentCount() < 26) {
+                        leftPanel.add(new JLabel(" ", JLabel.LEFT));
+                    }
+                    ((JLabel) leftPanel.getComponent(25)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(25)).setText("Invalid shooting target: x" + df.format(msg.shootingTo[0]) + " y" + df.format(msg.shootingTo[1]));
+                }
+
+                if (!msg.ballValid) {
+                    while (leftPanel.getComponentCount() < 26) {
+                        leftPanel.add(new JLabel(" ", JLabel.LEFT));
+                    }
+                    ((JLabel) leftPanel.getComponent(25)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(25)).setText("Invalid ball data: age " + msg.ballAge + " x" + msg.ball[0] + "/" + msg.ballVel[0] + " y" + msg.ball[1] + "/" + msg.ballVel[1]);
                 }
             }
         }
