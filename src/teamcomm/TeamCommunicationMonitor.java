@@ -1,6 +1,9 @@
 package teamcomm;
 
 import com.jogamp.opengl.GLProfile;
+import common.ApplicationLock;
+import java.awt.HeadlessException;
+import java.io.IOException;
 import java.net.SocketException;
 import javax.swing.JOptionPane;
 import teamcomm.data.GameState;
@@ -28,6 +31,24 @@ public class TeamCommunicationMonitor {
     public static void main(final String[] args) {
         GameControlDataReceiver gcDataReceiver = null;
         SPLStandardMessageReceiver receiver = null;
+
+        // try to acquire the application lock
+        final ApplicationLock applicationLock = new ApplicationLock("TeamCommunicationMonitor");
+        try {
+            if (!applicationLock.acquire()) {
+                JOptionPane.showMessageDialog(null,
+                        "An instance of TeamCommunicationMonitor already exists.",
+                        "Multiple instances",
+                        JOptionPane.WARNING_MESSAGE);
+                System.exit(0);
+            }
+        } catch (IOException | HeadlessException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error while trying to acquire the application lock.",
+                    e.getClass().getSimpleName(),
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
 
         // Initialize the JOGL profile for 3D drawing
         GLProfile.initSingleton();
@@ -61,6 +82,12 @@ public class TeamCommunicationMonitor {
                 }
             }
         } catch (InterruptedException ex) {
+        }
+
+        // Release the application lock
+        try {
+            applicationLock.release();
+        } catch (IOException e) {
         }
 
         // Shutdown threads and clean up
