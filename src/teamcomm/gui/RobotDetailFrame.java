@@ -118,10 +118,10 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
             final DecimalFormat df = new DecimalFormat("#.#####");
             synchronized (leftPanel.getTreeLock()) {
                 if (!msg.teamNumValid || msg.teamNum != robot.getTeamNumber()) {
-                    ((JLabel) leftPanel.getComponent(1)).setForeground(Color.red);
-                    ((JLabel) leftPanel.getComponent(1)).setText("Team no: " + msg.teamNum);
+                    ((JLabel) leftPanel.getComponent(0)).setForeground(Color.red);
+                    ((JLabel) leftPanel.getComponent(0)).setText("Invalid team no: " + msg.teamNum);
                 } else {
-                    ((JLabel) leftPanel.getComponent(1)).setForeground(defaultColor);
+                    ((JLabel) leftPanel.getComponent(0)).setForeground(defaultColor);
                     ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
                 }
                 if (robot.getPlayerNumber() == null || !msg.playerNumValid) {
