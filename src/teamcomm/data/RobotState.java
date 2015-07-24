@@ -5,8 +5,8 @@ import teamcomm.data.event.RobotStateEventListener;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import javax.swing.event.EventListenerList;
-import teamcomm.net.logging.LogReplayer;
 
 /**
  * Class representing the state of a robot.
@@ -21,12 +21,12 @@ public class RobotState {
      */
     public static final int MILLISECONDS_UNTIL_INACTIVE = 2000;
 
+    private static final int AVERAGE_CALCULATION_TIME = 10000;
+
     private final String address;
     private SPLStandardMessage lastMessage;
     private long lastMessageTimestamp;
-    private final LinkedList<Long> recentMessageTimestamps = new LinkedList<Long>();
-    private final LinkedList<Integer> messagesPerSecond = new LinkedList<Integer>();
-    private long lastMpsTest = 0;
+    private final LinkedList<Long> recentMessageTimestamps = new LinkedList<>();
     private int messageCount = 0;
     private int illegalMessageCount = 0;
     private final int teamNumber;
@@ -88,47 +88,19 @@ public class RobotState {
     }
 
     /**
-     * Returns the number of messages received during the last second.
-     *
-     * @return number of messages in the last second
-     */
-    public int getRecentMessageCount() {
-        final long cut;
-        if (LogReplayer.getInstance().isReplaying() && LogReplayer.getInstance().isPaused()) {
-            cut = 0;
-        } else {
-            cut = System.currentTimeMillis() - 1000;
-        }
-
-        Long val = recentMessageTimestamps.peekLast();
-        while (val != null && val < cut) {
-            recentMessageTimestamps.pollLast();
-            val = recentMessageTimestamps.peekLast();
-        }
-
-        final int mps = recentMessageTimestamps.size();
-        if (lastMpsTest <= cut) {
-            messagesPerSecond.add(mps);
-            lastMpsTest = System.currentTimeMillis();
-        }
-
-        return mps;
-    }
-
-    /**
      * Returns the average number of messages per second.
      *
      * @return number of messages per second
      */
     public double getMessagesPerSecond() {
-        getRecentMessageCount();
+        final ListIterator<Long> it = recentMessageTimestamps.listIterator(recentMessageTimestamps.size());
 
-        long sum = 0;
-        for (final int mps : messagesPerSecond) {
-            sum += mps;
+        final long curTime = System.currentTimeMillis();
+        while (curTime - it.previous() > AVERAGE_CALCULATION_TIME) {
+            it.remove();
         }
 
-        return (double) sum / (double) messagesPerSecond.size();
+        return recentMessageTimestamps.size() > 0 ? (recentMessageTimestamps.size() * 1000.0 / Math.max(1000, curTime - recentMessageTimestamps.getLast())) : 0;
     }
 
     /**

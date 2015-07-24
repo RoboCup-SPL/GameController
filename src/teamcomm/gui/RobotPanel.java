@@ -31,6 +31,8 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
      */
     public static final int PANEL_HEIGHT = 105;
 
+    private static final double MPS_LEGAL_THRESHOLD = 5.25;
+
     private final RobotState robot;
     private final RobotDetailFrame detailFrame;
 
@@ -53,7 +55,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
         setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             add(new JLabel(" ", JLabel.LEFT));
         }
 
@@ -85,14 +87,20 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
                 ((JLabel) getComponent(0)).setText("Player no: " + robot.getPlayerNumber());
             }
             ((JLabel) getComponent(1)).setText("Messages: " + robot.getMessageCount());
-            ((JLabel) getComponent(2)).setText("Current mps: " + df.format(robot.getRecentMessageCount()));
-            ((JLabel) getComponent(3)).setText("Average mps: " + df.format(robot.getMessagesPerSecond()));
-            if (robot.getLastMessage() == null || !robot.getLastMessage().valid) {
-                ((JLabel) getComponent(4)).setForeground(Color.red);
+
+            final double mps = robot.getMessagesPerSecond();
+            if (mps >= MPS_LEGAL_THRESHOLD) {
+                ((JLabel) getComponent(2)).setForeground(Color.red);
             } else {
-                ((JLabel) getComponent(4)).setForeground(defaultColor);
+                ((JLabel) getComponent(2)).setForeground(defaultColor);
             }
-            ((JLabel) getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
+            ((JLabel) getComponent(2)).setText("Per second: " + df.format(mps));
+            if (robot.getLastMessage() == null || !robot.getLastMessage().valid) {
+                ((JLabel) getComponent(3)).setForeground(Color.red);
+            } else {
+                ((JLabel) getComponent(3)).setForeground(defaultColor);
+            }
+            ((JLabel) getComponent(3)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
         }
     }
 
