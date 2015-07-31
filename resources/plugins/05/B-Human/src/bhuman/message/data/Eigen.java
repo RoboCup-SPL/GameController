@@ -27,9 +27,31 @@ public abstract class Eigen {
             super(NativeReaders.floatReader);
         }
 
+        public Vector2f(final float x, final float y) {
+            super(NativeReaders.floatReader);
+            this.x = x;
+            this.y = y;
+        }
+
         @Override
         public Vector2f read(ByteBuffer stream) {
             return (Vector2f) super.read(stream);
+        }
+
+        public double norm() {
+            return Math.hypot(x, y);
+        }
+
+        public Vector2f diff(final Vector2f other) {
+            return new Vector2f(other.x - x, other.y - y);
+        }
+
+        public Vector2f scale(final float factor) {
+            return new Vector2f(x * factor, y * factor);
+        }
+
+        public Vector2f invScale(final float factor) {
+            return new Vector2f(x / factor, y / factor);
         }
     }
 

@@ -1,6 +1,7 @@
 package bhuman.drawings;
 
 import bhuman.message.BHumanMessage;
+import bhuman.message.data.Eigen;
 import bhuman.message.messages.GoalPercept;
 import bhuman.message.messages.GoalPercept.GoalPost;
 import com.jogamp.opengl.GL2;
@@ -9,6 +10,7 @@ import com.jogamp.opengl.glu.GLUquadric;
 import teamcomm.gui.Camera;
 import teamcomm.data.RobotState;
 import teamcomm.gui.drawings.PerPlayer;
+import teamcomm.gui.drawings.Text;
 
 /**
  *
@@ -28,37 +30,32 @@ public class Goal extends PerPlayer {
             if (goalPercept != null) {
                 final GLU glu = GLU.createGLU(gl);
                 final GLUquadric q = glu.gluNewQuadric();
+                final float rotation = (float) Math.toDegrees(msg.pose[2]);
 
                 // Enable transparency
                 gl.glEnable(GL2.GL_BLEND);
                 gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 
+                gl.glPushMatrix();
+                gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
+                gl.glRotatef(rotation, 0, 0, 1);
+
                 // Draw goalposts
                 for (final GoalPost post : goalPercept.goalPosts) {
-                    // Set color
-                    if (post.position == GoalPost.Position.IS_LEFT) {
-                        gl.glColor4f(0, 0, 1, OPACITY);
-                    } else if (post.position == GoalPost.Position.IS_RIGHT) {
-                        gl.glColor4f(1, 0, 0, OPACITY);
-                    } else {
-                        gl.glColor4f(1, 1, 1, OPACITY);
-                    }
-
                     // Translate to goalpost
                     gl.glPushMatrix();
-                    gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
-                    gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
-                    gl.glTranslatef(post.positionOnField.x / 1000.0f, post.positionOnField.y / 1000.0f, 0);
+                    final Eigen.Vector2f postPos = post.positionOnField.invScale(1000);
+                    gl.glTranslatef(postPos.x, postPos.y, 0);
 
                     // Draw post
+                    gl.glColor4f(1, 1, 1, OPACITY);
                     glu.gluCylinder(q, GOALPOST_RADIUS, GOALPOST_RADIUS, GOALPOST_HEIGHT, 16, 1);
 
                     // Draw cylinder from goalpost to robot
                     gl.glColor4f(1, 1, 1, OPACITY / 3.0f);
-                    gl.glRotatef((float) Math.toDegrees(Math.atan2(-post.positionOnField.y, -post.positionOnField.x)), 0, 0, 1);
+                    gl.glRotatef((float) Math.toDegrees(Math.atan2(-postPos.y, -postPos.x)), 0, 0, 1);
                     gl.glRotatef(90, 0, 1, 0);
-                    final double distance = Math.sqrt(Math.pow(post.positionOnField.x / 1000.0f, 2) + Math.pow(post.positionOnField.y / 1000.0f, 2));
-                    glu.gluCylinder(q, GOALPOST_RADIUS, GOALPOST_RADIUS, distance, 16, 1);
+                    glu.gluCylinder(q, GOALPOST_RADIUS, GOALPOST_RADIUS, postPos.norm(), 16, 1);
 
                     // Translate back
                     gl.glPopMatrix();
@@ -66,43 +63,66 @@ public class Goal extends PerPlayer {
 
                 // Draw crossbar
                 if (goalPercept.goalPosts.size() == 2) {
-                    GoalPost left = null;
-                    GoalPost right = null;
-                    if (goalPercept.goalPosts.get(0).position == GoalPost.Position.IS_LEFT) {
-                        left = goalPercept.goalPosts.get(0);
-                    } else if (goalPercept.goalPosts.get(0).position == GoalPost.Position.IS_RIGHT) {
-                        right = goalPercept.goalPosts.get(0);
-                    } else {
-                        return;
-                    }
-                    if (left == null && goalPercept.goalPosts.get(1).position == GoalPost.Position.IS_LEFT) {
-                        left = goalPercept.goalPosts.get(1);
-                    } else if (right == null && goalPercept.goalPosts.get(1).position == GoalPost.Position.IS_RIGHT) {
-                        right = goalPercept.goalPosts.get(1);
+                    final Eigen.Vector2f leftPos;
+                    final Eigen.Vector2f diff;
+                    if (goalPercept.goalPosts.get(0).position == GoalPost.Position.IS_LEFT && goalPercept.goalPosts.get(1).position == GoalPost.Position.IS_RIGHT) {
+                        GoalPost post = goalPercept.goalPosts.get(0);
+                        leftPos = post.positionOnField.invScale(1000);
+                        post = goalPercept.goalPosts.get(1);
+                        diff = leftPos.diff(post.positionOnField.invScale(1000));
+                    } else if (goalPercept.goalPosts.get(0).position == GoalPost.Position.IS_RIGHT && goalPercept.goalPosts.get(1).position == GoalPost.Position.IS_LEFT) {
+                        GoalPost post = goalPercept.goalPosts.get(1);
+                        leftPos = post.positionOnField.invScale(1000);
+                        post = goalPercept.goalPosts.get(0);
+                        diff = leftPos.diff(post.positionOnField.invScale(1000));
                     } else {
                         return;
                     }
 
                     // Translate to left goalpost
                     gl.glPushMatrix();
-                    gl.glTranslatef(left.positionOnField.x / 1000.0f, left.positionOnField.y / 1000.0f, (float) GOALPOST_HEIGHT);
+                    gl.glTranslatef(leftPos.x, leftPos.y, (float) (GOALPOST_HEIGHT - GOALPOST_RADIUS));
 
                     // Draw cylinder from left goalpost to right goalpost
                     gl.glColor4f(1, 1, 1, OPACITY);
-                    gl.glRotatef((float) Math.toDegrees(Math.atan2(right.positionOnField.y - left.positionOnField.y, right.positionOnField.x - left.positionOnField.x)), 0, 0, 1);
+                    gl.glRotatef((float) Math.toDegrees(Math.atan2(diff.y, diff.x)), 0, 0, 1);
                     gl.glRotatef(90, 0, 1, 0);
-                    final double distance = Math.sqrt(Math.pow(right.positionOnField.x / 1000.0f - left.positionOnField.x / 1000.0f, 2) + Math.pow(right.positionOnField.y / 1000.0f - left.positionOnField.y / 1000.0f, 2));
-                    glu.gluCylinder(q, GOALPOST_RADIUS, GOALPOST_RADIUS, distance, 16, 1);
+                    glu.gluCylinder(q, GOALPOST_RADIUS, GOALPOST_RADIUS, diff.norm(), 16, 1);
                     glu.gluDeleteQuadric(q);
 
                     // Translate back
                     gl.glPopMatrix();
                 }
+                gl.glPopMatrix();
 
                 // Disable transparency
                 gl.glDisable(GL2.GL_BLEND);
 
                 glu.gluDeleteQuadric(q);
+
+                for (final GoalPost post : goalPercept.goalPosts) {
+                    if (post.position == GoalPost.Position.IS_LEFT) {
+                        gl.glPushMatrix();
+                        final Eigen.Vector2f pos = post.positionOnField.invScale(1000);
+                        gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
+                        gl.glRotatef(rotation, 0, 0, 1);
+                        gl.glTranslatef(pos.x, pos.y, 1.2f);
+                        gl.glRotatef(-rotation, 0, 0, 1);
+                        camera.turnTowardsCamera(gl);
+                        Text.drawText(gl, "L", 0, 0, 0.25f);
+                        gl.glPopMatrix();
+                    } else if (post.position == GoalPost.Position.IS_RIGHT) {
+                        gl.glPushMatrix();
+                        final Eigen.Vector2f pos = post.positionOnField.invScale(1000);
+                        gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
+                        gl.glRotatef(rotation, 0, 0, 1);
+                        gl.glTranslatef(pos.x, pos.y, 1.2f);
+                        gl.glRotatef(-rotation, 0, 0, 1);
+                        camera.turnTowardsCamera(gl);
+                        Text.drawText(gl, "R", 0, 0, 0.25f);
+                        gl.glPopMatrix();
+                    }
+                }
             }
         }
     }

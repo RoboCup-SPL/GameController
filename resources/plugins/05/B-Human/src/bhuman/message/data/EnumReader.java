@@ -21,11 +21,7 @@ public class EnumReader<E extends Enum<E>> implements SimpleStreamReader<E> {
             if (((E[]) enumClass.getMethod("values").invoke(null)).length >= (1 << 8)) {
                 return NativeReaders.uintReader.getStreamedSize();
             }
-        } catch (NoSuchMethodException ex) {
-        } catch (SecurityException ex) {
-        } catch (IllegalAccessException ex) {
-        } catch (IllegalArgumentException ex) {
-        } catch (InvocationTargetException ex) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
         }
         return NativeReaders.ucharReader.getStreamedSize();
     }
@@ -43,11 +39,7 @@ public class EnumReader<E extends Enum<E>> implements SimpleStreamReader<E> {
             if (val < values.length) {
                 return values[val];
             }
-        } catch (NoSuchMethodException ex) {
-        } catch (SecurityException ex) {
-        } catch (IllegalAccessException ex) {
-        } catch (IllegalArgumentException ex) {
-        } catch (InvocationTargetException ex) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
         }
 
         return null;

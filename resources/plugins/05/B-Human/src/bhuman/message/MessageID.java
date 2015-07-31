@@ -61,6 +61,7 @@ public enum MessageID {
     idPenaltyAreaPercept,
     idPerceptionStatistics,
     idPlayersPercept,
+    idRealisticBallPercepts,
     idReceivedSPLStandardMessages,
     idRobotHealth,
     idRobotInfo,

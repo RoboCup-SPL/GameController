@@ -50,7 +50,7 @@ public class GoalPercept extends Message<GoalPercept> {
 
     @Override
     public GoalPercept read(ByteBuffer stream) {
-        final ArrayReader<GoalPost> reader = new ArrayReader<GoalPost>(new GoalPost());
+        final ArrayReader<GoalPost> reader = new ArrayReader<>(GoalPost.class);
         if (stream.remaining() != reader.getStreamedSize(stream) + NativeReaders.uintReader.getStreamedSize() * 2) {
             return null;
         }

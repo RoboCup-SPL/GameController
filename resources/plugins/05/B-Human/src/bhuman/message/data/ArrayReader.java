@@ -11,17 +11,24 @@ import java.util.List;
 public class ArrayReader<T> implements StreamReader<List<T>> {
 
     private final SimpleStreamReader<T> reader;
+    private final Class<? extends SimpleStreamReader<T>> readerClass;
 
     public ArrayReader(final SimpleStreamReader<T> reader) {
         this.reader = reader;
+        readerClass = null;
     }
 
-    public ArrayReader(final Class<? extends SimpleStreamReader<T>> cls) throws InstantiationException, IllegalAccessException {
-        this.reader = cls.newInstance();
+    public ArrayReader(final Class<? extends SimpleStreamReader<T>> cls) {
+        reader = null;
+        readerClass = cls;
     }
 
     public int getStreamedSize(final ByteBuffer stream) {
-        return 4 + getElementCount(stream) * reader.getStreamedSize();
+        try {
+            return 4 + getElementCount(stream) * (reader != null ? reader.getStreamedSize() : readerClass.newInstance().getStreamedSize());
+        } catch (InstantiationException | IllegalAccessException ex) {
+        }
+        return 4 + getElementCount(stream);
     }
 
     public int getElementCount(final ByteBuffer stream) {
@@ -31,9 +38,16 @@ public class ArrayReader<T> implements StreamReader<List<T>> {
     @Override
     public List<T> read(final ByteBuffer stream) {
         final int count = stream.getInt();
-        final ArrayList<T> elems = new ArrayList<T>(count);
+        final ArrayList<T> elems = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            elems.add(reader.read(stream));
+            if (reader != null) {
+                elems.add(reader.read(stream));
+            } else {
+                try {
+                    elems.add(readerClass.newInstance().read(stream));
+                } catch (InstantiationException | IllegalAccessException ex) {
+                }
+            }
         }
         return elems;
     }

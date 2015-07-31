@@ -21,7 +21,7 @@ public class BHumanMessage extends AdvancedMessage {
     public String[] display() {
         final List<String> display = new LinkedList<String>();
         final RobotHealth health = queue.getCachedMessage(RobotHealth.class);
-        final BehaviorStatus status = queue.getMessage(BehaviorStatus.class);
+        final BehaviorStatus status = queue.getCachedMessage(BehaviorStatus.class);
 
         if (health != null) {
             display.add(health.robotName);
@@ -35,6 +35,7 @@ public class BHumanMessage extends AdvancedMessage {
         }
         if (status != null) {
             display.add("Role: " + status.role);
+            display.add("Activity: " + status.activity);
         }
 
         return display.toArray(new String[0]);
