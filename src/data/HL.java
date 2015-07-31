@@ -64,6 +64,10 @@ public class HL extends Rules
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty. */
         penaltyTime = new int[] {-1, 30, 30, 30, 30, 30, 60 };
+        /** Whether penalties can be removed before the penalty time has passed. */
+        allowEarlyPenaltyRemoval = true;
+        /** Penalty that players get when they substitute another player. */
+        substitutePenalty = PlayerInfo.PENALTY_NONE;
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = false;
         /** Time in seconds one team has as timeOut. */

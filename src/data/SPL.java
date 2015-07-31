@@ -64,6 +64,10 @@ public class SPL extends Rules
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
         penaltyTime = new int[] {-1, 45, 45, 0, 45, 45, 45, 45, 45, 2 * halfTime};
+        /** Whether penalties can be removed before the penalty time has passed. */
+        allowEarlyPenaltyRemoval = false;
+        /** Penalty that players get when they substitute another player. */
+        substitutePenalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */

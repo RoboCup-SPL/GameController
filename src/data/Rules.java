@@ -73,6 +73,10 @@ public abstract class Rules
     public int numberOfPenaltyShotsLong;
     /** Time in seconds for each kind of penalty. */
     public int[] penaltyTime;
+    /** Whether penalties can be removed before the penalty time has passed. */
+    public boolean allowEarlyPenaltyRemoval;
+    /** Penalty that players get when they substitute another player. */
+    public byte substitutePenalty;
     /** if robots should return from penalties when the game state changes. */
     public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */
