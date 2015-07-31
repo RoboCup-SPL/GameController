@@ -23,12 +23,13 @@
 #pragma clang diagnostic pop
 #endif
 
+#include <arpa/inet.h>
 #include <RoboCupGameControlData.h>
 #include "UdpComm.h"
 
 static const int BUTTON_DELAY = 30; /**< Button state changes are ignored when happening in less than 30 ms. */
 static const int GAMECONTROLLER_TIMEOUT = 2000; /**< Connected to GameController when packet was received within the last 2000 ms. */
-static const int ALIVE_DELAY = 500; /**< Send an alive signal every 500 ms. */
+static const int ALIVE_DELAY = 1000; /**< Send an alive signal every 1000 ms. */
 
 enum Button
 {
@@ -85,6 +86,7 @@ private:
   AL::ALMemoryProxy* memory; /**< Give access to ALMemory. */
   AL::ALValue ledRequest; /**< Prepared request to set the LEDs. */
   UdpComm* udp; /**< The socket used to communicate. */
+  in_addr gameControllerAddress; /**< The address of the GameController PC. */
   const float* buttons[numOfButtons]; /**< Pointers to where ALMemory stores the current button states. */
   const int* playerNumber; /** Points to where ALMemory stores the player number. */
   const int* teamNumberPtr; /** Points to where ALMemory stores the team number. The number be set to 0 after it was read. */
@@ -110,6 +112,7 @@ private:
    */
   void init()
   {
+    memset(&gameControllerAddress, 0, sizeof(gameControllerAddress));
     previousState = (uint8_t) -1;
     previousSecondaryState = (uint8_t) -1;
     previousKickOffTeam = (uint8_t) -1;
@@ -363,7 +366,8 @@ private:
     bool received = false;
     int size;
     RoboCupGameControlData buffer;
-    while(udp && (size = udp->read((char*) &buffer, sizeof(buffer))) > 0)
+    struct sockaddr_in from;
+    while(udp && (size = udp->read((char*) &buffer, sizeof(buffer), from)) > 0)
     {
       if(size == sizeof(buffer) &&
          !std::memcmp(&buffer, GAMECONTROLLER_STRUCT_HEADER, 4) &&
@@ -373,6 +377,12 @@ private:
           buffer.teams[1].teamNumber == teamNumber))
       {
         gameCtrlData = buffer;
+        if(memcmp(&gameControllerAddress, &from.sin_addr, sizeof(in_addr)))
+        {
+          memcpy(&gameControllerAddress, &from.sin_addr, sizeof(in_addr));
+          udp->setTarget(inet_ntoa(gameControllerAddress), GAMECONTROLLER_PORT);
+        }
+
         received = true;
       }
     }
@@ -491,7 +501,6 @@ public:
       if(!udp->setBlocking(false) ||
          !udp->setBroadcast(true) ||
          !udp->bind("0.0.0.0", GAMECONTROLLER_PORT) ||
-         !udp->setTarget(UdpComm::getWifiBroadcastAddress(), GAMECONTROLLER_PORT) ||
          !udp->setLoopback(false))
       {
         fprintf(stderr, "libgamectrl: Could not open UDP port\n");
