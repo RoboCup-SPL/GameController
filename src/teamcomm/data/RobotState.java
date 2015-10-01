@@ -15,11 +15,19 @@ import javax.swing.event.EventListenerList;
  */
 public class RobotState {
 
-    /**
-     * Amount of time after which a robot will be considered inactive if it did
-     * not send any messages.
-     */
-    public static final int MILLISECONDS_UNTIL_INACTIVE = 2000;
+    public static enum ConnectionStatus {
+
+        INACTIVE(10000),
+        OFFLINE(2000),
+        HIGH_LATENCY(500),
+        ONLINE(0);
+
+        public final int threshold;
+
+        private ConnectionStatus(final int threshold) {
+            this.threshold = threshold;
+        }
+    }
 
     private static final int AVERAGE_CALCULATION_TIME = 10000;
 
@@ -32,6 +40,7 @@ public class RobotState {
     private final int teamNumber;
     private Integer playerNumber = null;
     private byte penalty = PlayerInfo.PENALTY_NONE;
+    private ConnectionStatus lastConnectionStatus = ConnectionStatus.ONLINE;
 
     private final EventListenerList listeners = new EventListenerList();
 
@@ -66,6 +75,7 @@ public class RobotState {
 
         for (final RobotStateEventListener listener : listeners.getListeners(RobotStateEventListener.class)) {
             listener.robotStateChanged(new RobotStateEvent(this));
+            listener.connectionStatusChanged(new RobotStateEvent(this));
         }
     }
 
@@ -101,6 +111,39 @@ public class RobotState {
         }
 
         return recentMessageTimestamps.size() > 0 ? (recentMessageTimestamps.size() * 1000.0 / Math.max(1000, curTime - recentMessageTimestamps.getLast())) : 0;
+    }
+
+    /**
+     * Updates the current network status of the robot internally. Sends events
+     * about a change of the connection status if needed.
+     *
+     * @return the current connection status
+     */
+    public ConnectionStatus updateConnectionStatus() {
+        final ConnectionStatus c = getConnectionStatus();
+        if (c != lastConnectionStatus) {
+            lastConnectionStatus = c;
+            for (final RobotStateEventListener listener : listeners.getListeners(RobotStateEventListener.class)) {
+                listener.connectionStatusChanged(new RobotStateEvent(this));
+            }
+        }
+        return c;
+    }
+
+    /**
+     * Returns the current network status of the robot.
+     *
+     * @return connection status
+     */
+    public ConnectionStatus getConnectionStatus() {
+        final long timeSinceLastMessage = System.currentTimeMillis() - lastMessageTimestamp;
+        for (final ConnectionStatus c : ConnectionStatus.values()) {
+            if (timeSinceLastMessage >= c.threshold) {
+                return c;
+            }
+        }
+
+        return ConnectionStatus.ONLINE;
     }
 
     /**
@@ -146,16 +189,6 @@ public class RobotState {
      */
     public Integer getPlayerNumber() {
         return playerNumber;
-    }
-
-    /**
-     * Returns whether this robot is considered inactive because he did not send
-     * any messages for a while.
-     *
-     * @return boolean
-     */
-    public boolean isInactive() {
-        return lastMessageTimestamp < System.currentTimeMillis() - MILLISECONDS_UNTIL_INACTIVE;
     }
 
     /**

@@ -5,8 +5,11 @@ import java.awt.Dimension;
 import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
 import javax.swing.border.TitledBorder;
 import teamcomm.data.RobotState;
 import teamcomm.data.event.RobotStateEvent;
@@ -36,7 +39,17 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
     private final RobotState robot;
     private final RobotDetailFrame detailFrame;
 
-    private final Color defaultColor = new JLabel("test").getForeground();
+    private final JPanel foregroundPanel = new JPanel();
+    private final JLabel connectionStatus = new JLabel();
+
+    private static final Color defaultColor = new JLabel("test").getForeground();
+    private static final String ICONS_PATH = "config/icons/";
+    private static final String ICON_ONLINE = "wlan_status_green.png";
+    private static final String ICON_OFFLINE = "wlan_status_red.png";
+    private static final String ICON_HIGH_LATENCY = "wlan_status_yellow.png";
+    private static ImageIcon iconOnline;
+    private static ImageIcon iconOffline;
+    private static ImageIcon iconHighLatency;
 
     /**
      * Constructor.
@@ -46,21 +59,54 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
     public RobotPanel(final RobotState robot) {
         super();
 
+        loadIcons();
+
         this.robot = robot;
 
-        final JPanel panel = this;
-        final RobotStateEventListener listener = this;
-
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(getForeground()), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
-        setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        setLayout(new OverlayLayout(this));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
+        foregroundPanel.setLayout(new BoxLayout(foregroundPanel, BoxLayout.Y_AXIS));
+        foregroundPanel.setOpaque(false);
         for (int i = 0; i < 4; i++) {
-            add(new JLabel(" ", JLabel.LEFT));
+            foregroundPanel.add(new JLabel(" ", JLabel.LEFT));
         }
+        final JPanel foregroundContainer = new JPanel();
+        foregroundContainer.setOpaque(false);
+        final GroupLayout foregroundContainerLayout = new GroupLayout(foregroundContainer);
+        foregroundContainer.setLayout(foregroundContainerLayout);
+        foregroundContainerLayout.setHorizontalGroup(
+                foregroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(foregroundPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_WIDTH, Short.MAX_VALUE)
+        );
+        foregroundContainerLayout.setVerticalGroup(
+                foregroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(foregroundPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_HEIGHT, Short.MAX_VALUE)
+        );
+        add(foregroundContainer);
+
+        connectionStatus.setIcon(iconOnline);
+        final JPanel backgroundContainer = new JPanel();
+        backgroundContainer.setOpaque(false);
+        final GroupLayout backgroundContainerLayout = new GroupLayout(backgroundContainer);
+        backgroundContainer.setLayout(backgroundContainerLayout);
+        backgroundContainerLayout.setHorizontalGroup(
+                backgroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, backgroundContainerLayout.createSequentialGroup()
+                        .addGap(0, 220, Short.MAX_VALUE)
+                        .addComponent(connectionStatus))
+        );
+        backgroundContainerLayout.setVerticalGroup(
+                backgroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(backgroundContainerLayout.createSequentialGroup()
+                        .addComponent(connectionStatus)
+                        .addGap(0, 181, Short.MAX_VALUE))
+        );
+        add(backgroundContainer);
 
         update();
-        robot.addListener(listener);
+        robot.addListener(this);
 
         detailFrame = new RobotDetailFrame(robot, this);
     }
@@ -72,6 +118,22 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
         }
     }
 
+    @Override
+    public void connectionStatusChanged(final RobotStateEvent e) {
+        if (isVisible()) {
+            switch (robot.getConnectionStatus()) {
+                case HIGH_LATENCY:
+                    connectionStatus.setIcon(iconHighLatency);
+                    break;
+                case OFFLINE:
+                    connectionStatus.setIcon(iconOffline);
+                    break;
+                case ONLINE:
+                    connectionStatus.setIcon(iconOnline);
+            }
+        }
+    }
+
     /**
      * Updates the panel with information of the given robot.
      */
@@ -80,27 +142,27 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
 
         synchronized (getTreeLock()) {
             if (robot.getPlayerNumber() == null || (robot.getLastMessage() != null && !robot.getLastMessage().playerNumValid)) {
-                ((JLabel) getComponent(0)).setForeground(Color.red);
-                ((JLabel) getComponent(0)).setText("Player no: " + (robot.getLastMessage() != null ? robot.getLastMessage().playerNum : "invalid"));
+                ((JLabel) foregroundPanel.getComponent(0)).setForeground(Color.red);
+                ((JLabel) foregroundPanel.getComponent(0)).setText("Player no: " + (robot.getLastMessage() != null ? robot.getLastMessage().playerNum : "invalid"));
             } else {
-                ((JLabel) getComponent(0)).setForeground(defaultColor);
-                ((JLabel) getComponent(0)).setText("Player no: " + robot.getPlayerNumber());
+                ((JLabel) foregroundPanel.getComponent(0)).setForeground(defaultColor);
+                ((JLabel) foregroundPanel.getComponent(0)).setText("Player no: " + robot.getPlayerNumber());
             }
-            ((JLabel) getComponent(1)).setText("Messages: " + robot.getMessageCount());
+            ((JLabel) foregroundPanel.getComponent(1)).setText("Messages: " + robot.getMessageCount());
 
             final double mps = robot.getMessagesPerSecond();
             if (mps >= MPS_LEGAL_THRESHOLD) {
-                ((JLabel) getComponent(2)).setForeground(Color.red);
+                ((JLabel) foregroundPanel.getComponent(2)).setForeground(Color.red);
             } else {
-                ((JLabel) getComponent(2)).setForeground(defaultColor);
+                ((JLabel) foregroundPanel.getComponent(2)).setForeground(defaultColor);
             }
-            ((JLabel) getComponent(2)).setText("Per second: " + df.format(mps));
+            ((JLabel) foregroundPanel.getComponent(2)).setText("Per second: " + df.format(mps));
             if (robot.getLastMessage() == null || !robot.getLastMessage().valid) {
-                ((JLabel) getComponent(3)).setForeground(Color.red);
+                ((JLabel) foregroundPanel.getComponent(3)).setForeground(Color.red);
             } else {
-                ((JLabel) getComponent(3)).setForeground(defaultColor);
+                ((JLabel) foregroundPanel.getComponent(3)).setForeground(defaultColor);
             }
-            ((JLabel) getComponent(3)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
+            ((JLabel) foregroundPanel.getComponent(3)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
         }
     }
 
@@ -121,4 +183,15 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
         return robot.getAddress();
     }
 
+    private static void loadIcons() {
+        if (iconOnline == null) {
+            iconOnline = new ImageIcon(ICONS_PATH + ICON_ONLINE);
+        }
+        if (iconHighLatency == null) {
+            iconHighLatency = new ImageIcon(ICONS_PATH + ICON_HIGH_LATENCY);
+        }
+        if (iconOffline == null) {
+            iconOffline = new ImageIcon(ICONS_PATH + ICON_OFFLINE);
+        }
+    }
 }

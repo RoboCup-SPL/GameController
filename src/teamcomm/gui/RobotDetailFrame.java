@@ -275,4 +275,9 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
             pack();
         }
     }
+
+    @Override
+    public void connectionStatusChanged(final RobotStateEvent e) {
+        
+    }
 }

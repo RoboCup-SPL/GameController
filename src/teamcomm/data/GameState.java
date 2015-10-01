@@ -102,7 +102,7 @@ public class GameState {
                         final Iterator<RobotState> iter = robotsByAddress.values().iterator();
                         while (iter.hasNext()) {
                             final RobotState r = iter.next();
-                            if (r.isInactive()) {
+                            if (r.updateConnectionStatus() == RobotState.ConnectionStatus.INACTIVE) {
                                 iter.remove();
 
                                 final Collection<RobotState> team = robots.get(r.getTeamNumber());
@@ -130,7 +130,7 @@ public class GameState {
                     sendEvents(changed);
                 }
             }
-        }, RobotState.MILLISECONDS_UNTIL_INACTIVE * 2, RobotState.MILLISECONDS_UNTIL_INACTIVE / 2, TimeUnit.MILLISECONDS);
+        }, RobotState.ConnectionStatus.HIGH_LATENCY.threshold * 2, RobotState.ConnectionStatus.HIGH_LATENCY.threshold / 2, TimeUnit.MILLISECONDS);
     }
 
     /**
