@@ -1,5 +1,6 @@
 package teamcomm.gui;
 
+import common.Log;
 import data.SPLStandardMessage;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -234,7 +235,13 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
         }
 
         if (msg instanceof AdvancedMessage) {
-            final String[] data = ((AdvancedMessage) msg).display();
+            final String[] data;
+            try {
+                data = ((AdvancedMessage) msg).display();
+            } catch (final Throwable e) {
+                Log.error(e.getClass().getSimpleName() + " was thrown while displaying custom message data from " + msg.getClass().getSimpleName() + ": " + e.getMessage());
+                return;
+            }
             if (data != null && data.length != 0) {
                 synchronized (rightPanel.getTreeLock()) {
                     while (rightPanel.getComponentCount() < data.length + 6) {

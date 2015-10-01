@@ -161,9 +161,9 @@ public class SPLStandardMessageReceiver extends Thread {
                     if (message instanceof AdvancedMessage && message.valid) {
                         try {
                             ((AdvancedMessage) message).init();
-                        } catch (Exception e) {
+                        } catch (final Throwable e) {
                             m = SPLStandardMessage.createFrom(message);
-                            Log.error("a " + e.getClass().getSimpleName() + " was thrown while initializing custom message class " + c.getSimpleName() + ": " + e.getMessage());
+                            Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom message class " + c.getSimpleName() + ": " + e.getMessage());
                         }
                     }
                     

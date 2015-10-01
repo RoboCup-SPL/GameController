@@ -186,7 +186,11 @@ public class PluginLoader {
                     // Class is a message class: set it as default if no
                     // other message class exists for the team
                     if (!messageClasses.containsKey(teamNumber)) {
-                        messageClasses.put(teamNumber, AdvancedMessage.class.cast(cls.newInstance()).getClass());
+                        try {
+                            messageClasses.put(teamNumber, AdvancedMessage.class.cast(cls.newInstance()).getClass());
+                        } catch (final Throwable e) {
+                            Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom message class " + cls.getName() + ": " + e.getMessage());
+                        }
                     }
                 } else if (PerPlayer.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
                     // Class is a drawing: add it to the team drawings
@@ -201,9 +205,13 @@ public class PluginLoader {
                             continue classLoop;
                         }
                     }
-                    final Drawing d = (Drawing) cls.newInstance();
-                    d.setTeamNumber(teamNumber);
-                    drawingsForTeam.add(d);
+                    try {
+                        final Drawing d = (Drawing) cls.newInstance();
+                        d.setTeamNumber(teamNumber);
+                        drawingsForTeam.add(d);
+                    } catch (final Throwable e) {
+                        Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom drawing " + cls.getName() + ": " + e.getMessage());
+                    }
                 }
             }
             loader.close();
