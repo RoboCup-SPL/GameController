@@ -51,12 +51,12 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
     private static final long serialVersionUID = 6549981924840180076L;
 
-    private static final Map<Integer, ImageIcon> logos = new HashMap<Integer, ImageIcon>();
+    private static final Map<Integer, ImageIcon> logos = new HashMap<>();
 
     private final View3D fieldView = new View3D();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
     private final JLabel[] teamLogos = new JLabel[]{new JLabel((Icon) null, SwingConstants.CENTER), new JLabel((Icon) null, SwingConstants.CENTER)};
-    private final Map<String, RobotPanel> robotPanels = new HashMap<String, RobotPanel>();
+    private final Map<String, RobotPanel> robotPanels = new HashMap<>();
 
     @SuppressWarnings("unused")
     private final LogReplayFrame logReplayFrame = new LogReplayFrame(this);
@@ -139,7 +139,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
         });
         resetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         fileMenu.add(resetItem);
-        
+
         final JMenuItem replayItem = new JMenuItem("Replay log file");
         fileMenu.add(replayItem);
         replayItem.addActionListener(new ActionListener() {
@@ -159,7 +159,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
             }
         });
         replayItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
-        
+
         final JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.addActionListener(new ActionListener() {
             @Override
@@ -207,9 +207,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
         try {
             icon = new ImageIcon(GameState.getInstance().getTeamIcon(team));
-        } catch (NullPointerException e) {
-            return null;
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
             return null;
         }
         final float scaleFactor = Math.min((float) (RobotPanel.PANEL_WIDTH) / icon.getImage().getWidth(null), (float) (RobotPanel.PANEL_HEIGHT) / icon.getImage().getHeight(null));

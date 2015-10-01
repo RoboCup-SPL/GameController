@@ -96,7 +96,7 @@ public class SPLStandardMessageReceiver extends Thread {
     private static final int MAX_TEAMNUMBER = 100;
     
     private final ReceiverThread[] receivers = new ReceiverThread[MAX_TEAMNUMBER];
-    private final LinkedBlockingQueue<SPLStandardMessagePackage> queue = new LinkedBlockingQueue<SPLStandardMessagePackage>();
+    private final LinkedBlockingQueue<SPLStandardMessagePackage> queue = new LinkedBlockingQueue<>();
 
     /**
      * Constructor.
@@ -168,9 +168,7 @@ public class SPLStandardMessageReceiver extends Thread {
                     }
                     
                     GameState.getInstance().receiveMessage(p.host, m.teamNumValid ? m.teamNum : p.team, m);
-                } catch (InstantiationException ex) {
-                    Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
-                } catch (IllegalAccessException ex) {
+                } catch (InstantiationException | IllegalAccessException ex) {
                     Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
                 }
                 Thread.yield();

@@ -50,8 +50,8 @@ public class View3D implements GLEventListener, TeamEventListener {
     private final Camera camera = new Camera();
 
     private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
-    private final Set<RobotState> leftRobots = new HashSet<RobotState>();
-    private final Set<RobotState> rightRobots = new HashSet<RobotState>();
+    private final Set<RobotState> leftRobots = new HashSet<>();
+    private final Set<RobotState> rightRobots = new HashSet<>();
 
     private static final Comparator<Drawing> drawingComparator = new Comparator<Drawing>() {
         @Override
@@ -68,7 +68,7 @@ public class View3D implements GLEventListener, TeamEventListener {
             return o2.getPriority() - o1.getPriority();
         }
     };
-    private final List<Drawing> drawings = new LinkedList<Drawing>();
+    private final List<Drawing> drawings = new LinkedList<>();
     private final JMenu drawingsMenu = new JMenu("Drawings");
 
     private int width = 0;
@@ -314,7 +314,7 @@ public class View3D implements GLEventListener, TeamEventListener {
         drawingsMenu.removeAll();
 
         // Create submenus for teams
-        final HashMap<Integer, JMenu> submenus = new HashMap<Integer, JMenu>();
+        final HashMap<Integer, JMenu> submenus = new HashMap<>();
         for (final int teamNumber : teamNumbers) {
             if (teamNumber != PluginLoader.TEAMNUMBER_COMMON) {
                 final String name = GameState.getInstance().getTeamName(teamNumber, false, false);

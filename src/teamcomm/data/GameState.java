@@ -54,11 +54,11 @@ public class GameState {
     private GameControlData lastGameControlData;
 
     private final int[] teamNumbers = new int[]{0, 0};
-    private final Map<Integer, Integer> teamColors = new HashMap<Integer, Integer>();
+    private final Map<Integer, Integer> teamColors = new HashMap<>();
 
     private boolean mirrored = false;
 
-    private final Map<Integer, Collection<RobotState>> robots = new HashMap<Integer, Collection<RobotState>>();
+    private final Map<Integer, Collection<RobotState>> robots = new HashMap<>();
 
     private static final Comparator<RobotState> playerNumberComparator = new Comparator<RobotState>() {
         @Override
@@ -75,7 +75,7 @@ public class GameState {
         }
     };
 
-    private final HashMap<String, RobotState> robotsByAddress = new HashMap<String, RobotState>();
+    private final HashMap<String, RobotState> robotsByAddress = new HashMap<>();
 
     private final EventListenerList listeners = new EventListenerList();
 
@@ -310,7 +310,7 @@ public class GameState {
 
             Collection<RobotState> set = robots.get(teamNumber);
             if (set == null) {
-                set = new HashSet<RobotState>();
+                set = new HashSet<>();
                 robots.put(teamNumber, set);
             }
             if (set.add(r)) {
@@ -334,12 +334,12 @@ public class GameState {
         boolean rightSent = false;
 
         if ((changed & CHANGED_OTHER) != 0) {
-            final Collection<RobotState> rs = new TreeSet<RobotState>(playerNumberComparator);
+            final Collection<RobotState> rs = new TreeSet<>(playerNumberComparator);
             synchronized (robotsByAddress) {
                 for (final Entry<Integer, Collection<RobotState>> entry : robots.entrySet()) {
                     if (entry.getKey() == teamNumbers[TEAM_LEFT]) {
                         if ((changed & CHANGED_LEFT) != 0) {
-                            final Collection<RobotState> list = new TreeSet<RobotState>(playerNumberComparator);
+                            final Collection<RobotState> list = new TreeSet<>(playerNumberComparator);
                             for (final RobotState r : entry.getValue()) {
                                 list.add(r);
                             }
@@ -348,7 +348,7 @@ public class GameState {
                         }
                     } else if (entry.getKey() == teamNumbers[TEAM_RIGHT]) {
                         if ((changed & CHANGED_RIGHT) != 0) {
-                            final Collection<RobotState> list = new TreeSet<RobotState>(playerNumberComparator);
+                            final Collection<RobotState> list = new TreeSet<>(playerNumberComparator);
                             for (final RobotState r : entry.getValue()) {
                                 list.add(r);
                             }
@@ -370,7 +370,7 @@ public class GameState {
             synchronized (robotsByAddress) {
                 rs = robots.get(teamNumbers[TEAM_LEFT]);
             }
-            final Collection<RobotState> list = new TreeSet<RobotState>(playerNumberComparator);
+            final Collection<RobotState> list = new TreeSet<>(playerNumberComparator);
             if (rs != null) {
                 for (final RobotState r : rs) {
                     list.add(r);
@@ -384,7 +384,7 @@ public class GameState {
             synchronized (robotsByAddress) {
                 rs = robots.get(teamNumbers[TEAM_RIGHT]);
             }
-            final Collection<RobotState> list = new TreeSet<RobotState>(playerNumberComparator);
+            final Collection<RobotState> list = new TreeSet<>(playerNumberComparator);
             if (rs != null) {
                 for (final RobotState r : rs) {
                     list.add(r);
@@ -419,8 +419,7 @@ public class GameState {
                     Rules.league = Rules.LEAGUES[0];
                 }
                 colorStrings = Teams.getColors(teamNumber);
-            } catch (NullPointerException e) {
-            } catch (ArrayIndexOutOfBoundsException e) {
+            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
             }
             if (colorStrings == null || colorStrings.length < 1) {
                 if (teamNumber == teamNumbers[TEAM_RIGHT]) {
