@@ -164,6 +164,23 @@ public class SPLStandardMessage implements Serializable {
         m.currentSideConfidence = message.currentSideConfidence;
         m.nominalDataBytes = message.nominalDataBytes;
         m.data = message.data;
+        m.valid = message.valid;
+        m.headerValid = message.headerValid;
+        m.versionValid = message.versionValid;
+        m.playerNumValid = message.playerNumValid;
+        m.teamNumValid = message.teamNumValid;
+        m.fallenValid = message.fallenValid;
+        m.poseValid = message.poseValid;
+        m.walkingToValid = message.walkingToValid;
+        m.shootingToValid = message.shootingToValid;
+        m.ballValid = message.ballValid;
+        m.suggestionValid = message.suggestionValid;
+        m.intentionValid = message.intentionValid;
+        m.averageWalkSpeedValid = message.averageWalkSpeedValid;
+        m.maxKickDistanceValid = message.maxKickDistanceValid;
+        m.currentPositionConfidenceValid = message.currentPositionConfidenceValid;
+        m.currentSideConfidenceValid = message.currentSideConfidenceValid;
+        m.dataValid = message.dataValid;
         return m;
     }
 
