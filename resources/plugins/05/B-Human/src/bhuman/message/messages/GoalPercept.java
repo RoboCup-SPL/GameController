@@ -35,7 +35,7 @@ public class GoalPercept extends Message<GoalPercept> {
 
         @Override
         public GoalPost read(ByteBuffer stream) {
-            position = new EnumReader<Position>(Position.class).read(stream);
+            position = new EnumReader<>(Position.class).read(stream);
             positionInImage = new Eigen.Vector2i().read(stream);
             positionOnField = new Eigen.Vector2f().read(stream);
 

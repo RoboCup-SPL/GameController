@@ -20,15 +20,17 @@ public class MessageQueue {
     private final long ballTimeWhenDisappeared;
     private final short ballLastPerceptX;
     private final short ballLastPerceptY;
+    private final float[] ballCovariance;
     private final float robotPoseDeviation;
+    private final float[] robotPoseCovariance;
     private final short robotPoseValidity;
 
     private final long usedSize;
     private final int numberOfMessages;
 
-    private static final Map<String, Map<Class<?>, Message<? extends Message>>> cachedMessages = new HashMap<String, Map<Class<?>, Message<? extends Message>>>();
+    private static final Map<String, Map<Class<?>, Message<? extends Message>>> cachedMessages = new HashMap<>();
 
-    private final Map<Class<?>, Message<? extends Message>> messages = new HashMap<Class<?>, Message<? extends Message>>();
+    private final Map<Class<?>, Message<? extends Message>> messages = new HashMap<>();
 
     public MessageQueue(final SPLStandardMessage origin, final ByteBuffer buf) {
         robotIdentifier = origin.teamNum + "," + origin.playerNum;
@@ -41,14 +43,19 @@ public class MessageQueue {
         ballTimeWhenDisappeared = Unsigned.toUnsigned(buf.getInt());
         ballLastPerceptX = buf.getShort();
         ballLastPerceptY = buf.getShort();
+        ballCovariance = new float[]{buf.getFloat(), buf.getFloat(), buf.getFloat()};
         robotPoseDeviation = buf.getFloat();
+        robotPoseCovariance = new float[]{
+            buf.getFloat(), buf.getFloat(), buf.getFloat(),
+            buf.getFloat(), buf.getFloat(), buf.getFloat()};
         robotPoseValidity = Unsigned.toUnsigned(buf.get());
 
         usedSize = Unsigned.toUnsigned(buf.getInt());
         numberOfMessages = buf.getInt();
 
         while (buf.hasRemaining()) {
-            final MessageID id = MessageID.values()[Unsigned.toUnsigned(buf.get())];
+            final short idIndex = Unsigned.toUnsigned(buf.get());
+            final MessageID id = MessageID.values()[idIndex];
             final int size = Unsigned.toUnsigned(buf.get()) | (Unsigned.toUnsigned(buf.get()) << 8) | (Unsigned.toUnsigned(buf.get()) << 16);
             final byte[] data = new byte[size];
             buf.get(data);
@@ -79,8 +86,16 @@ public class MessageQueue {
         return ballLastPerceptY;
     }
 
+    public float[] getBallCovariance() {
+        return ballCovariance;
+    }
+
     public float getRobotPoseDeviation() {
         return robotPoseDeviation;
+    }
+
+    public float[] getRobotPoseCovariance() {
+        return robotPoseCovariance;
     }
 
     public short getRobotPoseValidity() {
@@ -102,7 +117,7 @@ public class MessageQueue {
     public <T extends Message<T>> T getCachedMessage(final Class<T> cls) {
         Map<Class<?>, Message<? extends Message>> cache = cachedMessages.get(robotIdentifier);
         if (cache == null) {
-            cache = new HashMap<Class<?>, Message<? extends Message>>();
+            cache = new HashMap<>();
             cachedMessages.put(robotIdentifier, cache);
         }
 

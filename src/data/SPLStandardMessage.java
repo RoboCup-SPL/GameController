@@ -143,6 +143,30 @@ public class SPLStandardMessage implements Serializable {
 
     public List<String> errors = new LinkedList<String>();
 
+    public static SPLStandardMessage createFrom(final SPLStandardMessage message) {
+        final SPLStandardMessage m = new SPLStandardMessage();
+        m.header = message.header;
+        m.version = message.version;
+        m.playerNum = message.playerNum;
+        m.teamNum = message.teamNum;
+        m.fallen = message.fallen;
+        m.pose = message.pose;
+        m.walkingTo = message.walkingTo;
+        m.shootingTo = message.shootingTo;
+        m.ballAge = message.ballAge;
+        m.ball = message.ball;
+        m.ballVel = message.ballVel;
+        m.suggestion = message.suggestion;
+        m.intention = message.intention;
+        m.averageWalkSpeed = message.averageWalkSpeed;
+        m.maxKickDistance = message.maxKickDistance;
+        m.currentPositionConfidence = message.currentPositionConfidence;
+        m.currentSideConfidence = message.currentSideConfidence;
+        m.nominalDataBytes = message.nominalDataBytes;
+        m.data = message.data;
+        return m;
+    }
+
     public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
