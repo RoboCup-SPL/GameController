@@ -223,7 +223,7 @@ public class RoSi2Element {
         }
 
         // Instantiate all child elements
-        final List<RoSi2Drawable> childInstances = (List<RoSi2Drawable>) ((refChilds != null) ? new LinkedList<>(refChilds) : new LinkedList<>());
+        final List<RoSi2Drawable> childInstances = (refChilds != null) ? new LinkedList<>(refChilds) : new LinkedList<RoSi2Drawable>();
         for (final RoSi2Element child : children) {
             final RoSi2Drawable childInst = child.instantiate(gl, varBindings, null);
             if (childInst != null) {
