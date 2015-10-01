@@ -17,8 +17,7 @@ It serves two main purposes:
 Building the TeamCommunicationMonitor is done together with the GameController
 using Apache Ant.
 
-The jar file does not check for command line parameters, so it may be executed
-by simply calling:
+The jar file may be executed by simply double-clicking it or calling:
 
 `java -jar TeamCommunicationMonitor.jar`
 
@@ -26,6 +25,10 @@ It depends on the JOGAMP JOGL library (see http://jogamp.org/jogl/www/) for
 drawing the 3D view of the field.
 The JOGL jars reside in the deps directory and are automatically copied to the
 build directory during the build process.
+
+By passing the command line parameter `-s` or `--silent`, the TCM is started in
+"silent" mode, in which it does not display anything but still stores all
+received messages in log files.
 
 
 ## User Interface
