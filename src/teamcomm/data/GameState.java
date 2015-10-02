@@ -5,7 +5,6 @@ import data.Rules;
 import data.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
-import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -475,21 +474,6 @@ public class GameState {
         } else {
             return "Unknown" + (withPrefix ? " Team" : "");
         }
-    }
-
-    /**
-     * Returns the icon of the given team.
-     *
-     * @param teamNumber number of the team
-     * @return icon as a BufferedImage
-     */
-    public BufferedImage getTeamIcon(final int teamNumber) {
-        if (teamNumber == 98 || teamNumber == 99) {
-            Rules.league = Rules.LEAGUES[1];
-        } else {
-            Rules.league = Rules.LEAGUES[0];
-        }
-        return Teams.getIcon(teamNumber);
     }
 
     /**
