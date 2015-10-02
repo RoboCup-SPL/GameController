@@ -59,6 +59,8 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                                 setLocationRelativeTo(anchor);
                             }
                             setVisible(true);
+                            update();
+                            repaint();
                         }
                     }
                 });
