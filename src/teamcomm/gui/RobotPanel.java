@@ -76,6 +76,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
                 setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(getForeground()), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
                 setLayout(new OverlayLayout(robotPanel));
                 setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+                setMaximumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
                 foregroundPanel.setLayout(new BoxLayout(foregroundPanel, BoxLayout.Y_AXIS));
                 foregroundPanel.setOpaque(false);

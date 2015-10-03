@@ -70,7 +70,9 @@ public class RobotState {
             playerNumber = (int) message.playerNum;
         }
         lastMessageTimestamp = System.currentTimeMillis();
-        recentMessageTimestamps.addFirst(lastMessageTimestamp);
+        synchronized (recentMessageTimestamps) {
+            recentMessageTimestamps.addFirst(lastMessageTimestamp);
+        }
         messageCount++;
 
         for (final RobotStateEventListener listener : listeners.getListeners(RobotStateEventListener.class)) {
@@ -103,14 +105,16 @@ public class RobotState {
      * @return number of messages per second
      */
     public double getMessagesPerSecond() {
-        final ListIterator<Long> it = recentMessageTimestamps.listIterator(recentMessageTimestamps.size());
+        synchronized (recentMessageTimestamps) {
+            final ListIterator<Long> it = recentMessageTimestamps.listIterator(recentMessageTimestamps.size());
 
-        final long curTime = System.currentTimeMillis();
-        while (curTime - it.previous() > AVERAGE_CALCULATION_TIME) {
-            it.remove();
+            final long curTime = System.currentTimeMillis();
+            while (curTime - it.previous() > AVERAGE_CALCULATION_TIME) {
+                it.remove();
+            }
+
+            return recentMessageTimestamps.size() > 0 ? (recentMessageTimestamps.size() * 1000.0 / Math.max(1000, curTime - recentMessageTimestamps.getLast())) : 0;
         }
-
-        return recentMessageTimestamps.size() > 0 ? (recentMessageTimestamps.size() * 1000.0 / Math.max(1000, curTime - recentMessageTimestamps.getLast())) : 0;
     }
 
     /**
