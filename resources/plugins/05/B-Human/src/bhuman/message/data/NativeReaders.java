@@ -5,21 +5,66 @@ import java.nio.ByteBuffer;
 import util.Unsigned;
 
 /**
+ * Abstract class containing StreamReader classes and instances for native C++
+ * types.
  *
  * @author Felix Thielke
  */
 public abstract class NativeReaders {
 
+    /**
+     * SimpleStreamReader for bools.
+     */
     public static final SimpleStreamReader<Boolean> boolReader = new BoolReader();
+
+    /**
+     * SimpleStreamReader for chars (read as Java chars).
+     */
     public static final SimpleStreamReader<Character> charReader = new CharReader();
+
+    /**
+     * SimpleStreamReader for signed chars (read as Java bytes).
+     */
     public static final SimpleStreamReader<Byte> scharReader = new SCharReader();
+
+    /**
+     * SimpleStreamReader for unsigned chars.
+     */
     public static final SimpleStreamReader<Short> ucharReader = new UCharReader();
+
+    /**
+     * SimpleStreamReader for shorts.
+     */
     public static final SimpleStreamReader<Short> shortReader = new ShortReader();
+
+    /**
+     * SimpleStreamReader for unsigned shorts.
+     */
     public static final SimpleStreamReader<Integer> ushortReader = new UShortReader();
+
+    /**
+     * SimpleStreamReader for ints.
+     */
     public static final SimpleStreamReader<Integer> intReader = new IntReader();
+
+    /**
+     * SimpleStreamReader for unsigned ints.
+     */
     public static final SimpleStreamReader<Long> uintReader = new UIntReader();
+
+    /**
+     * SimpleStreamReader for floats.
+     */
     public static final SimpleStreamReader<Float> floatReader = new FloatReader();
+
+    /**
+     * SimpleStreamReader for doubles.
+     */
     public static final SimpleStreamReader<Double> doubleReader = new DoubleReader();
+
+    /**
+     * StreamReader for strings.
+     */
     public static final StringReader stringReader = new StringReader();
 
     private static class BoolReader implements SimpleStreamReader<Boolean> {
@@ -162,6 +207,9 @@ public abstract class NativeReaders {
 
     }
 
+    /**
+     * StreamReader for strings.
+     */
     public static class StringReader implements StreamReader<String> {
 
         public int getStreamedSize(final ByteBuffer stream) {
@@ -190,6 +238,9 @@ public abstract class NativeReaders {
 
     }
 
+    /**
+     * SimpleStreamReader for strings of a fixed size.
+     */
     public static class SimpleStringReader implements SimpleStreamReader<String> {
 
         private final int count;
@@ -220,6 +271,9 @@ public abstract class NativeReaders {
 
     }
 
+    /**
+     * SimpleStreamReader for bool arrays of a fixed size.
+     */
     public static class BoolArrayReader implements SimpleStreamReader<boolean[]> {
 
         public final int count;
@@ -243,6 +297,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for char arrays of a fixed size.
+     */
     public static class CharArrayReader implements SimpleStreamReader<char[]> {
 
         public final int count;
@@ -266,6 +323,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for signed char arrays of a fixed size.
+     */
     public static class SCharArrayReader implements SimpleStreamReader<byte[]> {
 
         public final int count;
@@ -289,6 +349,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for unsigned char arrays of a fixed size.
+     */
     public static class UCharArrayReader implements SimpleStreamReader<short[]> {
 
         public final int count;
@@ -312,6 +375,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for short arrays of a fixed size.
+     */
     public static class ShortArrayReader implements SimpleStreamReader<short[]> {
 
         public final int count;
@@ -335,6 +401,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for unsigned short arrays of a fixed size.
+     */
     public static class UShortArrayReader implements SimpleStreamReader<int[]> {
 
         public final int count;
@@ -358,6 +427,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for int arrays of a fixed size.
+     */
     public static class IntArrayReader implements SimpleStreamReader<int[]> {
 
         public final int count;
@@ -381,6 +453,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for unsigned int arrays of a fixed size.
+     */
     public static class UIntArrayReader implements SimpleStreamReader<long[]> {
 
         public final int count;
@@ -404,6 +479,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for float arrays of a fixed size.
+     */
     public static class FloatArrayReader implements SimpleStreamReader<float[]> {
 
         public final int count;
@@ -427,6 +505,9 @@ public abstract class NativeReaders {
         }
     }
 
+    /**
+     * SimpleStreamReader for double arrays of a fixed size.
+     */
     public static class DoubleArrayReader implements SimpleStreamReader<double[]> {
 
         public final int count;

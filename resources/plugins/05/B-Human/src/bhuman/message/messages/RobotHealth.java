@@ -7,6 +7,7 @@ import bhuman.message.data.NativeReaders;
 import java.nio.ByteBuffer;
 
 /**
+ * Class for the RobotHealth message.
  *
  * @author Felix Thielke
  */
@@ -115,7 +116,7 @@ public class RobotHealth extends Message<RobotHealth> {
     public RobotHealth read(final ByteBuffer stream) {
         if (stream.remaining() < NativeReaders.floatReader.getStreamedSize() * 6
                 + NativeReaders.ucharReader.getStreamedSize() * 4
-                + new EnumReader<JointData.Joint>(JointData.Joint.class).getStreamedSize()
+                + new EnumReader<>(JointData.Joint.class).getStreamedSize()
                 + new NativeReaders.UCharArrayReader(3).getStreamedSize()) {
             return null;
         }
@@ -127,7 +128,7 @@ public class RobotHealth extends Message<RobotHealth> {
         batteryLevel = NativeReaders.ucharReader.read(stream);
         totalCurrent = NativeReaders.floatReader.read(stream);
         maxJointTemperature = NativeReaders.ucharReader.read(stream);
-        jointWithMaxTemperature = new EnumReader<JointData.Joint>(JointData.Joint.class).read(stream);
+        jointWithMaxTemperature = new EnumReader<>(JointData.Joint.class).read(stream);
         cpuTemperature = NativeReaders.ucharReader.read(stream);
         load = new NativeReaders.UCharArrayReader(3).read(stream);
         memoryUsage = NativeReaders.ucharReader.read(stream);

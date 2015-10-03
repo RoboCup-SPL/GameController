@@ -8,6 +8,7 @@ import java.util.List;
 import teamcomm.data.AdvancedMessage;
 
 /**
+ * Custom message class for team B-Human.
  *
  * @author Felix Thielke
  */
@@ -15,11 +16,14 @@ public class BHumanMessage extends AdvancedMessage {
 
     private static final long serialVersionUID = 8509144227967224852L;
 
+    /**
+     * The MessageQueue tranferred in this message.
+     */
     public MessageQueue queue;
 
     @Override
     public String[] display() {
-        final List<String> display = new LinkedList<String>();
+        final List<String> display = new LinkedList<>();
         final RobotHealth health = queue.getCachedMessage(RobotHealth.class);
         final BehaviorStatus status = queue.getCachedMessage(BehaviorStatus.class);
 
@@ -45,8 +49,9 @@ public class BHumanMessage extends AdvancedMessage {
     public void init() {
         queue = new MessageQueue(this, ByteBuffer.wrap(data));
 
-        // Update cached RobotHealth
+        // Update cached RobotHealth and BehaviorStatus
         queue.getCachedMessage(RobotHealth.class);
+        queue.getCachedMessage(BehaviorStatus.class);
     }
 
 }

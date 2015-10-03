@@ -13,6 +13,7 @@ import teamcomm.gui.drawings.Image;
 import teamcomm.gui.drawings.PerPlayer;
 
 /**
+ * Custom drawing for visualizing when a whistle was heard.
  *
  * @author Felix Thielke
  */

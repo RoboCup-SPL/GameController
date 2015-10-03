@@ -9,7 +9,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- *
+ * Small program for automatically generating the MessageID enum of the plugin
+ * by reading the MessageID enum of the B-Human repository. The path to the
+ * repository must be stored in a file whose name is given in CONFIG_FILE.
  *
  * @author Felix Thielke
  */
@@ -19,6 +21,11 @@ public class Bootstrap {
 
     private static final String MESSAGEIDS_H = "Tools/MessageQueue/MessageIDs.h";
 
+    /**
+     * Main method of the program.
+     *
+     * @param args command line arguments (ignored)
+     */
     public static void main(final String[] args) {
         final File bhumanPath;
         try {
@@ -39,49 +46,35 @@ public class Bootstrap {
     }
 
     private static void generateMessageIDs(final File bhumanPath) throws IOException {
-        final BufferedReader messageIDs_h = new BufferedReader(new FileReader(new File(bhumanPath, MESSAGEIDS_H)));
-        try {
-            final BufferedWriter messageID_java = new BufferedWriter(new FileWriter("src/bhuman/message/MessageID.java"));
-
-            try {
-                while (!messageIDs_h.readLine().trim().startsWith("ENUM(MessageID,")) {
-                }
-
-                messageID_java.write(
-                        "package bhuman.message;\n"
-                        + "\n"
-                        + "/**\n"
-                        + " * Enum containing all MessageIDs used for serialization.\n"
-                        + " *\n"
-                        + " * @author Felix Thielke\n"
-                        //+ " * @version " + Instant.now().toString() + "\n"
-                        + " */\n"
-                        + "public enum MessageID {\n"
-                        + "\n"
-                );
-
-                String line = messageIDs_h.readLine().trim();
-                while (!line.startsWith("});")) {
-                    if (!line.isEmpty() && !line.startsWith("//") && !line.startsWith("numOf")) {
-                        final String[] split = line.split("=", 2);
-                        if (split.length == 2) {
-                            split[0] = split[0].trim() + split[1].substring(Math.max(0, split[1].indexOf(','))).trim();
-                        }
-                        if(!split[0].startsWith("{")) {
-                            messageID_java.write("    " + split[0] + "\n");
-                        }
-                    }
-
-                    line = messageIDs_h.readLine().trim();
-                }
-                messageID_java.write("}\n");
-                
-                System.out.println("MessageIDs updated");
-            } finally {
-                messageID_java.close();
+        try (final BufferedReader messageIDs_h = new BufferedReader(new FileReader(new File(bhumanPath, MESSAGEIDS_H)));
+                final BufferedWriter messageID_java = new BufferedWriter(new FileWriter("src/bhuman/message/MessageID.java"))) {
+            while (!messageIDs_h.readLine().trim().startsWith("ENUM(MessageID,")) {
             }
-        } finally {
-            messageIDs_h.close();
+            messageID_java.write(
+                    "package bhuman.message;\n"
+                    + "\n"
+                    + "/**\n"
+                    + " * Enum containing all MessageIDs used for serialization.\n"
+                    + " */\n"
+                    + "public enum MessageID {\n"
+                    + "\n"
+            );
+            String line = messageIDs_h.readLine().trim();
+            while (!line.startsWith("});")) {
+                if (!line.isEmpty() && !line.startsWith("//") && !line.startsWith("numOf")) {
+                    final String[] split = line.split("=", 2);
+                    if (split.length == 2) {
+                        split[0] = split[0].trim() + split[1].substring(Math.max(0, split[1].indexOf(','))).trim();
+                    }
+                    if (!split[0].startsWith("{")) {
+                        messageID_java.write("    " + split[0] + "\n");
+                    }
+                }
+
+                line = messageIDs_h.readLine().trim();
+            }
+            messageID_java.write("}\n");
+            System.out.println("MessageIDs updated");
         }
     }
 }

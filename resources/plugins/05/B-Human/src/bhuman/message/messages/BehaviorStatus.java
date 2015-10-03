@@ -8,6 +8,7 @@ import bhuman.message.data.SimpleStreamReader;
 import java.nio.ByteBuffer;
 
 /**
+ * Class for the BehaviourStatus message.
  *
  * @author Felix Thielke
  */
@@ -38,10 +39,13 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
     public static enum HeadControlFlags {
 
         noFlag,
-        checkingBall
+        checkingBall // Whether the robot started panning to the ball or is currently looking at the ball
     }
 
     public Role role;
+    /**
+     * What is the robot doing in general?
+     */
     public Activity activity;
     public float estimatedTimeToReachBall;
     public int passTarget;
@@ -50,19 +54,19 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
     @Override
     public int getStreamedSize() {
         return new Role().getStreamedSize()
-                + new EnumReader<Activity>(Activity.class).getStreamedSize()
+                + new EnumReader<>(Activity.class).getStreamedSize()
                 + NativeReaders.floatReader.getStreamedSize()
                 + NativeReaders.intReader.getStreamedSize()
-                + new EnumReader<HeadControlFlags>(HeadControlFlags.class).getStreamedSize();
+                + new EnumReader<>(HeadControlFlags.class).getStreamedSize();
     }
 
     @Override
     public BehaviorStatus read(final ByteBuffer stream) {
         role = new Role().read(stream);
-        activity = new EnumReader<Activity>(Activity.class).read(stream);
+        activity = new EnumReader<>(Activity.class).read(stream);
         estimatedTimeToReachBall = NativeReaders.floatReader.read(stream);
         passTarget = NativeReaders.intReader.read(stream);
-        headControlFlags = new EnumReader<HeadControlFlags>(HeadControlFlags.class).read(stream);
+        headControlFlags = new EnumReader<>(HeadControlFlags.class).read(stream);
         return this;
     }
 

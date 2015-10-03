@@ -10,11 +10,15 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 /**
+ * Class for the GoalPercept message.
  *
  * @author Felix Thielke
  */
 public class GoalPercept extends Message<GoalPercept> {
 
+    /**
+     * Description of a perceived goal post.
+     */
     public static class GoalPost implements SimpleStreamReader<GoalPost> {
 
         public static enum Position {
@@ -22,13 +26,22 @@ public class GoalPercept extends Message<GoalPercept> {
             IS_UNKNOWN, IS_LEFT, IS_RIGHT
         }
 
+        /**
+         * Position of this post.
+         */
         public Position position;
+        /**
+         * The position of the goal post in the current image.
+         */
         public Eigen.Vector2i positionInImage;
+        /**
+         * The position of the goal post relative to the robot.
+         */
         public Eigen.Vector2f positionOnField;
 
         @Override
         public int getStreamedSize() {
-            return new EnumReader<Position>(Position.class).getStreamedSize()
+            return new EnumReader<>(Position.class).getStreamedSize()
                     + new Eigen.Vector2i().getStreamedSize()
                     + new Eigen.Vector2f().getStreamedSize();
         }
@@ -44,8 +57,17 @@ public class GoalPercept extends Message<GoalPercept> {
 
     }
 
+    /**
+     * Is empty if no goal posts where seen this frame.
+     */
     public List<GoalPost> goalPosts;
+    /**
+     * Time when a goal post was seen.
+     */
     public long timeWhenGoalPostLastSeen;
+    /**
+     * Time when complete goal was seen.
+     */
     public long timeWhenCompleteGoalLastSeen;
 
     @Override

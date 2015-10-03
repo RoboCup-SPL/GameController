@@ -3,13 +3,20 @@ package bhuman.message.data;
 import java.nio.ByteBuffer;
 
 /**
+ * Abstract class containing classes for Eigen types.
  *
  * @author Felix Thielke
  */
 public abstract class Eigen {
 
+    /**
+     * Class for a Vector of two ints.
+     */
     public static class Vector2i extends Vector2<Integer> {
 
+        /**
+         * Constructor.
+         */
         public Vector2i() {
             super(NativeReaders.intReader);
         }
@@ -21,12 +28,24 @@ public abstract class Eigen {
 
     }
 
+    /**
+     * Class for a Vector of two floats.
+     */
     public static class Vector2f extends Vector2<Float> {
 
+        /**
+         * Constructor.
+         */
         public Vector2f() {
             super(NativeReaders.floatReader);
         }
 
+        /**
+         * Constructor.
+         *
+         * @param x x value
+         * @param y y value
+         */
         public Vector2f(final float x, final float y) {
             super(NativeReaders.floatReader);
             this.x = x;
@@ -38,24 +57,38 @@ public abstract class Eigen {
             return (Vector2f) super.read(stream);
         }
 
-        public double norm() {
-            return Math.hypot(x, y);
-        }
-
+        /**
+         * Returns the difference of this vector and another.
+         *
+         * @param other other vector
+         * @return difference
+         */
         public Vector2f diff(final Vector2f other) {
             return new Vector2f(other.x - x, other.y - y);
         }
 
+        /**
+         * Scales this vector.
+         *
+         * @param factor scaling factor
+         * @return resulting vector
+         */
         public Vector2f scale(final float factor) {
             return new Vector2f(x * factor, y * factor);
         }
 
+        /**
+         * Inversely scales this vector.
+         *
+         * @param factor scaling factor
+         * @return resulting factor
+         */
         public Vector2f invScale(final float factor) {
             return new Vector2f(x / factor, y / factor);
         }
     }
 
-    private static abstract class Vector2<T> implements SimpleStreamReader<Vector2<T>> {
+    private static abstract class Vector2<T extends Number> implements SimpleStreamReader<Vector2<T>> {
 
         public T x;
         public T y;
@@ -75,6 +108,15 @@ public abstract class Eigen {
             x = reader.read(stream);
             y = reader.read(stream);
             return this;
+        }
+
+        /**
+         * Returns the norm of the vector.
+         *
+         * @return norm
+         */
+        public double norm() {
+            return Math.hypot(x.doubleValue(), y.doubleValue());
         }
     }
 }

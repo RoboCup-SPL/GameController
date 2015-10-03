@@ -1,11 +1,15 @@
 package bhuman.message.data;
 
 /**
+ * Class containing joint data declarations.
  *
  * @author Felix Thielke
  */
 public class JointData {
 
+    /**
+     * Enum containing all joints.
+     */
     public static enum Joint {
 
         HeadYaw,

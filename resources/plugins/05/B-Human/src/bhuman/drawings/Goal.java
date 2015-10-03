@@ -13,14 +13,15 @@ import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Text;
 
 /**
+ * Custom drawing for seen goalposts.
  *
  * @author Felix Thielke
  */
 public class Goal extends PerPlayer {
 
-    public static final float OPACITY = 0.5f;
-    public static final double GOALPOST_RADIUS = 0.05;
-    public static final double GOALPOST_HEIGHT = 0.85;
+    private static final float OPACITY = 0.5f;
+    private static final double GOALPOST_RADIUS = 0.05;
+    private static final double GOALPOST_HEIGHT = 0.85;
 
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {

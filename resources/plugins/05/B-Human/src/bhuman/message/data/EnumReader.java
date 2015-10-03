@@ -1,6 +1,5 @@
 package bhuman.message.data;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 
 /**
@@ -18,10 +17,10 @@ public class EnumReader<E extends Enum<E>> implements SimpleStreamReader<E> {
     @Override
     public int getStreamedSize() {
         try {
-            if (((E[]) enumClass.getMethod("values").invoke(null)).length >= (1 << 8)) {
+            if (enumClass.getEnumConstants().length >= (1 << 8)) {
                 return NativeReaders.uintReader.getStreamedSize();
             }
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (final SecurityException | IllegalArgumentException ex) {
         }
         return NativeReaders.ucharReader.getStreamedSize();
     }
@@ -29,7 +28,7 @@ public class EnumReader<E extends Enum<E>> implements SimpleStreamReader<E> {
     @Override
     public E read(final ByteBuffer stream) {
         try {
-            final E[] values = (E[]) enumClass.getMethod("values").invoke(null);
+            final E[] values = enumClass.getEnumConstants();
             final int val;
             if (values.length >= (1 << 8)) {
                 val = NativeReaders.intReader.read(stream);
@@ -39,7 +38,7 @@ public class EnumReader<E extends Enum<E>> implements SimpleStreamReader<E> {
             if (val < values.length) {
                 return values[val];
             }
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (final SecurityException | IllegalArgumentException ex) {
         }
 
         return null;

@@ -10,12 +10,13 @@ import teamcomm.data.RobotState;
 import teamcomm.gui.drawings.PerPlayer;
 
 /**
+ * Custom drawing for obstacles.
  *
  * @author Florian Maaß
  */
 public class Obstacle extends PerPlayer {
 
-    public static final float OPACITY = 0.75f;
+    private static final float OPACITY = 0.75f;
 
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {

@@ -6,6 +6,7 @@ import bhuman.message.data.SimpleStreamReader;
 import java.nio.ByteBuffer;
 
 /**
+ * Class for the Whistle message.
  *
  * @author Felix Thielke
  */
