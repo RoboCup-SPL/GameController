@@ -1,4 +1,5 @@
 build/
 nbproject/
 *~
+error.txt
 /resources/plugins/05/B-Human/bhumanpath.cfg
