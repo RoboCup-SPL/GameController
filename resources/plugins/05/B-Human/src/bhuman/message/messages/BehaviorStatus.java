@@ -36,12 +36,6 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
         walkNextToKeeper
     }
 
-    public static enum HeadControlFlags {
-
-        noFlag,
-        checkingBall // Whether the robot started panning to the ball or is currently looking at the ball
-    }
-
     public Role role;
     /**
      * What is the robot doing in general?
@@ -49,15 +43,13 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
     public Activity activity;
     public float estimatedTimeToReachBall;
     public int passTarget;
-    public HeadControlFlags headControlFlags;
 
     @Override
     public int getStreamedSize() {
         return new Role().getStreamedSize()
                 + new EnumReader<>(Activity.class).getStreamedSize()
                 + NativeReaders.floatReader.getStreamedSize()
-                + NativeReaders.intReader.getStreamedSize()
-                + new EnumReader<>(HeadControlFlags.class).getStreamedSize();
+                + NativeReaders.intReader.getStreamedSize();
     }
 
     @Override
@@ -66,7 +58,6 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
         activity = new EnumReader<>(Activity.class).read(stream);
         estimatedTimeToReachBall = NativeReaders.floatReader.read(stream);
         passTarget = NativeReaders.intReader.read(stream);
-        headControlFlags = new EnumReader<>(HeadControlFlags.class).read(stream);
         return this;
     }
 
