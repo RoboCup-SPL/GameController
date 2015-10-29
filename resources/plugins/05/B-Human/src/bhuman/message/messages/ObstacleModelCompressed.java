@@ -23,6 +23,7 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
         public int getStreamedSize() {
             return NativeReaders.floatReader.getStreamedSize() * 3
                     + new Eigen.Vector2f().getStreamedSize() * 3
+                    + NativeReaders.uintReader.getStreamedSize()
                     + new EnumReader<>(Type.class).getStreamedSize();
         }
 
@@ -39,18 +40,25 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
          */
         public float covXX, covYY, covXY;
         /**
-         * Center point of an Obstacle.
+         * Center point of an obstacle.
          */
         public Eigen.Vector2f center;
         /**
-         * Left point of an Obstacle.
+         * Left point of an obstacle.
          */
         public Eigen.Vector2f left;
         /**
-         * Right point of an Obstacle.
+         * Right point of an obstacle.
          */
         public Eigen.Vector2f right;
+        /**
+         * Classified type (see enum above).
+         */
         public Type type;
+        /**
+         * Timestamp of the last measurement of an obstacle.
+         */
+        public long lastSeen;
 
         @Override
         public Obstacle read(ByteBuffer stream) {
@@ -61,6 +69,8 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
             center = new Eigen.Vector2f().read(stream);
             left = new Eigen.Vector2f().read(stream);
             right = new Eigen.Vector2f().read(stream);
+
+            lastSeen = NativeReaders.uintReader.read(stream);
 
             type = new EnumReader<>(Type.class).read(stream);
             if (type == null) {
