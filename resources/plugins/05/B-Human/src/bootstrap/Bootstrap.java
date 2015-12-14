@@ -66,7 +66,8 @@ public class Bootstrap {
                     if (split.length == 2) {
                         split[0] = split[0].trim() + split[1].substring(Math.max(0, split[1].indexOf(','))).trim();
                     }
-                    if (!split[0].startsWith("{")) {
+                    final char start = split[0].charAt(0);
+                    if (start != '{' && start != ',') {
                         messageID_java.write("    " + split[0] + "\n");
                     }
                 }

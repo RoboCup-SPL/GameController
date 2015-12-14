@@ -1,6 +1,7 @@
 package bhuman.message;
 
 import bhuman.message.messages.BehaviorStatus;
+import bhuman.message.messages.NetworkThumbnail;
 import bhuman.message.messages.RobotHealth;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
@@ -52,6 +53,12 @@ public class BHumanMessage extends AdvancedMessage {
         // Update cached RobotHealth and BehaviorStatus
         queue.getCachedMessage(RobotHealth.class);
         queue.getCachedMessage(BehaviorStatus.class);
+        
+        // Update thumbnail image
+        final NetworkThumbnail msg = queue.getMessage(NetworkThumbnail.class);
+        if(msg != null) {
+            Thumbnail.instance.handleMessage(msg);
+        }
     }
 
 }
