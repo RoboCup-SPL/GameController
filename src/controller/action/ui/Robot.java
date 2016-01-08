@@ -15,7 +15,6 @@ import controller.action.ui.penalty.ServiceHL;
 import controller.action.ui.penalty.Substitute;
 import data.AdvancedData;
 import data.AdvancedData.PenaltyQueueData;
-import data.HL;
 import data.PlayerInfo;
 import data.Rules;
 import data.SPL;
@@ -76,10 +75,10 @@ public class Robot extends GCAction
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         }
         else if (player.penalty != PlayerInfo.PENALTY_NONE) {
+            player.penalty = PlayerInfo.PENALTY_NONE;
             Log.state(data, ("Unpenalised ")+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
-            player.penalty = PlayerInfo.PENALTY_NONE;
         }
     }
     
