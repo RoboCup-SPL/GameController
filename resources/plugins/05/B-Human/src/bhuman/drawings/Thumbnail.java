@@ -1,12 +1,7 @@
 package bhuman.drawings;
 
-import bhuman.message.BHumanMessage;
-import bhuman.message.messages.Whistle;
 import com.jogamp.opengl.GL2;
 import data.SPLStandardMessage;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.JOptionPane;
 import teamcomm.gui.Camera;
 import teamcomm.data.RobotState;
 import teamcomm.gui.drawings.TextureLoader;
@@ -19,12 +14,12 @@ import teamcomm.gui.drawings.PerPlayer;
  * @author Felix Thielke
  */
 public class Thumbnail extends PerPlayer {
-    
+
     public Thumbnail() {
         super();
         setActive(false);
     }
-    
+
     @Override
     protected void init(final GL2 gl) {
         setActive(false);
@@ -34,7 +29,7 @@ public class Thumbnail extends PerPlayer {
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
         if (rs.getLastMessage() != null) {
             final SPLStandardMessage msg = rs.getLastMessage();
-            final TextureLoader.Texture tex = bhuman.message.Thumbnail.instance.getLastImage(gl);
+            final TextureLoader.Texture tex = bhuman.message.Thumbnail.getInstance(msg.teamNum + "," + msg.playerNum).getLastImage(gl);
 
             if (tex != null) {
                 gl.glPushMatrix();

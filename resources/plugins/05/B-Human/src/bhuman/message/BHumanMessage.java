@@ -57,7 +57,7 @@ public class BHumanMessage extends AdvancedMessage {
         // Update thumbnail image
         final NetworkThumbnail msg = queue.getMessage(NetworkThumbnail.class);
         if(msg != null) {
-            Thumbnail.instance.handleMessage(msg);
+            Thumbnail.getInstance(teamNum + "," + playerNum).handleMessage(msg);
         }
     }
 

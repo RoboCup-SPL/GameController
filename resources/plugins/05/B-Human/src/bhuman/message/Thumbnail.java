@@ -4,6 +4,8 @@ import bhuman.message.messages.NetworkThumbnail;
 import com.jogamp.opengl.GL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
+import java.util.Map;
 import teamcomm.gui.drawings.TextureLoader;
 import util.Unsigned;
 
@@ -14,7 +16,7 @@ import util.Unsigned;
  */
 public class Thumbnail {
 
-    public static final Thumbnail instance = new Thumbnail();
+    private static final Map<String, Thumbnail> instances = new HashMap<>();
 
     private byte sequence = -1;
     private short width;
@@ -28,6 +30,15 @@ public class Thumbnail {
     private int textureId = -1;
 
     private boolean newImage = false;
+
+    public static Thumbnail getInstance(final String robot) {
+        Thumbnail instance = instances.get(robot);
+        if (instance == null) {
+            instance = new Thumbnail();
+            instances.put(robot, instance);
+        }
+        return instance;
+    }
 
     public void handleMessage(final NetworkThumbnail msg) {
         synchronized (this) {
