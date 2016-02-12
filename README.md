@@ -10,6 +10,12 @@ The sources mentioned in some sections of this document are available at
 https://github.com/bhuman/GameController .
 
 
+### Acknowledgement
+
+The development was partially supported by the RoboCup Federation within the calls for
+Support for Projects for League Developments for 2013 and 2015.
+
+
 ## 1. Building from Source
 
 To build it from the source code you may use Apache Ant.
