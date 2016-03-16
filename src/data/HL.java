@@ -86,5 +86,7 @@ public class HL extends Rules
         compatibilityToVersion7 = true;
         /** If true, the drop-in player competition is active */
         dropInPlayerMode = false;
+        /** If true, the game controller should drop broadcast-messages */
+        dropBroadcastMessages = false;
     }
 }

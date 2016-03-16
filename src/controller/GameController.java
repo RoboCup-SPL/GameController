@@ -155,6 +155,19 @@ public class GameController
             EventHandler.getInstance().data = data;
 
             //receiver
+            final Pattern regex;
+            if (outBroadcastAddress.startsWith("255.")) {
+                regex = IPV4_PATTERN;
+            } else {
+                // TODO this is a lazy implementation, only working with broadcast addresses like
+                // 10.0.255.255 with 10.0.0.0/16 being the network
+                // 10.0.5.255 with 10.0.5.0/24 being the network
+                // NOT: 10.0.255.255 with 10.0.128.0/17 being the network (matching too many addresses)
+                // NOT: 10.0.128.255 with 10.0.0.0/17 being the network (matching too few addresses)
+                // a better pattern can only be created if the netmask is also supplied
+                regex = Pattern.compile(outBroadcastAddress.replace(".","\\.").replace("\\.255", "\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)"));
+            }
+            GameControlReturnDataReceiver.initialize(regex);
             GameControlReturnDataReceiver receiver = GameControlReturnDataReceiver.getInstance();
             receiver.start();
 
@@ -167,6 +180,7 @@ public class GameController
                     "Error while setting up GameController on port: " + GameControlData.GAMECONTROLLER_RETURNDATA_PORT + ".",
                     "Error on configured port",
                     JOptionPane.ERROR_MESSAGE);
+            Log.error("fatal: " + e.getMessage());
             System.exit(-1);
         }
 

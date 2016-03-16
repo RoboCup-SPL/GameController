@@ -88,5 +88,7 @@ public class SPL extends Rules
         compatibilityToVersion7 = false;
         /** If true, the drop-in player competition is active */
         dropInPlayerMode = false;
+        /** If true, the game controller should drop broadcast-messages */
+        dropBroadcastMessages = true;
     }
 }

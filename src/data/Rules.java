@@ -97,4 +97,6 @@ public abstract class Rules
     public boolean compatibilityToVersion7;
     /** If true, the drop-in player competition is active */
     public boolean dropInPlayerMode;
+    /** If true, the game controller should drop broadcast-messages */
+    public boolean dropBroadcastMessages;
 }
