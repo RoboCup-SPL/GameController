@@ -269,9 +269,10 @@ Please note that the field "team" now contains the team number, not the color.
 
 ## 7. Misc
 
-The format of the packets the GameController broadcasts and receives at port
-GAMECONTROLLER_PORT is defined in the file RoboCupGameControlData.h. It differs
-from the version used in 2014 in several ways:
+The format of the packets the GameController broadcasts at port 
+GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
+is defined in the file RoboCupGameControlData.h. It differs from the version used
+in 2014 in several ways:
 
 - Inside the messages, teams are now identified by their number rather than their 
   color (e.g. kickOffTeam, dropInTeam).
