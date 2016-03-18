@@ -176,8 +176,9 @@ public class GameController
                             }
                         }
                     }
-                    System.out.println();
-                    throw new Exception(String.format("The specified interface \"%s\" is not available", interfaceName));
+                    System.err.println();
+                    Log.error("fatal: " + String.format("The specified interface \"%s\" is not available", interfaceName));
+                    System.exit(-1);
                 }
             } else {
                 for (InterfaceAddress ifAddress : networkInterface.getInterfaceAddresses()) {
@@ -187,7 +188,8 @@ public class GameController
                 }
                 if (localAddress == null) {
                     System.err.printf("The specified interface \"%s\" has no IPv4 address assigned%n", interfaceName);
-                    throw new Exception(String.format("The specified interface \"%s\" has no IPv4 address assigned", interfaceName));
+                    Log.error("fatal: " + String.format("The specified interface \"%s\" has no IPv4 address assigned", interfaceName));
+                    System.exit(-1);
                 }
             }
 
