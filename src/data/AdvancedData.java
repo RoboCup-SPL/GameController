@@ -330,7 +330,7 @@ public class AdvancedData extends GameControlData implements Cloneable
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
     {
         if(timeKickOffBlockedOvertime == 0 // preparing data packet
-                && gameType == GAME_PLAYOFF && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
+                && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
                 && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.playOffDelayedSwitchToPlaying) {
             return null;
         }
@@ -395,7 +395,7 @@ public class AdvancedData extends GameControlData implements Cloneable
     }
     
     public void updatePenalties() {
-        if (gameType == GAME_PLAYOFF && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
+        if (secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
                 && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.playOffDelayedSwitchToPlaying) {
             for (TeamInfo t : team) {
                 for (PlayerInfo p : t.player) {
