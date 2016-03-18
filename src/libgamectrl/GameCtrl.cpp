@@ -10,8 +10,10 @@
 
 #ifdef __clang__
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma clang diagnostic ignored "-Wconversion"
 #pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wunused-local-typedef"
 #endif
 #define BOOST_SIGNALS_NO_DEPRECATION_WARNING
 #include <alcommon/albroker.h>
@@ -513,7 +515,7 @@ public:
     }
     catch(AL::ALError& e)
     {
-      fprintf(stderr, "libgamectrl: %s\n", e.toString().c_str());
+      fprintf(stderr, "libgamectrl: %s\n", e.what());
       close();
     }
   }
