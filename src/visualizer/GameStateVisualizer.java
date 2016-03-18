@@ -14,11 +14,14 @@ public class GameStateVisualizer
     private static final String HELP_TEMPLATE = "Usage: java -jar GameStateVisualizer.jar {options}"
             + "\n  (-h | --help)                   display help"
             + "\n  (-l | --league) %s%sselect league (default is spl)"
+            + "\n  (-w | --window)                 select window mode (default is fullscreen)"
             + "\n";
     private static final String COMMAND_HELP = "--help";
     private static final String COMMAND_HELP_SHORT = "-h";
     private final static String COMMAND_LEAGUE = "--league";
     private final static String COMMAND_LEAGUE_SHORT = "-l";
+    private static final String COMMAND_WINDOW = "--window";
+    private static final String COMMAND_WINDOW_SHORT = "-w";
     
     private static Listener listener;
 
@@ -29,10 +32,24 @@ public class GameStateVisualizer
      */
     public static void main(String[] args)
     {
+        boolean windowMode = false;
         //commands
-        if ((args.length > 0)
-                && ((args[0].equalsIgnoreCase(COMMAND_HELP_SHORT))
-                  || (args[0].equalsIgnoreCase(COMMAND_HELP))) ) {
+        parsing:
+        for (int i=0; i<args.length; i++) {
+            if ((args.length > i+1)
+                    && ((args[i].equalsIgnoreCase(COMMAND_LEAGUE_SHORT))
+                    || (args[i].equalsIgnoreCase(COMMAND_LEAGUE))) ) {
+                i++;
+                for (int j=0; j < Rules.LEAGUES.length; j++) {
+                    if (Rules.LEAGUES[j].leagueDirectory.equals(args[i])) {
+                        Rules.league = Rules.LEAGUES[j];
+                        continue parsing;
+                    }
+                }
+            } else if (args[i].equals(COMMAND_WINDOW_SHORT) || args[i].equals(COMMAND_WINDOW)) {
+                windowMode = true;
+                continue parsing;
+            }
             String leagues = "";
             for (Rules rules : Rules.LEAGUES) {
                 leagues += (leagues.equals("") ? "" : " | ") + rules.leagueDirectory;
@@ -45,16 +62,8 @@ public class GameStateVisualizer
                               : "\n                                  ");
             System.exit(0);
         }
-        if ((args.length >= 2) && ((args[0].equals(COMMAND_LEAGUE_SHORT)) || (args[0].equals(COMMAND_LEAGUE)))) {
-            for (int i=0; i < Rules.LEAGUES.length; i++) {
-                if (Rules.LEAGUES[i].leagueDirectory.equals(args[1])) {
-                    Rules.league = Rules.LEAGUES[i];
-                    break;
-                }
-            }
-        }
         
-        GUI gui = new GUI();
+        GUI gui = new GUI(!windowMode);
         new KeyboardListener(gui);
         listener = new Listener(gui);
         listener.start();

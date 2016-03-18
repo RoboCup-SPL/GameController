@@ -43,6 +43,8 @@ public class GUI extends JFrame
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final boolean IS_APPLE_JAVA = IS_OSX && System.getProperty("java.version").compareTo("1.7") < 0;
     private static final String WINDOW_TITLE = "Visualizer";
+    private static final int WINDOW_WIDTH = 1024;
+    private static final int WINDOW_HEIGHT = 768;
     private static final int DISPLAY_UPDATE_DELAY = 500;
     private static final String STANDARD_FONT = Font.DIALOG;
     private static final double STANDARD_FONT_SIZE = 0.08;
@@ -78,15 +80,19 @@ public class GUI extends JFrame
     /**
      * Creates a new GUI.
      */
-    GUI()
+    GUI(final boolean fullscreen)
     {
         super(WINDOW_TITLE, device.getDefaultConfiguration());
-        
-        setUndecorated(true);
-        if (IS_APPLE_JAVA && devices.length != 1) {
-            setSize(device.getDefaultConfiguration().getBounds().getSize());
-        } else {
-            device.setFullScreenWindow(this);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        //fullscreen
+        if (fullscreen) {
+            setUndecorated(true);
+            if (IS_APPLE_JAVA && devices.length != 1) {
+                setSize(device.getDefaultConfiguration().getBounds().getSize());
+            } else {
+                device.setFullScreenWindow(this);
+            }
         }
         
         loadBackground();
