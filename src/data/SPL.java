@@ -63,7 +63,11 @@ public class SPL extends Rules
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
-        penaltyTime = new int[] {-1, 45, 45, 0, 45, 45, 45, 45, 45, 2 * halfTime};
+        penaltyTime = new int[][] {{-1}, {45, 90, 135, 2 * halfTime}, {45, 90, 135, 2 * halfTime}, {0}, {45, 90, 135, 2 * halfTime}, {45, 90, 135, 2 * halfTime}, {45, 90, 135, 2 * halfTime}, {45, 90, 135, 2 * halfTime}, {45}, {2 * halfTime}};
+        /** Whether the penalty count is reset on halftime */
+        resetPenaltyCountOnHalftime = true;
+        /** Whether the ejected robots are reset on halftime */
+        resetEjectedRobotsOnHalftime = true;
         /** Whether penalties can be removed before the penalty time has passed. */
         allowEarlyPenaltyRemoval = false;
         /** Penalty that players get when they substitute another player. */
