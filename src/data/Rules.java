@@ -81,7 +81,7 @@ public abstract class Rules
     public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */
     public int timeOutTime;
-    /** Time in seconds of a referee timeout*/
+    /** Time in seconds of a referee timeout */
     public int refereeTimeout;
     /** Defines if the option for a referee timeout is available. */ 
     public boolean isRefereeTimeoutAvailable;
@@ -89,12 +89,14 @@ public abstract class Rules
     public boolean timeOutPerHalf;
     /** On how many pushings is a robot ejected. */
     public int[] pushesToEjection;
-    /** Defines if coach is available **/
+    /** Defines if coach is available */
     public boolean isCoachAvailable;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
-    /** Whether compatibility mode (version 7) is supported **/
+    /** Whether compatibility mode (version 7) is supported */
     public boolean compatibilityToVersion7;
-    /** If true, the drop-in player competition is active*/
+    /** If true, the drop-in player competition is active */
     public boolean dropInPlayerMode;
+    /** If true, the game controller should drop broadcast-messages */
+    public boolean dropBroadcastMessages;
 }

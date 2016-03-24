@@ -33,7 +33,7 @@ Double-click GameController.jar or run
 Usage: `java -jar GameController.jar {options}`
 
     (-h | --help)                   display help
-    (-b | --broadcast) <address>    set broadcast ip (default is 255.255.255.255)
+    (-i | --interface) <interface>  set network interface (default is a connected IPv4 interface)
     (-l | --league) (spl | spl_dropin | hl_kid | hl_teen | hl_adult)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
@@ -58,9 +58,7 @@ of the opponent is selected in the following sequence:
 You also have to select whether you play a game in the preliminaries or a 
 play-off game. In the preliminaries the clock will continue to run during game stoppages
 and there will be no penalty shootout in case of a draw. In play-off games, the clock
-will be stopped and there may be penalty shootout. In addition, kick-offs will be 
-signaled using a whistle while the GameController actually hides the game state change
-from the robots for a while.
+will be stopped and there may be penalty shootout.
 
 HL: You also have to select whether you play a normal game or a knock-out game. A
 knock-out game will continue after a draw with two halves of extra time (if goals were
@@ -269,9 +267,10 @@ Please note that the field "team" now contains the team number, not the color.
 
 ## 7. Misc
 
-The format of the packets the GameController broadcasts and receives at port
-GAMECONTROLLER_PORT is defined in the file RoboCupGameControlData.h. It differs
-from the version used in 2014 in several ways:
+The format of the packets the GameController broadcasts at port
+GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
+is defined in the file RoboCupGameControlData.h. It differs from the version used
+in 2014 in several ways:
 
 - Inside the messages, teams are now identified by their number rather than their 
   color (e.g. kickOffTeam, dropInTeam).
@@ -282,9 +281,9 @@ from the version used in 2014 in several ways:
 - Coach messages now have a data packet size of 81 bytes instead of 40. 
 
 - RoboCupGameControlData now has the gameType flag, which indicates whether the
-  current game is a round-robin game (time does not stop + no whistles), a 
-  drop-in player game (the same, but only one half), or a play-off game, i.e.
-  a (quarter / semi) final (whistle is used + time is stopped).
+  current game is a round-robin game (time does not stop), a drop-in player game
+  (the same, but only one half), or a play-off game, i.e. a (quarter / semi)
+  final (time is stopped).
 
 
 ## 8. Known Issues

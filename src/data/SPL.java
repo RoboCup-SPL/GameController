@@ -72,7 +72,7 @@ public class SPL extends Rules
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */
         timeOutTime = 5*60;
-        /** Time in seconds of a referee timeout*/
+        /** Time in seconds of a referee timeout */
         refereeTimeout = 10*60;
         /** Defines if the option for a referee timeout is available */
         isRefereeTimeoutAvailable = true;
@@ -80,13 +80,15 @@ public class SPL extends Rules
         timeOutPerHalf = false;
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
-        /** Defines if coach is available **/
+        /** Defines if coach is available */
         isCoachAvailable = true;
         /** Allowed to compensate for lost time? */
         lostTime = true;
-        /** Whether compatibility mode (version 7) is supported **/
+        /** Whether compatibility mode (version 7) is supported */
         compatibilityToVersion7 = false;
-        /** If true, the drop-in player competition is active*/
+        /** If true, the drop-in player competition is active */
         dropInPlayerMode = false;
+        /** If true, the game controller should drop broadcast-messages */
+        dropBroadcastMessages = true;
     }
 }
