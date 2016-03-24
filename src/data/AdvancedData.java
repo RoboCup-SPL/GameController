@@ -226,7 +226,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                 && ((gameType == GAME_PLAYOFF) && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
                 ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                : real || gameType != GAME_PLAYOFF || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
+                : real || gameType != GAME_PLAYOFF && gameType != GAME_ROUNDROBIN || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
                 || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.playOffDelayedSwitchToPlaying 
                 ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
                 : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
