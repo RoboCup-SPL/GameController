@@ -55,6 +55,7 @@ public class TimeOut extends GCAction
             data.secGameState = data.previousSecGameState;
             data.previousSecGameState = GameControlData.STATE2_TIMEOUT;
             data.timeOutActive[side] = false;
+            data.kickOffReason = AdvancedData.KICKOFF_TIMEOUT;
             Log.setNextMessage("End of Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 ActionBoard.ready.perform(data);

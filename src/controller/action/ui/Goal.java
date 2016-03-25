@@ -48,10 +48,12 @@ public class Goal extends GCAction
         if (set == 1) {
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.kickOffTeam = data.team[1 - side].teamNumber;
+                data.kickOffReason = AdvancedData.KICKOFF_GOAL;
                 Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
                 ActionBoard.ready.perform(data);
             } else {
                 data.team[side].singleShots += (1<<(data.team[side].penaltyShot-1));
+                data.kickOffReason = AdvancedData.KICKOFF_PENALTYSHOOT;
                 Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
                 ActionBoard.finish.perform(data);
             }
