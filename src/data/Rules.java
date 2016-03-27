@@ -49,8 +49,8 @@ public abstract class Rules
     public int kickoffTime;
     /** Time in seconds before a global game stuck can be called. */
     public int minDurationBeforeStuck;
-    /** The number of seconds switching to Playing is delayed in a play-off game. */
-    public int playOffDelayedSwitchToPlaying;
+    /** The number of seconds switching to Playing is delayed. */
+    public int delayedSwitchToPlaying;
     /** If there is an overtime before the penalty shoot-out in a play-off game. */
     public boolean overtime;
     /** Time in seconds one overtime half is long. */

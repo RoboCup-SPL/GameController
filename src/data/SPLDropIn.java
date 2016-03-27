@@ -16,8 +16,8 @@ public class SPLDropIn extends SPL
         leagueDirectory = "spl_dropin";
         /** How many robots are in a team. */
         teamSize = robotsPlaying;
-        /** The number of seconds switching to Playing is delayed in a play-off game. */
-        playOffDelayedSwitchToPlaying = 0;
+        /** The number of seconds switching to Playing is delayed. */
+        delayedSwitchToPlaying = 0;
         /** Defines if coach is available */
         isCoachAvailable = false;
         /** If true, the drop-in player competition is active */
