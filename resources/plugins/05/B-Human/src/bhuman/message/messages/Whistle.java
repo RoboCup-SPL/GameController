@@ -41,7 +41,7 @@ public class Whistle extends Message<Whistle> implements SimpleStreamReader<Whis
 
     @Override
     public int getStreamedSize() {
-        return -1; // Size unknown because of whisle's name
+        return -1; // Size unknown because of whistle's name
     }
 
 }
