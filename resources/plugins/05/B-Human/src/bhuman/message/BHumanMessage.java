@@ -18,29 +18,31 @@ public class BHumanMessage extends AdvancedMessage {
     private static final long serialVersionUID = 8509144227967224852L;
 
     /**
-     * The MessageQueue tranferred in this message.
+     * The MessageQueue transferred in this message.
      */
     public MessageQueue queue;
 
     @Override
     public String[] display() {
         final List<String> display = new LinkedList<>();
-        final RobotHealth health = queue.getCachedMessage(RobotHealth.class);
-        final BehaviorStatus status = queue.getCachedMessage(BehaviorStatus.class);
+        if (valid) {
+            final RobotHealth health = queue.getCachedMessage(RobotHealth.class);
+            final BehaviorStatus status = queue.getCachedMessage(BehaviorStatus.class);
 
-        if (health != null) {
-            display.add(health.robotName);
-            display.add("Location: " + health.location);
-            display.add("Configuration: " + health.configuration);
-            display.add("Battery: " + health.batteryLevel + "%");
-            if (health.jointWithMaxTemperature != null) {
-                display.add("Hottest joint: " + health.jointWithMaxTemperature.toString() + " (" + health.maxJointTemperature + "°C)");
+            if (health != null) {
+                display.add(health.robotName);
+                display.add("Location: " + health.location);
+                display.add("Configuration: " + health.configuration);
+                display.add("Battery: " + health.batteryLevel + "%");
+                if (health.jointWithMaxTemperature != null) {
+                    display.add("Hottest joint: " + health.jointWithMaxTemperature.toString() + " (" + health.maxJointTemperature + "°C)");
+                }
+                display.add("");
             }
-            display.add("");
-        }
-        if (status != null) {
-            display.add("Role: " + status.role);
-            display.add("Activity: " + status.activity);
+            if (status != null) {
+                display.add("Role: " + status.role);
+                display.add("Activity: " + status.activity);
+            }
         }
 
         return display.toArray(new String[0]);

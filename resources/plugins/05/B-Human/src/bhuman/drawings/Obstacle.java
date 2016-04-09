@@ -21,6 +21,7 @@ public class Obstacle extends PerPlayer {
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
         if (rs.getLastMessage() != null
+                && rs.getLastMessage().valid
                 && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
             final ObstacleModelCompressed obstacleModel = msg.queue

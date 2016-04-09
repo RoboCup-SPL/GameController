@@ -21,7 +21,9 @@ public class WhistleHeard extends PerPlayer {
 
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
-        if (rs.getLastMessage() != null && rs.getLastMessage() instanceof BHumanMessage) {
+        if (rs.getLastMessage() != null
+                && rs.getLastMessage().valid
+                && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
             final Whistle whistle = msg.queue.getMessage(Whistle.class);
             if (whistle != null && whistle.confidenceOfLastWhistleDetection > 50 && whistle.lastTimeWhistleDetected >= msg.queue.getTimestamp() - 200) {
