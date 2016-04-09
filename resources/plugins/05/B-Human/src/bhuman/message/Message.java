@@ -44,7 +44,8 @@ public abstract class Message<T extends Message> implements StreamReader<T> {
             try {
                 final Message inst = cls.newInstance();
                 if (SimpleStreamReader.class.isInstance(inst)) {
-                    if (data.remaining() != ((SimpleStreamReader) inst).getStreamedSize()) {
+                    final int streamedSize = ((SimpleStreamReader) inst).getStreamedSize();
+                    if (data.remaining() != streamedSize && streamedSize != -1) {
                         return null;
                     }
                 }
