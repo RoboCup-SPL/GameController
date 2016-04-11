@@ -40,7 +40,7 @@ public class MessageQueue {
      * @param buf raw data of the transmitted MessageQueue
      */
     public MessageQueue(final SPLStandardMessage origin, final ByteBuffer buf) {
-        robotIdentifier = origin.teamNum + "," + origin.playerNum;
+        robotIdentifier = Unsigned.toUnsigned(origin.teamNum) + "," + origin.playerNum;
 
         buf.rewind();
         buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -64,11 +64,10 @@ public class MessageQueue {
         // read messages
         while (buf.hasRemaining()) {
             final short idIndex = Unsigned.toUnsigned(buf.get());
-            final MessageID id = MessageID.values()[idIndex];
             final int size = Unsigned.toUnsigned(buf.get()) | (Unsigned.toUnsigned(buf.get()) << 8) | (Unsigned.toUnsigned(buf.get()) << 16);
             final byte[] data = new byte[size];
             buf.get(data);
-            final Message<? extends Message> msg = Message.factory(id, ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
+            final Message<? extends Message> msg = Message.factory(idIndex, Unsigned.toUnsigned(origin.teamNum), ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
             if (msg != null) {
                 messages.put(msg.getClass(), msg);
             }

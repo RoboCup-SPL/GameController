@@ -6,11 +6,11 @@ import com.jogamp.opengl.GL2;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JOptionPane;
-import teamcomm.gui.Camera;
 import teamcomm.data.RobotState;
-import teamcomm.gui.drawings.TextureLoader;
+import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.Image;
 import teamcomm.gui.drawings.PerPlayer;
+import teamcomm.gui.drawings.TextureLoader;
 
 /**
  * Custom drawing for visualizing when a whistle was heard.
@@ -31,7 +31,7 @@ public class WhistleHeard extends PerPlayer {
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1);
                 camera.turnTowardsCamera(gl);
                 try {
-                    final File f = new File("plugins/05/resources/whistle.png").getAbsoluteFile();
+                    final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/whistle.png").getAbsoluteFile();
                     Image.drawImage(gl, TextureLoader.getInstance().loadTexture(gl, f), 0, 0, 0.2f);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null,
