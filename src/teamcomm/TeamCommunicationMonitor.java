@@ -102,6 +102,9 @@ public class TeamCommunicationMonitor {
         } catch (InterruptedException ex) {
         }
 
+        // Write config file
+        Config.getInstance().flush();
+
         // Release the application lock
         try {
             applicationLock.release();

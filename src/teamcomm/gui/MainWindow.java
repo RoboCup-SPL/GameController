@@ -32,6 +32,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import teamcomm.Config;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
@@ -142,9 +143,15 @@ public class MainWindow extends JFrame implements TeamEventListener {
         replayItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final JFileChooser fc = new JFileChooser(new File(new File(".").getAbsoluteFile(), "logs_teamcomm"));
+                final String dir = (String) Config.getInstance().get("ReplayLogfileDir");
+                final JFileChooser fc = new JFileChooser(dir == null ? new File(new File(".").getAbsoluteFile(), "logs_teamcomm") : new File(dir));
                 if (fc.showOpenDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
                     try {
+                        try {
+                            Config.getInstance().set("ReplayLogfileDir", fc.getSelectedFile().getParentFile().getCanonicalPath());
+                        } catch (IOException ex) {
+                            Config.getInstance().set("ReplayLogfileDir", fc.getSelectedFile().getParentFile().getAbsolutePath());
+                        }
                         LogReplayer.getInstance().open(fc.getSelectedFile());
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null,

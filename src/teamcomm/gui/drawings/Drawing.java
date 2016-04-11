@@ -1,6 +1,7 @@
 package teamcomm.gui.drawings;
 
 import com.jogamp.opengl.GL2;
+import teamcomm.Config;
 
 /**
  * Abstract base class for drawings of the 3D field view.
@@ -22,6 +23,7 @@ public abstract class Drawing {
      */
     public void setActive(final boolean active) {
         this.active = active;
+        Config.getInstance().set("DrawingActive_" + getClass().getName() + (getTeamNumber() < 0 ? "" : "_" + getTeamNumber()), (Boolean) active);
     }
 
     /**
@@ -58,8 +60,16 @@ public abstract class Drawing {
      */
     public final void initialize(final GL2 gl) {
         if (!initialized) {
+            final Boolean confActive = (Boolean) Config.getInstance().get("DrawingActive_" + getClass().getName() + (getTeamNumber() < 0 ? "" : "_" + getTeamNumber()));
+
             init(gl);
             initialized = true;
+
+            if (confActive == null) {
+                setActive(isActive());
+            } else {
+                setActive(confActive);
+            }
         }
     }
 
