@@ -2,11 +2,13 @@
 
   <Compound name="field">
 
+    <Set name="size" value=""/>
+	
     <ComplexAppearance ref="fieldLines" name="fieldLines1"/>
     <ComplexAppearance ref="fieldLines" name="fieldLines2">
       <Rotation z="180degree"/>
     </ComplexAppearance>
-    <ComplexAppearance ref="fieldCross"/>
+    <ComplexAppearance ref="fieldCrossCenter"/>
     <ComplexAppearance ref="fieldGreen"/>
 
     <Compound ref="fieldGoal" name="Goal1">
@@ -15,6 +17,29 @@
     </Compound>
     <Compound ref="fieldGoal" name="Goal2">
       <Translation x="4525mm"/>
+      <Rotation z="180degree"/>
+      <Set name="color" value="fieldWhite"/>
+    </Compound>
+
+  </Compound>
+
+  <Compound name="fieldSmall">
+  
+    <Set name="size" value="Small"/>
+
+    <ComplexAppearance ref="fieldLines" name="fieldLines1"/>
+    <ComplexAppearance ref="fieldLines" name="fieldLines2">
+      <Rotation z="180degree"/>
+    </ComplexAppearance>
+    <ComplexAppearance ref="fieldCrossCenter"/>
+    <ComplexAppearance ref="fieldGreen"/>
+
+    <Compound ref="fieldGoal" name="Goal1">
+      <Translation x="-3m"/>
+      <Set name="color" value="fieldWhite"/>
+    </Compound>
+    <Compound ref="fieldGoal" name="Goal2">
+      <Translation x="3m"/>
       <Rotation z="180degree"/>
       <Set name="color" value="fieldWhite"/>
     </Compound>
@@ -114,6 +139,43 @@
 3.875 -1.125 0
 3.925 -1.125 0
 3.925 1.125 0
+  </Vertices>
+  <Vertices name="fieldLinesSmall">
+# middle line
+-0.025 1.975 0
+-0.025 0.05 0
+0.025 0.05 0
+0.025 1.975 0
+
+# goal line
+2.975 2.025 0
+2.975 -2.025 0
+3.025 -2.025 0
+3.025 2.025 0
+
+# outer line left
+-2.975 2.025 0
+-2.975 1.975 0
+2.975 1.975 0
+2.975 2.025 0
+
+# keeper line left
+2.425 1.125 0
+2.425 1.075 0
+2.975 1.075 0
+2.975 1.125 0
+
+# keeper line right
+2.975 -1.125 0
+2.975 -1.075 0
+2.425 -1.075 0
+2.425 -1.125 0
+
+# keeper line front
+2.375 1.125 0
+2.375 -1.125 0 
+2.425 -1.125 0
+2.425 1.125 0
   </Vertices>
 
   <Vertices name="fieldCross">
@@ -287,6 +349,151 @@
 0.775 0 0
 0.548008 -0.548008 0
   </Vertices>
+  <Vertices name="fieldCenterCircleSmall">  
+0.0000 0.5750 0
+0.0000 0.6250 0
+0.0250 0.6245 0
+0.0250 0.6250 0
+0.0250 0.5745 0
+0.0250 0.0500 0
+0.0564 0.5722 0
+0.0564 0.0500 0
+0.0564 0.0000 0
+0.0613 0.6220 0
+0.0613 0.6250 0
+0.1122 0.5640 0
+0.1122 0.0000 0
+0.1219 0.6130 0
+0.1219 0.6250 0
+0.1669 0.5502 0
+0.1669 0.0000 0
+0.1814 0.5981 0
+0.1814 0.6250 0
+0.2200 0.5312 0
+0.2200 0.0000 0
+0.2392 0.5774 0
+0.2392 0.6250 0
+0.2711 0.5071 0
+0.2711 0.0000 0
+0.2946 0.5512 0
+0.2946 0.6250 0
+0.3195 0.4781 0
+0.3195 0.0000 0
+0.3472 0.5197 0
+0.3472 0.6250 0
+0.3648 0.4445 0
+0.3648 0.0000 0
+0.3965 0.4831 0
+0.3965 0.6250 0
+0.4066 0.4066 0
+0.4066 0.0000 0
+0.4419 0.4419 0
+0.4419 0.6250 0
+0.4445 0.3648 0
+0.4445 0.0000 0
+0.4831 0.3965 0
+0.4831 0.6250 0
+0.4781 0.3195 0
+0.4781 0.0000 0
+0.5197 0.3472 0
+0.5197 0.6250 0
+0.5071 0.2711 0
+0.5071 0.0000 0
+0.5512 0.2946 0
+0.5512 0.6250 0
+0.5312 0.2200 0
+0.5312 0.0000 0
+0.5774 0.2392 0
+0.5774 0.6250 0
+0.5502 0.1669 0
+0.5502 0.0000 0
+0.5981 0.1814 0
+0.5981 0.6250 0
+0.5640 0.1122 0
+0.5640 0.0000 0
+0.6130 0.1219 0
+0.6130 0.6250 0
+0.5722 0.0564 0
+0.5722 0.0000 0
+0.6220 0.0613 0
+0.6220 0.6250 0
+0.5750 0.0000 0
+0.5750 0.0000 0
+0.6250 0.0000 0
+0.6250 0.6250 0
+		
+0.0000 -0.5750 0
+0.0000 -0.6250 0
+0.0250 -0.6245 0
+0.0250 -0.6250 0
+0.0250 -0.5745 0
+0.0250 -0.0500 0
+0.0564 -0.5722 0
+0.0564 -0.0500 0
+0.0564 -0.0000 0
+0.0613 -0.6220 0
+0.0613 -0.6250 0
+0.1122 -0.5640 0
+0.1122 -0.0000 0
+0.1219 -0.6130 0
+0.1219 -0.6250 0
+0.1669 -0.5502 0
+0.1669 -0.0000 0
+0.1814 -0.5981 0
+0.1814 -0.6250 0
+0.2200 -0.5312 0
+0.2200 -0.0000 0
+0.2392 -0.5774 0
+0.2392 -0.6250 0
+0.2711 -0.5071 0
+0.2711 -0.0000 0
+0.2946 -0.5512 0
+0.2946 -0.6250 0
+0.3195 -0.4781 0
+0.3195 -0.0000 0
+0.3472 -0.5197 0
+0.3472 -0.6250 0
+0.3648 -0.4445 0
+0.3648 -0.0000 0
+0.3965 -0.4831 0
+0.3965 -0.6250 0
+0.4066 -0.4066 0
+0.4066 -0.0000 0
+0.4419 -0.4419 0
+0.4419 -0.6250 0
+0.4445 -0.3648 0
+0.4445 -0.0000 0
+0.4831 -0.3965 0
+0.4831 -0.6250 0
+0.4781 -0.3195 0
+0.4781 -0.0000 0
+0.5197 -0.3472 0
+0.5197 -0.6250 0
+0.5071 -0.2711 0
+0.5071 -0.0000 0
+0.5512 -0.2946 0
+0.5512 -0.6250 0
+0.5312 -0.2200 0
+0.5312 -0.0000 0
+0.5774 -0.2392 0
+0.5774 -0.6250 0
+0.5502 -0.1669 0
+0.5502 -0.0000 0
+0.5981 -0.1814 0
+0.5981 -0.6250 0
+0.5640 -0.1122 0
+0.5640 -0.0000 0
+0.6130 -0.1219 0
+0.6130 -0.6250 0
+0.5722 -0.0564 0
+0.5722 -0.0000 0
+0.6220 -0.0613 0
+0.6220 -0.6250 0
+0.5750 -0.0000 0
+0.5750 -0.0000 0
+0.6250 -0.0000 0
+0.6250 -0.6250 0  
+  </Vertices>
 
   <Vertices name="fieldGreen">
 -5.2 -3.7 -0.001
@@ -300,6 +507,12 @@
 1 1
 1 0
   </TexCoords>
+  <Vertices name="fieldGreenSmall">
+-3.7 -2.7 -0.001
+3.7 -2.7 -0.001
+3.7 2.7 -0.001
+-3.7 2.7 -0.001
+  </Vertices>
 
   <Vertices name="fieldNet">
 -0.05 -0.8 0
@@ -336,7 +549,7 @@
 
   <ComplexAppearance name="fieldLines">
     <Surface ref="fieldWhite"/>
-    <Vertices ref="fieldLines"/>
+    <Vertices ref="fieldLines$size"/>
     <Quads>
 0 1 2 3
 4 5 6 7
@@ -345,13 +558,33 @@
 16 17 18 19
 20 21 22 23
     </Quads>
-    <ComplexAppearance ref="fieldCross">
-      <Translation x="3.2" y="0" z="0"/>
-    </ComplexAppearance>
+    <ComplexAppearance ref="fieldCross$size"/>
     <ComplexAppearance ref="fieldCenterCircle"/>
   </ComplexAppearance>
 
+  <ComplexAppearance name="fieldCrossCenter">
+    <Surface ref="fieldWhite"/>
+    <Vertices ref="fieldCross"/>
+    <Quads>
+2 3 1 0
+6 7 5 4
+8 9 11 10
+    </Quads>
+  </ComplexAppearance>
+
   <ComplexAppearance name="fieldCross">
+    <Translation x="3.2" y="0" z="0"/>
+    <Surface ref="fieldWhite"/>
+    <Vertices ref="fieldCross"/>
+    <Quads>
+2 3 1 0
+6 7 5 4
+8 9 11 10
+    </Quads>
+  </ComplexAppearance>
+
+  <ComplexAppearance name="fieldCrossSmall">
+    <Translation x="1.2" y="0" z="0"/>
     <Surface ref="fieldWhite"/>
     <Vertices ref="fieldCross"/>
     <Quads>
@@ -363,7 +596,7 @@
 
   <ComplexAppearance name="fieldCenterCircle">
     <Surface ref="fieldWhite"/>
-    <Vertices ref="fieldCenterCircle"/>
+    <Vertices ref="fieldCenterCircle$size"/>
     <Quads>
 4 2 1 0
 6 9 2 4
@@ -405,7 +638,7 @@
 
   <ComplexAppearance name="fieldGreen">
     <Surface ref="fieldGreen"/>
-    <Vertices ref="fieldGreen"/>
+    <Vertices ref="fieldGreen$size"/>
     <TexCoords ref="fieldGreen"/>
     <Quads>
 0 1 2 3
