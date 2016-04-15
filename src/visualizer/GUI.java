@@ -69,6 +69,8 @@ public class GUI extends JFrame
     private GameControlData data = null;
     /** The background. */
     private BufferedImage background;
+    /** Align background with 0: top, 1: bottom, 2: left, 3: right window border. */
+    private int alignBackgroundSide;
     
     /** The fonts used. */
     private Font testFont;
@@ -187,7 +189,11 @@ public class GUI extends JFrame
 
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.drawImage(background, 0, 0, null);
+        if ((alignBackgroundSide & 1) == 0) {
+            g.drawImage(background, 0, 0, null);
+        } else {
+            g.drawImage(background, getWidth() - background.getWidth(), getHeight() - background.getHeight(), null);
+        }
         
         if (data == null) {
             drawNoPackage(g);
@@ -552,21 +558,26 @@ public class GUI extends JFrame
     
     private void loadBackground() {
         this.background = null;
-        for (String format : new String [] {".png", ".jpeg", ".jpg"}) {
-            try {
-                this.background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND+format));
-            } catch (IOException e) {
+        String[] sides = {"", "b", "l", "r", "t"};
+        loaded: for (alignBackgroundSide = 0; alignBackgroundSide < sides.length; ++alignBackgroundSide) {
+            for (String format : new String [] {".png", ".jpeg", ".jpg"}) {
+                try {
+                    this.background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND+sides[alignBackgroundSide]+format));
+                    alignBackgroundSide &= 3;
+                    break loaded;
+                } catch (IOException e) {
+                }
             }
         }
         if (this.background == null) {
             Log.error("Unable to load background image");
         }
-        float scaleFactor = (float)getWidth()/background.getWidth();
+        float scaleFactor = alignBackgroundSide < 2 ? (float)getWidth()/background.getWidth() : (float)getHeight()/background.getHeight();
         Image tmp = (new ImageIcon(background).getImage()).getScaledInstance(
                 (int)(background.getWidth()*scaleFactor),
                 (int)(background.getHeight()*scaleFactor),
                 Image.SCALE_SMOOTH);
-        background = new BufferedImage((int) (background.getWidth() * scaleFactor), (int) (background.getWidth() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
+        background = new BufferedImage((int) (background.getWidth() * scaleFactor), (int) (background.getHeight() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
         background.getGraphics().drawImage(tmp, 0, 0, null);
     }
 }
