@@ -25,7 +25,6 @@ public abstract class Eigen {
         public Vector2i read(ByteBuffer stream) {
             return (Vector2i) super.read(stream);
         }
-
     }
 
     /**
@@ -85,6 +84,24 @@ public abstract class Eigen {
          */
         public Vector2f invScale(final float factor) {
             return new Vector2f(x / factor, y / factor);
+        }
+    }
+
+    /**
+     * Class for a Vector of two shorts.
+     */
+    public static class Vector2s extends Vector2<Short> {
+
+        /**
+         * Constructor.
+         */
+        public Vector2s() {
+            super(NativeReaders.shortReader);
+        }
+
+        @Override
+        public Vector2s read(ByteBuffer stream) {
+            return (Vector2s) super.read(stream);
         }
     }
 
