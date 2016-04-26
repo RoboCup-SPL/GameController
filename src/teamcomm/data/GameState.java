@@ -432,8 +432,20 @@ public class GameState {
                 return GameControlData.TEAM_RED;
             } else if (colorStrings[0].equals("yellow")) {
                 return GameControlData.TEAM_YELLOW;
-            } else {
+            } else if (colorStrings[0].equals("black")) {
                 return GameControlData.TEAM_BLACK;
+            } else if (colorStrings[0].equals("green")) {
+                return GameControlData.TEAM_GREEN;
+            } else if (colorStrings[0].equals("orange")) {
+                return GameControlData.TEAM_ORANGE;
+            } else if (colorStrings[0].equals("purple")) {
+                return GameControlData.TEAM_PURPLE;
+            } else if (colorStrings[0].equals("brown")) {
+                return GameControlData.TEAM_BROWN;
+            } else if (colorStrings[0].equals("gray")) {
+                return GameControlData.TEAM_GRAY;
+            } else {
+                return GameControlData.TEAM_WHITE;
             }
         }
 

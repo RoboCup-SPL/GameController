@@ -380,7 +380,7 @@ public class StartInput extends JFrame implements Serializable
             colors = Teams.getColors(outTeam[1]);
             colors = colors.length >= 2 ? colors : colors.length == 1 
                     ? new String[] {colors[0], "red"} : new String[]{"red", "blue"};
-            colorNames[1] = colors[0].equals(colorNames[0]) ? colors[1] : colors[0];
+            colorNames[1] = colors[1].equals(colorNames[0]) ? colors[0] : colors[1];
         }
         teamContainer[0].setImage(getImage(0, colorNames[0]));
         teamContainer[1].setImage(getImage(1, colorNames[1]));
@@ -391,8 +391,20 @@ public class StartInput extends JFrame implements Serializable
                 outTeamColor[i] = GameControlData.TEAM_RED;
             } else if (colorNames[i].equals("yellow")) {
                 outTeamColor[i] = GameControlData.TEAM_YELLOW;
-            } else {
+            } else if (colorNames[i].equals("black")) {
                 outTeamColor[i] = GameControlData.TEAM_BLACK;
+            } else if (colorNames[i].equals("green")) {
+                outTeamColor[i] = GameControlData.TEAM_GREEN;
+            } else if (colorNames[i].equals("orange")) {
+                outTeamColor[i] = GameControlData.TEAM_ORANGE;
+            } else if (colorNames[i].equals("purple")) {
+                outTeamColor[i] = GameControlData.TEAM_PURPLE;
+            } else if (colorNames[i].equals("brown")) {
+                outTeamColor[i] = GameControlData.TEAM_BROWN;
+            } else if (colorNames[i].equals("gray")) {
+                outTeamColor[i] = GameControlData.TEAM_GRAY;
+            } else {
+                outTeamColor[i] = GameControlData.TEAM_WHITE;
             }
         }
     }

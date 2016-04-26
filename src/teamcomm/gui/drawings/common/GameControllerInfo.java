@@ -106,7 +106,18 @@ public class GameControllerInfo extends Static {
                 return new float[]{1, 0, 0, 1};
             case GameControlData.TEAM_YELLOW:
                 return new float[]{1, 1, 0, 1};
-
+            case GameControlData.TEAM_WHITE:
+                return new float[]{1, 1, 1, 1};
+            case GameControlData.TEAM_GREEN:
+                return new float[]{0, 0.5f, 0, 1};
+            case GameControlData.TEAM_ORANGE:
+                return new float[]{1, 0.65f, 0, 1};
+            case GameControlData.TEAM_PURPLE:
+                return new float[]{0.5f, 0, 0.5f, 1};
+            case GameControlData.TEAM_BROWN:
+                return new float[]{0.65f, 0.15f, 0.15f, 1};
+            case GameControlData.TEAM_GRAY:
+                return new float[]{0.5f, 0.5f, 0.5f, 1};
         }
         return new float[]{1, 1, 1, 1};
     }
