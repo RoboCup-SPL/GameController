@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 import teamcomm.data.AdvancedMessage;
+import util.Unsigned;
 
 /**
  * Custom message class for team B-Human.
@@ -33,6 +34,7 @@ public class BHumanMessage extends AdvancedMessage {
                 display.add(health.robotName);
                 display.add("Location: " + health.location);
                 display.add("Configuration: " + health.configuration);
+                display.add("Magic: " + Unsigned.toUnsigned(queue.getMagicNumber()));
                 display.add("Battery: " + health.batteryLevel + "%");
                 if (health.jointWithMaxTemperature != null) {
                     display.add("Hottest joint: " + health.jointWithMaxTemperature.toString() + " (" + health.maxJointTemperature + "°C)");
@@ -55,10 +57,10 @@ public class BHumanMessage extends AdvancedMessage {
         // Update cached RobotHealth and BehaviorStatus
         queue.getCachedMessage(RobotHealth.class);
         queue.getCachedMessage(BehaviorStatus.class);
-        
+
         // Update thumbnail image
         final NetworkThumbnail msg = queue.getMessage(NetworkThumbnail.class);
-        if(msg != null) {
+        if (msg != null) {
             Thumbnail.getInstance(teamNum + "," + playerNum).handleMessage(msg);
         }
     }

@@ -25,6 +25,7 @@ public class MessageQueue {
     private final float robotPoseDeviation;
     private final float[] robotPoseCovariance;
     private final short robotPoseValidity;
+    private final byte magicNumber;
 
     private final long usedSize;
     private final int numberOfMessages;
@@ -57,6 +58,7 @@ public class MessageQueue {
             buf.getFloat(), buf.getFloat(), buf.getFloat(),
             buf.getFloat(), buf.getFloat(), buf.getFloat()};
         robotPoseValidity = Unsigned.toUnsigned(buf.get());
+        magicNumber = buf.get();
 
         usedSize = Unsigned.toUnsigned(buf.getInt());
         numberOfMessages = buf.getInt();
@@ -153,6 +155,15 @@ public class MessageQueue {
      */
     public short getRobotPoseValidity() {
         return robotPoseValidity;
+    }
+
+    /**
+     * Returns the magicNumber value from the MessageQueue header.
+     *
+     * @return magicNumber
+     */
+    public byte getMagicNumber() {
+        return magicNumber;
     }
 
     /**
