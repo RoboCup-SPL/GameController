@@ -438,18 +438,18 @@ public class StartInput extends JFrame implements Serializable
         if(team == 1) {
             switchTeamColor(1);
         }
-        teamColorChange[team].setBackground(Rules.league.teamColor[color(colorNames[team][1])]);
+        teamColorChange[team].setBackground(Rules.league.teamColor[fromColorName(colorNames[team][1])]);
     }
 
     private void updateBackgrounds()
     {
         for (int i = 0; i < 2; ++i) {
             teamContainer[i].setImage(getImage(i, colorNames[i][0]));
-            outTeamColor[i] = color(colorNames[i][0]);
+            outTeamColor[i] = fromColorName(colorNames[i][0]);
         }
     }
 
-    private byte color(final String colorName) {
+    private byte fromColorName(final String colorName) {
         switch (colorName) {
             case "blue":
                 return GameControlData.TEAM_BLUE;
