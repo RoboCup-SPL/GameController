@@ -425,11 +425,12 @@ public class StartInput extends JFrame implements Serializable
         String tmpColorString = colorNames[team][0];
         colorNames[team][0] = colorNames[team][1];
         colorNames[team][1] = tmpColorString;
+        teamColorChange[team].setBackground(Rules.league.teamColor[fromColorName(colorNames[team][1])]);
     }
 
     private void reloadTeamColor(final int team)
     {
-        colorNames[team] = Teams.getColors(outTeam[team]);
+        colorNames[team] = Teams.getColors(outTeam[team]).clone();
         if (colorNames[team] == null || colorNames[team].length == 0) {
             colorNames[team] = new String[]{"blue", "red"};
         } else if (colorNames[team].length == 1) {
