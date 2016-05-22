@@ -131,8 +131,6 @@ public class StartInput extends JFrame implements Serializable
             teamChooseContainer[i].add(team[i], BorderLayout.CENTER);
             colorNames[i] = new String[]{"red", "blue"};
             teamColorChange[i] = new JButton();
-            teamColorChange[i].setToolTipText("Change to alternative team color");
-            teamColorChange[i].setBackground(Color.RED);
         }
         teamChooseContainer[0].add(teamColorChange[0], BorderLayout.WEST);
         teamChooseContainer[1].add(teamColorChange[1], BorderLayout.EAST);
@@ -425,7 +423,13 @@ public class StartInput extends JFrame implements Serializable
         String tmpColorString = colorNames[team][0];
         colorNames[team][0] = colorNames[team][1];
         colorNames[team][1] = tmpColorString;
-        teamColorChange[team].setBackground(Rules.league.teamColor[fromColorName(colorNames[team][1])]);
+        updateTeamColorIndicator(team);
+    }
+
+    private void updateTeamColorIndicator(final int team) {
+        final byte color = fromColorName(colorNames[team][1]);
+        teamColorChange[team].setToolTipText(String.format("Change to alternative team color (%s)", Rules.league.teamColorName[color]));
+        teamColorChange[team].setBackground(Rules.league.teamColor[color]);
     }
 
     private void reloadTeamColor(final int team)
@@ -436,10 +440,11 @@ public class StartInput extends JFrame implements Serializable
         } else if (colorNames[team].length == 1) {
             colorNames[team] = new String[]{colorNames[team][0], colorNames[team][0] == "red" ? "blue" : "red"};
         }
-        if(team == 1) {
+        if (team == 1) {
             switchTeamColor(1);
+        } else {
+            updateTeamColorIndicator(team);
         }
-        teamColorChange[team].setBackground(Rules.league.teamColor[fromColorName(colorNames[team][1])]);
     }
 
     private void updateBackgrounds()
