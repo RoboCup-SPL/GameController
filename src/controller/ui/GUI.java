@@ -330,7 +330,11 @@ public class GUI extends JFrame implements GCGUI
         for (int i=0; i<2; i++) {
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
             name[i].setHorizontalAlignment(JLabel.CENTER);
-            name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
+            if(data.team[i].teamColor == GameControlData.TEAM_WHITE) {
+                name[i].setForeground(Color.BLACK);
+            } else {
+                name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
+            }
             goalInc[i] = new Button("+");
             goalDec[i] = new Button("-");
             kickOff[i] = new JRadioButton(KICKOFF);
@@ -901,7 +905,11 @@ public class GUI extends JFrame implements GCGUI
     private void updateColor(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
+            if(data.team[i].teamColor == GameControlData.TEAM_WHITE) {
+                name[i].setForeground(Color.BLACK);
+            } else {
+                name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
+            }
             side[i].setImage(backgroundSide[i][data.team[i].teamColor].getImage());
         }
     }
