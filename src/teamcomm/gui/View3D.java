@@ -81,6 +81,8 @@ public class View3D implements GLEventListener, TeamEventListener {
         // Initialize GL canvas and animator
         final GLProfile glp = GLProfile.get(GLProfile.GL2);
         final GLCapabilities caps = new GLCapabilities(glp);
+        caps.setSampleBuffers(true);
+        caps.setNumSamples(8);
         canvas = new GLCanvas(caps);
         canvas.addGLEventListener(this);
 

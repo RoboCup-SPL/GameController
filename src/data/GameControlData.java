@@ -128,7 +128,7 @@ public class GameControlData implements Serializable
         buffer.put(playersPerTeam);
         buffer.put(gameType);
     	if (secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
-                && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.playOffDelayedSwitchToPlaying) {
+                && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
             buffer.put(STATE_SET);
     	} else {
             buffer.put(gameState);

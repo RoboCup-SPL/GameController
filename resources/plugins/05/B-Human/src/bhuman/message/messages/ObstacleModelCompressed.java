@@ -22,7 +22,7 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
         @Override
         public int getStreamedSize() {
             return NativeReaders.floatReader.getStreamedSize() * 3
-                    + new Eigen.Vector2f().getStreamedSize() * 3
+                    + new Eigen.Vector2s().getStreamedSize() * 3
                     + NativeReaders.uintReader.getStreamedSize()
                     + new EnumReader<>(Type.class).getStreamedSize();
         }
@@ -42,15 +42,15 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
         /**
          * Center point of an obstacle.
          */
-        public Eigen.Vector2f center;
+        public Eigen.Vector2s center;
         /**
          * Left point of an obstacle.
          */
-        public Eigen.Vector2f left;
+        public Eigen.Vector2s left;
         /**
          * Right point of an obstacle.
          */
-        public Eigen.Vector2f right;
+        public Eigen.Vector2s right;
         /**
          * Classified type (see enum above).
          */
@@ -66,9 +66,9 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
             covYY = NativeReaders.floatReader.read(stream);
             covXY = NativeReaders.floatReader.read(stream);
 
-            center = new Eigen.Vector2f().read(stream);
-            left = new Eigen.Vector2f().read(stream);
-            right = new Eigen.Vector2f().read(stream);
+            center = new Eigen.Vector2s().read(stream);
+            left = new Eigen.Vector2s().read(stream);
+            right = new Eigen.Vector2s().read(stream);
 
             lastSeen = NativeReaders.uintReader.read(stream);
 

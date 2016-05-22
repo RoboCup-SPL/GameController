@@ -24,20 +24,24 @@ public class Whistle extends Message<Whistle> implements SimpleStreamReader<Whis
      * The last point of time when the robot received audio data.
      */
     public long lastTimeOfIncomingSound;
+    /**
+     * Name of the last detected whistle.
+     */
+    public String whistleName;
 
     @Override
     public Whistle read(final ByteBuffer stream) {
         confidenceOfLastWhistleDetection = NativeReaders.scharReader.read(stream);
         lastTimeWhistleDetected = NativeReaders.uintReader.read(stream);
         lastTimeOfIncomingSound = NativeReaders.uintReader.read(stream);
+        whistleName = NativeReaders.stringReader.read(stream);
 
         return this;
     }
 
     @Override
     public int getStreamedSize() {
-        return NativeReaders.scharReader.getStreamedSize()
-                + NativeReaders.uintReader.getStreamedSize() * 2;
+        return -1; // Size unknown because of whistle's name
     }
 
 }

@@ -40,15 +40,15 @@ public class SPL extends Rules
         kickoffTime = 10;
         /** Time in seconds before a global game stuck can be called. */
         minDurationBeforeStuck = 15;
-        /** The number of seconds switching to Playing is delayed in a play-off game. */
-        playOffDelayedSwitchToPlaying = 15;
+        /** The number of seconds switching to Playing is delayed. */
+        delayedSwitchToPlaying = 15;
         /** If there is an overtime before penalty-shoot in a play-off game. */
         overtime = false;
         /** Time in seconds one overtime half is long. */
         overtimeTime = 0;
         /** If the game starts with penalty-shoots. */
         startWithPenalty = false;
-       /** Time in seconds between second half and penalty shoot. */
+        /** Time in seconds between second half and penalty shoot. */
         pausePenaltyShootOutTime = 5*60;
         /** Time in seconds one penalty shoot is long. */
         penaltyShotTime = 1*60;

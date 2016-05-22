@@ -21,6 +21,7 @@ public class Obstacle extends PerPlayer {
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
         if (rs.getLastMessage() != null
+                && rs.getLastMessage().valid
                 && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
             final ObstacleModelCompressed obstacleModel = msg.queue
@@ -61,17 +62,25 @@ public class Obstacle extends PerPlayer {
                     gl.glTranslatef(msg.pose[0] / 1000.0f, msg.pose[1] / 1000.f, 0);
                     gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
 
+                    // cast short to float
+                    float centerX = obstacle.center.x;
+                    float centerY = obstacle.center.y;
+                    float leftX = obstacle.left.x;
+                    float leftY = obstacle.left.y;
+                    float rightX = obstacle.right.x;
+                    float rightY = obstacle.right.y;
+
                     // Translate to obstacle
                     gl.glBegin(GL2.GL_LINE_STRIP);
-                    gl.glVertex3f(obstacle.left.x / 1000.f, obstacle.left.y / 1000.f, 0.f);
-                    gl.glVertex3f(obstacle.center.x / 1000.f, obstacle.center.y / 1000.f, 0.f);
-                    gl.glVertex3f(obstacle.right.x / 1000.f, obstacle.right.y / 1000.f, 0.f);
+                    gl.glVertex3f(leftX / 1000.f, leftY / 1000.f, 0.f);
+                    gl.glVertex3f(centerX / 1000.f, centerY / 1000.f, 0.f);
+                    gl.glVertex3f(rightX / 1000.f, rightY / 1000.f, 0.f);
                     gl.glEnd();
 
                     // Draw line from obstacle to robot to determine which player saw that obstacle
                     gl.glBegin(GL2.GL_LINES);
                     gl.glVertex3f(0.f, 0.f, 0.f);
-                    gl.glVertex3f(obstacle.center.x / 1000.f, obstacle.center.y / 1000.f, 0.f);
+                    gl.glVertex3f(centerX / 1000.f, centerY / 1000.f, 0.f);
                     gl.glEnd();
 
                     // Translate back

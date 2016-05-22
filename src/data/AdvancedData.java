@@ -87,6 +87,13 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** Used to backup the secondary game state during a timeout. */
     public byte previousSecGameState = STATE2_NORMAL;
 
+    public static final byte KICKOFF_HALF = 0;
+    public static final byte KICKOFF_TIMEOUT = 1;
+    public static final byte KICKOFF_GAMESTUCK = 2;
+    public static final byte KICKOFF_PENALTYSHOOT = 3;
+    public static final byte KICKOFF_GOAL = 4;
+    public byte kickOffReason = KICKOFF_HALF;
+
     /** Keeps the penalties for the players if there are substituted */
     public ArrayList<ArrayList<PenaltyQueueData>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<PenaltyQueueData>>();
 
@@ -230,8 +237,8 @@ public class AdvancedData extends GameControlData implements Cloneable
                 && ((gameType == GAME_PLAYOFF) && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
                 ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                : real || gameType != GAME_PLAYOFF || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
-                || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.playOffDelayedSwitchToPlaying 
+                : real || (gameType != GAME_PLAYOFF && timeBeforeCurrentGameState > 0) || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
+                || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying 
                 ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
                 : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
         return duration - timePlayed;
@@ -351,7 +358,7 @@ public class AdvancedData extends GameControlData implements Cloneable
     {
         if(timeKickOffBlockedOvertime == 0 // preparing data packet
                 && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
-                && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.playOffDelayedSwitchToPlaying) {
+                && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
             return null;
         }
         int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
@@ -416,7 +423,7 @@ public class AdvancedData extends GameControlData implements Cloneable
     
     public void updatePenalties() {
         if (secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
-                && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.playOffDelayedSwitchToPlaying) {
+                && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying) {
             for (TeamInfo t : team) {
                 for (PlayerInfo p : t.player) {
                     if (p.penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET) {

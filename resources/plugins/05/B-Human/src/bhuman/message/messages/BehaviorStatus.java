@@ -1,9 +1,9 @@
 package bhuman.message.messages;
 
-import bhuman.message.data.Role;
 import bhuman.message.Message;
 import bhuman.message.data.EnumReader;
 import bhuman.message.data.NativeReaders;
+import bhuman.message.data.Role;
 import bhuman.message.data.SimpleStreamReader;
 import java.nio.ByteBuffer;
 
@@ -17,13 +17,16 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
     public static enum Activity {
 
         unknown,
+        blocking,
         duel,
         dribble,
         dribbleDuel,
         searchForBall,
+        searchForPercept,
         goToBall,
         takingPosition,
         kick,
+        kickoffkick,
         guardGoal,
         catchBall,
         waitingForPass,
@@ -33,7 +36,9 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
         turn,
         zeroValidityTurn,
         checkMirroredBall,
-        walkNextToKeeper
+        walkNextToKeeper,
+        kickoff,
+        waving
     }
 
     public Role role;
@@ -42,12 +47,14 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
      */
     public Activity activity;
     public float estimatedTimeToReachBall;
+    public float estimatedTimeToReachBallStriker;
     public int passTarget;
 
     @Override
     public int getStreamedSize() {
         return new Role().getStreamedSize()
                 + new EnumReader<>(Activity.class).getStreamedSize()
+                + NativeReaders.floatReader.getStreamedSize()
                 + NativeReaders.floatReader.getStreamedSize()
                 + NativeReaders.intReader.getStreamedSize();
     }
@@ -57,6 +64,7 @@ public class BehaviorStatus extends Message<BehaviorStatus> implements SimpleStr
         role = new Role().read(stream);
         activity = new EnumReader<>(Activity.class).read(stream);
         estimatedTimeToReachBall = NativeReaders.floatReader.read(stream);
+        estimatedTimeToReachBallStriker = NativeReaders.floatReader.read(stream);
         passTarget = NativeReaders.intReader.read(stream);
         return this;
     }

@@ -32,6 +32,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import teamcomm.Config;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
@@ -48,7 +49,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
     private static final long serialVersionUID = 6549981924840180076L;
 
-    private static final Map<Integer, ImageIcon> logos = new HashMap<>();
+    private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
 
     private final View3D fieldView = new View3D();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
@@ -94,7 +95,6 @@ public class MainWindow extends JFrame implements TeamEventListener {
         right.add(teamPanels[1]);
         right.add(new Box.Filler(new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, 1000)));
         final Box bottom = new Box(BoxLayout.X_AXIS);
-        bottom.setBorder(new EmptyBorder(0, RobotPanel.PANEL_WIDTH, 0, RobotPanel.PANEL_WIDTH));
         teamPanels[2].setLayout(new BoxLayout(teamPanels[2], BoxLayout.LINE_AXIS));
         bottom.add(teamPanels[2]);
 
@@ -103,12 +103,14 @@ public class MainWindow extends JFrame implements TeamEventListener {
         teamPanels[1].add(teamLogos[1]);
 
         // Setup content pane
-        final JPanel contentPane = new JPanel(new BorderLayout());
-        contentPane.add(left, BorderLayout.WEST);
-        contentPane.add(right, BorderLayout.EAST);
-        contentPane.add(bottom, BorderLayout.SOUTH);
-        contentPane.add(fieldView.getCanvas(), BorderLayout.CENTER);
-        setContentPane(contentPane);
+        final JPanel centerColumn = new JPanel(new BorderLayout());
+        add(left, BorderLayout.WEST);
+        add(right, BorderLayout.EAST);
+        
+        // On OS X, the 3-D view cannot cope with the optional panel at the bottom, so put it at the top
+        centerColumn.add(bottom, IS_OSX ? BorderLayout.NORTH : BorderLayout.SOUTH);
+        centerColumn.add(fieldView.getCanvas(), BorderLayout.CENTER);
+        add(centerColumn, BorderLayout.CENTER);
 
         // Add menu bar
         final JMenuBar mb = new JMenuBar();
@@ -142,9 +144,15 @@ public class MainWindow extends JFrame implements TeamEventListener {
         replayItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final JFileChooser fc = new JFileChooser(new File(new File(".").getAbsoluteFile(), "logs_teamcomm"));
+                final String dir = (String) Config.getInstance().get("ReplayLogfileDir");
+                final JFileChooser fc = new JFileChooser(dir == null ? new File(new File(".").getAbsoluteFile(), "logs_teamcomm") : new File(dir));
                 if (fc.showOpenDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
                     try {
+                        try {
+                            Config.getInstance().set("ReplayLogfileDir", fc.getSelectedFile().getParentFile().getCanonicalPath());
+                        } catch (IOException ex) {
+                            Config.getInstance().set("ReplayLogfileDir", fc.getSelectedFile().getParentFile().getAbsolutePath());
+                        }
                         LogReplayer.getInstance().open(fc.getSelectedFile());
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null,

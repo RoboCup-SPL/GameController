@@ -25,7 +25,9 @@ public class Goal extends PerPlayer {
 
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
-        if (rs.getLastMessage() != null && rs.getLastMessage() instanceof BHumanMessage) {
+        if (rs.getLastMessage() != null
+                && rs.getLastMessage().valid
+                && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
             final GoalPercept goalPercept = msg.queue.getMessage(GoalPercept.class);
             if (goalPercept != null) {

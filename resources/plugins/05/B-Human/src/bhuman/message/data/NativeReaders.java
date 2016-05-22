@@ -212,6 +212,10 @@ public abstract class NativeReaders {
      */
     public static class StringReader implements StreamReader<String> {
 
+        public int getStreamedSize() {
+            return -1;
+        }
+
         public int getStreamedSize(final ByteBuffer stream) {
             return 4 + getLength(stream);
         }

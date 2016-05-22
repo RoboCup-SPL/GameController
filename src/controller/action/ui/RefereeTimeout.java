@@ -37,6 +37,7 @@ public class RefereeTimeout extends GCAction
             data.secGameState = data.previousSecGameState;
             data.previousSecGameState = GameControlData.STATE2_TIMEOUT;
             data.refereeTimeout = false;
+            data.kickOffReason = AdvancedData.KICKOFF_TIMEOUT;
             Log.setNextMessage("End of Referee Timeout");
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 ActionBoard.ready.perform(data);

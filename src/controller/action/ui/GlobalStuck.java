@@ -41,6 +41,7 @@ public class GlobalStuck extends GCAction
     public void perform(AdvancedData data)
     {
         data.kickOffTeam = data.team[1 - side].teamNumber;
+        data.kickOffReason = AdvancedData.KICKOFF_GAMESTUCK;
         Log.setNextMessage("Global Game Stuck, Kickoff "+Rules.league.teamColorName[data.team[data.kickOffTeam == data.team[0].teamNumber ? 0 : 1].teamColor]);
         ActionBoard.ready.perform(data);
     }
