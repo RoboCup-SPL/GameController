@@ -6,7 +6,6 @@ import bhuman.message.data.Eigen;
 import bhuman.message.data.EnumReader;
 import bhuman.message.data.NativeReaders;
 import bhuman.message.data.SimpleStreamReader;
-
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -88,7 +87,7 @@ public class ObstacleModelCompressed extends Message<ObstacleModelCompressed> {
 
     @Override
     public ObstacleModelCompressed read(ByteBuffer stream) {
-        final ArrayReader<Obstacle> reader = new ArrayReader<>(new Obstacle());
+        final ArrayReader<Obstacle> reader = new ArrayReader<>(Obstacle.class);
         if (stream.remaining() != reader.getStreamedSize(stream)) {
             return null;
         }
