@@ -63,7 +63,11 @@ public class HL extends Rules
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty. */
-        penaltyTime = new int[] {-1, 30, 30, 30, 30, 30, 60 };
+        penaltyTime = new int[][] {{-1}, {30}, {30}, {30}, {30}, {30}, {60}};
+        /** Whether the penalty count is reset on halftime */
+        resetPenaltyCountOnHalftime = true;
+        /** Whether the ejected robots are reset on halftime */
+        resetEjectedRobotsOnHalftime = true;
         /** Whether penalties can be removed before the penalty time has passed. */
         allowEarlyPenaltyRemoval = true;
         /** Penalty that players get when they substitute another player. */

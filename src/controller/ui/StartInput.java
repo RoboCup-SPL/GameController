@@ -1,11 +1,5 @@
 package controller.ui;
 
-import data.GameControlData;
-import data.Rules;
-import data.SPL;
-import data.SPLDropIn;
-import data.Teams;
-
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Color;
@@ -18,11 +12,24 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.io.Serializable;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
+import data.GameControlData;
+import data.Rules;
+import data.SPL;
+import data.SPLDropIn;
+import data.Teams;
 
 
 /**
@@ -72,7 +79,9 @@ public class StartInput extends JFrame implements Serializable
 
     /** All the components of this GUI. */
     private ImagePanel[] teamContainer = new ImagePanel[2];
+    private JPanel[] teamChooseContainer = new JPanel[2];
     private ImageIcon[] teamIcon = new ImageIcon[2];
+    private JButton[] teamColorChange = new JButton[2];
     private JLabel[] teamIconLabel = new JLabel[2];
     @SuppressWarnings("unchecked")
     private JComboBox<String>[] team = (JComboBox<String>[]) new JComboBox[2];
@@ -86,6 +95,8 @@ public class StartInput extends JFrame implements Serializable
     private Checkbox autoColorChange;
     private JButton start;
     
+    private String[][] colorNames = new String[2][];
+
     private HashMap<String, Image> images = new HashMap<String, Image>();
 
     /**
@@ -115,8 +126,40 @@ public class StartInput extends JFrame implements Serializable
             teamIconLabel[i] = new JLabel(teamIcon[i]);
             teamContainer[i].add(teamIconLabel[i], BorderLayout.CENTER);
             team[i] = new JComboBox<String>(teams);
-            teamContainer[i].add(team[i], BorderLayout.SOUTH);
+            teamChooseContainer[i] = new JPanel(new BorderLayout());
+            teamContainer[i].add(teamChooseContainer[i], BorderLayout.SOUTH);
+            teamChooseContainer[i].add(team[i], BorderLayout.CENTER);
+            colorNames[i] = new String[]{"red", "blue"};
+            teamColorChange[i] = new JButton();
         }
+        teamChooseContainer[0].add(teamColorChange[0], BorderLayout.WEST);
+        teamChooseContainer[1].add(teamColorChange[1], BorderLayout.EAST);
+
+        teamColorChange[0].addActionListener(new ActionListener()
+            {
+            @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    switchTeamColor(0);
+                    updateBackgrounds();
+                    teamIconLabel[0].repaint();
+                    teamIconLabel[1].repaint();
+                }
+            }
+        );
+        teamColorChange[1].addActionListener(new ActionListener()
+            {
+            @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    switchTeamColor(1);
+                    updateBackgrounds();
+                    teamIconLabel[0].repaint();
+                    teamIconLabel[1].repaint();
+                }
+            }
+        );
+
         team[0].addActionListener(new ActionListener()
             {
             @Override
@@ -127,6 +170,7 @@ public class StartInput extends JFrame implements Serializable
                         return;
                     }
                     outTeam[0] = Integer.valueOf(((String)selected).split(" \\(")[1].split("\\)")[0]);
+                    reloadTeamColor(0);
                     updateBackgrounds();
                     setTeamIcon(0, outTeam[0]);
                     teamIconLabel[0].setIcon(teamIcon[0]);
@@ -146,6 +190,7 @@ public class StartInput extends JFrame implements Serializable
                         return;
                     }
                     outTeam[1] = Integer.valueOf(((String)selected).split(" \\(")[1].split("\\)")[0]);
+                    reloadTeamColor(1);
                     updateBackgrounds();
                     setTeamIcon(1, outTeam[1]);
                     teamIconLabel[1].setIcon(teamIcon[1]);
@@ -208,6 +253,8 @@ public class StartInput extends JFrame implements Serializable
                         nofulltime.setVisible(false);
                         fulltime.setVisible(false);
                         autoColorChange.setVisible(false);
+                        teamColorChange[0].setVisible(false);
+                        teamColorChange[1].setVisible(false);
                     } else {
                         nofulltime.setVisible(true);
                         fulltime.setVisible(true);
@@ -215,11 +262,15 @@ public class StartInput extends JFrame implements Serializable
                             nofulltime.setText(FULLTIME_LABEL_NO);
                             fulltime.setText(FULLTIME_LABEL_YES);
                             autoColorChange.setVisible(false);
+                            teamColorChange[0].setVisible(true);
+                            teamColorChange[1].setVisible(true);
                         } else {
                             nofulltime.setText(FULLTIME_LABEL_HL_NO);
                             fulltime.setText(FULLTIME_LABEL_HL_YES);
                             autoColorChange.setState(Rules.league.colorChangeAuto);
                             autoColorChange.setVisible(true);
+                            teamColorChange[0].setVisible(false);
+                            teamColorChange[1].setVisible(false);
                         }
                     }
                     showAvailableTeams();
@@ -366,37 +417,69 @@ public class StartInput extends JFrame implements Serializable
         }
         return images.get(filename);
     }
-    
-    private void updateBackgrounds()
+
+    private void switchTeamColor(final int team)
     {
-        String[] colorNames = new String[2];
-        if (Teams.getColors(outTeam[0]).length == 0 &&
-                Teams.getColors(outTeam[1]).length > 0) {
-            colorNames[1] = Teams.getColors(outTeam[1])[0];
-            colorNames[0] = colorNames[1].equals("blue") ? "red" : "blue";
-        } else {
-            String[] colors = Teams.getColors(outTeam[0]);
-            colorNames[0] = colors.length > 0 ? colors[0] : "blue";
-            colors = Teams.getColors(outTeam[1]);
-            colors = colors.length >= 2 ? colors : colors.length == 1 
-                    ? new String[] {colors[0], "red"} : new String[]{"red", "blue"};
-            colorNames[1] = colors[0].equals(colorNames[0]) ? colors[1] : colors[0];
+        String tmpColorString = colorNames[team][0];
+        colorNames[team][0] = colorNames[team][1];
+        colorNames[team][1] = tmpColorString;
+        updateTeamColorIndicator(team);
+    }
+
+    private void updateTeamColorIndicator(final int team) {
+        final byte color = fromColorName(colorNames[team][1]);
+        teamColorChange[team].setToolTipText(String.format("Change to alternative team color (%s)", Rules.league.teamColorName[color]));
+        teamColorChange[team].setBackground(Rules.league.teamColor[color]);
+    }
+
+    private void reloadTeamColor(final int team)
+    {
+        colorNames[team] = Teams.getColors(outTeam[team]).clone();
+        if (colorNames[team] == null || colorNames[team].length == 0) {
+            colorNames[team] = new String[]{"blue", "red"};
+        } else if (colorNames[team].length == 1) {
+            colorNames[team] = new String[]{colorNames[team][0], colorNames[team][0] == "red" ? "blue" : "red"};
         }
-        teamContainer[0].setImage(getImage(0, colorNames[0]));
-        teamContainer[1].setImage(getImage(1, colorNames[1]));
-        for (int i = 0; i < 2; ++i) {
-            if (colorNames[i].equals("blue")) {
-                outTeamColor[i] = GameControlData.TEAM_BLUE;
-            } else if (colorNames[i].equals("red")) {
-                outTeamColor[i] = GameControlData.TEAM_RED;
-            } else if (colorNames[i].equals("yellow")) {
-                outTeamColor[i] = GameControlData.TEAM_YELLOW;
-            } else {
-                outTeamColor[i] = GameControlData.TEAM_BLACK;
-            }
+        if (team == 1) {
+            switchTeamColor(1);
+        } else {
+            updateTeamColorIndicator(team);
         }
     }
-    
+
+    private void updateBackgrounds()
+    {
+        for (int i = 0; i < 2; ++i) {
+            teamContainer[i].setImage(getImage(i, colorNames[i][0]));
+            outTeamColor[i] = fromColorName(colorNames[i][0]);
+        }
+    }
+
+    private byte fromColorName(final String colorName) {
+        switch (colorName) {
+            case "blue":
+                return GameControlData.TEAM_BLUE;
+            case "red":
+                return GameControlData.TEAM_RED;
+            case "yellow":
+                return GameControlData.TEAM_YELLOW;
+            case "black":
+                return GameControlData.TEAM_BLACK;
+            case "green":
+                return GameControlData.TEAM_GREEN;
+            case "orange":
+                return GameControlData.TEAM_ORANGE;
+            case "purple":
+                return GameControlData.TEAM_PURPLE;
+            case "brown":
+                return GameControlData.TEAM_BROWN;
+            case "gray":
+                return GameControlData.TEAM_GRAY;
+            default:
+                return GameControlData.TEAM_WHITE;
+        }
+    }
+
     /**
      * @author Michel Bartsch
      * 

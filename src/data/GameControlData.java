@@ -22,11 +22,16 @@ public class GameControlData implements Serializable
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final byte GAMECONTROLLER_STRUCT_VERSION = 9;
-
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte TEAM_YELLOW = 2;
     public static final byte TEAM_BLACK = 3;
+    public static final byte TEAM_WHITE = 4;
+    public static final byte TEAM_GREEN = 5;
+    public static final byte TEAM_ORANGE = 6;
+    public static final byte TEAM_PURPLE = 7;
+    public static final byte TEAM_BROWN = 8;
+    public static final byte TEAM_GRAY = 9;
     public static final byte DROPBALL = -128;
     
     public static final byte GAME_ROUNDROBIN = 0;

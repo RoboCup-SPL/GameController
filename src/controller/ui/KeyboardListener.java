@@ -75,6 +75,7 @@ public class KeyboardListener implements KeyEventDispatcher
             default:
                 if (Rules.league instanceof SPL) {
                     switch (key) {
+                        // TODO: This Key-Mappings do not work properly with 10 Colors
                         case KeyEvent.VK_B:
                             for (int i = 0; i < ActionBoard.out.length; ++i) {
                                 if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_BLUE) {

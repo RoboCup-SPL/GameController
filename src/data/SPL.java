@@ -21,9 +21,9 @@ public class SPL extends Rules
         /** How many robots of each team may play at one time. */
         robotsPlaying = 5;
         /** The Java Colors the left and the right team starts with. */
-        teamColor = new Color[] {Color.BLUE, Color.RED, new Color(224, 200, 0), Color.BLACK};
+        teamColor = new Color[] {Color.BLUE, Color.RED, new Color(224, 200, 0), Color.BLACK, Color.WHITE, new Color(0, 128, 0), new Color(255, 165, 0), new Color(128, 0, 128), new Color(165, 42, 42), new Color(128, 128, 128)};
         /** The name of the colors. */
-        teamColorName = new String[] {"Blue", "Red", "Yellow", "Black"};
+        teamColorName = new String[] {"Blue", "Red", "Yellow", "Black", "White", "Green", "Orange", "Purple", "Brown", "Gray"};
         /** If the colors change automatically. */
         colorChangeAuto = false;
         /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
@@ -63,7 +63,11 @@ public class SPL extends Rules
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
-        penaltyTime = new int[] {-1, 45, 45, 0, 45, 45, 45, 45, 45, 2 * halfTime};
+        penaltyTime = new int[][] {{-1}, {45, 90, 135, 2 * halfTime}, {45, 90, 135, 2 * halfTime}, {0}, {45, 90, 135, 2 * halfTime}, {45, 90, 135, 2 * halfTime}, {45, 90, 135, 2 * halfTime}, {45, 90, 135, 2 * halfTime}, {45}, {2 * halfTime}};
+        /** Whether the penalty count is reset on halftime */
+        resetPenaltyCountOnHalftime = true;
+        /** Whether the ejected robots are reset on halftime */
+        resetEjectedRobotsOnHalftime = true;
         /** Whether penalties can be removed before the penalty time has passed. */
         allowEarlyPenaltyRemoval = false;
         /** Penalty that players get when they substitute another player. */

@@ -38,7 +38,7 @@ public class GameController
      * Actually there are no dependencies, but this should be the first thing
      * to be written into the log file.
      */
-    public static final String version = "GC2 1.3";
+    public static final String version = "GC2 1.4";
 
     /** Relative directory of where logs are stored */
     private final static String LOG_DIRECTORY = "logs";
@@ -55,6 +55,8 @@ public class GameController
     private static final String COMMAND_LEAGUE_SHORT = "-l";
     private static final String COMMAND_WINDOW = "--window";
     private static final String COMMAND_WINDOW_SHORT = "-w";
+    private static final String COMMAND_TEST = "--test";
+    private static final String COMMAND_TEST_SHORT = "-t";
 
     /**
      * The program starts here.
@@ -69,6 +71,7 @@ public class GameController
         //commands
         String interfaceName = "";
         boolean windowMode = false;
+        boolean testMode = false;
 
         parsing:
         for (int i=0; i<args.length; i++) {
@@ -89,6 +92,9 @@ public class GameController
                 }
             } else if (args[i].equals(COMMAND_WINDOW_SHORT) || args[i].equals(COMMAND_WINDOW)) {
                 windowMode = true;
+                continue parsing;
+            } else if (args[i].equals(COMMAND_TEST_SHORT) || args[i].equals(COMMAND_TEST)) {
+                testMode = true;
                 continue parsing;
             }
             String leagues = "";
@@ -142,6 +148,9 @@ public class GameController
         data.colorChangeAuto = input.outAutoColorChange;
         data.gameType = Rules.league.dropInPlayerMode ? GameControlData.GAME_DROPIN
                 : input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
+        if(testMode) {
+            Rules.league.delayedSwitchToPlaying = 0;
+        }
 
         InterfaceAddress localAddress = null;
         try {

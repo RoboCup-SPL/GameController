@@ -139,6 +139,12 @@ public class TeamInfo implements Serializable
             case GameControlData.TEAM_RED:  temp = "red";  break;
             case GameControlData.TEAM_YELLOW: temp = "yellow"; break;
             case GameControlData.TEAM_BLACK:  temp = "black";  break;
+            case GameControlData.TEAM_WHITE:  temp = "white";  break;
+            case GameControlData.TEAM_GREEN:  temp = "green";  break;
+            case GameControlData.TEAM_ORANGE:  temp = "orange";  break;
+            case GameControlData.TEAM_PURPLE:  temp = "purple";  break;
+            case GameControlData.TEAM_BROWN:  temp = "brown";  break;
+            case GameControlData.TEAM_GRAY:  temp = "gray";  break;
             default: temp = "undefinied("+teamColor+")";
         }
         out += "          teamColor: "+temp+"\n";

@@ -2,6 +2,7 @@ package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
 import data.GameControlData;
+import data.Rules;
 import data.TeamInfo;
 import teamcomm.data.GameState;
 import teamcomm.gui.Camera;
@@ -97,18 +98,10 @@ public class GameControllerInfo extends Static {
     }
 
     private static float[] getColor(final byte color) {
-        switch (color) {
-            case GameControlData.TEAM_BLACK:
-                return new float[]{0, 0, 0, 1};
-            case GameControlData.TEAM_BLUE:
-                return new float[]{0, 0, 1, 1};
-            case GameControlData.TEAM_RED:
-                return new float[]{1, 0, 0, 1};
-            case GameControlData.TEAM_YELLOW:
-                return new float[]{1, 1, 0, 1};
-
+        if (color < 0 || color >= Rules.league.teamColor.length) {
+            return new float[] {1, 1, 1, 1};
         }
-        return new float[]{1, 1, 1, 1};
+        return Rules.league.teamColor[color].getComponents(new float[4]);
     }
 
     @Override
