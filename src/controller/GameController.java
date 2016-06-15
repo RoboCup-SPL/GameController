@@ -38,7 +38,7 @@ public class GameController
      * Actually there are no dependencies, but this should be the first thing
      * to be written into the log file.
      */
-    public static final String version = "GC2 1.3";
+    public static final String version = "GC2 1.4";
 
     /** Relative directory of where logs are stored */
     private final static String LOG_DIRECTORY = "logs";
