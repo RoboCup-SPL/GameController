@@ -5,11 +5,11 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.PlayerInfo;
-import data.Rules;
 
 /**
  *
  * @author Michel-Zen
+ * @author Dennis Schürholz (bhuman@dennisschuerholz.de)
  */
 public abstract class Penalty extends GCAction
 {

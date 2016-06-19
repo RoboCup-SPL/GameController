@@ -5,11 +5,11 @@ import java.nio.ByteOrder;
 
 
 /**
- * @author Michel Bartsch
- * 
  * This class is what robots send to the GameCOntroller.
  * It just represents this data, reads and writes between C-structure and
  * Java, nothing more.
+ * 
+ * @author Michel Bartsch
  */
 public class GameControlReturnData
 {

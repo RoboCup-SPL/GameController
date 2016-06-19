@@ -14,12 +14,12 @@ import javax.imageio.ImageIO;
 
 
 /**
- * @author Michel Bartsch
- * 
  * This class provides the icons and names including unique teamNumbers of all
  * teams written in the config file.
  * 
  * This class is a singleton!
+ * 
+ * @author Michel Bartsch
  */
 public class Teams
 {

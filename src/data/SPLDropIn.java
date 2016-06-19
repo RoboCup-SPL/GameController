@@ -1,10 +1,9 @@
 package data;
 
 /**
+ * This class sets attributes given by the spl rules, adapted for the drop-in competition.
  *
  * @author Michel-Zen
- * 
- * This class sets attributes given by the spl rules, adapted for the drop-in competition.
  */
 public class SPLDropIn extends SPL
 {

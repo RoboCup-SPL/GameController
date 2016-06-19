@@ -12,8 +12,6 @@ import common.Log;
 import controller.action.ActionBoard;
 
 /**
- * @author Michel Bartsch
- *
  * This class extends the GameControlData that is send to the robots. It
  * contains all the additional informations the GameControler needs to
  * represent a state of the game, for example time in millis.
@@ -21,6 +19,9 @@ import controller.action.ActionBoard;
  * There are no synchronized get and set methods because in this architecture
  * only actions in their perform method are allowed to write into this and they
  * are all in the same thread. Look in the EventHandler for more information.
+ * 
+ * @author Michel Bartsch
+ * @author Dennis Schürholz (bhuman@dennisschuerholz.de)
  */
 public class AdvancedData extends GameControlData implements Cloneable
 {

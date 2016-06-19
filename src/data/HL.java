@@ -3,10 +3,9 @@ package data;
 import java.awt.Color;
 
 /**
+ * This class sets attributes given by the humanoid-league rules.
  *
  * @author Michel-Zen
- * 
- * This class sets attributes given by the humanoid-league rules.
  */
 public class HL extends Rules
 {
