@@ -52,13 +52,12 @@ public abstract class Penalty extends GCAction
         }
     }
 
-    /** may get removed if not used */
     private boolean containsState(final int[] states, final int state) {
-        if(states == null || states.length == 0) {
-            return true;
+        if (states == null || states.length == 0) {
+            return false;
         }
-        for(final int s : states) {
-            if(s==state) {
+        for (final int s : states) {
+            if (s == state) {
                 return true;
             }
         }

@@ -7,9 +7,9 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author Michel Bartsch
- * 
  * This action means that the player pushing penalty has been selected.
+ * 
+ * @author Michel Bartsch
  */
 public class Pushing extends Penalty
 {
