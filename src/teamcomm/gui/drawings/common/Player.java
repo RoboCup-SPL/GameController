@@ -7,8 +7,8 @@ import data.SPLStandardMessage;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
-import teamcomm.gui.drawings.RoSi2Loader;
 import teamcomm.gui.drawings.PerPlayer;
+import teamcomm.gui.drawings.RoSi2Loader;
 
 /**
  * Drawing for a robot.
@@ -17,9 +17,36 @@ import teamcomm.gui.drawings.PerPlayer;
  */
 public class Player extends PerPlayer {
 
+    private static String getModelName(final int color) {
+        switch (color) {
+            case GameControlData.TEAM_BLUE:
+                return "robotBlue";
+            case GameControlData.TEAM_RED:
+                return "robotRed";
+            case GameControlData.TEAM_BLACK:
+                return "robotBlack";
+            case GameControlData.TEAM_YELLOW:
+                return "robotYellow";
+            case GameControlData.TEAM_WHITE:
+                return "robotWhite";
+            case GameControlData.TEAM_GREEN:
+                return "robotGreen";
+            case GameControlData.TEAM_ORANGE:
+                return "robotOrange";
+            case GameControlData.TEAM_PURPLE:
+                return "robotPurple";
+            case GameControlData.TEAM_BROWN:
+                return "robotBrown";
+            case GameControlData.TEAM_GRAY:
+                return "robotGray";
+        }
+
+        return "robotWhite";
+    }
+
     @Override
     protected void init(GL2 gl) {
-        RoSi2Loader.getInstance().cacheModels(gl, new String[]{"robotBlue", "robotRed", "robotBlack", "robotYellow"});
+        RoSi2Loader.getInstance().cacheModels(gl, new String[]{"robotBlue", "robotRed", "robotBlack", "robotYellow", "robotWhite", "robotGreen", "robotOrange", "robotPurple", "robotBrown", "robotGray"});
     }
 
     @Override
@@ -41,20 +68,7 @@ public class Player extends PerPlayer {
                 }
             }
 
-            switch (GameState.getInstance().getTeamColor(player.getTeamNumber())) {
-                case GameControlData.TEAM_BLUE:
-                    gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotBlue"));
-                    break;
-                case GameControlData.TEAM_RED:
-                    gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotRed"));
-                    break;
-                case GameControlData.TEAM_BLACK:
-                    gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotBlack"));
-                    break;
-                case GameControlData.TEAM_YELLOW:
-                    gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "robotYellow"));
-                    break;
-            }
+            gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, getModelName(GameState.getInstance().getTeamColor(player.getTeamNumber()))));
 
             gl.glPopMatrix();
         }

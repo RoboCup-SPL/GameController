@@ -15,6 +15,24 @@
     <Body ref="Nao" name="robotYellow">
       <Set name="NaoColor" value="yellow"/>
     </Body>
+    <Body ref="Nao" name="robotWhite">
+      <Set name="NaoColor" value="white"/>
+    </Body>
+    <Body ref="Nao" name="robotGreen">
+      <Set name="NaoColor" value="green"/>
+    </Body>
+    <Body ref="Nao" name="robotOrange">
+      <Set name="NaoColor" value="orange"/>
+    </Body>
+    <Body ref="Nao" name="robotPurple">
+      <Set name="NaoColor" value="purple"/>
+    </Body>
+    <Body ref="Nao" name="robotBrown">
+      <Set name="NaoColor" value="brown"/>
+    </Body>
+    <Body ref="Nao" name="robotGray">
+      <Set name="NaoColor" value="gray"/>
+    </Body>
 
     <Body name="ball" ref="ball">
       <Translation z="0.0325m" />

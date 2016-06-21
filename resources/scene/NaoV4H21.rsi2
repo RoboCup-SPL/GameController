@@ -155,6 +155,11 @@
   <Surface name="nao-blue" diffuseColor="rgb(0%, 100%, 100%)" ambientColor="rgb(12%, 12%, 20%)"/>
   <Surface name="nao-red" diffuseColor="rgb(100%, 0%, 100%)" ambientColor="rgb(20%, 12%, 12%)"/>
   <Surface name="nao-yellow" diffuseColor="rgb(100%, 100%, 0%)" ambientColor="rgb(20%, 12%, 12%)"/>
+  <Surface name="nao-white" diffuseColor="rgb(100%, 100%, 100%)" ambientColor="rgb(40%, 40%, 40%)"/>
+  <Surface name="nao-green" diffuseColor="rgb(0%, 50%, 0%)" ambientColor="rgb(12%, 20%, 12%)"/>
+  <Surface name="nao-orange" diffuseColor="rgb(100%, 65%, 0%)" ambientColor="rgb(40%, 20%, 12%)"/>
+  <Surface name="nao-purple" diffuseColor="rgb(50%, 0%, 50%)" ambientColor="rgb(20%, 12%, 20%)"/>
+  <Surface name="nao-brown" diffuseColor="rgb(65%, 20%, 20%)" ambientColor="rgb(20%, 12%, 12%)"/>
 
   <Surface name="nao-logo" diffuseColor="rgb(100%, 100%, 100%)" ambientColor="rgb(15%, 15%, 15%)" specularColor="rgb(40%, 40%, 40%)" shininess="10" diffuseTexture="Textures/textures-button_gray.png"/>
 
