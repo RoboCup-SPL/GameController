@@ -15,6 +15,8 @@ public class SPLDropIn extends SPL
         leagueDirectory = "spl_dropin";
         /** How many robots are in a team. */
         teamSize = robotsPlaying;
+        /** Time in seconds to increment penalties. */
+        penaltyIncreaseTime = 0;
         /** The number of seconds switching to Playing is delayed. */
         delayedSwitchToPlaying = 0;
         /** Defines if coach is available */

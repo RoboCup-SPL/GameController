@@ -72,7 +72,9 @@ public abstract class Rules
     /** Number of penalty-shots for each team after full 10minutes playing. */
     public int numberOfPenaltyShotsLong;
     /** Time in seconds for each kind of penalty. */
-    public int[][] penaltyTime;
+    public int[] penaltyTime;
+    /** Time in seconds to increment penalties. */
+    public int penaltyIncreaseTime; 
     /** Whether the penalty count is reset on halftime */
     public boolean resetPenaltyCountOnHalftime;
     /** Whether the ejected robots are reset on halftime */

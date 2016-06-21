@@ -42,9 +42,11 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** When was each player penalized last (ms, 0 = never)? */
     public long[][] whenPenalized = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize+1] : new long[2][Rules.league.teamSize];
 
-    /** How often was each robot penalized with each league-specific penalty? */
-    public int[][][] penaltyCount = Rules.league.isCoachAvailable ? new int[2][Rules.league.teamSize + 1][Rules.league.penaltyTime.length]
-                                                                  : new int[2][Rules.league.teamSize][Rules.league.penaltyTime.length];
+    /** How often was each team penalized? */
+    public int[] penaltyCount = new int[2];
+
+    /** How often was each team penalized at before the robot got penalized? */
+    public int[][] robotPenaltyCount = new int[2][Rules.league.teamSize];
 
     /** Which players were already ejected? */
     public boolean [][] ejected = Rules.league.isCoachAvailable ? new boolean[2][Rules.league.teamSize+1] : new boolean[2][Rules.league.teamSize];
@@ -294,10 +296,11 @@ public class AdvancedData extends GameControlData implements Cloneable
                     }
                 }
                 if (Rules.league.resetPenaltyCountOnHalftime) {
-                    for (int k = 0; k < Rules.league.penaltyTime.length; k++) {
-                        penaltyCount[i][j][k] = 0;
-                    }
+                    robotPenaltyCount[i][j] = 0;
                 }
+            }
+            if (Rules.league.resetPenaltyCountOnHalftime) {
+                penaltyCount[i] = 0;
             }
         }
         resetPenaltyTimes();
@@ -317,13 +320,8 @@ public class AdvancedData extends GameControlData implements Cloneable
         int penalty = team[side].player[number].penalty;
         int penaltyTime = -1;
         if (penalty != PlayerInfo.PENALTY_MANUAL && penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
-//            System.out.println("penalty: " + penalty);
-//            System.out.println("penalty count: " + penaltyCount[side][number][penalty]);
-            penaltyTime = Rules.league.penaltyTime[penalty][((penaltyCount[side][number][penalty] > Rules.league.penaltyTime[penalty].length)
-                    ? Rules.league.penaltyTime[penalty].length
-                    : penaltyCount[side][number][penalty]) - 1];
+            penaltyTime = Rules.league.penaltyTime[penalty] + Rules.league.penaltyIncreaseTime * robotPenaltyCount[side][number];
         }
-//        System.out.println("penalty time: " + penaltyTime);
         assert penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE || penaltyTime != -1;
         return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
                 : gameState == STATE_READY && Rules.league.returnRobotsInGameStoppages && whenPenalized[side][number] >= whenCurrentGameStateBegan

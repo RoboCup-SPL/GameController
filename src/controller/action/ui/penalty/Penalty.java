@@ -43,16 +43,12 @@ public abstract class Penalty extends GCAction
      * @param side      The side the player is playing on (0:left, 1:right).
      * @param number    The player`s number, beginning with 0!
      */
-    protected void handleRepeatedPenaltyEjection(final AdvancedData data, final PlayerInfo player,
+    protected void handleRepeatedPenalty(final AdvancedData data, final PlayerInfo player,
             final int side, final int number, final int... states) {
+        data.robotPenaltyCount[side][number] = 0;
         if (containsState(states, data.gameState)) {
-            data.penaltyCount[side][number][player.penalty]++;
-            final int penaltyTime = Rules.league.penaltyTime[player.penalty][((data.penaltyCount[side][number][player.penalty] > Rules.league.penaltyTime[player.penalty].length)
-                    ? Rules.league.penaltyTime[player.penalty].length
-                    : data.penaltyCount[side][number][player.penalty]) - 1];
-            if (penaltyTime >= Rules.league.halfTime * 2) {
-                data.ejected[side][number] = true;
-            }
+            data.robotPenaltyCount[side][number] = data.penaltyCount[side];
+            data.penaltyCount[side]++;
         }
     }
 
