@@ -45,6 +45,7 @@ public class GameController
 
     private static final String HELP_TEMPLATE = "Usage: java -jar GameController.jar {options}"
             + "\n  (-h | --help)                   display help"
+            + "\n  (-t | --test)                   use test-mode - currently only disabling the delayed switch to playing in SPL"
             + "\n  (-i | --interface) <interface>  set network interface (default is a connected IPv4 interface)"
             + "\n  (-l | --league) %s%sselect league (default is spl)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
