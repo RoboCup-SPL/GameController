@@ -427,9 +427,8 @@ public class StartInput extends JFrame implements Serializable
     }
 
     private void updateTeamColorIndicator(final int team) {
-        final byte color = fromColorName(colorNames[team][1]);
-        teamColorChange[team].setToolTipText(String.format("Change to alternative team color (%s)", Rules.league.teamColorName[color]));
-        teamColorChange[team].setBackground(Rules.league.teamColor[color]);
+        teamColorChange[team].setToolTipText(String.format("Change to alternative team color (%s)", Rules.league.teamColorName[fromColorName(colorNames[team][1])]));
+        teamColorChange[team].setBackground(Rules.league.teamColor[fromColorName(colorNames[team][0])]);
     }
 
     private void reloadTeamColor(final int team)
@@ -438,7 +437,7 @@ public class StartInput extends JFrame implements Serializable
         if (colorNames[team] == null || colorNames[team].length == 0) {
             colorNames[team] = new String[]{"blue", "red"};
         } else if (colorNames[team].length == 1) {
-            colorNames[team] = new String[]{colorNames[team][0], colorNames[team][0] == "red" ? "blue" : "red"};
+            colorNames[team] = new String[]{colorNames[team][0], colorNames[team][0] != "red" ? "red" : "blue"};
         }
         if (team == 1) {
             switchTeamColor(1);
@@ -455,7 +454,7 @@ public class StartInput extends JFrame implements Serializable
         }
     }
 
-    private byte fromColorName(final String colorName) {
+    private static byte fromColorName(final String colorName) {
         switch (colorName) {
             case "blue":
                 return GameControlData.TEAM_BLUE;
