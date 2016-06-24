@@ -437,7 +437,7 @@ public class StartInput extends JFrame implements Serializable
         if (colorNames[team] == null || colorNames[team].length == 0) {
             colorNames[team] = new String[]{"blue", "red"};
         } else if (colorNames[team].length == 1) {
-            colorNames[team] = new String[]{colorNames[team][0], colorNames[team][0] != "red" ? "red" : "blue"};
+            colorNames[team] = new String[]{colorNames[team][0], !"red".equals(colorNames[team][0]) ? "red" : "blue"};
         }
         if (team == 1) {
             switchTeamColor(1);
