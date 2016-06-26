@@ -66,6 +66,7 @@ public class StartInput extends JFrame implements Serializable
     private static final String FULLSCREEN_LABEL = "Fullscreen";
     private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
+    private static final String TEAM_COLOR_CHANGE = "Color";
     
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
@@ -130,7 +131,7 @@ public class StartInput extends JFrame implements Serializable
             teamContainer[i].add(teamChooseContainer[i], BorderLayout.SOUTH);
             teamChooseContainer[i].add(team[i], BorderLayout.CENTER);
             colorNames[i] = new String[]{"red", "blue"};
-            teamColorChange[i] = new JButton();
+            teamColorChange[i] = new JButton(TEAM_COLOR_CHANGE);
         }
         teamChooseContainer[0].add(teamColorChange[0], BorderLayout.WEST);
         teamChooseContainer[1].add(teamColorChange[1], BorderLayout.EAST);
