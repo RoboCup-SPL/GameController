@@ -440,7 +440,13 @@ public class StartInput extends JFrame implements Serializable
             colorNames[team] = new String[]{colorNames[team][0], !"red".equals(colorNames[team][0]) ? "red" : "blue"};
         }
         if (team == 1) {
-            switchTeamColor(1);
+            String[] otherColors = Teams.getColors(outTeam[0]);
+            if ((otherColors == null || otherColors.length == 0)) {
+                otherColors = new String[]{"blue"};
+            }
+            if (colorNames[team][0].equals(otherColors[0])) {
+                switchTeamColor(1);
+            }
         } else {
             updateTeamColorIndicator(team);
         }
