@@ -447,6 +447,8 @@ public class StartInput extends JFrame implements Serializable
             }
             if (colorNames[team][0].equals(otherColors[0])) {
                 switchTeamColor(1);
+            } else {
+                updateTeamColorIndicator(team);
             }
         } else {
             updateTeamColorIndicator(team);
