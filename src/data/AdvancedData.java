@@ -438,15 +438,17 @@ public class AdvancedData extends GameControlData implements Cloneable
 
         public long whenPenalized;
         public byte penalty;
+        public int penaltyCount;
 
-        public PenaltyQueueData(long whenPenalized, byte penalty) {
+        public PenaltyQueueData(long whenPenalized, byte penalty, int penaltyCount) {
             this.whenPenalized = whenPenalized;
             this.penalty = penalty;
+            this.penaltyCount = penaltyCount;
         }
     }
 
-    public void addToPenaltyQueue(int side, long whenPenalized, byte penalty) {
-        penaltyQueueForSubPlayers.get(side).add(new PenaltyQueueData(whenPenalized, penalty));
+    public void addToPenaltyQueue(int side, long whenPenalized, byte penalty, int penaltyCount) {
+        penaltyQueueForSubPlayers.get(side).add(new PenaltyQueueData(whenPenalized, penalty, penaltyCount));
     }
 
 }

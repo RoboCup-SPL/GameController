@@ -58,11 +58,11 @@ public class Robot extends GCAction
             ArrayList<PenaltyQueueData> playerInfoList = data.penaltyQueueForSubPlayers.get(side);
             if (playerInfoList.isEmpty()) {
                 player.penalty = Rules.league.substitutePenalty;
-                data.penaltyCount[side]++;
                 data.whenPenalized[side][number] = data.getTime();
             } else {
                 PenaltyQueueData playerInfo = playerInfoList.get(0);
                 player.penalty = playerInfo.penalty;
+                data.robotPenaltyCount[side][number] = playerInfo.penaltyCount;
                 data.whenPenalized[side][number] = playerInfo.whenPenalized;
                 playerInfoList.remove(0);
             }
