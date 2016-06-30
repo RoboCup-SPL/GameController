@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import common.Log;
+import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
 import data.SPL;
@@ -308,8 +309,9 @@ public class GUI extends JFrame
         int size = getSizeToWidth(0.12);
         g.setColor(Color.BLACK);
         drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
-        for (int i=0; i<2; i++) {
-            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+        for (int i = 0; i < 2; i++) {
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor == AdvancedData.TEAM_WHITE
+                    ? AdvancedData.TEAM_BLACK : data.team[i].teamColor]);
             drawCenteredString(
                     g,
                     data.team[i].score+"",
