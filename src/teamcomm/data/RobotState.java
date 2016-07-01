@@ -1,12 +1,12 @@
 package teamcomm.data;
 
-import teamcomm.data.event.RobotStateEvent;
-import teamcomm.data.event.RobotStateEventListener;
 import data.PlayerInfo;
 import data.SPLStandardMessage;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import javax.swing.event.EventListenerList;
+import teamcomm.data.event.RobotStateEvent;
+import teamcomm.data.event.RobotStateEventListener;
 
 /**
  * Class representing the state of a robot.
@@ -109,7 +109,7 @@ public class RobotState {
             final ListIterator<Long> it = recentMessageTimestamps.listIterator(recentMessageTimestamps.size());
 
             final long curTime = System.currentTimeMillis();
-            while (curTime - it.previous() > AVERAGE_CALCULATION_TIME) {
+            while (!it.hasPrevious() && curTime - it.previous() > AVERAGE_CALCULATION_TIME) {
                 it.remove();
             }
 
