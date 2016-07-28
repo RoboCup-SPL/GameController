@@ -121,6 +121,12 @@ public class Parser
                 } else {
                     int undos = Integer.valueOf(splitted[1]);
                     for (int j=0; j<undos; j++) {
+                        if (log.lines.get(i-2-j).endsWith("Ready") 
+                                && i-2-j > 0 
+                                && (log.lines.get(i-2-j-1).contains("Goal for")
+                                        || log.lines.get(i-2-j-1).contains("Global Game Stuck"))) {
+                            ++undos;
+                        }
                         log.lines.set(i-2-j, UNDONE_PREFIX+log.lines.get(i-2-j));
                     }
                 }
