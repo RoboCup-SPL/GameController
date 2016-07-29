@@ -43,7 +43,7 @@ public class Undo extends GCAction
         if ((EventHandler.getInstance().lastUIEvent == this)
          && (!executed) ) {
             executed= true;
-            Log.toFile("Undo "+states+" States to "+Log.goBack(states));
+            Log.toFile("Undo "+states+" States to "+Log.goBack(data, states));
         } else {
             executed = false;
         }

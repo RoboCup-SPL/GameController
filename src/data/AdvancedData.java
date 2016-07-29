@@ -36,6 +36,9 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** When was switched to the current state? (ms) */
     public long whenCurrentGameStateBegan;
     
+    /** How long ago started the current game state? (ms) Only set when written to log! */
+    public long timeSinceCurrentGameStateBegan;
+
     /** When was the last drop-in? (ms, 0 = never) */
     public long whenDropIn;
     

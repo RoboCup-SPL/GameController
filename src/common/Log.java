@@ -112,6 +112,9 @@ public class Log
     public static void state(AdvancedData data, String message)
     {
         AdvancedData state = (AdvancedData) data.clone();
+        if (!instance.states.isEmpty()) {
+          state.timeSinceCurrentGameStateBegan = state.getTime() - instance.states.getLast().whenCurrentGameStateBegan;
+        }
         if (instance.message == null) {
             state.message = message;
         } else {
@@ -129,27 +132,31 @@ public class Log
      * If a game state change is undone, the time when it was left is restored.
      * Thereby, there whole remaining log is moved into the new timeframe.
      * 
+     * @param data      The current data. Only used to determine whether 
+     *                  a change of game state is reverted.
      * @param states    How far you want to go back, how many states.
      * 
      * @return The message that was attached to the data you went back to.
      */
-    public static String goBack(int states)
+    public static String goBack(AdvancedData data, int states)
     {
         if (states >= instance.states.size()) {
             states = instance.states.size()-1;
         }
+        long timeSinceCurrentGameStateBegan = 0;
         
-        long laterTimestamp = instance.states.getLast().whenCurrentGameStateBegan;
-        long earlierTimestamp = 0;
-        long timeInCurrentState = instance.states.getLast().getTime() - laterTimestamp;
+        boolean gameStateChanged = false;
         for (int i=0; i<states; i++) {
-            earlierTimestamp = instance.states.getLast().whenCurrentGameStateBegan;
+            gameStateChanged |= instance.states.getLast().gameState != data.gameState;
+            timeSinceCurrentGameStateBegan = instance.states.getLast().timeSinceCurrentGameStateBegan;
             instance.states.removeLast();
         }
-        if (laterTimestamp != instance.states.getLast().whenCurrentGameStateBegan) {
-            long timeOffset = laterTimestamp - earlierTimestamp + timeInCurrentState;
-            for (AdvancedData data : instance.states) {
-                data.whenCurrentGameStateBegan += timeOffset;
+        gameStateChanged |= instance.states.getLast().gameState != data.gameState;
+        if (gameStateChanged) {
+            long timeOffset = data.getTime() - timeSinceCurrentGameStateBegan 
+                    - instance.states.getLast().whenCurrentGameStateBegan;
+            for (AdvancedData state : instance.states) {
+                state.whenCurrentGameStateBegan += timeOffset;
             }
         }
         AdvancedData state = (AdvancedData) instance.states.getLast().clone();
