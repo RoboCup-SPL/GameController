@@ -166,7 +166,7 @@ public class View3D implements GLEventListener, TeamEventListener {
         gl.glCullFace(GL.GL_BACK);
         gl.glFrontFace(GL.GL_CCW);
 
-        // Enable lightning, texturing and smooth shading
+        // Enable lighting, texturing and smooth shading
         gl.glEnable(GL2.GL_LIGHTING);
         gl.glEnable(GL.GL_MULTISAMPLE);
         gl.glEnable(GL.GL_TEXTURE_2D);
