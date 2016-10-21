@@ -13,7 +13,6 @@ import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
 import data.Teams;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -22,25 +21,24 @@ import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
-
 import javax.swing.*;
 
 /**
  * @author Michel Bartsch
- * 
- * The programm starts in this class.
- * The main components are initialised here.
+ *
+ * The programm starts in this class. The main components are initialised here.
  */
-public class GameController
-{
+public class GameController {
+
     /**
-     * The version of the GameController.
-     * Actually there are no dependencies, but this should be the first thing
-     * to be written into the log file.
+     * The version of the GameController. Actually there are no dependencies,
+     * but this should be the first thing to be written into the log file.
      */
     public static final String version = "GC2 1.4";
 
-    /** Relative directory of where logs are stored */
+    /**
+     * Relative directory of where logs are stored
+     */
     private final static String LOG_DIRECTORY = "logs";
 
     private static final String HELP_TEMPLATE = "Usage: java -jar GameController.jar {options}"
@@ -61,11 +59,10 @@ public class GameController
 
     /**
      * The program starts here.
-     * 
-     * @param args  This is ignored.
+     *
+     * @param args This is ignored.
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         // Do not just System.exit(0) on Macs when selecting GameController/Quit
         System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
 
@@ -75,17 +72,17 @@ public class GameController
         boolean testMode = false;
 
         parsing:
-        for (int i=0; i<args.length; i++) {
-            if ((args.length > i+1)
+        for (int i = 0; i < args.length; i++) {
+            if ((args.length > i + 1)
                     && ((args[i].equalsIgnoreCase(COMMAND_INTERFACE_SHORT))
                     || (args[i].equalsIgnoreCase(COMMAND_INTERFACE)))) {
                 interfaceName = args[++i];
                 continue parsing;
-            } else if ((args.length > i+1)
+            } else if ((args.length > i + 1)
                     && ((args[i].equalsIgnoreCase(COMMAND_LEAGUE_SHORT))
-                    || (args[i].equalsIgnoreCase(COMMAND_LEAGUE))) ) {
+                    || (args[i].equalsIgnoreCase(COMMAND_LEAGUE)))) {
                 i++;
-                for (int j=0; j < Rules.LEAGUES.length; j++) {
+                for (int j = 0; j < Rules.LEAGUES.length; j++) {
                     if (Rules.LEAGUES[j].leagueDirectory.equals(args[i])) {
                         Rules.league = Rules.LEAGUES[j];
                         continue parsing;
@@ -106,8 +103,8 @@ public class GameController
                 leagues = "(" + leagues + ")";
             }
             System.out.printf(HELP_TEMPLATE, leagues, leagues.length() < 17
-                              ? "                ".substring(leagues.length())
-                              : "\n                                  ");
+                    ? "                ".substring(leagues.length())
+                    : "\n                                  ");
             System.exit(0);
         }
 
@@ -129,30 +126,7 @@ public class GameController
             System.exit(-1);
         }
 
-        //collect the start parameters and put them into the first data.
-        StartInput input = new StartInput(!windowMode);
-        while (!input.finished) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                System.exit(0);
-            }
-        }
-
-        AdvancedData data = new AdvancedData();
-        for (int i=0; i<2; i++) {
-            data.team[i].teamNumber = (byte)input.outTeam[i];
-        }
-        data.team[0].teamColor = input.outTeamColor[0];
-        data.team[1].teamColor = input.outTeamColor[1];
-        data.kickOffTeam = (byte)input.outTeam[0];
-        data.colorChangeAuto = input.outAutoColorChange;
-        data.gameType = Rules.league.dropInPlayerMode ? GameControlData.GAME_DROPIN
-                : input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
-        if(testMode) {
-            Rules.league.delayedSwitchToPlaying = 0;
-        }
-
+        // Network Interface
         InterfaceAddress localAddress = null;
         try {
             NetworkInterface networkInterface = NetworkInterface.getByName(interfaceName);
@@ -164,7 +138,7 @@ public class GameController
                         if (!nif.isUp() || nif.isLoopback()) {
                             continue;
                         }
-                        for(InterfaceAddress ifAddress : nif.getInterfaceAddresses()) {
+                        for (InterfaceAddress ifAddress : nif.getInterfaceAddresses()) {
                             if (ifAddress.getAddress().isLoopbackAddress()) {
                                 // ignore loopback during automatic interface lookup
                                 continue;
@@ -180,7 +154,7 @@ public class GameController
                     while (nifs.hasMoreElements()) {
                         NetworkInterface nif = nifs.nextElement();
                         if (nif.isUp()) {
-                            System.err.printf("%s (%s)",nif.getName(), nif.getDisplayName());
+                            System.err.printf("%s (%s)", nif.getName(), nif.getDisplayName());
                             if (nifs.hasMoreElements()) {
                                 System.err.print(", ");
                             }
@@ -202,7 +176,40 @@ public class GameController
                     System.exit(-1);
                 }
             }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error while setting up GameController on interface: " + interfaceName + ".",
+                    "Error in network interface",
+                    JOptionPane.ERROR_MESSAGE);
+            Log.error("fatal: " + e.getMessage());
+            System.exit(-1);
+        }
 
+        //collect the start parameters and put them into the first data.
+        StartInput input = new StartInput(!windowMode);
+        while (!input.finished) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                System.exit(0);
+            }
+        }
+
+        AdvancedData data = new AdvancedData();
+        for (int i = 0; i < 2; i++) {
+            data.team[i].teamNumber = (byte) input.outTeam[i];
+        }
+        data.team[0].teamColor = input.outTeamColor[0];
+        data.team[1].teamColor = input.outTeamColor[1];
+        data.kickOffTeam = (byte) input.outTeam[0];
+        data.colorChangeAuto = input.outAutoColorChange;
+        data.gameType = Rules.league.dropInPlayerMode ? GameControlData.GAME_DROPIN
+                : input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
+        if (testMode) {
+            Rules.league.delayedSwitchToPlaying = 0;
+        }
+
+        try {
             //sender
             Sender.initialize(localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast());
             Sender sender = Sender.getInstance();
@@ -235,16 +242,16 @@ public class GameController
 
         final File logDir = new File(LOG_DIRECTORY);
         if (!logDir.exists() && !logDir.mkdirs()) {
-            Log.init("log_"+df.format(new Date(System.currentTimeMillis()))+".txt");
+            Log.init("log_" + df.format(new Date(System.currentTimeMillis())) + ".txt");
         } else {
-            final File logFile = new File(logDir, 
-                "log_"+df.format(new Date(System.currentTimeMillis()))+".txt");
+            final File logFile = new File(logDir,
+                    "log_" + df.format(new Date(System.currentTimeMillis())) + ".txt");
             Log.init(logFile.getPath());
         }
-        Log.toFile("League = "+Rules.league.leagueName);
-        Log.toFile("Game type = "+ (data.gameType == GameControlData.GAME_ROUNDROBIN ? "round robin"
-                : data.gameType == GameControlData.GAME_PLAYOFF ?  "play-off" : "drop-in"));
-        Log.toFile("Auto color change = "+data.colorChangeAuto);
+        Log.toFile("League = " + Rules.league.leagueName);
+        Log.toFile("Game type = " + (data.gameType == GameControlData.GAME_ROUNDROBIN ? "round robin"
+                : data.gameType == GameControlData.GAME_PLAYOFF ? "play-off" : "drop-in"));
+        Log.toFile("Auto color change = " + data.colorChangeAuto);
         Log.toFile("Using broadcast address " + (localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast()));
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));
 
