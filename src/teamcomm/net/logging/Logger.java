@@ -25,6 +25,7 @@ public class Logger {
     private File logFile;
     private ObjectOutputStream logger;
     private long beginTimestamp;
+    private boolean enabled = true;
 
     private Logger() {
         createLogfile();
@@ -37,6 +38,22 @@ public class Logger {
      */
     public static Logger getInstance() {
         return instance;
+    }
+
+    public final void enableLogging() {
+        if (!enabled) {
+            enabled = true;
+            createLogfile();
+            System.out.println("Enabled logging of SPLStandardMessages");
+        }
+    }
+
+    public final void disableLogging() {
+        if (enabled) {
+            enabled = false;
+            closeLogfile();
+            System.out.println("Disabled logging of SPLStandardMessages");
+        }
     }
 
     /**
@@ -52,7 +69,7 @@ public class Logger {
      * @param name string appended to the name of the new log file
      */
     public final void createLogfile(final String name) {
-        if (!LogReplayer.getInstance().isReplaying()) {
+        if (enabled && !LogReplayer.getInstance().isReplaying()) {
             // Close current log file
             closeLogfile();
 
@@ -122,7 +139,7 @@ public class Logger {
      * @param p package
      */
     public <T extends Serializable> void log(final Class<T> cls, final T p) {
-        if (!LogReplayer.getInstance().isReplaying()) {
+        if (enabled && !LogReplayer.getInstance().isReplaying()) {
             boolean error = false;
             synchronized (this) {
                 if (logFile != null) {

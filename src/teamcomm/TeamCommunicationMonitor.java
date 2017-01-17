@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import teamcomm.data.GameState;
 import teamcomm.gui.MainWindow;
 import teamcomm.net.GameControlDataReceiver;
-import teamcomm.net.SPLStandardMessageReceiver;
+import teamcomm.net.SPLStandardMessageReceiverTCM;
 import teamcomm.net.logging.LogReplayer;
 import teamcomm.net.logging.Logger;
 
@@ -32,7 +32,7 @@ public class TeamCommunicationMonitor {
      */
     public static void main(final String[] args) {
         GameControlDataReceiver gcDataReceiver = null;
-        SPLStandardMessageReceiver receiver = null;
+        SPLStandardMessageReceiverTCM receiver = null;
 
         parseArgs(args);
 
@@ -71,6 +71,18 @@ public class TeamCommunicationMonitor {
             GLProfile.initSingleton();
         }
 
+        // Check if the GameController is running
+        try {
+            final ApplicationLock lock = new ApplicationLock("GameController");
+            if (!lock.acquire()) {
+                // Do not log messages if a GameController is running on the same system
+                Logger.getInstance().disableLogging();
+            } else {
+                lock.release();
+            }
+        } catch (IOException e) {
+        }
+
         // Initialize listener for GameController messages
         try {
             gcDataReceiver = new GameControlDataReceiver();
@@ -83,7 +95,7 @@ public class TeamCommunicationMonitor {
         }
 
         // Initialize listeners for robots
-        receiver = SPLStandardMessageReceiver.getInstance();
+        receiver = SPLStandardMessageReceiverTCM.getInstance();
 
         // Initialize robot view part of the GUI
         final MainWindow robotView = silentMode ? null : new MainWindow();

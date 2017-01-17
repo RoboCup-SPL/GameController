@@ -185,6 +185,20 @@ public class GameController {
             System.exit(-1);
         }
 
+        //SPLStandardMessageReceiver
+        teamcomm.net.SPLStandardMessageReceiver splStandardMessageReceiver = null;
+        try {
+            splStandardMessageReceiver = new teamcomm.net.SPLStandardMessageReceiver();
+            splStandardMessageReceiver.start();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error while setting up GameController on port: " + GameControlData.GAMECONTROLLER_RETURNDATA_PORT + ".",
+                    "Error on configured port",
+                    JOptionPane.ERROR_MESSAGE);
+            Log.error("fatal: " + e.getMessage());
+            System.exit(-1);
+        }
+
         //collect the start parameters and put them into the first data.
         StartInput input = new StartInput(!windowMode);
         while (!input.finished) {
@@ -282,6 +296,7 @@ public class GameController {
         Sender.getInstance().interrupt();
         GameControlReturnDataReceiver.getInstance().interrupt();
         SPLCoachMessageReceiver.getInstance().interrupt();
+        splStandardMessageReceiver.interrupt();
         Thread.interrupted(); // clean interrupted status
         try {
             Sender.getInstance().join();
@@ -295,8 +310,16 @@ public class GameController {
         } catch (IOException e) {
             Log.error("Error while trying to close the log.");
         }
+        teamcomm.net.logging.Logger.getInstance().closeLogfile();
 
         gui.dispose();
+        
+        // Try to join SPLStandardMessageReceiver
+        try {
+            splStandardMessageReceiver.join(1000);
+        } catch (InterruptedException ex) {
+        }
         System.exit(0);
+        
     }
 }

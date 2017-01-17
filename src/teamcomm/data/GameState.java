@@ -1,10 +1,12 @@
 package teamcomm.data;
 
+import common.ApplicationLock;
 import data.GameControlData;
 import data.Rules;
 import data.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -95,8 +97,21 @@ public class GameState {
             @Override
             public void run() {
                 if (!(LogReplayer.getInstance().isReplaying() && LogReplayer.getInstance().isPaused())) {
-                    int changed = 0;
+                    // Check if the GameController is running
+                    try {
+                        final ApplicationLock lock = new ApplicationLock("GameController");
+                        if (!lock.acquire()) {
+                            // Do not log messages if a GameController is running on the same system
+                            Logger.getInstance().disableLogging();
+                        } else {
+                            Logger.getInstance().enableLogging();
+                            lock.release();
+                        }
+                    } catch (IOException e) {
+                    }
 
+                    // Update robots
+                    int changed = 0;
                     synchronized (robotsByAddress) {
                         final Iterator<RobotState> iter = robotsByAddress.values().iterator();
                         while (iter.hasNext()) {

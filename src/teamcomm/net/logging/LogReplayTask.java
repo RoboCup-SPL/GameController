@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import javax.swing.event.EventListenerList;
 import teamcomm.data.GameState;
 import teamcomm.net.SPLStandardMessagePackage;
-import teamcomm.net.SPLStandardMessageReceiver;
+import teamcomm.net.SPLStandardMessageReceiverTCM;
 
 /**
  * Task handling the replaying of a log file.
@@ -176,7 +176,7 @@ class LogReplayTask implements Runnable {
     private void handleObject(final LoggedObject obj) {
         if (obj.object != null) {
             if (obj.object instanceof SPLStandardMessagePackage) {
-                SPLStandardMessageReceiver.getInstance().addToPackageQueue((SPLStandardMessagePackage) obj.object);
+                SPLStandardMessageReceiverTCM.getInstance().addToPackageQueue((SPLStandardMessagePackage) obj.object);
             } else if (obj.object instanceof GameControlData) {
                 GameState.getInstance().updateGameData((GameControlData) obj.object);
             }

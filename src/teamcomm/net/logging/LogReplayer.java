@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.swing.event.EventListenerList;
 import teamcomm.data.GameState;
-import teamcomm.net.SPLStandardMessageReceiver;
+import teamcomm.net.SPLStandardMessageReceiverTCM;
 
 /**
  * Singleton class for replaying log files.
@@ -54,7 +54,7 @@ public class LogReplayer {
         }
 
         // Drain package queue of SPLStandardMessageReceiver
-        SPLStandardMessageReceiver.getInstance().clearPackageQueue();
+        SPLStandardMessageReceiverTCM.getInstance().clearPackageQueue();
 
         // Reset GameState
         GameState.getInstance().reset();
@@ -113,7 +113,7 @@ public class LogReplayer {
             }
 
             // Drain package queue of SPLStandardMessageReceiver
-            SPLStandardMessageReceiver.getInstance().clearPackageQueue();
+            SPLStandardMessageReceiverTCM.getInstance().clearPackageQueue();
 
             // Reset GameState
             GameState.getInstance().reset();

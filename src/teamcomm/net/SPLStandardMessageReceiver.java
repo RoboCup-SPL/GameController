@@ -10,20 +10,14 @@ import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
-import javax.swing.JOptionPane;
-import teamcomm.PluginLoader;
-import teamcomm.data.GameState;
-import teamcomm.data.AdvancedMessage;
-import teamcomm.net.logging.LogReplayer;
 import teamcomm.net.logging.Logger;
 
 /**
- * Singleton class for the thread which handles messages from the robots. It
- * spawns one thread for listening on each team port up to team number 100 and
- * processes the messages received by these threads.
+ * Class for a thread which handles messages from the robots. It spawns one
+ * thread for listening on each team port up to team number 100 and processes
+ * the messages received by these threads.
  *
  * @author Felix Thielke
  */
@@ -73,7 +67,7 @@ public class SPLStandardMessageReceiver extends Thread {
                     final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
 
-                    if (!LogReplayer.getInstance().isReplaying()) {
+                    if (processPackets()) {
                         if (packet.getAddress().getAddress()[0] != 10) {
                             queue.add(new SPLStandardMessagePackage("10.0." + team + "." + buffer[5], team, buffer));
                         } else {
@@ -90,8 +84,6 @@ public class SPLStandardMessageReceiver extends Thread {
 
         }
     }
-
-    private static SPLStandardMessageReceiver instance;
 
     private static final int MAX_TEAMNUMBER = 100;
 
@@ -111,24 +103,11 @@ public class SPLStandardMessageReceiver extends Thread {
         }
     }
 
-    /**
-     * Returns the only instance of the SPLStandardMessageReceiver.
-     *
-     * @return instance
-     */
-    public static SPLStandardMessageReceiver getInstance() {
-        if (instance == null) {
-            try {
-                instance = new SPLStandardMessageReceiver();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null,
-                        "Error while setting up packet listeners: " + ex.getMessage(),
-                        "IOException",
-                        JOptionPane.ERROR_MESSAGE);
-                System.exit(-1);
-            }
-        }
-        return instance;
+    protected boolean processPackets() {
+        return true;
+    }
+
+    protected void handleMessage(final SPLStandardMessagePackage p) {
     }
 
     @Override
@@ -142,39 +121,12 @@ public class SPLStandardMessageReceiver extends Thread {
             // Handle received packages
             while (!isInterrupted()) {
                 final SPLStandardMessagePackage p = queue.take();
-                final SPLStandardMessage message;
-                final Class<? extends SPLStandardMessage> c = PluginLoader.getInstance().getMessageClass(p.team);
 
                 // Log package
                 Logger.getInstance().log(p);
 
                 // Handle message
-                try {
-                    message = c.newInstance();
-                    message.fromByteArray(ByteBuffer.wrap(p.message));
-                    if (message.teamNumValid && message.teamNum != p.team) {
-                        message.teamNumValid = false;
-                        message.valid = false;
-                    }
-
-                    SPLStandardMessage m = message;
-                    if (message instanceof AdvancedMessage) {
-                        if (message.valid) {
-                            try {
-                                ((AdvancedMessage) message).init();
-                            } catch (final Throwable e) {
-                                m = SPLStandardMessage.createFrom(message);
-                                Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom message class " + c.getSimpleName() + ": " + e.getMessage());
-                            }
-                        } else {
-                            m = SPLStandardMessage.createFrom(message);
-                        }
-                    }
-
-                    GameState.getInstance().receiveMessage(p.host, m.teamNumValid ? m.teamNum : p.team, m);
-                } catch (InstantiationException | IllegalAccessException ex) {
-                    Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
-                }
+                handleMessage(p);
                 Thread.yield();
             }
         } catch (InterruptedException ex) {
