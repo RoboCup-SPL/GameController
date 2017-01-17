@@ -18,7 +18,6 @@ import java.util.Map;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -31,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 import teamcomm.Config;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
@@ -51,7 +49,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
 
-    private final View3D fieldView = new View3D();
+    private final View3DCanvas fieldView = new View3DCanvas();
     private final JPanel[] teamPanels = new JPanel[]{new JPanel(), new JPanel(), new JPanel()};
     private final JLabel[] teamLogos = new JLabel[]{new JLabel((Icon) null, SwingConstants.CENTER), new JLabel((Icon) null, SwingConstants.CENTER)};
     private final Map<String, RobotPanel> robotPanels = new HashMap<>();
@@ -106,7 +104,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
         final JPanel centerColumn = new JPanel(new BorderLayout());
         add(left, BorderLayout.WEST);
         add(right, BorderLayout.EAST);
-        
+
         // On OS X, the 3-D view cannot cope with the optional panel at the bottom, so put it at the top
         centerColumn.add(bottom, IS_OSX ? BorderLayout.NORTH : BorderLayout.SOUTH);
         centerColumn.add(fieldView.getCanvas(), BorderLayout.CENTER);

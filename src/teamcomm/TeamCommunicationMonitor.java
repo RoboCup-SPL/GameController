@@ -8,6 +8,7 @@ import java.net.SocketException;
 import javax.swing.JOptionPane;
 import teamcomm.data.GameState;
 import teamcomm.gui.MainWindow;
+import teamcomm.gui.View3DGSV;
 import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.SPLStandardMessageReceiverTCM;
 import teamcomm.net.logging.LogReplayer;
@@ -21,6 +22,7 @@ import teamcomm.net.logging.Logger;
 public class TeamCommunicationMonitor {
 
     private static boolean silentMode = false;
+    private static boolean gsvMode = false;
 
     private static boolean shutdown = false;
     private static final Object shutdownMutex = new Object();
@@ -98,7 +100,8 @@ public class TeamCommunicationMonitor {
         receiver = SPLStandardMessageReceiverTCM.getInstance();
 
         // Initialize robot view part of the GUI
-        final MainWindow robotView = silentMode ? null : new MainWindow();
+        final MainWindow robotView = silentMode || gsvMode ? null : new MainWindow();
+        final View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV() : null);
 
         // Start threads
         gcDataReceiver.start();
@@ -130,6 +133,9 @@ public class TeamCommunicationMonitor {
         if (robotView != null) {
             robotView.terminate();
         }
+        if (gsvView != null) {
+            gsvView.terminate();
+        }
         LogReplayer.getInstance().close();
         Logger.getInstance().closeLogfile();
 
@@ -148,6 +154,7 @@ public class TeamCommunicationMonitor {
     private static final String ARG_HELP = "--help";
     private static final String ARG_SILENT_SHORT = "-s";
     private static final String ARG_SILENT = "--silent";
+    private static final String ARG_GSV = "--gsv";
 
     private static void parseArgs(final String[] args) {
         for (final String arg : args) {
@@ -156,11 +163,14 @@ public class TeamCommunicationMonitor {
                 case ARG_HELP:
                     System.out.println("Usage: java -jar TeamCommunicationMonitor.jar {options}"
                             + "\n  (-h | --help)                   display help"
-                            + "\n  (-s | --silent)                 start in silent mode");
+                            + "\n  (-s | --silent)                 start in silent mode"
+                            + "\n  (--gsv)                         start as GameStateVisualizer");
                     System.exit(0);
                 case ARG_SILENT_SHORT:
                 case ARG_SILENT:
                     silentMode = true;
+                case ARG_GSV:
+                    gsvMode = true;
             }
         }
     }

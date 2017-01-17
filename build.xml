@@ -53,16 +53,16 @@
                 <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
             </manifest>
         </jar>
+        <jar destfile="${jar.dir}/plugins/common.jar" basedir="${classes.dir}" includes="teamcomm/gui/drawings/common/">
+            <manifest>
+                <attribute name="Author" value="Felix Thielke" />
+            </manifest>
+        </jar>
         <jar destfile="${jar.dir}/TeamCommunicationMonitor.jar" basedir="${classes.dir}" includes="${common_classes} teamcomm/" excludes="teamcomm/gui/drawings/common/">
             <manifest>
                 <attribute name="Main-Class" value="teamcomm.TeamCommunicationMonitor"/>
                 <attribute name="Author" value="Felix Thielke" />
-                <attribute name="Class-Path" value="deps/gluegen-rt.jar deps/jogl-all.jar" />
-            </manifest>
-        </jar>
-        <jar destfile="${jar.dir}/plugins/common.jar" basedir="${classes.dir}" includes="teamcomm/gui/drawings/common/">
-            <manifest>
-                <attribute name="Author" value="Felix Thielke" />
+                <attribute name="Class-Path" value="deps/gluegen-rt.jar deps/jogl-all.jar plugins/common.jar" />
             </manifest>
         </jar>
 
@@ -89,7 +89,7 @@
         <copy file="${lib.dir}/libgamectrl.so" tofile="${jar.dir}/lib/libgamectrl.so"/>
         <copy file="README.md" tofile="${jar.dir}/README.txt"/>
     </target>
-  
+
     <target name="run" depends="jar">
         <java jar="${jar.dir}/GameController.jar" fork="true"/>
     </target>
@@ -97,15 +97,15 @@
     <target name="run_visualizer" depends="jar">
         <java jar="${jar.dir}/GameStateVisualizer.jar" fork="true"/>
     </target>
-  
+
     <target name="run_analyzer" depends="jar">
         <java jar="${jar.dir}/LogAnalyzer.jar" fork="true"/>
     </target>
-  
+
     <target name="run_teamcomm" depends="jar">
         <java jar="${jar.dir}/TeamCommunicationMonitor.jar" dir="${jar.dir}" fork="true"/>
     </target>
-    
+
     <target name="javadoc">
         <mkdir dir="${doc.dir}"/>
         <javadoc access="public" author="true" destdir="${doc.dir}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="*" source="1.7" sourcepath="${src.dir}" splitindex="true" use="true" version="true">

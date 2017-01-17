@@ -3,30 +3,17 @@ package teamcomm.gui;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.AnimatorBase;
-import com.jogamp.opengl.util.FPSAnimator;
 import common.Log;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.event.MouseInputAdapter;
 import teamcomm.PluginLoader;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
@@ -37,23 +24,26 @@ import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Static;
 
 /**
- * Class for the 3-dimensional field view.
+ * Abstract class for the 3-dimensional field views.
  *
  * @author Felix Thielke
  */
-public class View3D implements GLEventListener, TeamEventListener {
+public abstract class View3D implements GLEventListener, TeamEventListener {
 
-    private static final int ANIMATION_FPS = 60;
+    public static final int ANIMATION_FPS = 30;
 
-    private final GLCanvas canvas;
-    private final AnimatorBase animator;
-    private final Camera camera = new Camera();
+    protected AnimatorBase animator;
+    protected GLAutoDrawable autoDrawable;
+    protected final Camera camera = new Camera();
 
-    private final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
-    private final Set<RobotState> leftRobots = new HashSet<>();
-    private final Set<RobotState> rightRobots = new HashSet<>();
+    protected final int[] teamNumbers = new int[]{PluginLoader.TEAMNUMBER_COMMON, PluginLoader.TEAMNUMBER_COMMON};
+    protected final Set<RobotState> leftRobots = new HashSet<>();
+    protected final Set<RobotState> rightRobots = new HashSet<>();
 
-    private static final Comparator<Drawing> drawingComparator = new Comparator<Drawing>() {
+    private int width = 0;
+    private int height = 0;
+
+    protected static final Comparator<Drawing> drawingComparator = new Comparator<Drawing>() {
         @Override
         public int compare(final Drawing o1, final Drawing o2) {
             // opaque objects have priority over transparent objects
@@ -68,83 +58,18 @@ public class View3D implements GLEventListener, TeamEventListener {
             return o2.getPriority() - o1.getPriority();
         }
     };
-    private final List<Drawing> drawings = new LinkedList<>();
-    private final JMenu drawingsMenu = new JMenu("Drawings");
+    protected final List<Drawing> drawings = new LinkedList<>();
 
-    private int width = 0;
-    private int height = 0;
+    protected abstract void initProjection(final GLAutoDrawable glad);
 
-    /**
-     * Constructor.
-     */
-    public View3D() {
-        // Initialize GL canvas and animator
-        final GLProfile glp = GLProfile.get(GLProfile.GL2);
-        final GLCapabilities caps = new GLCapabilities(glp);
-        caps.setSampleBuffers(true);
-        caps.setNumSamples(8);
-        canvas = new GLCanvas(caps);
-        canvas.addGLEventListener(this);
-
-        // Setup camera movement
-        final MouseInputAdapter listener = new MouseInputAdapter() {
-
-            private int[] lastPos = null;
-
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    lastPos = new int[]{e.getX(), e.getY()};
-                }
-            }
-
-            @Override
-            public void mouseReleased(final MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    lastPos = null;
-                }
-            }
-
-            @Override
-            public void mouseDragged(final MouseEvent e) {
-                if (lastPos != null) {
-                    final float factor = 1.0f / 5.0f;
-                    camera.addPhi((e.getX() - lastPos[0]) * factor);
-                    camera.addTheta(-(e.getY() - lastPos[1]) * factor);
-                    lastPos = new int[]{e.getX(), e.getY()};
-                }
-            }
-
-        };
-        canvas.addMouseListener(listener);
-        canvas.addMouseMotionListener(listener);
-        canvas.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(final MouseWheelEvent e) {
-                camera.addRadius(-e.getWheelRotation() * 0.05f);
-            }
-        });
-
-        // Start rendering
-        animator = new FPSAnimator(canvas, ANIMATION_FPS);
-        animator.start();
-    }
+    protected abstract void updateDrawingsMenu();
 
     /**
      * Terminates the field view.
      */
     public void terminate() {
         animator.stop();
-        canvas.destroy();
-    }
-
-    /**
-     * Returns the AWT canvas the field view is drawn on.
-     *
-     * @return AWT canvas
-     */
-    public GLCanvas getCanvas() {
-        return canvas;
+        autoDrawable.destroy();
     }
 
     /**
@@ -178,7 +103,7 @@ public class View3D implements GLEventListener, TeamEventListener {
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 
         // Initialize projection matrix
-        reshape(glad, canvas.getBounds().x, canvas.getBounds().y, canvas.getBounds().width, canvas.getBounds().height);
+        initProjection(glad);
 
         // setup light
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
@@ -218,7 +143,6 @@ public class View3D implements GLEventListener, TeamEventListener {
      */
     @Override
     public void dispose(final GLAutoDrawable glad) {
-
     }
 
     /**
@@ -292,8 +216,8 @@ public class View3D implements GLEventListener, TeamEventListener {
     }
 
     /**
-     * Method that gets called on a reshape event of the AWT canvas. Adjusts the
-     * viewing frustum of the field view for the new shape.
+     * Method that gets called on a reshape event of the window / AWT canvas.
+     * Adjusts the viewing frustum of the field view for the new shape.
      *
      * @param glad drawable
      * @param x new x offset
@@ -311,87 +235,17 @@ public class View3D implements GLEventListener, TeamEventListener {
         }
     }
 
-    private void updateDrawingsMenu() {
-        // Clear the current menu
-        drawingsMenu.removeAll();
-
-        // Create submenus for teams
-        final HashMap<Integer, JMenu> submenus = new HashMap<>();
-        for (final int teamNumber : teamNumbers) {
-            if (teamNumber != PluginLoader.TEAMNUMBER_COMMON) {
-                final String name = GameState.getInstance().getTeamName(teamNumber, false, false);
-                if (!name.equals("Unknown")) {
-                    final JMenu submenu = new JMenu(name);
-                    submenus.put(teamNumber, submenu);
-                    drawingsMenu.add(submenu);
-                }
-            }
-        }
-
-        // Create menu items for drawings
-        for (final Drawing d : drawings) {
-            final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
-            m.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(final ItemEvent e) {
-                    d.setActive(e.getStateChange() == ItemEvent.SELECTED);
-                }
-            });
-            final JMenu submenu = submenus.get(d.getTeamNumber());
-            if (submenu != null) {
-                submenu.add(m);
-            } else {
-                drawingsMenu.add(m);
-            }
-        }
-
-        // Remove empty submenus
-        for (final JMenu submenu : submenus.values()) {
-            if (submenu.getMenuComponentCount() == 0) {
-                drawingsMenu.remove(submenu);
-            }
-        }
-    }
-
-    /**
-     * Returns a JMenu controlling which drawings are visible.
-     *
-     * @return menu
-     */
-    public JMenu getDrawingsMenu() {
-        return drawingsMenu;
-    }
-
     @Override
     public void teamChanged(final TeamEvent e) {
-        if (e.side != GameState.TEAM_OTHER) {
-            if (teamNumbers[e.side] != (e.teamNumber == 0 ? PluginLoader.TEAMNUMBER_COMMON : e.teamNumber)) {
-                teamNumbers[e.side] = e.teamNumber == 0 ? PluginLoader.TEAMNUMBER_COMMON : e.teamNumber;
-
-                synchronized (drawings) {
-                    drawings.clear();
-                    drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
-                    if (teamNumbers[0] != PluginLoader.TEAMNUMBER_COMMON) {
-                        drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[0]));
-                    }
-                    if (teamNumbers[1] != PluginLoader.TEAMNUMBER_COMMON) {
-                        drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
-                    }
-                    Collections.sort(drawings, drawingComparator);
-                    updateDrawingsMenu();
-                }
+        if (e.side == GameState.TEAM_LEFT) {
+            synchronized (leftRobots) {
+                leftRobots.clear();
+                leftRobots.addAll(e.players);
             }
-
-            if (e.side == GameState.TEAM_LEFT) {
-                synchronized (leftRobots) {
-                    leftRobots.clear();
-                    leftRobots.addAll(e.players);
-                }
-            } else {
-                synchronized (rightRobots) {
-                    rightRobots.clear();
-                    rightRobots.addAll(e.players);
-                }
+        } else if (e.side == GameState.TEAM_RIGHT) {
+            synchronized (rightRobots) {
+                rightRobots.clear();
+                rightRobots.addAll(e.players);
             }
         }
     }
