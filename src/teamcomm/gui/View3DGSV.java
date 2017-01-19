@@ -82,8 +82,11 @@ public class View3DGSV extends View3D {
                                 }
                             }
                             final List<MonitorDevice> fullscreenDevice = new ArrayList<>(1);
-                            fullscreenDevice.add(devices.get((i + (ke.getKeyCode() == KeyEvent.VK_LEFT ? -1 : 1)) % devices.size()));
+                            fullscreenDevice.add(devices.get((i + (ke.getKeyCode() == KeyEvent.VK_LEFT ? -1 : 1) + devices.size()) % devices.size()));
+                            animator.pause();
+                            window.setFullscreen(false);
                             window.setFullscreen(fullscreenDevice);
+                            animator.resume();
                         }
                     }
                 }
