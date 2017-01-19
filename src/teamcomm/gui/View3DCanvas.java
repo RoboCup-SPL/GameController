@@ -87,6 +87,13 @@ public class View3DCanvas extends View3D {
         animator.start();
     }
 
+    @Override
+    public void init(GLAutoDrawable glad) {
+        super.init(glad);
+
+        updateDrawingsMenu();
+    }
+
     /**
      * Returns the AWT canvas the field view is drawn on.
      *
@@ -96,8 +103,7 @@ public class View3DCanvas extends View3D {
         return canvas;
     }
 
-    @Override
-    protected void updateDrawingsMenu() {
+    private void updateDrawingsMenu() {
         // Clear the current menu
         drawingsMenu.removeAll();
 
@@ -146,11 +152,6 @@ public class View3DCanvas extends View3D {
      */
     public JMenu getDrawingsMenu() {
         return drawingsMenu;
-    }
-
-    @Override
-    protected void initProjection(final GLAutoDrawable glad) {
-        reshape(glad, canvas.getBounds().x, canvas.getBounds().y, canvas.getBounds().width, canvas.getBounds().height);
     }
 
     @Override

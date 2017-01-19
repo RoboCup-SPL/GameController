@@ -1,9 +1,11 @@
 package teamcomm.gui;
 
+import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.AnimatorBase;
 import common.Log;
 import java.nio.FloatBuffer;
@@ -60,10 +62,6 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
     };
     protected final List<Drawing> drawings = new LinkedList<>();
 
-    protected abstract void initProjection(final GLAutoDrawable glad);
-
-    protected abstract void updateDrawingsMenu();
-
     /**
      * Terminates the field view.
      */
@@ -103,7 +101,15 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 
         // Initialize projection matrix
-        initProjection(glad);
+        if (autoDrawable instanceof GLCanvas) {
+            final GLCanvas canvas = (GLCanvas) autoDrawable;
+            reshape(glad, canvas.getBounds().x, canvas.getBounds().y, canvas.getBounds().width, canvas.getBounds().height);
+        } else if (autoDrawable instanceof GLWindow) {
+            final GLWindow window = (GLWindow) autoDrawable;
+            reshape(glad, window.getX(), window.getY(), window.getWidth(), window.getHeight());
+        } else {
+            reshape(glad, 0, 0, 640, 480);
+        }
 
         // setup light
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
@@ -130,7 +136,6 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
         for (final Drawing d : drawings) {
             d.initialize(gl);
         }
-        updateDrawingsMenu();
 
         // Listen for robot events
         GameState.getInstance().addListener(this);

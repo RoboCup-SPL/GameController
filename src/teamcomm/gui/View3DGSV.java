@@ -1,6 +1,7 @@
 package teamcomm.gui;
 
 import com.jogamp.nativewindow.ScalableSurface;
+import com.jogamp.newt.MonitorDevice;
 import com.jogamp.newt.event.KeyAdapter;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseAdapter;
@@ -11,9 +12,10 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
+import java.util.ArrayList;
+import java.util.List;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.gui.drawings.Drawing;
-import teamcomm.gui.drawings.common.GameControllerInfo;
 
 /**
  * Class for the 3-dimensional field view.
@@ -54,8 +56,36 @@ public class View3DGSV extends View3D {
         window.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(final KeyEvent ke) {
-                if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    TeamCommunicationMonitor.shutdown();
+                switch (ke.getKeyCode()) {
+                    case KeyEvent.VK_ESCAPE:
+                        TeamCommunicationMonitor.shutdown();
+                        break;
+                    case KeyEvent.VK_UP:
+                        camera.addRadius(-0.05f);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        camera.addRadius(0.05f);
+                        break;
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                if ((ke.getModifiers() & (KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK)) != 0) {
+                    if (ke.getKeyCode() == KeyEvent.VK_LEFT || ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        final List<MonitorDevice> devices = window.getScreen().getMonitorDevices();
+                        if (devices.size() > 1) {
+                            int i;
+                            for (i = 0; i < devices.size(); i++) {
+                                if (devices.get(i).equals(window.getMainMonitor())) {
+                                    break;
+                                }
+                            }
+                            final List<MonitorDevice> fullscreenDevice = new ArrayList<>(1);
+                            fullscreenDevice.add(devices.get((i + (ke.getKeyCode() == KeyEvent.VK_LEFT ? -1 : 1)) % devices.size()));
+                            window.setFullscreen(fullscreenDevice);
+                        }
+                    }
                 }
             }
         });
@@ -72,20 +102,20 @@ public class View3DGSV extends View3D {
     }
 
     @Override
-    protected void updateDrawingsMenu() {
-    }
-
-    @Override
-    protected void initProjection(final GLAutoDrawable glad) {
-        reshape(glad, window.getX(), window.getY(), window.getWidth(), window.getHeight());
-    }
-
-    @Override
     public void init(final GLAutoDrawable glad) {
         super.init(glad);
         for (final Drawing d : drawings) {
-            if (d instanceof GameControllerInfo) {
-                d.setActive(true);
+            switch (d.getClass().getName()) {
+                case "teamcomm.gui.drawings.common.Ball":
+                case "teamcomm.gui.drawings.common.Field":
+                case "teamcomm.gui.drawings.common.GameControllerInfo":
+                case "teamcomm.gui.drawings.common.Player":
+                case "teamcomm.gui.drawings.common.PlayerNumber":
+                case "teamcomm.gui.drawings.common.PlayerTarget":
+                    d.setActive(true);
+                    break;
+                default:
+                    d.setActive(false);
             }
         }
     }
