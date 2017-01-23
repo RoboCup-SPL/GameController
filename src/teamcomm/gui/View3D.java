@@ -156,12 +156,17 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
      * @param glad drawable
      */
     @Override
-    public void display(final GLAutoDrawable glad) {
+    public final void display(final GLAutoDrawable glad) {
         final GL2 gl = glad.getGL().getGL2();
 
         // Clear buffers
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
+        // Draw
+        draw(gl);
+    }
+
+    protected void draw(final GL2 gl) {
         // Position camera
         gl.glLoadIdentity();
         camera.positionCamera(gl);
@@ -236,6 +241,7 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
         if (this.width != width || this.height != height) {
             this.width = width;
             this.height = height;
+            glad.getGL().getGL2().glViewport(0, 0, width, height);
             camera.setupFrustum(glad.getGL().getGL2(), (double) width / (double) height);
         }
     }

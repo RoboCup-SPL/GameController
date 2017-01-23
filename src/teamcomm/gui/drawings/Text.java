@@ -17,11 +17,11 @@ public class Text {
 
     private static final int CHAR_WIDTH_PX = 42;
     private static final int CHAR_HEIGHT_PX = 82;
-    private static final double CHAR_PX_RATIO = (double) CHAR_WIDTH_PX / (double) CHAR_HEIGHT_PX;
+    public static final double CHAR_PX_RATIO = (double) CHAR_WIDTH_PX / (double) CHAR_HEIGHT_PX;
 
     /**
-     * Draw the given text at the given position. Only characters in the ASCII
-     * charset are allowed, others are ignored.
+     * Draw the given text centered at the given position. Only characters in
+     * the ASCII charset are allowed, others are ignored.
      *
      * @param gl OpenGL context
      * @param text text to draw
@@ -34,8 +34,8 @@ public class Text {
     }
 
     /**
-     * Draw the given text at the given position. Only characters in the ASCII
-     * charset are allowed, others are ignored.
+     * Draw the given text centered at the given position. Only characters in
+     * the ASCII charset are allowed, others are ignored.
      *
      * @param gl OpenGL context
      * @param text text to draw
@@ -46,6 +46,46 @@ public class Text {
      * text (color values are in the range [0.0f,1.0f])
      */
     public static void drawText(final GL2 gl, final String text, final float centerX, final float centerY, final float size, final float[] color) {
+        drawText(gl, text, color, size, centerX - (float) (text.length() * size * CHAR_PX_RATIO) / 2, centerY - size / 2, false);
+    }
+
+    /**
+     * Draw the given text at the given position in 2D mode. Only characters in
+     * the ASCII charset are allowed, others are ignored.
+     *
+     * @param gl OpenGL context
+     * @param text text to draw
+     * @param x left X coordinate at which the text is drawn
+     * @param y top Y coordinate at which the text is drawn
+     * @param size height of the font
+     * @param color array with rgb or rgba values describing the color of the
+     * text (color values are in the range [0.0f,1.0f])
+     */
+    public static void drawText2D(final GL2 gl, final String text, final float x, final float y, final float size, final float[] color) {
+        drawText(gl, text, color, size, x, y, true);
+    }
+
+    /**
+     * Draw the given text at the given position in 2D mode, optionally
+     * downscaling the font so it fits into the given area. Only characters in
+     * the ASCII charset are allowed, others are ignored.
+     *
+     * @param gl OpenGL context
+     * @param text text to draw
+     * @param x left X coordinate at which the text is drawn
+     * @param y top Y coordinate at which the text is drawn
+     * @param width width of the text
+     * @param height height of the font
+     * @param color array with rgb or rgba values describing the color of the
+     * text (color values are in the range [0.0f,1.0f])
+     */
+    public static void drawText2DContain(final GL2 gl, final String text, final float x, final float y, final float width, final float height, final float[] color) {
+        final float w = (float) Math.min(width, text.length() * Math.min(height, width / text.length() / CHAR_PX_RATIO) * CHAR_PX_RATIO);
+        final float h = (float) (w / text.length() / CHAR_PX_RATIO);
+        drawText(gl, text, color, h, x + (width - w) / 2, y, true);
+    }
+
+    private static void drawText(final GL2 gl, final String text, final float[] color, final float charHeight, final float x, final float y, final boolean flip) {
         final FloatBuffer colorBuffer;
         if (color.length > 4) {
             return;
@@ -86,8 +126,7 @@ public class Text {
             gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
         }
 
-        final float charWidth = (float) ((double) size * CHAR_PX_RATIO);
-        final float[] startOffset = new float[]{centerX - (text.length() * charWidth) / 2, centerY + size / 2};
+        final float charWidth = (float) ((double) charHeight * CHAR_PX_RATIO);
 
         int n = 0;
         gl.glBegin(GL2.GL_QUADS);
@@ -97,21 +136,21 @@ public class Text {
             }
             final float[] texCoordsX = new float[]{(float) (b - 0x20) / 95.0f, (float) (b - 0x1F) / 95.0f};
 
-            gl.glTexCoord2f(texCoordsX[0], 0);
+            gl.glTexCoord2f(texCoordsX[0], flip ? 1 : 0);
             gl.glNormal3f(0, 0, 1);
-            gl.glVertex3f(startOffset[0] + (float) n * charWidth, startOffset[1], 0);
+            gl.glVertex2f(x + (float) n * charWidth, y + charHeight);
 
-            gl.glTexCoord2f(texCoordsX[0], 1);
+            gl.glTexCoord2f(texCoordsX[0], flip ? 0 : 1);
             gl.glNormal3f(0, 0, 1);
-            gl.glVertex3f(startOffset[0] + (float) n * charWidth, startOffset[1] - size, 0);
+            gl.glVertex2f(x + (float) n * charWidth, y);
 
-            gl.glTexCoord2f(texCoordsX[1], 1);
+            gl.glTexCoord2f(texCoordsX[1], flip ? 0 : 1);
             gl.glNormal3f(0, 0, 1);
-            gl.glVertex3f(startOffset[0] + (float) (n + 1) * charWidth, startOffset[1] - size, 0);
+            gl.glVertex2f(x + (float) (n + 1) * charWidth, y);
 
-            gl.glTexCoord2f(texCoordsX[1], 0);
+            gl.glTexCoord2f(texCoordsX[1], flip ? 1 : 0);
             gl.glNormal3f(0, 0, 1);
-            gl.glVertex3f(startOffset[0] + (float) (n + 1) * charWidth, startOffset[1], 0);
+            gl.glVertex2f(x + (float) (n + 1) * charWidth, y + charHeight);
 
             n++;
         }
