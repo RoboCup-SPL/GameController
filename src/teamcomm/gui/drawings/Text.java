@@ -16,8 +16,7 @@ public class Text {
     private static final int FONT_SIZE = 72;
 
     /**
-     * Draw the given text centered at the given position. Only characters in
-     * the ASCII charset are allowed, others are ignored.
+     * Draw the given text centered at the given position.
      *
      * @param text text to draw
      * @param centerX center X coordinate at which the text is drawn
@@ -29,8 +28,7 @@ public class Text {
     }
 
     /**
-     * Draw the given text centered at the given position. Only characters in
-     * the ASCII charset are allowed, others are ignored.
+     * Draw the given text centered at the given position.
      *
      * @param text text to draw
      * @param centerX center X coordinate at which the text is drawn
