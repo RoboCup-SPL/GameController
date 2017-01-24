@@ -57,11 +57,11 @@ public class GameControllerInfo extends Static {
                     }
                 }
             }
-            Text.drawText(gl, half, 0, 0.9f, 0.3f);
+            Text.drawText(half, 0, 0.9f, 0.3f);
 
             int minutes = (data.secsRemaining < 0 ? (-data.secsRemaining) : data.secsRemaining) / 60;
             int seconds = (data.secsRemaining < 0 ? (-data.secsRemaining) : data.secsRemaining) % 60;
-            Text.drawText(gl, (data.secsRemaining < 0 ? "-" : "") + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds, 0, 0.6f, 0.3f);
+            Text.drawText((data.secsRemaining < 0 ? "-" : "") + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds, 0, 0.6f, 0.3f);
 
             // Display game state
             final String state;
@@ -85,21 +85,21 @@ public class GameControllerInfo extends Static {
                     state = "";
                     break;
             }
-            Text.drawText(gl, state, 0, 0.3f, 0.3f);
+            Text.drawText(state, 0, 0.3f, 0.3f);
 
             // Display scores
             final TeamInfo teamLeft = data.team[GameState.getInstance().isMirrored() ? 1 : 0];
             final TeamInfo teamRight = data.team[GameState.getInstance().isMirrored() ? 0 : 1];
-            Text.drawText(gl, "" + teamLeft.score, -0.3f, 0, 0.3f, getColor(teamLeft.teamColor));
-            Text.drawText(gl, ":", 0, 0, 0.3f);
-            Text.drawText(gl, "" + teamRight.score, 0.3f, 0, 0.3f, getColor(teamRight.teamColor));
+            Text.drawText("" + teamLeft.score, -0.3f, 0, 0.3f, getColor(teamLeft.teamColor));
+            Text.drawText(":", 0, 0, 0.3f);
+            Text.drawText("" + teamRight.score, 0.3f, 0, 0.3f, getColor(teamRight.teamColor));
             gl.glPopMatrix();
         }
     }
 
     private static float[] getColor(final byte color) {
         if (color < 0 || color >= Rules.league.teamColor.length) {
-            return new float[] {1, 1, 1, 1};
+            return new float[]{1, 1, 1, 1};
         }
         return Rules.league.teamColor[color].getComponents(new float[4]);
     }

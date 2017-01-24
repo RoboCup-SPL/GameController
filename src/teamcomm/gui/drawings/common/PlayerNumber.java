@@ -28,7 +28,7 @@ public class PlayerNumber extends PerPlayer {
             }
 
             camera.turnTowardsCamera(gl);
-            Text.drawText(gl, "" + msg.playerNum, 0, 0, 0.25f);
+            Text.drawText("" + msg.playerNum, 0, 0, 0.25f);
 
             gl.glPopMatrix();
         }
