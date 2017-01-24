@@ -243,7 +243,7 @@ public class View3DGSV extends View3D {
             // Score
             textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
             drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, 40 + window.getWidth() / 6, window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - (int) (40 + window.getWidth() / 6 + textRenderers[RENDERER_SCORE].getCharWidth((char) ('0' + data.team[0].score))), window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - (int) (40 + window.getWidth() / 6 + textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth()), window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
             textRenderers[RENDERER_SCORE].endRendering();
         }
     }
