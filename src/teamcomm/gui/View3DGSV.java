@@ -180,40 +180,59 @@ public class View3DGSV extends View3D {
             }
             switchTo3D(gl);
 
-            // Secondary State
-            String state;
-            switch (data.secGameState) {
-                case GameControlData.STATE2_NORMAL:
-                    if (Rules.league.dropInPlayerMode) {
-                        state = "";
-                    } else if (data.firstHalf == GameControlData.C_TRUE) {
-                        if (data.gameState == GameControlData.STATE_FINISHED) {
-                            state = "Half Time";
-                        } else {
-                            state = "First Half";
-                        }
-                    } else {
-                        if (data.gameState == GameControlData.STATE_INITIAL) {
-                            state = "Half Time";
-                        } else {
-                            state = "Second Half";
-                        }
-                    }
+            // State
+            String state, secState;
+            switch (data.gameState) {
+                case GameControlData.STATE_INITIAL:
+                    state = "Initial";
                     break;
-                case GameControlData.STATE2_OVERTIME:
-                    state = "Overtime";
+                case GameControlData.STATE_READY:
+                    state = "Ready";
                     break;
-                case GameControlData.STATE2_PENALTYSHOOT:
-                    state = "Penalty Shootout";
+                case GameControlData.STATE_SET:
+                    state = "Set";
                     break;
-                case GameControlData.STATE2_TIMEOUT:
-                    state = "Time Out";
+                case GameControlData.STATE_PLAYING:
+                    state = "Playing";
+                    break;
+                case GameControlData.STATE_FINISHED:
+                    state = "Finished";
                     break;
                 default:
                     state = "";
             }
+            switch (data.secGameState) {
+                case GameControlData.STATE2_NORMAL:
+                    if (Rules.league.dropInPlayerMode) {
+                        secState = "";
+                    } else if (data.firstHalf == GameControlData.C_TRUE) {
+                        if (data.gameState == GameControlData.STATE_FINISHED) {
+                            secState = "Half Time";
+                        } else {
+                            secState = "First Half";
+                        }
+                    } else {
+                        if (data.gameState == GameControlData.STATE_INITIAL) {
+                            secState = "Half Time";
+                        } else {
+                            secState = "Second Half";
+                        }
+                    }
+                    break;
+                case GameControlData.STATE2_OVERTIME:
+                    secState = "Overtime";
+                    break;
+                case GameControlData.STATE2_PENALTYSHOOT:
+                    secState = "Penalty Shootout";
+                    break;
+                case GameControlData.STATE2_TIMEOUT:
+                    secState = "Time Out";
+                    break;
+                default:
+                    secState = "";
+            }
             textRenderers[RENDERER_STATE].beginRendering(window.getWidth(), window.getHeight());
-            drawTextCenter(textRenderers[RENDERER_STATE], state, window.getHeight() - textRendererSizes[RENDERER_STATE], Color.black);
+            drawTextCenter(textRenderers[RENDERER_STATE], secState + (state.length() == 0 || secState.length() == 0 ? "" : " – ") + state, window.getHeight() - textRendererSizes[RENDERER_STATE], Color.black);
             textRenderers[RENDERER_STATE].endRendering();
 
             // Time
