@@ -21,7 +21,6 @@ import data.Rules;
 import data.Teams;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,10 +38,13 @@ import teamcomm.gui.drawings.TextureLoader;
  */
 public class View3DGSV extends View3D {
 
-    private final GLWindow window;
-    private TextRenderer renderer;
+    private static final int RENDERER_STATE = 0;
+    private static final int RENDERER_TIME = 1;
+    private static final int RENDERER_SCORE = 2;
 
-    private static final int TEXT_RENDER_SIZE = 480;
+    private final GLWindow window;
+    private final TextRenderer[] textRenderers = new TextRenderer[3];
+    private final int[] textRendererSizes = new int[3];
 
     /**
      * Constructor.
@@ -147,8 +149,6 @@ public class View3DGSV extends View3D {
         camera.addRadius(1.75f);
 
         GameState.getInstance().setMirrored(true);
-
-        renderer = new TextRenderer(new Font(Font.DIALOG, Font.BOLD, TEXT_RENDER_SIZE), true, true);
     }
 
     @Override
@@ -179,9 +179,6 @@ public class View3DGSV extends View3D {
             } catch (final Exception e) {
             }
             switchTo3D(gl);
-
-            // Draw text (reversed coordinate system)
-            renderer.beginRendering(window.getWidth(), window.getHeight());
 
             // Secondary State
             String state;
@@ -215,29 +212,30 @@ public class View3DGSV extends View3D {
                 default:
                     state = "";
             }
-            drawText2DContain(state, window.getWidth() / 2 - window.getWidth() / 6, window.getHeight() - window.getWidth() / 1920 * 64 - 10, window.getWidth() / 3, window.getWidth() / 1920 * 64, Color.black);
+            textRenderers[RENDERER_STATE].beginRendering(window.getWidth(), window.getHeight());
+            drawTextCenter(textRenderers[RENDERER_STATE], state, window.getHeight() - textRendererSizes[RENDERER_STATE], Color.black);
+            textRenderers[RENDERER_STATE].endRendering();
 
             // Time
-            drawText2DContain(formatTime((int) data.secsRemaining), window.getWidth() / 2 - window.getWidth() / 6, window.getHeight() - window.getWidth() / 1920 * 96 - window.getWidth() / 1920 * 64 - 10, window.getWidth() / 3, window.getWidth() / 1920 * 96, Color.black);
+            textRenderers[RENDERER_TIME].beginRendering(window.getWidth(), window.getHeight());
+            drawText(textRenderers[RENDERER_TIME], formatTime((int) data.secsRemaining), (int) Math.round((window.getWidth() - textRenderers[RENDERER_TIME].getBounds("00:00").getWidth()) / 2 - (data.secsRemaining < 0 ? textRenderers[RENDERER_TIME].getCharWidth('-') : 0)), window.getHeight() - textRendererSizes[RENDERER_TIME] - textRendererSizes[RENDERER_STATE], Color.black);
+            textRenderers[RENDERER_TIME].endRendering();
 
             // Score
-            drawText("" + data.team[1].score, 40 + window.getWidth() / 6, window.getHeight() - (window.getWidth() / 6.f) + window.getWidth() / 1920 * 50, window.getWidth() / 6.f, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
-            drawText("" + data.team[0].score, window.getWidth() - (40 + window.getWidth() / 6 + renderer.getCharWidth((char) ('0' + data.team[0].score)) * (window.getWidth() / 6.f) / TEXT_RENDER_SIZE), window.getHeight() - (window.getWidth() / 6.f) + window.getWidth() / 1920 * 50, window.getWidth() / 6.f, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
-
-            // Finish text drawing
-            renderer.endRendering();
+            textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, 40 + window.getWidth() / 6, window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - (int) (40 + window.getWidth() / 6 + textRenderers[RENDERER_SCORE].getCharWidth((char) ('0' + data.team[0].score))), window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
+            textRenderers[RENDERER_SCORE].endRendering();
         }
     }
 
-    private void drawText2DContain(final String text, final float x, final float y, final float width, final float height, final Color color) {
-        final Rectangle2D bounds = renderer.getBounds(text);
-        final float w = (float) (bounds.getWidth() * height / TEXT_RENDER_SIZE);
-        drawText(text, x + (width - w) / 2, y, height, color);
+    private void drawTextCenter(final TextRenderer renderer, final String text, final int y, final Color color) {
+        drawText(renderer, text, (int) Math.round((window.getWidth() - renderer.getBounds(text).getWidth()) / 2), y, color);
     }
 
-    private void drawText(final String text, final float x, final float y, final float size, final Color color) {
+    private void drawText(final TextRenderer renderer, final String text, final int x, final int y, final Color color) {
         renderer.setColor(color);
-        renderer.draw3D(text, x, y, 0, size / TEXT_RENDER_SIZE);
+        renderer.draw(text, x, y);
     }
 
     private void switchTo2D(final GL2 gl) {
@@ -272,5 +270,17 @@ public class View3DGSV extends View3D {
      */
     private String formatTime(final int seconds) {
         return (seconds < 0 ? "-" : "") + String.format("%02d:%02d", Math.abs(seconds) / 60, Math.abs(seconds) % 60);
+    }
+
+    @Override
+    public void reshape(final GLAutoDrawable glad, final int x, final int y, final int width, final int height) {
+        super.reshape(glad, x, y, width, height);
+
+        textRendererSizes[RENDERER_STATE] = 80 * width / 1920;
+        textRendererSizes[RENDERER_TIME] = 120 * width / 1920;
+        textRendererSizes[RENDERER_SCORE] = width / 6;
+        for (int i = 0; i < textRenderers.length; i++) {
+            textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i]), true, true);
+        }
     }
 }
