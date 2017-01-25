@@ -125,7 +125,7 @@ public class TextureLoader {
         gl.glBindTexture(GL.GL_TEXTURE_2D, textureId);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-        gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, hasAlpha ? 4 : 3, img.getWidth(), img.getHeight(), 0, hasAlpha ? GL.GL_BGRA : GL2.GL_BGR, GL.GL_UNSIGNED_BYTE, buffer);
+        gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, hasAlpha ? GL2.GL_RGBA8 : GL2.GL_RGB8, img.getWidth(), img.getHeight(), 0, hasAlpha ? GL.GL_BGRA : GL2.GL_BGR, GL.GL_UNSIGNED_BYTE, buffer);
         gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
         tex = new Texture(textureId, hasAlpha, img.getWidth(), img.getHeight());
         map.put(filename.getAbsolutePath(), tex);

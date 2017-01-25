@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
 import teamcomm.gui.drawings.Drawing;
@@ -49,6 +50,23 @@ public class View3DGSV extends View3D {
     private final int[] textRendererSizes = new int[4];
 
     private static final float NEAR_FIELD_BORDER_Y = -3.7f;
+
+    private enum BackgroundAlign {
+        NONE(""),
+        BOTTOM("b"),
+        LEFT("l"),
+        RIGHT("r"),
+        TOP("t");
+
+        public final String suffix;
+
+        BackgroundAlign(final String s) {
+            suffix = s;
+        }
+    }
+
+    private TextureLoader.Texture background;
+    private BackgroundAlign backgroundAlign;
 
     /**
      * Constructor.
@@ -157,26 +175,59 @@ public class View3DGSV extends View3D {
         camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
 
         GameState.getInstance().setMirrored(true);
+
+        loaded:
+        for (final BackgroundAlign align : BackgroundAlign.values()) {
+            for (final String format : new String[]{".png", ".jpeg", ".jpg"}) {
+                try {
+                    background = TextureLoader.getInstance().loadTexture(glad.getGL(), new File("config/" + Rules.league.leagueDirectory + "/background" + align.suffix + format));
+                    backgroundAlign = align;
+                    break loaded;
+                } catch (final IOException e) {
+                } catch (final Exception e) {
+                    JOptionPane.showMessageDialog(null,
+                            "The background image " + "config/" + Rules.league.leagueDirectory + "/background" + align.suffix + format + " could not be loaded.\nUsually this happens if its width or height is not an even number.",
+                            "Background image could not be loaded",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        }
     }
 
     @Override
     public void draw(final GL2 gl) {
         // Draw Background
         switchTo2D(gl);
-        try {
-            final TextureLoader.Texture t = TextureLoader.getInstance().loadTexture(gl, new File("config/" + Rules.league.leagueDirectory + "/background.png"));
-            Image.drawImage2DCover(gl, t, 0, 0, window.getWidth(), window.getHeight());
-        } catch (IOException ex) {
-
+        if (background != null) {
+            switch (backgroundAlign) {
+                case NONE:
+                    Image.drawImage2DCover(gl, background, 0, 0, window.getWidth(), window.getHeight());
+                    break;
+                case LEFT:
+                    Image.drawImage2DContain(gl, background, 0, 0, background.width * window.getHeight() / background.height, window.getHeight());
+                    break;
+                case RIGHT:
+                    Image.drawImage2DContain(gl, background, window.getWidth() - background.width * window.getHeight() / background.height, 0, background.width * window.getHeight() / background.height, window.getHeight());
+                    break;
+                case TOP:
+                    Image.drawImage2DContain(gl, background, 0, 0, window.getWidth(), background.height * window.getWidth() / background.width);
+                    break;
+                case BOTTOM:
+                    Image.drawImage2DContain(gl, background, 0, window.getHeight() - background.height * window.getWidth() / background.width, window.getWidth(), background.height * window.getWidth() / background.width);
+                    break;
+            }
         }
 
         // Draw 3D Drawings
         switchTo3D(gl);
+
         super.draw(gl);
 
         // Draw 2D HUD
         final GameState gs = GameState.getInstance();
-        if (gs.getLastGameControlData() != null) {
+
+        if (gs.getLastGameControlData()
+                != null) {
             final GameControlData data = gs.getLastGameControlData();
 
             // Team Logos
