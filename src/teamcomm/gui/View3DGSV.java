@@ -12,6 +12,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.awt.TextRenderer;
@@ -38,13 +39,16 @@ import teamcomm.gui.drawings.TextureLoader;
  */
 public class View3DGSV extends View3D {
 
-    private static final int RENDERER_STATE = 0;
-    private static final int RENDERER_TIME = 1;
-    private static final int RENDERER_SCORE = 2;
+    private static final int RENDERER_SECSTATE = 0;
+    private static final int RENDERER_STATE = 1;
+    private static final int RENDERER_TIME = 2;
+    private static final int RENDERER_SCORE = 3;
 
     private final GLWindow window;
-    private final TextRenderer[] textRenderers = new TextRenderer[3];
-    private final int[] textRendererSizes = new int[3];
+    private final TextRenderer[] textRenderers = new TextRenderer[4];
+    private final int[] textRendererSizes = new int[4];
+
+    private static final float NEAR_FIELD_BORDER_Y = -3.7f;
 
     /**
      * Constructor.
@@ -72,6 +76,7 @@ public class View3DGSV extends View3D {
             @Override
             public void mouseWheelMoved(final MouseEvent me) {
                 camera.addRadius(-me.getRotation()[1] * 0.05f);
+                camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
             }
         });
         window.addKeyListener(new KeyAdapter() {
@@ -84,10 +89,12 @@ public class View3DGSV extends View3D {
                     case KeyEvent.VK_UP:
                     case KeyEvent.VK_PLUS:
                         camera.addRadius(-0.05f * ((ke.getModifiers() & KeyEvent.SHIFT_MASK) != 0 ? 2 : 1));
+                        camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
                         break;
                     case KeyEvent.VK_DOWN:
                     case KeyEvent.VK_MINUS:
                         camera.addRadius(0.05f * ((ke.getModifiers() & KeyEvent.SHIFT_MASK) != 0 ? 2 : 1));
+                        camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
                         break;
                 }
             }
@@ -146,7 +153,8 @@ public class View3DGSV extends View3D {
                     d.setActive(false);
             }
         }
-        camera.addRadius(1.75f);
+        camera.addRadius(4.f);
+        camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
 
         GameState.getInstance().setMirrored(true);
     }
@@ -180,8 +188,48 @@ public class View3DGSV extends View3D {
             }
             switchTo3D(gl);
 
+            // Secondary state
+            String state;
+            switch (data.secGameState) {
+                case GameControlData.STATE2_NORMAL:
+                    if (Rules.league.dropInPlayerMode) {
+                        state = "";
+                    } else if (data.firstHalf == GameControlData.C_TRUE) {
+                        if (data.gameState == GameControlData.STATE_FINISHED) {
+                            state = "Half Time";
+                        } else {
+                            state = "First Half";
+                        }
+                    } else {
+                        if (data.gameState == GameControlData.STATE_INITIAL) {
+                            state = "Half Time";
+                        } else {
+                            state = "Second Half";
+                        }
+                    }
+                    break;
+                case GameControlData.STATE2_OVERTIME:
+                    state = "Overtime";
+                    break;
+                case GameControlData.STATE2_PENALTYSHOOT:
+                    state = "Penalty Shootout";
+                    break;
+                case GameControlData.STATE2_TIMEOUT:
+                    state = "Time Out";
+                    break;
+                default:
+                    state = "";
+            }
+            textRenderers[RENDERER_SECSTATE].beginRendering(window.getWidth(), window.getHeight());
+            drawTextCenter(textRenderers[RENDERER_SECSTATE], state, window.getHeight() - textRendererSizes[RENDERER_SECSTATE], Color.black);
+            textRenderers[RENDERER_SECSTATE].endRendering();
+
+            // Time
+            textRenderers[RENDERER_TIME].beginRendering(window.getWidth(), window.getHeight());
+            drawText(textRenderers[RENDERER_TIME], formatTime((int) data.secsRemaining), (int) Math.round((window.getWidth() - textRenderers[RENDERER_TIME].getBounds("00:00").getWidth()) / 2 - (data.secsRemaining < 0 ? textRenderers[RENDERER_TIME].getCharWidth('-') : 0)), window.getHeight() - textRendererSizes[RENDERER_SECSTATE] - textRendererSizes[RENDERER_TIME], Color.black);
+            textRenderers[RENDERER_TIME].endRendering();
+
             // State
-            String state, secState;
             switch (data.gameState) {
                 case GameControlData.STATE_INITIAL:
                     state = "Initial";
@@ -201,50 +249,49 @@ public class View3DGSV extends View3D {
                 default:
                     state = "";
             }
-            switch (data.secGameState) {
-                case GameControlData.STATE2_NORMAL:
-                    if (Rules.league.dropInPlayerMode) {
-                        secState = "";
-                    } else if (data.firstHalf == GameControlData.C_TRUE) {
-                        if (data.gameState == GameControlData.STATE_FINISHED) {
-                            secState = "Half Time";
-                        } else {
-                            secState = "First Half";
-                        }
-                    } else {
-                        if (data.gameState == GameControlData.STATE_INITIAL) {
-                            secState = "Half Time";
-                        } else {
-                            secState = "Second Half";
-                        }
-                    }
-                    break;
-                case GameControlData.STATE2_OVERTIME:
-                    secState = "Overtime";
-                    break;
-                case GameControlData.STATE2_PENALTYSHOOT:
-                    secState = "Penalty Shootout";
-                    break;
-                case GameControlData.STATE2_TIMEOUT:
-                    secState = "Time Out";
-                    break;
-                default:
-                    secState = "";
-            }
             textRenderers[RENDERER_STATE].beginRendering(window.getWidth(), window.getHeight());
-            drawTextCenter(textRenderers[RENDERER_STATE], secState + (state.length() == 0 || secState.length() == 0 ? "" : " – ") + state, window.getHeight() - textRendererSizes[RENDERER_STATE], Color.black);
-            textRenderers[RENDERER_STATE].endRendering();
+            drawTextCenter(textRenderers[RENDERER_STATE], state, window.getHeight() - textRendererSizes[RENDERER_SECSTATE] - textRendererSizes[RENDERER_TIME] - window.getHeight() * 15 / 1080 - textRendererSizes[RENDERER_STATE], Color.black);
 
-            // Time
-            textRenderers[RENDERER_TIME].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_TIME], formatTime((int) data.secsRemaining), (int) Math.round((window.getWidth() - textRenderers[RENDERER_TIME].getBounds("00:00").getWidth()) / 2 - (data.secsRemaining < 0 ? textRenderers[RENDERER_TIME].getCharWidth('-') : 0)), window.getHeight() - textRendererSizes[RENDERER_TIME] - textRendererSizes[RENDERER_STATE], Color.black);
-            textRenderers[RENDERER_TIME].endRendering();
+            // Secondary time
+            if (data.secondaryTime > 0) {
+                drawTextCenter(textRenderers[RENDERER_STATE], formatTime(data.secondaryTime), window.getHeight() - textRendererSizes[RENDERER_SECSTATE] - textRendererSizes[RENDERER_TIME] - window.getHeight() * 15 / 1080 - textRendererSizes[RENDERER_STATE] * 2, Color.black);
+            }
+            textRenderers[RENDERER_STATE].endRendering();
 
             // Score
             textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, 40 + window.getWidth() / 6, window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - (int) (40 + window.getWidth() / 6 + textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth()), window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + window.getWidth() * 10 / 1920, window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() * 40 / 1920 - window.getWidth() / 6 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
             textRenderers[RENDERER_SCORE].endRendering();
+
+            // Penalty shots
+            if (data.team[0].penaltyShot > 0 || data.team[1].penaltyShot > 0) {
+                switchTo2D(gl);
+                final GLU glu = GLU.createGLU(gl);
+                final GLUquadric q = glu.gluNewQuadric();
+                for (int i = 0; i < 2; i++) {
+                    gl.glColor4fv(Rules.league.teamColor[data.team[i].teamColor].getComponents(new float[4]), 0);
+                    if (i == 0) {
+                        gl.glPushMatrix();
+                        gl.glTranslatef(window.getWidth() * 11 / 12, window.getWidth() / 6 + window.getHeight() * 20 / 1080, 0);
+                    } else {
+                        gl.glTranslatef(window.getWidth() / 12, window.getWidth() / 6 + window.getHeight() * 20 / 1080, 0);
+                    }
+                    for (int j = 0; j < data.team[i].penaltyShot; j++) {
+                        gl.glTranslatef(0, 2.5f * window.getWidth() * 32 / 1920, 0);
+                        if ((data.team[i].singleShots & (1 << j)) != 0) {
+                            glu.gluDisk(q, 0, window.getWidth() * 32 / 1920, 16, 16);
+                        } else {
+                            glu.gluDisk(q, window.getWidth() * 28 / 1920, window.getWidth() * 32 / 1920, 16, 16);
+                        }
+                    }
+                    if (i == 0) {
+                        gl.glPopMatrix();
+                    }
+                }
+                glu.gluDeleteQuadric(q);
+                switchTo3D(gl);
+            }
         }
     }
 
@@ -295,7 +342,8 @@ public class View3DGSV extends View3D {
     public void reshape(final GLAutoDrawable glad, final int x, final int y, final int width, final int height) {
         super.reshape(glad, x, y, width, height);
 
-        textRendererSizes[RENDERER_STATE] = 80 * width / 1920;
+        textRendererSizes[RENDERER_STATE] = 60 * width / 1920;
+        textRendererSizes[RENDERER_SECSTATE] = 80 * width / 1920;
         textRendererSizes[RENDERER_TIME] = 120 * width / 1920;
         textRendererSizes[RENDERER_SCORE] = width / 6;
         for (int i = 0; i < textRenderers.length; i++) {

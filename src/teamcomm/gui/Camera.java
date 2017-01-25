@@ -12,10 +12,12 @@ public class Camera {
 
     private static final float NEAR_PLANE = 1;
     private static final float FAR_PLANE = 20;
+    private static final float FOVY = 40;
 
     private float theta = 45;
     private float phi = 0;
     private float radius = 9;
+    private float shift = 0;
     private boolean flipped = false;
 
     /**
@@ -84,7 +86,7 @@ public class Camera {
         final GLU glu = GLU.createGLU(gl);
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(40, displayRatio, NEAR_PLANE, FAR_PLANE);
+        glu.gluPerspective(FOVY, displayRatio, NEAR_PLANE, FAR_PLANE);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
     }
 
@@ -98,6 +100,7 @@ public class Camera {
         gl.glTranslatef(0, 0, -radius);
         gl.glRotatef(-theta, 1, 0, 0);
         gl.glRotatef(phi, 0, 0, 1);
+        gl.glTranslatef(0, -shift, 0);
     }
 
     /**
@@ -109,5 +112,15 @@ public class Camera {
     public void turnTowardsCamera(final GL2 gl) {
         gl.glRotatef((flipped ? 180 : 0) - phi, 0, 0, 1);
         gl.glRotatef(theta, 1, 0, 0);
+    }
+
+    /**
+     * Shifts the camera so that the given Y coordinate on the X-Z-plane so is
+     * at the bottom of the viewport.
+     *
+     * @param bottomY Y-coordinate to be shifted to the bottom of the viewport
+     */
+    public void shiftToBottom(final float bottomY) {
+        shift = bottomY + (float) (Math.sin(Math.PI / 2 - Math.toRadians(theta)) * radius - Math.sin(Math.PI / 2 - (Math.toRadians(theta) + Math.toRadians(FOVY) / 2)) * radius * Math.cos(Math.PI / 2 - Math.toRadians(theta)) / Math.cos(Math.PI / 2 - (Math.toRadians(theta) + Math.toRadians(FOVY) / 2)));
     }
 }
