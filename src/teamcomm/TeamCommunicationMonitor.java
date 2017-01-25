@@ -23,6 +23,7 @@ public class TeamCommunicationMonitor {
 
     private static boolean silentMode = false;
     private static boolean gsvMode = false;
+    private static boolean forceWindowed = false;
 
     private static boolean shutdown = false;
     private static final Object shutdownMutex = new Object();
@@ -101,7 +102,7 @@ public class TeamCommunicationMonitor {
 
         // Initialize robot view part of the GUI
         final MainWindow robotView = silentMode || gsvMode ? null : new MainWindow();
-        final View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV() : null);
+        final View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV(forceWindowed) : null);
 
         // Start threads
         gcDataReceiver.start();
@@ -155,6 +156,8 @@ public class TeamCommunicationMonitor {
     private static final String ARG_SILENT_SHORT = "-s";
     private static final String ARG_SILENT = "--silent";
     private static final String ARG_GSV = "--gsv";
+    private static final String ARG_WINDOWED = "--windowed";
+    private static final String ARG_WINDOWED_SHORT = "-w";
 
     private static void parseArgs(final String[] args) {
         for (final String arg : args) {
@@ -169,8 +172,14 @@ public class TeamCommunicationMonitor {
                 case ARG_SILENT_SHORT:
                 case ARG_SILENT:
                     silentMode = true;
+                    break;
+                case ARG_WINDOWED_SHORT:
+                case ARG_WINDOWED:
+                    forceWindowed = true;
+                    break;
                 case ARG_GSV:
                     gsvMode = true;
+                    break;
             }
         }
     }

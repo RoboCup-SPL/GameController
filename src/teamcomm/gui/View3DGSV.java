@@ -6,6 +6,8 @@ import com.jogamp.newt.event.KeyAdapter;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
+import com.jogamp.newt.event.WindowAdapter;
+import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -70,8 +72,10 @@ public class View3DGSV extends View3D {
 
     /**
      * Constructor.
+     *
+     * @param forceWindowed force the GSV window into windowed mode
      */
-    public View3DGSV() {
+    public View3DGSV(final boolean forceWindowed) {
         final GLProfile glp = GLProfile.get(GLProfile.GL2);
         final GLCapabilities caps = new GLCapabilities(glp);
         caps.setSampleBuffers(true);
@@ -83,11 +87,20 @@ public class View3DGSV extends View3D {
         autoDrawable.addGLEventListener(this);
         window.setSurfaceScale(new float[]{ScalableSurface.AUTOMAX_PIXELSCALE, ScalableSurface.AUTOMAX_PIXELSCALE});
         window.setTitle("GameStateVisualizer");
-        window.setUndecorated(true);
-        window.setResizable(false);
-        window.setFullscreen(true);
-        window.setPointerVisible(false);
-        window.confinePointer(false);
+        if (!forceWindowed) {
+            window.setUndecorated(true);
+            window.setResizable(false);
+            window.setFullscreen(true);
+            window.setPointerVisible(false);
+            window.confinePointer(false);
+        } else {
+            window.setSize(640, 480);
+            window.setUndecorated(false);
+            //window.setResizable(true);
+            window.setFullscreen(false);
+            window.setPointerVisible(true);
+            window.confinePointer(false);
+        }
 
         // Setup keyboard / mouse interaction
         window.addMouseListener(new MouseAdapter() {
@@ -120,7 +133,7 @@ public class View3DGSV extends View3D {
             @Override
             public void keyReleased(KeyEvent ke) {
                 if ((ke.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
-                    if (ke.getKeyCode() == KeyEvent.VK_LEFT || ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    if (!forceWindowed && (ke.getKeyCode() == KeyEvent.VK_LEFT || ke.getKeyCode() == KeyEvent.VK_RIGHT)) {
                         final List<MonitorDevice> devices = window.getScreen().getMonitorDevices();
                         if (devices.size() > 1) {
                             int i;
@@ -138,6 +151,12 @@ public class View3DGSV extends View3D {
                         }
                     }
                 }
+            }
+        });
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowDestroyed(final WindowEvent we) {
+                TeamCommunicationMonitor.shutdown();
             }
         });
 
