@@ -7,8 +7,8 @@ import bhuman.message.messages.GoalPercept.GoalPost;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
-import teamcomm.gui.Camera;
 import teamcomm.data.RobotState;
+import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Text;
 
@@ -112,7 +112,7 @@ public class Goal extends PerPlayer {
                         gl.glTranslatef(pos.x, pos.y, 1.2f);
                         gl.glRotatef(-rotation, 0, 0, 1);
                         camera.turnTowardsCamera(gl);
-                        Text.drawText(gl, "L", 0, 0, 0.25f);
+                        Text.drawText("L", 0, 0, 0.25f);
                         gl.glPopMatrix();
                     } else if (post.position == GoalPost.Position.IS_RIGHT) {
                         gl.glPushMatrix();
@@ -122,7 +122,7 @@ public class Goal extends PerPlayer {
                         gl.glTranslatef(pos.x, pos.y, 1.2f);
                         gl.glRotatef(-rotation, 0, 0, 1);
                         camera.turnTowardsCamera(gl);
-                        Text.drawText(gl, "R", 0, 0, 0.25f);
+                        Text.drawText("R", 0, 0, 0.25f);
                         gl.glPopMatrix();
                     }
                 }
