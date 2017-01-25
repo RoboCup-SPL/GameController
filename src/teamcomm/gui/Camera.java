@@ -115,8 +115,8 @@ public class Camera {
     }
 
     /**
-     * Shifts the camera so that the given Y coordinate on the X-Z-plane so is
-     * at the bottom of the viewport.
+     * Shifts the camera so that the given Y coordinate on the X-Z-plane is at
+     * the bottom of the viewport.
      *
      * @param bottomY Y-coordinate to be shifted to the bottom of the viewport
      */
