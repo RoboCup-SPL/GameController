@@ -101,6 +101,7 @@ public class TeamCommunicationMonitor {
         receiver = SPLStandardMessageReceiverTCM.getInstance();
 
         // Initialize robot view part of the GUI
+        System.setProperty("newt.window.icons", "null,null");
         final MainWindow robotView = silentMode || gsvMode ? null : new MainWindow();
         final View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV(forceWindowed) : null);
 
