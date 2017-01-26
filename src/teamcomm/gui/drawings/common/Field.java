@@ -19,7 +19,9 @@ public class Field extends Static {
 
     @Override
     public void draw(final GL2 gl, final Camera camera) {
+        gl.glDepthFunc(GL2.GL_LESS);
         gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "field"));
+        gl.glDepthFunc(GL2.GL_LEQUAL);
     }
 
     @Override
