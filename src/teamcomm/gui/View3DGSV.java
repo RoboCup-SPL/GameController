@@ -412,15 +412,12 @@ public class View3DGSV extends View3D {
     public void reshape(final GLAutoDrawable glad, final int x, final int y, final int width, final int height) {
         super.reshape(glad, x, y, width, height);
 
-        textRendererSizes[RENDERER_STATE] = 60 * width / 1920;
-        textRendererSizes[RENDERER_SECSTATE] = 80 * width / 1920;
-        textRendererSizes[RENDERER_TIME] = 120 * width / 1920;
-        textRendererSizes[RENDERER_SCORE] = width / 6;
+        textRendererSizes[RENDERER_STATE] = 60 * window.getWidth() / 1920;
+        textRendererSizes[RENDERER_SECSTATE] = 80 * window.getWidth() / 1920;
+        textRendererSizes[RENDERER_TIME] = 120 * window.getWidth() / 1920;
+        textRendererSizes[RENDERER_SCORE] = window.getWidth() / 6;
         for (int i = 0; i < textRenderers.length; i++) {
             textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i]), true, true);
-            if (textRenderers[i].getBounds("0").getHeight() > textRendererSizes[i]) {
-                textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i] / 2), true, true);
-            }
         }
     }
 }
