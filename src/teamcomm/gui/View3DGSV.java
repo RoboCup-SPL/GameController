@@ -418,6 +418,9 @@ public class View3DGSV extends View3D {
         textRendererSizes[RENDERER_SCORE] = width / 6;
         for (int i = 0; i < textRenderers.length; i++) {
             textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i]), true, true);
+            if (textRenderers[i].getBounds("0").getHeight() > textRendererSizes[i]) {
+                textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i] / 2), true, true);
+            }
         }
     }
 }
