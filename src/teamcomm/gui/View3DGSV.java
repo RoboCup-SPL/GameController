@@ -253,6 +253,9 @@ public class View3DGSV extends View3D {
             switchTo2D(gl);
             try {
                 Image.drawImage2DContain(gl, TextureLoader.getInstance().loadTexture(gl, Teams.getIconPath(data.team[1].teamNumber)), 20, 20, window.getWidth() / 6, window.getWidth() / 6);
+            } catch (final Exception e) {
+            }
+            try {
                 Image.drawImage2DContain(gl, TextureLoader.getInstance().loadTexture(gl, Teams.getIconPath(data.team[0].teamNumber)), window.getWidth() * 5 / 6 - 20, 2, window.getWidth() / 6, window.getWidth() / 6);
             } catch (final Exception e) {
             }
