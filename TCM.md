@@ -11,6 +11,9 @@ It serves two main purposes:
 2. visualizing the data that was sent via SPLStandardMessages in both textual
    and graphical form.
 
+Additionally, the TCM can be used for displaying the current state of the game
+by starting it in (GameStateVisualizer)[gamestatevisualizer-mode] mode.
+
 
 ## Usage
 
@@ -149,7 +152,7 @@ of the viewer. This is useful for displaying text or images.
 The package `teamcomm.gui.drawings` also contains some utility classes that can
 be used by drawings:
 * `TextureLoader` manages the loading of textures from image files
-* `Text` allows to draw ASCII text
+* `Text` allows to draw text
 * `Image` allows to draw a textured 2D surface with the correct aspect ratio of
   the given texture
 * `RoSi2Loader` manages the loading of models from ros2 files as used by
@@ -165,3 +168,24 @@ Team B-Human provides the source code for a sample plugin that visualizes data
 sent by their robots in the directory `resources/plugins/05` of the
 GameController repository.
 This plugin may be used as a reference when developing plugins for other teams.
+
+
+## GameStateVisualizer mode
+The GameStateVisualizer (GSV) mode of the TCM replaces the GameStateVisualizer which
+was previously used for displaying the current game state to the audience at
+SPL matches.
+
+To start it, pass the command line parameter `--gsv` to the TCM.
+
+In this mode, the TCM is always displayed in fullscreen mode unless the command
+line parameter `-w` was passed as well.
+
+### Keyboard input
+Some commands can be sent to the TCM when in GSV mode by pressing certain keys
+on the keyboard:
+
+    Esc                     - Close the TCM
+    Arrow up/down           - Zoom the 3D field drawing in or out. This can also
+                              be done by scrolling the mouse wheel.
+    Ctrl + Arrow left/right - Switch the screen on which to display the
+                              fullscreen GSV window.

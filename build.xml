@@ -88,6 +88,7 @@
         </copy>
         <copy file="${lib.dir}/libgamectrl.so" tofile="${jar.dir}/lib/libgamectrl.so"/>
         <copy file="README.md" tofile="${jar.dir}/README.txt"/>
+        <copy file="TCM.md" tofile="${jar.dir}/TCM.txt"/>
     </target>
 
     <target name="run" depends="jar">

@@ -3,19 +3,20 @@
 This is the GameController developed by team B-Human for the RoboCup SPL and
 Humanoid League.
 
-If there are any questions, please contact fthielke@informatik.uni-bremen.de or
-bhuman@dennisschuerholz.de .
+If there are any questions, please contact
+[fthielke@informatik.uni-bremen.de](fthielke@informatik.uni-bremen.de) or
+[bhuman@dennisschuerholz.de](bhuman@dennisschuerholz.de).
 
 Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
 
 The sources mentioned in some sections of this document are available at
-https://github.com/bhuman/GameController .
+[https://github.com/bhuman/GameController](https://github.com/bhuman/GameController).
 
 
 ### Acknowledgement
 
 The development was partially supported by the RoboCup Federation within the
-calls for Support for Projects for League Developments for 2013 and 2015.
+calls for Support for Projects for League Developments for 2013, 2015 and 2017.
 
 
 ## 1. Building from Source
@@ -177,23 +178,12 @@ only Humanoid-League
 
 ## 3. GameStateVisualizer
 
-### Executing the Jar
+As of the 2017 RoboCup competitions, the GameStateVisualizer has been replaced
+by the GameStateVisualizer mode of the TeamCommunicationMonitor.
 
-Double-click GameStateVisualizer.jar or run 
+To start it, run
 
-Usage: `java -jar GameStateVisualizer.jar {options}`
-
-    (-h | --help)                   display help
-    (-w | --window)                 select window mode (default is fullscreen)
-    (-l | --league) (spl | spl_dropin | hl_kid | hl_teen | hl_adult)
-                                    select league (default is spl)
-
-### Shortcuts
-
-In addition to the usual keyboard combinations to terminate the application
-(Alt+F4 / Cmd+Q), pressing F11 toggles between the normal mode and the test
-mode. In the latter, the messages sent by the GameController are dumped on
-the screen.
+`java -jar TeamCommunicationMonitor.jar --gsv`.
 
 
 ## 4. TeamCommunicationMonitor
