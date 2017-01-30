@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
 import teamcomm.gui.drawings.Drawing;
@@ -204,12 +203,22 @@ public class View3DGSV extends View3D {
                     break loaded;
                 } catch (final IOException e) {
                 } catch (final Exception e) {
-                    JOptionPane.showMessageDialog(null,
-                            "The background image " + "config/" + Rules.league.leagueDirectory + "/background" + align.suffix + format + " could not be loaded.\nUsually this happens if its width or height is not an even number.",
-                            "Background image could not be loaded",
-                            JOptionPane.WARNING_MESSAGE);
+                    System.err.println("The background image " + "config/" + Rules.league.leagueDirectory + "/background" + align.suffix + format + " could not be loaded.\nUsually this happens if its width or height is not an even number.");
                 }
             }
+        }
+    }
+
+    @Override
+    public void reshape(final GLAutoDrawable glad, final int x, final int y, final int width, final int height) {
+        super.reshape(glad, x, y, width, height);
+
+        textRendererSizes[RENDERER_STATE] = 60 * window.getWidth() / 1920;
+        textRendererSizes[RENDERER_SECSTATE] = 80 * window.getWidth() / 1920;
+        textRendererSizes[RENDERER_TIME] = 120 * window.getWidth() / 1920;
+        textRendererSizes[RENDERER_SCORE] = window.getWidth() / 6;
+        for (int i = 0; i < textRenderers.length; i++) {
+            textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i]), true, true);
         }
     }
 
@@ -239,12 +248,10 @@ public class View3DGSV extends View3D {
 
         // Draw 3D Drawings
         switchTo3D(gl);
-
         super.draw(gl);
 
         // Draw 2D HUD
         final GameState gs = GameState.getInstance();
-
         if (gs.getLastGameControlData()
                 != null) {
             final GameControlData data = gs.getLastGameControlData();
@@ -252,11 +259,11 @@ public class View3DGSV extends View3D {
             // Team Logos
             switchTo2D(gl);
             try {
-                Image.drawImage2DContain(gl, TextureLoader.getInstance().loadTexture(gl, Teams.getIconPath(data.team[1].teamNumber)), 20, 20, window.getWidth() / 6, window.getWidth() / 6);
+                Image.drawImage2DContain(gl, TextureLoader.getInstance().loadTexture(gl, Teams.getIconPath(data.team[1].teamNumber)), 20 * window.getWidth() / 1920, 20 * window.getWidth() / 1920, window.getWidth() / 6, window.getWidth() / 6);
             } catch (final Exception e) {
             }
             try {
-                Image.drawImage2DContain(gl, TextureLoader.getInstance().loadTexture(gl, Teams.getIconPath(data.team[0].teamNumber)), window.getWidth() * 5 / 6 - 20, 2, window.getWidth() / 6, window.getWidth() / 6);
+                Image.drawImage2DContain(gl, TextureLoader.getInstance().loadTexture(gl, Teams.getIconPath(data.team[0].teamNumber)), window.getWidth() - window.getWidth() / 6 - 20 * window.getWidth() / 1920, 20 * window.getWidth() / 1920, window.getWidth() / 6, window.getWidth() / 6);
             } catch (final Exception e) {
             }
             switchTo3D(gl);
@@ -333,8 +340,8 @@ public class View3DGSV extends View3D {
 
             // Score
             textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + window.getWidth() * 10 / 1920, window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() * 40 / 1920 - window.getWidth() / 6 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - textRendererSizes[RENDERER_SCORE] + window.getWidth() * 50 / 1920, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
             textRenderers[RENDERER_SCORE].endRendering();
 
             // Penalty shots
@@ -409,18 +416,5 @@ public class View3DGSV extends View3D {
      */
     private String formatTime(final int seconds) {
         return (seconds < 0 ? "-" : "") + String.format("%02d:%02d", Math.abs(seconds) / 60, Math.abs(seconds) % 60);
-    }
-
-    @Override
-    public void reshape(final GLAutoDrawable glad, final int x, final int y, final int width, final int height) {
-        super.reshape(glad, x, y, width, height);
-
-        textRendererSizes[RENDERER_STATE] = 60 * window.getWidth() / 1920;
-        textRendererSizes[RENDERER_SECSTATE] = 80 * window.getWidth() / 1920;
-        textRendererSizes[RENDERER_TIME] = 120 * window.getWidth() / 1920;
-        textRendererSizes[RENDERER_SCORE] = window.getWidth() / 6;
-        for (int i = 0; i < textRenderers.length; i++) {
-            textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i]), true, true);
-        }
     }
 }
