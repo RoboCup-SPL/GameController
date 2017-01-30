@@ -12,7 +12,7 @@ It serves two main purposes:
    and graphical form.
 
 Additionally, the TCM can be used for displaying the current state of the game
-by starting it in (GameStateVisualizer)[gamestatevisualizer-mode] mode.
+by starting it in GameStateVisualizer mode.
 
 
 ## Usage
