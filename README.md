@@ -4,8 +4,7 @@ This is the GameController developed by team B-Human for the RoboCup SPL and
 Humanoid League.
 
 If there are any questions, please contact
-[fthielke@informatik.uni-bremen.de](fthielke@informatik.uni-bremen.de) or
-[bhuman@dennisschuerholz.de](bhuman@dennisschuerholz.de).
+[fthielke@uni-bremen.de](fthielke@uni-bremen.de).
 
 Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
 
@@ -296,11 +295,6 @@ in 2014 in several ways:
 ## 8. Known Issues
 
 There are still a number of issues left:
-
-- When running on the same PC, the GameStateVisualizer sometimes does not
-  receive the GameController packets anymore. This error is hard to reproduce,
-  but it happened quite often in Eindhoven. It did not in João Pessoa, but there 
-  the GameStateVisualizer was never running for a long time in a row.
   
 - The qibuild file for libgamectrl is untested.
 
