@@ -4,7 +4,9 @@ This is the GameController developed by team B-Human for the RoboCup SPL and
 Humanoid League.
 
 If there are any questions, please contact
-[fthielke@uni-bremen.de](fthielke@uni-bremen.de).
+[fthielke@uni-bremen.de](fthielke@uni-bremen.de). Please make sure that your
+questions are not already answered in this README or the README file of the
+[TCM](TCM.md).
 
 Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
 
@@ -173,6 +175,19 @@ only Humanoid-League
     D    - illegal defense
     I    - service / incapable
     S    - substitute
+
+
+### Adding teams to the GameController
+
+The teams registered in the GameController are determined using the config file
+located at `config/<league name>/teams.cfg` relative the the GameController.jar.
+To add teams to it, lines composed of `<team number>=<team name>` may be added
+to this file.
+Optionally, the primary and secondary team colors may be added behind the team
+name, separated by commas.
+
+Team logos lie in the same directory as the config file with the corresponding
+team number as the file name.
 
 
 ## 3. GameStateVisualizer
