@@ -1,4 +1,6 @@
-package data;
+package data.states;
+
+import data.communication.GameControlData;
 
 /**
  * This complete class needs to be bound with the Observer pattern to the respective window

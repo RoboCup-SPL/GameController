@@ -1,4 +1,4 @@
-package data;
+package data.states;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,6 +10,11 @@ import java.util.ArrayList;
 
 import common.Log;
 import controller.action.ActionBoard;
+import data.PlayerInfo;
+import data.Rules;
+import data.spl.SPLCoachMessage;
+import data.TeamInfo;
+import data.communication.GameControlData;
 
 /**
  * This class extends the GameControlData that is send to the robots. It

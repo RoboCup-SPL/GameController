@@ -1,7 +1,7 @@
 package teamcomm.data;
 
 import data.PlayerInfo;
-import data.SPLStandardMessage;
+import data.spl.SPLStandardMessage;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import javax.swing.event.EventListenerList;

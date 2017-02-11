@@ -28,6 +28,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import data.*;
+import data.communication.GameControlData;
+import data.spl.SPL;
+import data.spl.SPLDropIn;
+import data.states.GamePreparationData;
 
 
 /**

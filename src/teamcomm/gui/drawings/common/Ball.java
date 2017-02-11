@@ -5,7 +5,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 import data.PlayerInfo;
-import data.SPLStandardMessage;
+import data.spl.SPLStandardMessage;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.RoSi2Loader;

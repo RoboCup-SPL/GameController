@@ -1,4 +1,4 @@
-package data;
+package data.hl;
 
 /**
  * This class sets attributes given by the humanoid-league rules.
@@ -7,7 +7,7 @@ package data;
  */
 public class HLAdult extends HL
 {
-    HLAdult()
+    public HLAdult()
     {
         /** The league´s name this rules are for. */
         leagueName = "HL Adult";

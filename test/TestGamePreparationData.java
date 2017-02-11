@@ -1,5 +1,6 @@
-import data.GameControlData;
-import data.GamePreparationData;
+import data.communication.GameControlData;
+import data.states.GamePreparationData;
+
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;

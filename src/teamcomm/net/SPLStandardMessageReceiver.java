@@ -1,7 +1,7 @@
 package teamcomm.net;
 
 import common.Log;
-import data.SPLStandardMessage;
+import data.spl.SPLStandardMessage;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;

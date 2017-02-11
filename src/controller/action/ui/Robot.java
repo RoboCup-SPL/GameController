@@ -13,11 +13,11 @@ import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.ServiceHL;
 import controller.action.ui.penalty.Substitute;
-import data.AdvancedData;
-import data.AdvancedData.PenaltyQueueData;
+import data.states.AdvancedData;
+import data.states.AdvancedData.PenaltyQueueData;
 import data.PlayerInfo;
 import data.Rules;
-import data.SPL;
+import data.spl.SPL;
 
 /**
  * @author Michel Bartsch

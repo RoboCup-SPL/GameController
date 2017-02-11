@@ -1,5 +1,8 @@
 package data;
 
+import data.communication.GameControlData;
+import data.spl.SPLCoachMessage;
+
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

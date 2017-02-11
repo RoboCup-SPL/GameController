@@ -1,4 +1,4 @@
-package data;
+package data.spl;
 
 /**
  * This class sets attributes given by the spl rules, adapted for the drop-in competition.
@@ -7,7 +7,7 @@ package data;
  */
 public class SPLDropIn extends SPL
 {
-    SPLDropIn()
+    public SPLDropIn()
     {
         /** The league´s name this rules are for. */
         leagueName = "SPL Drop-in";

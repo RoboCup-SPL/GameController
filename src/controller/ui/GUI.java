@@ -29,12 +29,12 @@ import controller.action.ActionBoard;
 import controller.action.GCAction;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
-import data.AdvancedData;
-import data.GameControlData;
-import data.HL;
+import data.states.AdvancedData;
+import data.communication.GameControlData;
+import data.hl.HL;
 import data.PlayerInfo;
 import data.Rules;
-import data.SPL;
+import data.spl.SPL;
 import data.Teams;
 
 
