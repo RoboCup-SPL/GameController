@@ -1,4 +1,4 @@
-package controller.ui;
+package controller.ui.setup;
 
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
@@ -32,6 +32,7 @@ import data.communication.GameControlData;
 import data.spl.SPL;
 import data.spl.SPLDropIn;
 import data.states.GamePreparationData;
+import data.states.PrepTeam;
 
 
 /**
@@ -313,7 +314,7 @@ public class StartInput extends JFrame implements Serializable
         if (selected_team == null) {
             return;
         }
-        GamePreparationData.PrepTeam prepTeam = gamePrepData.getPrepTeam(team_index);
+        PrepTeam prepTeam = gamePrepData.getPrepTeam(team_index);
         int team_number = Integer.valueOf((selected_team).split(" \\(")[1].split("\\)")[0]);
         prepTeam.setTeamNumber(team_number);
 
@@ -440,7 +441,7 @@ public class StartInput extends JFrame implements Serializable
 
     private void reloadTeamColor(final int team_idx)
     {
-        GamePreparationData.PrepTeam pt = gamePrepData.getPrepTeam(team_idx);
+        PrepTeam pt = gamePrepData.getPrepTeam(team_idx);
 
         colorNames[team_idx] = Teams.getColors(pt.getTeamNumber()).clone();
         if (colorNames[team_idx] == null || colorNames[team_idx].length == 0) {

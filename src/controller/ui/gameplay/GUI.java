@@ -1,4 +1,4 @@
-package controller.ui;
+package controller.ui.gameplay;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -29,6 +29,7 @@ import controller.action.ActionBoard;
 import controller.action.GCAction;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
+import controller.ui.GCGUI;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
 import data.hl.HL;

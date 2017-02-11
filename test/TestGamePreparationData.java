@@ -1,7 +1,12 @@
 import data.communication.GameControlData;
+import data.hl.HL;
 import data.states.GamePreparationData;
 
+import data.states.PrepTeam;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -9,6 +14,12 @@ import static org.junit.Assert.assertTrue;
 
 
 public class TestGamePreparationData {
+
+    @BeforeClass
+    public static void setUp(){
+        System.setProperty("CONFIG_ROOT", "test_resources/");
+    }
+
 
     @Test
     public void test_fresh_game_prep_data() {
@@ -57,11 +68,22 @@ public class TestGamePreparationData {
     }
 
     @Test
-    public void test_get_prep_team_by_index_works() {
+    public void test_team_refresh_works() {
         GamePreparationData gpd = new GamePreparationData();
+        ArrayList<PrepTeam> al = gpd.getPreparedTeams();
+        assertEquals(al.size(), 5);
+    }
 
-        assertEquals(gpd.getFirstTeam(), gpd.getPrepTeam(0));
-        assertEquals(gpd.getSecondTeam(), gpd.getPrepTeam(1));
+    @Test
+    public void test_switching_leagues_work() {
+        GamePreparationData gpd = new GamePreparationData();
+        ArrayList<PrepTeam> al = gpd.getPreparedTeams();
+        assertEquals(al.size(), 5);
+
+        gpd.switchRules(new HL());
+
+        ArrayList<PrepTeam> al2 = gpd.getPreparedTeams();
+        assertEquals(al2.size(), 9);
     }
 
 }

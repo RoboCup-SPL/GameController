@@ -24,7 +24,14 @@ public abstract class Rules
         new HLTeen(),
         new HLAdult()
     };
-    
+
+    public boolean equals(Rules rules) {
+        if (this.getClass().getSimpleName().equals(rules.getClass().getSimpleName())) {
+            return true;
+        }
+        return false;
+    }
+
     /** The rules of the league playing. */
     public static Rules league = LEAGUES[0];
 

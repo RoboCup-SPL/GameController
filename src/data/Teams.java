@@ -26,7 +26,7 @@ public class Teams
     /**
      * Information about each team.
      */
-    private static class Info
+    public static class Info
     {
         /** The name of the team. */
         public String name;
@@ -47,9 +47,10 @@ public class Teams
             this.colors = colors;
         }
     }
-    
+    /** Dynamically settable path to the config root folder */
+    private static final String CONFIG_ROOT = System.getProperty("CONFIG_ROOT", "");
     /** The path to the leagues directories. */
-    private static final String PATH = "config/";
+    private static final String PATH = CONFIG_ROOT + "config/";
     /** The name of the config file. */
     private static final String CONFIG = "teams.cfg";
     /** The charset to read the config file. */
@@ -101,6 +102,16 @@ public class Teams
             }
             teams[i] = new Info[maxValue+1];
         }
+    }
+
+    public static Teams.Info[] getTeamArrayForLeague(Rules rules){
+
+        for (int i=0; i < Rules.LEAGUES.length; i++) {
+            if (Rules.LEAGUES[i].leagueName.equals(rules.leagueName)) {
+                return Teams.instance.teams[i];
+            }
+        }
+        return null;
     }
     
     /**
