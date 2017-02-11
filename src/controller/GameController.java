@@ -9,10 +9,8 @@ import controller.net.Sender;
 import controller.ui.GUI;
 import controller.ui.KeyboardListener;
 import controller.ui.StartInput;
-import data.AdvancedData;
-import data.GameControlData;
-import data.Rules;
-import data.Teams;
+import data.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -209,16 +207,23 @@ public class GameController {
             }
         }
 
+        // Maybe those two can be merged somehow
+        GamePreparationData gpd = input.getGamePreparationData();
+
         AdvancedData data = new AdvancedData();
-        for (int i = 0; i < 2; i++) {
-            data.team[i].teamNumber = (byte) input.outTeam[i];
-        }
-        data.team[0].teamColor = input.outTeamColor[0];
-        data.team[1].teamColor = input.outTeamColor[1];
-        data.kickOffTeam = (byte) input.outTeam[0];
-        data.colorChangeAuto = input.outAutoColorChange;
+
+        data.team[0].teamNumber = gpd.getFirstTeam().getTeamNumber();
+        data.team[1].teamNumber = gpd.getSecondTeam().getTeamNumber();
+
+        data.team[0].teamColor = gpd.getFirstTeam().getTeamColor();
+        data.team[1].teamColor = gpd.getSecondTeam().getTeamColor();
+
+        data.kickOffTeam = gpd.getFirstTeam().getTeamNumber();
+        data.colorChangeAuto = gpd.isAutoColorChange();
+
+
         data.gameType = Rules.league.dropInPlayerMode ? GameControlData.GAME_DROPIN
-                : input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
+                : gpd.isFullTimeGame() ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
         }
@@ -275,7 +280,7 @@ public class GameController {
                 + " (" + Rules.league.teamColorName[data.team[0].teamColor]
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
                 + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
-        GUI gui = new GUI(input.outFullscreen, data);
+        GUI gui = new GUI(gpd.getFullScreen(), data);
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);

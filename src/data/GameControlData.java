@@ -3,6 +3,7 @@ package data;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 
 
 /**
@@ -259,5 +260,45 @@ public class GameControlData implements Serializable
         out += "      secsRemaining: "+secsRemaining+"\n";
         out += "      secondaryTime: "+secondaryTime+"\n";
         return out;
+    }
+
+    public static ArrayList<Byte> colorConstants = new ArrayList<>();
+
+    static {
+        colorConstants.add(TEAM_BLUE);
+        colorConstants.add(TEAM_RED);
+        colorConstants.add(TEAM_YELLOW);
+        colorConstants.add(TEAM_BLACK);
+        colorConstants.add(TEAM_GREEN);
+        colorConstants.add(TEAM_ORANGE);
+        colorConstants.add(TEAM_PURPLE);
+        colorConstants.add(TEAM_BROWN);
+        colorConstants.add(TEAM_GRAY);
+        colorConstants.add(TEAM_WHITE);
+    }
+
+    public static byte fromColorName(final String colorName) {
+        switch (colorName) {
+            case "blue":
+                return GameControlData.TEAM_BLUE;
+            case "red":
+                return GameControlData.TEAM_RED;
+            case "yellow":
+                return GameControlData.TEAM_YELLOW;
+            case "black":
+                return GameControlData.TEAM_BLACK;
+            case "green":
+                return GameControlData.TEAM_GREEN;
+            case "orange":
+                return GameControlData.TEAM_ORANGE;
+            case "purple":
+                return GameControlData.TEAM_PURPLE;
+            case "brown":
+                return GameControlData.TEAM_BROWN;
+            case "gray":
+                return GameControlData.TEAM_GRAY;
+            default:
+                return GameControlData.TEAM_WHITE;
+        }
     }
 }

@@ -105,4 +105,6 @@ public abstract class Rules
     public boolean dropInPlayerMode;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
+    /** BackgroundSide **/
+    public String[][] backgroundSide;
 }

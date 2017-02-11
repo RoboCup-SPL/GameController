@@ -93,5 +93,16 @@ public class HL extends Rules
         dropInPlayerMode = false;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = false;
+        /** Background Side **/
+        backgroundSide = new String[][]{
+                {
+                        "robot_left_blue.png",
+                        "robot_left_red.png",
+                },
+                {
+                        "robot_right_blue.png",
+                        "robot_right_red.png",
+                }
+        };
     }
 }

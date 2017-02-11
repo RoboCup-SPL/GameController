@@ -2,6 +2,7 @@
 <!DOCTYPE project>
 <project default="jar">
     <property name="src.dir"     value="src"/>
+    <property name="test.dir"    value="test"/>
     <property name="include.dir" value="include"/>
     <property name="lib.dir"     value="lib"/>
     <property name="deps.dir"    value="deps"/>
@@ -22,6 +23,16 @@
         <mkdir dir="${classes.dir}"/>
         <!-- debug flags: debug="true" debuglevel="lines,vars,source" -->
         <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.7" target="1.7" encoding="utf-8">
+            <compilerarg value="-Xlint:-options"/> <!-- ignore nagging about missing bootstrap class path -->
+            <compilerarg value="-Xlint:unchecked"/>
+            <classpath>
+                <pathelement path="${classpath}"/>
+                <fileset dir="${deps.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+        <javac srcdir="${test.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.7" target="1.7" encoding="utf-8">
             <compilerarg value="-Xlint:-options"/> <!-- ignore nagging about missing bootstrap class path -->
             <compilerarg value="-Xlint:unchecked"/>
             <classpath>
@@ -107,5 +118,34 @@
                 </fileset>
             </classpath>
         </javadoc>
+    </target>
+
+    <target name="test" depends="compile">
+
+        <mkdir dir="test_reports"/>
+
+        <junit printsummary="yes" haltonfailure="no">
+
+            <classpath>
+                <pathelement location="${classes.dir}/"/>
+
+                <fileset dir="${deps.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+
+
+            </classpath>
+
+            <formatter type="plain"/>
+            <formatter type="xml"/>
+
+            <batchtest fork="yes" todir="test_reports">
+                <fileset dir="test">
+                    <include name="*Test*"/>
+                </fileset>
+            </batchtest>
+
+        </junit>
+
     </target>
 </project>

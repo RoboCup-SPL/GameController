@@ -95,5 +95,32 @@ public class SPL extends Rules
         dropInPlayerMode = false;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = true;
+        /** Background Side **/
+        backgroundSide = new String[][]{
+                {
+                        "robot_left_blue.png",
+                        "robot_left_red.png",
+                        "robot_left_yellow.png",
+                        "robot_left_black.png",
+                        "robot_left_white.png",
+                        "robot_left_green.png",
+                        "robot_left_orange.png",
+                        "robot_left_purple.png",
+                        "robot_left_brown.png",
+                        "robot_left_gray.png"
+                },
+                {
+                        "robot_right_blue.png",
+                        "robot_right_red.png",
+                        "robot_right_yellow.png",
+                        "robot_right_black.png",
+                        "robot_right_white.png",
+                        "robot_right_green.png",
+                        "robot_right_orange.png",
+                        "robot_right_purple.png",
+                        "robot_right_brown.png",
+                        "robot_right_gray.png"
+                }
+        };
     }
 }
