@@ -1,7 +1,7 @@
 package teamcomm.net.logging;
 
 import common.Log;
-import data.GameControlData;
+import data.communication.GameControlData;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

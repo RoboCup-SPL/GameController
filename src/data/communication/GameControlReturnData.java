@@ -1,4 +1,6 @@
-package data;
+package data.communication;
+
+import data.Rules;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

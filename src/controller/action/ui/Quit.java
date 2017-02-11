@@ -4,7 +4,7 @@ import controller.Clock;
 import controller.EventHandler;
 import controller.action.ActionType;
 import controller.action.GCAction;
-import data.AdvancedData;
+import data.states.AdvancedData;
 
 
 /**

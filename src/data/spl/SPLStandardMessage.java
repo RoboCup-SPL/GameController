@@ -1,4 +1,4 @@
-package data;
+package data.spl;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;

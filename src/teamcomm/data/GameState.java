@@ -1,9 +1,9 @@
 package teamcomm.data;
 
 import common.ApplicationLock;
-import data.GameControlData;
+import data.communication.GameControlData;
 import data.Rules;
-import data.SPLStandardMessage;
+import data.spl.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
 import java.io.IOException;

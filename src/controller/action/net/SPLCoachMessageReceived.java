@@ -3,9 +3,9 @@ package controller.action.net;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.net.RobotWatcher;
-import data.AdvancedData;
+import data.states.AdvancedData;
 import data.PlayerInfo;
-import data.SPLCoachMessage;
+import data.spl.SPLCoachMessage;
 
 public class SPLCoachMessageReceived extends GCAction
 {

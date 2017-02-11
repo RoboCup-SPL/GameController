@@ -1,6 +1,6 @@
 package teamcomm.data;
 
-import data.SPLStandardMessage;
+import data.spl.SPLStandardMessage;
 
 /**
  * Abstract base class for plugin-based extensions to the SPLStandardMessage.

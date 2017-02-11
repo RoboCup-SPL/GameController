@@ -1,7 +1,7 @@
 package controller.action.ui.penalty;
 
 import common.Log;
-import data.AdvancedData;
+import data.states.AdvancedData;
 import data.PlayerInfo;
 import data.Rules;
 

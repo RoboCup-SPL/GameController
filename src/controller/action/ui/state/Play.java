@@ -3,8 +3,8 @@ package controller.action.ui.state;
 import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
-import data.AdvancedData;
-import data.GameControlData;
+import data.states.AdvancedData;
+import data.communication.GameControlData;
 
 
 /**

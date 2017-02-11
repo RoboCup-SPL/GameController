@@ -1,4 +1,8 @@
-package data;
+package data.communication;
+
+import data.states.AdvancedData;
+import data.Rules;
+import data.TeamInfo;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -89,7 +93,7 @@ public class GameControlData implements Serializable
     // GAMECONTROLLER_STRUCT_HEADER                             // header to identify the structure
     // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
     public byte packetNumber = 0;
-    public byte playersPerTeam = (byte)Rules.league.teamSize;   // The number of players on a team
+    public byte playersPerTeam = (byte) Rules.league.teamSize;   // The number of players on a team
     public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_DROPIN)
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise

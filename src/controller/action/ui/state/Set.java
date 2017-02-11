@@ -4,8 +4,8 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.action.ui.half.FirstHalf;
-import data.AdvancedData;
-import data.GameControlData;
+import data.states.AdvancedData;
+import data.communication.GameControlData;
 import data.Rules;
 
 /**

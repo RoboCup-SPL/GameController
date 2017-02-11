@@ -1,6 +1,6 @@
 package common;
 
-import data.AdvancedData;
+import data.states.AdvancedData;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

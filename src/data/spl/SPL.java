@@ -1,4 +1,7 @@
-package data;
+package data.spl;
+
+import data.PlayerInfo;
+import data.Rules;
 
 import java.awt.Color;
 
@@ -9,7 +12,7 @@ import java.awt.Color;
  */
 public class SPL extends Rules
 {
-    SPL()
+    public SPL()
     {
         /** The league´s name this rules are for. */
         leagueName = "SPL";
