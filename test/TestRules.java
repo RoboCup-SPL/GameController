@@ -1,10 +1,16 @@
 import data.Rules;
 import data.spl.SPL;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
 public class TestRules {
+
+    @BeforeClass
+    public static void setUp(){
+        System.setProperty("CONFIG_ROOT", "test_resources/");
+    }
 
     @Test
     public void test_rules_are_equal() {

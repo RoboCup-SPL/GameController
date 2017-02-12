@@ -2,6 +2,7 @@ package data.states;
 
 import data.Helper;
 import data.Rules;
+import data.teams.TeamLoadInfo;
 import data.teams.TeamsLoader;
 
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 public class GamePreparationData {
 
     private Rules _active_rules;
-    private ArrayList<PrepTeam> _available_teams;
 
     private PrepTeam firstTeam;
     private PrepTeam secondTeam;
@@ -20,6 +20,7 @@ public class GamePreparationData {
     private boolean fullTimeGame;
 
     private boolean fullScreen;
+    private ArrayList<TeamLoadInfo> availableTeams;
 
     public GamePreparationData(){
         // Chose default SPL rules
@@ -37,48 +38,34 @@ public class GamePreparationData {
      * Refreshes the teams that are available
      */
     private void refreshTeams(){
-        _available_teams = new ArrayList<>();
-
         TeamsLoader tl = TeamsLoader.getInstance();
 
-        ArrayList<String> teams = tl.getNames(_active_rules.leagueName, true);
+        availableTeams = tl.getTeamLoadInfoList(_active_rules.leagueName);
 
-
-        //TODO simplyfy by jsut usign the teamloadinfo directly
-        for(String team: teams){
-            if (team != null) {
-                String[] components = team.split("\\(");
-                String team_name = components[0];
-                int team_number = Integer.valueOf(components[1].replace(")", ""));
-
-                PrepTeam pt = new PrepTeam(team_name, (byte) team_number);
-
-                _available_teams.add(pt);
-            }
-        }
-        firstTeam = _available_teams.get(0).clone();
-        secondTeam = _available_teams.get(0).clone();
+        firstTeam = new PrepTeam(availableTeams.get(0));
+        secondTeam = new PrepTeam(availableTeams.get(0));
     }
 
     public void switchRules(Rules _new_rules){
         assert Helper.isValidRule(_new_rules) : "Can not switch to this rules. Not active!";
         _active_rules = _new_rules;
         refreshTeams();
+        System.out.println("Switching ruleset");
     }
 
-    public boolean canStart(){
+    public String canStart(){
         /** Checks whether a game can start */
 
         // Cannot start if both teams are the same
-        if (firstTeam.getTeamNumber() == secondTeam.getTeamNumber()){
-            return false;
+        if (firstTeam.getTeamInfo() == secondTeam.getTeamInfo()){
+            return "Cannot start with both teams being the same!";
         }
 
-        if (firstTeam.getTeamColor() == secondTeam.getTeamColor()) {
-            return false;
+        if (firstTeam.getTeamColor().equals(secondTeam.getTeamColor())) {
+            return "Cannot start when TeamColors are the same";
         }
 
-        return true;
+        return null;
     }
 
     public PrepTeam getSecondTeam() {
@@ -113,11 +100,14 @@ public class GamePreparationData {
         return fullScreen;
     }
 
-    public void replaceTeam(int team_index, PrepTeam new_team) {
+
+    public void chooseTeam(int team_index, TeamLoadInfo new_team) {
+        assert 0 <= team_index && team_index <= 1 : "Team index must be 0 or 1";
+
         if (team_index == 0){
-            firstTeam = new_team;
+            firstTeam = new PrepTeam(new_team);
         } else {
-            secondTeam = new_team;
+            secondTeam = new PrepTeam(new_team);
         }
     }
 
@@ -129,7 +119,15 @@ public class GamePreparationData {
         }
     }
 
-    public ArrayList<PrepTeam> getPreparedTeams() {
-        return _available_teams;
+    public Rules getCurrentRules() {
+        return _active_rules;
+    }
+
+    public ArrayList<TeamLoadInfo> getAvailableTeams() {
+        return availableTeams;
+    }
+
+    public String toString(){
+        return String.format("%s %s\n", this.firstTeam, this.secondTeam);
     }
 }

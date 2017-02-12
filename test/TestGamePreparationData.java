@@ -3,6 +3,7 @@ import data.hl.HL;
 import data.states.GamePreparationData;
 
 import data.states.PrepTeam;
+import data.teams.TeamLoadInfo;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,69 +21,71 @@ public class TestGamePreparationData {
         System.setProperty("CONFIG_ROOT", "test_resources/");
     }
 
-
     @Test
     public void test_fresh_game_prep_data() {
         GamePreparationData gpd = new GamePreparationData();
-        assertEquals(0, gpd.getFirstTeam().getTeamNumber());
-        assertEquals(0, gpd.getSecondTeam().getTeamNumber());
+        assertEquals(0, gpd.getFirstTeam().getTeamInfo().identifier);
+        assertEquals(0, gpd.getSecondTeam().getTeamInfo().identifier);
 
-        assertEquals(GameControlData.TEAM_WHITE, gpd.getFirstTeam().getTeamColor());
-        assertEquals(GameControlData.TEAM_WHITE, gpd.getSecondTeam().getTeamColor());
+        assertEquals(GameControlData.TEAM_BLUE, gpd.getFirstTeam().getTeamColorAsByte());
+        assertEquals(GameControlData.TEAM_BLUE, gpd.getSecondTeam().getTeamColorAsByte());
     }
 
     @Test
     public void test_same_team_numbers_cannot_start_game() {
         GamePreparationData gpd = new GamePreparationData();
-        gpd.getFirstTeam().setTeamNumber(14);
-        gpd.getSecondTeam().setTeamNumber(14);
+        gpd.chooseTeam(0, gpd.getAvailableTeams().get(3));
+        gpd.chooseTeam(1, gpd.getAvailableTeams().get(3));
 
-        gpd.getFirstTeam().setTeamColor(GameControlData.TEAM_RED);
-        gpd.getSecondTeam().setTeamColor(GameControlData.TEAM_BROWN);
+        gpd.getFirstTeam().setTeamColor("Red");
+        gpd.getSecondTeam().setTeamColor("Blue");
 
-        assertFalse(gpd.canStart());
+        String problem = gpd.canStart();
+        assertEquals("Cannot start with both teams being the same!", problem);
     }
 
     @Test
     public void test_same_team_colors_cannot_start_game() {
         GamePreparationData gpd = new GamePreparationData();
-        gpd.getFirstTeam().setTeamNumber(15);
-        gpd.getSecondTeam().setTeamNumber(14);
+        gpd.chooseTeam(0, gpd.getAvailableTeams().get(2));
+        gpd.chooseTeam(1, gpd.getAvailableTeams().get(3));
 
-        gpd.getFirstTeam().setTeamColor(GameControlData.TEAM_RED);
-        gpd.getSecondTeam().setTeamColor(GameControlData.TEAM_RED);
+        gpd.getFirstTeam().setTeamColor("Red");
+        gpd.getSecondTeam().setTeamColor("Red");
 
-        assertFalse(gpd.canStart());
+        String problem = gpd.canStart();
+        assertEquals("Cannot start when TeamColors are the same", problem);
     }
 
     @Test
     public void test_game_can_start_with_different_team_properties() {
         GamePreparationData gpd = new GamePreparationData();
-        gpd.getFirstTeam().setTeamNumber(15);
-        gpd.getSecondTeam().setTeamNumber(14);
+        gpd.chooseTeam(0, gpd.getAvailableTeams().get(2));
+        gpd.chooseTeam(1, gpd.getAvailableTeams().get(3));
 
-        gpd.getFirstTeam().setTeamColor(GameControlData.TEAM_RED);
-        gpd.getSecondTeam().setTeamColor(GameControlData.TEAM_BLUE);
+        gpd.getFirstTeam().setTeamColor("Red");
+        gpd.getSecondTeam().setTeamColor("Blue");
 
-        assertTrue(gpd.canStart());
+        String problem = gpd.canStart();
+        assertEquals(null, problem);
     }
 
     @Test
     public void test_team_refresh_works() {
         GamePreparationData gpd = new GamePreparationData();
-        ArrayList<PrepTeam> al = gpd.getPreparedTeams();
+        ArrayList<TeamLoadInfo> al = gpd.getAvailableTeams();
         assertEquals(al.size(), 5);
     }
 
     @Test
     public void test_switching_leagues_work() {
         GamePreparationData gpd = new GamePreparationData();
-        ArrayList<PrepTeam> al = gpd.getPreparedTeams();
+        ArrayList<TeamLoadInfo> al = gpd.getAvailableTeams();
         assertEquals(al.size(), 5);
 
         gpd.switchRules(new HL());
 
-        ArrayList<PrepTeam> al2 = gpd.getPreparedTeams();
+        ArrayList<TeamLoadInfo> al2 = gpd.getAvailableTeams();
         assertEquals(al2.size(), 9);
     }
 

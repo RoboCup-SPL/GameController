@@ -215,13 +215,16 @@ public class GameController {
 
         AdvancedData data = new AdvancedData();
 
-        data.team[0].teamNumber = gpd.getFirstTeam().getTeamNumber();
-        data.team[1].teamNumber = gpd.getSecondTeam().getTeamNumber();
+        System.out.println("Team 1: " + gpd.getFirstTeam() + " color " + gpd.getFirstTeam().getTeamColor() + "as byte" + gpd.getFirstTeam().getTeamColorAsByte());
+        System.out.println("Team 1: " + gpd.getSecondTeam() + " color " + gpd.getSecondTeam().getTeamColor() + "as byte" + gpd.getSecondTeam().getTeamColorAsByte());
 
-        data.team[0].teamColor = gpd.getFirstTeam().getTeamColor();
-        data.team[1].teamColor = gpd.getSecondTeam().getTeamColor();
+        data.team[0].teamNumber = (byte) gpd.getFirstTeam().getTeamInfo().identifier;
+        data.team[1].teamNumber = (byte) gpd.getSecondTeam().getTeamInfo().identifier;
 
-        data.kickOffTeam = gpd.getFirstTeam().getTeamNumber();
+        data.team[0].teamColor = gpd.getFirstTeam().getTeamColorAsByte();
+        data.team[1].teamColor = gpd.getSecondTeam().getTeamColorAsByte();
+
+        data.kickOffTeam = (byte) gpd.getFirstTeam().getTeamInfo().identifier;
         data.colorChangeAuto = gpd.isAutoColorChange();
 
 

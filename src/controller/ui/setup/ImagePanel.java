@@ -25,6 +25,15 @@ class ImagePanel extends JPanel
         this.image = image;
     }
 
+    public ImagePanel()
+    {
+        this.image = null;
+    }
+
+    public void setVisible(){
+
+    }
+
     /**
      * Changes the background image.
      *
@@ -41,12 +50,13 @@ class ImagePanel extends JPanel
      * @param g     This components graphical content.
      */
     @Override
-    public void paintComponent(Graphics g)
-    {
-        if (super.isOpaque()) {
-            g.setColor(Color.WHITE);
-            g.fillRect(0, 0, getWidth(), getHeight());
+    public void paintComponent(Graphics g) {
+        if (image != null) {
+            if (super.isOpaque()) {
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+            g.drawImage(image, (getWidth() - image.getWidth(null)) / 2, 0, image.getWidth(null), image.getHeight(null), null);
         }
-        g.drawImage(image, (getWidth()-image.getWidth(null))/2, 0, image.getWidth(null), image.getHeight(null), null);
     }
 }

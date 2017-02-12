@@ -35,4 +35,12 @@ public class TeamLoadInfo {
         this.name = name;
         this.colors = new String[]{};
     }
+
+    public TeamLoadInfo clone(){
+        return new TeamLoadInfo(this.identifier, this.name, this.colors);
+    }
+
+    public String toString() {
+       return String.format("%1s (%2s)", this.name, this.identifier);
+    }
 }
