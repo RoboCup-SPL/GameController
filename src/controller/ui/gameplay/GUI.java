@@ -284,6 +284,7 @@ public class GUI extends JFrame implements GCGUI
         lanUnknown = new ImageIcon(ICONS_PATH+UNKNOWN_ONLINE_STATUS);
         
         backgroundSide = new ImageIcon[2][Rules.league.teamColor.length];
+
         for (int i=0; i<Rules.league.backgroundSide.length; i++) {
             for (int j=0; j<Rules.league.backgroundSide[i].length; j++) {
                 backgroundSide[i][j] = new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+Rules.league.backgroundSide[i][j]);
