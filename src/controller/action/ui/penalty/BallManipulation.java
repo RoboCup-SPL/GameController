@@ -5,8 +5,8 @@
 package controller.action.ui.penalty;
 
 import common.Log;
-import data.AdvancedData;
-import data.GameControlData;
+import data.states.AdvancedData;
+import data.communication.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
 

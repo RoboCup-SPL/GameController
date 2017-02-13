@@ -3,7 +3,7 @@ package controller.action.ui;
 import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
-import data.AdvancedData;
+import data.states.AdvancedData;
 
 
 /**

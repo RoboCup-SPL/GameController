@@ -2,7 +2,7 @@ package controller.net;
 
 import controller.EventHandler;
 import controller.action.ActionBoard;
-import data.GameControlReturnData;
+import data.communication.GameControlReturnData;
 import data.PlayerInfo;
 import data.Rules;
 

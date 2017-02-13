@@ -1,8 +1,8 @@
 package controller.net;
 
 import common.Log;
-import data.AdvancedData;
-import data.GameControlData;
+import data.states.AdvancedData;
+import data.communication.GameControlData;
 import data.Rules;
 import data.Teams;
 
@@ -19,7 +19,7 @@ import java.net.*;
  * To prevent race-conditions (the sender is executed in its thread-context),
  * the sender will hold a deep copy of {@link GameControlData} (have a closer
  * look to the copy-constructor
- * {@link GameControlData#GameControlData(data.GameControlData)}).
+ * {@link GameControlData#GameControlData(GameControlData)}).
  *
  * This class is a singleton!
  */
@@ -97,7 +97,7 @@ public class Sender extends Thread {
     /**
      * Sets the current game-state to send. Creates a deep copy of data to
      * prevent race-conditions. Have a closer look to
-     * {@link GameControlData#GameControlData(data.GameControlData)}
+     * {@link GameControlData#GameControlData(GameControlData)}
      *
      * @param data the current game-state to send to all robots
      */

@@ -6,13 +6,14 @@ import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
-import controller.ui.GUI;
+import controller.ui.gameplay.GUI;
 import controller.ui.KeyboardListener;
-import controller.ui.StartInput;
-import data.AdvancedData;
-import data.GameControlData;
-import data.Rules;
-import data.Teams;
+import controller.ui.setup.StartInput;
+import data.*;
+import data.communication.GameControlData;
+import data.states.AdvancedData;
+import data.states.GamePreparationData;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -209,16 +210,26 @@ public class GameController {
             }
         }
 
+        // Maybe those two can be merged somehow
+        GamePreparationData gpd = input.getGamePreparationData();
+
         AdvancedData data = new AdvancedData();
-        for (int i = 0; i < 2; i++) {
-            data.team[i].teamNumber = (byte) input.outTeam[i];
-        }
-        data.team[0].teamColor = input.outTeamColor[0];
-        data.team[1].teamColor = input.outTeamColor[1];
-        data.kickOffTeam = (byte) input.outTeam[0];
-        data.colorChangeAuto = input.outAutoColorChange;
+
+        System.out.println("Team 1: " + gpd.getFirstTeam() + " color " + gpd.getFirstTeam().getTeamColor() + "as byte" + gpd.getFirstTeam().getTeamColorAsByte());
+        System.out.println("Team 1: " + gpd.getSecondTeam() + " color " + gpd.getSecondTeam().getTeamColor() + "as byte" + gpd.getSecondTeam().getTeamColorAsByte());
+
+        data.team[0].teamNumber = (byte) gpd.getFirstTeam().getTeamInfo().identifier;
+        data.team[1].teamNumber = (byte) gpd.getSecondTeam().getTeamInfo().identifier;
+
+        data.team[0].teamColor = gpd.getFirstTeam().getTeamColorAsByte();
+        data.team[1].teamColor = gpd.getSecondTeam().getTeamColorAsByte();
+
+        data.kickOffTeam = (byte) gpd.getFirstTeam().getTeamInfo().identifier;
+        data.colorChangeAuto = gpd.isAutoColorChange();
+
+
         data.gameType = Rules.league.dropInPlayerMode ? GameControlData.GAME_DROPIN
-                : input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
+                : gpd.isFullTimeGame() ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
         }
@@ -275,7 +286,7 @@ public class GameController {
                 + " (" + Rules.league.teamColorName[data.team[0].teamColor]
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
                 + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
-        GUI gui = new GUI(input.outFullscreen, data);
+        GUI gui = new GUI(gpd.getFullScreen(), data);
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);

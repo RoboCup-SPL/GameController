@@ -1,5 +1,11 @@
 package data;
 
+import data.hl.HL;
+import data.hl.HLAdult;
+import data.hl.HLTeen;
+import data.spl.SPL;
+import data.spl.SPLDropIn;
+
 import java.awt.Color;
 
 
@@ -18,9 +24,17 @@ public abstract class Rules
         new HLTeen(),
         new HLAdult()
     };
-    
+
+    public boolean equals(Rules rules) {
+        if (this.getClass().getSimpleName().equals(rules.getClass().getSimpleName())) {
+            return true;
+        }
+        return false;
+    }
+
     /** The rules of the league playing. */
     public static Rules league = LEAGUES[0];
+
     /** The league´s name this rules are for. */
     public String leagueName;
     /** The league´s directory name with it´s teams and icons. */
@@ -105,4 +119,6 @@ public abstract class Rules
     public boolean dropInPlayerMode;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
+    /** BackgroundSide **/
+    public String[][] backgroundSide;
 }

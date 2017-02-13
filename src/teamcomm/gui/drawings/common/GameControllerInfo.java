@@ -1,7 +1,7 @@
 package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
-import data.GameControlData;
+import data.communication.GameControlData;
 import data.Rules;
 import data.TeamInfo;
 import teamcomm.data.GameState;

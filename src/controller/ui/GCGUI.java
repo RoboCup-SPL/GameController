@@ -1,6 +1,6 @@
 package controller.ui;
 
-import data.AdvancedData;
+import data.states.AdvancedData;
 
 
 /**

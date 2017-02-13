@@ -1,7 +1,7 @@
 package controller.action;
 
 import controller.EventHandler;
-import data.AdvancedData;
+import data.states.AdvancedData;
 import data.PlayerInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

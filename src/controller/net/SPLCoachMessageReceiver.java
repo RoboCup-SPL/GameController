@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 
 import common.Log;
 import controller.action.net.SPLCoachMessageReceived;
-import data.SPLCoachMessage;
+import data.spl.SPLCoachMessage;
 
 public class SPLCoachMessageReceiver extends Thread
 {

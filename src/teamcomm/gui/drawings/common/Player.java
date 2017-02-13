@@ -1,9 +1,9 @@
 package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
-import data.GameControlData;
+import data.communication.GameControlData;
 import data.PlayerInfo;
-import data.SPLStandardMessage;
+import data.spl.SPLStandardMessage;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;

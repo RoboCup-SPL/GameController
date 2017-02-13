@@ -9,12 +9,11 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.util.regex.Pattern;
 
 import common.Log;
 
-import data.GameControlData;
-import data.GameControlReturnData;
+import data.communication.GameControlData;
+import data.communication.GameControlReturnData;
 import data.Rules;
 
 /**
@@ -23,7 +22,7 @@ import data.Rules;
  *
  * This class is used to receive a packet send by a robot on port {@link GameControlData#GAMECONTROLLER_RETURNDATA_PORT} via UDP
  * over broadcast.
- * If a package was received, this class will invoke {@link RobotWatcher#update(data.GameControlReturnData)} to update
+ * If a package was received, this class will invoke {@link RobotWatcher#update(GameControlReturnData)} to update
  * the robots online status.
  *
  * This class is a sigleton!

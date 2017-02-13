@@ -1,7 +1,7 @@
 package teamcomm.gui;
 
 import common.Log;
-import data.SPLStandardMessage;
+import data.spl.SPLStandardMessage;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;

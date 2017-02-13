@@ -1,7 +1,7 @@
 package teamcomm;
 
 import common.Log;
-import data.SPLStandardMessage;
+import data.spl.SPLStandardMessage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
