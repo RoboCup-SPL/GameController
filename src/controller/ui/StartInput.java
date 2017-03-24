@@ -67,6 +67,7 @@ public class StartInput extends JFrame implements Serializable
     private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
     private static final String TEAM_COLOR_CHANGE = "Color";
+    private static final String DEFAULT_BACKGROUND = "robot_default.png";
     
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
@@ -414,7 +415,19 @@ public class StartInput extends JFrame implements Serializable
     {
         String filename = ICONS_PATH + Rules.league.leagueDirectory + "/" + BACKGROUND_PREFIX[side] + color + BACKGROUND_EXT;
         if (images.get(filename) == null) {
-            images.put(filename, new ImageIcon(filename).getImage());
+            Color c = null;
+            try {
+                c = (Color)Class.forName("java.awt.Color").getField(color).get(null);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            
+            if(c == null){
+                c = Color.WHITE;
+            }
+
+            Image image = new BackgroundImage(ICONS_PATH + Rules.league.leagueDirectory + "/" + DEFAULT_BACKGROUND, side==1, c).getImage();
+            images.put(filename, image);
         }
         return images.get(filename);
     }

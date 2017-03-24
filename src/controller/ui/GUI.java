@@ -116,6 +116,8 @@ public class GUI extends JFrame implements GCGUI
     private static final int STATE_FONT_SIZE = 12;
     private static final String WINDOW_TITLE = "GameController";
     private static final String ICONS_PATH = "config/icons/";
+    
+    private static final String DEFAULT_BACKGROUND = "robot_default.png";
     private static final String[][] BACKGROUND_SIDE = {{"robot_left_blue.png",
                                                         "robot_left_red.png",
                                                         "robot_left_yellow.png",
@@ -307,7 +309,8 @@ public class GUI extends JFrame implements GCGUI
         backgroundSide = new ImageIcon[2][Rules.league.teamColor.length];
         for (int i=0; i<backgroundSide.length; i++) {
             for (int j=0; j<backgroundSide[i].length; j++) {
-                backgroundSide[i][j] = new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i][j]);
+                //backgroundSide[i][j] = new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND_SIDE[i][j]);
+                backgroundSide[i][j] = new BackgroundImage(ICONS_PATH+Rules.league.leagueDirectory+"/"+DEFAULT_BACKGROUND, i==1, Rules.league.teamColor[j]);
             }
         }
         
