@@ -200,6 +200,9 @@ public class GUI extends JFrame implements GCGUI
     private static final int FINISH_HIGHLIGHT_SECONDS = 10;
     private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
 
+    private static final Color COLOR_PENALTY_SHOOTOUT_TAKER = new Color(0x00FF00);
+    private static final Color COLOR_PENALTY_SHOOTOUT_KEEPER = new Color(0xFF3EF0);
+
     /** Some attributes used in the GUI components. */
     private double lastSize = 0;
     private Font standardFont;
@@ -1070,7 +1073,26 @@ public class GUI extends JFrame implements GCGUI
                         robotTime[i][j].setVisible(false);
                         highlight(robot[i][j], false);
                     }
-                }    
+                    
+                    // Adds an information if player is selected for penalty shootout:
+                    if(data.secGameState == AdvancedData.STATE2_PENALTYSHOOT){
+                    	// if the same robot is taker and keeper in a team, show just the current info:
+                    	if(data.penaltyShootOutPlayers[i][0] == j && data.penaltyShootOutPlayers[i][0] == data.penaltyShootOutPlayers[i][1]){
+                    		boolean isTaker = data.team[i].teamNumber == data.kickOffTeam;
+                    		robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker?" Taker":" Keeper"));
+                    		robot[i][j].setBackground(isTaker?COLOR_PENALTY_SHOOTOUT_TAKER:COLOR_PENALTY_SHOOTOUT_KEEPER);
+                    	
+                    		// if keeper and taker are different, mark both but set only the background for the relevant player:
+                    	} else if(data.penaltyShootOutPlayers[i][0] == j || data.penaltyShootOutPlayers[i][1] == j){
+                    		boolean isTaker = data.penaltyShootOutPlayers[i][0] == j;
+                    		robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker?" Taker":" Keeper"));
+	                    	
+                    		if(data.team[i].teamNumber == data.kickOffTeam == isTaker){
+	                    		robot[i][j].setBackground(isTaker?COLOR_PENALTY_SHOOTOUT_TAKER:COLOR_PENALTY_SHOOTOUT_KEEPER);
+	                    	}
+                    	}
+                    }
+                }
                 
                 robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
                 

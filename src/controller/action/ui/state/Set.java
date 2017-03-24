@@ -6,6 +6,7 @@ import controller.action.GCAction;
 import controller.action.ui.half.FirstHalf;
 import data.AdvancedData;
 import data.GameControlData;
+import data.PlayerInfo;
 import data.Rules;
 
 /**
@@ -49,6 +50,30 @@ public class Set extends GCAction {
             if (data.gameState != GameControlData.STATE_PLAYING) {
                 data.team[data.team[0].teamNumber == data.kickOffTeam ? 0 : 1].penaltyShot++;
             }
+            
+            // restore selected player:
+            for(int side = 0; side < 2;side++){
+            	int number = data.penaltyShootOutPlayers[side][data.team[side].teamNumber == data.kickOffTeam?0:1];
+            	
+	        	for(int playerID = 0; playerID < Rules.league.teamSize; playerID++){
+	        		if(playerID != number && !(Rules.league.isCoachAvailable && playerID == Rules.league.teamSize)){
+	        	        PlayerInfo playerToSub = data.team[side].player[playerID]; 
+	        			
+	        			if (playerToSub.penalty != PlayerInfo.PENALTY_NONE) {
+	        	            data.addToPenaltyQueue(side, data.whenPenalized[side][playerID], playerToSub.penalty, data.robotPenaltyCount[side][playerID]);
+	        	        }
+	        	        
+	        	        playerToSub.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
+	        	        data.robotPenaltyCount[side][playerID] = 0;
+	        	        data.whenPenalized[side][playerID] = data.getTime();
+	        		}
+	        	}
+	        	// unpenalise selected player:
+
+            	if(number != -1)
+            		data.team[side].player[number].penalty = PlayerInfo.PENALTY_NONE;
+            }
+        	
         }
         data.gameState = GameControlData.STATE_SET;
         Log.state(data, "Set");
