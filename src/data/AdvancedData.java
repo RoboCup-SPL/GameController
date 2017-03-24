@@ -110,9 +110,8 @@ public class AdvancedData extends GameControlData implements Cloneable
     public  ArrayList<SPLCoachMessage> splCoachMessageQueue = new ArrayList<SPLCoachMessage>();
 
     /** Saves the selected penalty taker and keeper of both teams. First index is team-number, second index is taker (0) or keeper (1)  */
-    public int[][] penaltyShootOutPlayers = new int[][]{{-1,-1},{-1,-1}};
-    
-    
+    public int[][] penaltyShootOutPlayers = new int[][] { { -1, -1 }, { -1, -1 } };
+
     /**
      * Creates a new AdvancedData.
      */

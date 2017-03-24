@@ -72,12 +72,12 @@ public class FirstHalf extends GCAction
         boolean[] ejected = data.ejected[0];
         data.ejected[0] = data.ejected[1];
         data.ejected[1] = ejected;
-        
+
         // swap penalty shootout sides:
         int[] tmp = data.penaltyShootOutPlayers[0];
         data.penaltyShootOutPlayers[0] = data.penaltyShootOutPlayers[1];
         data.penaltyShootOutPlayers[1] = tmp;
-        
+
         // if necessary, swap back team colors
         if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT 
                 && data.colorChangeAuto) {
