@@ -57,7 +57,6 @@ public class StartInput extends JFrame implements Serializable
     /** This is not what the name says ;) */
     private static final int FULLSCREEN_WIDTH = 160;
     private static final String ICONS_PATH = "config/icons/";
-    private static final String[] BACKGROUND_PREFIX = {"robot_left_", "robot_right_"};
     private static final String BACKGROUND_EXT = ".png";
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
@@ -67,7 +66,6 @@ public class StartInput extends JFrame implements Serializable
     private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
     private static final String TEAM_COLOR_CHANGE = "Color";
-    private static final String DEFAULT_BACKGROUND = "robot_default.png";
     
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
@@ -413,7 +411,7 @@ public class StartInput extends JFrame implements Serializable
     
     private Image getImage(int side, String color)
     {
-        String filename = ICONS_PATH + Rules.league.leagueDirectory + "/" + BACKGROUND_PREFIX[side] + color + BACKGROUND_EXT;
+        String filename = Rules.league.leagueName + "/" + side + "/" + color;
         if (images.get(filename) == null) {
             Color c = null;
             try {
@@ -426,7 +424,7 @@ public class StartInput extends JFrame implements Serializable
                 c = Color.WHITE;
             }
 
-            Image image = new BackgroundImage(ICONS_PATH + Rules.league.leagueDirectory + "/" + DEFAULT_BACKGROUND, side==1, c).getImage();
+            Image image = new BackgroundImage(ICONS_PATH + Rules.league.leagueDirectory + BACKGROUND_EXT, side==1, c).getImage();
             images.put(filename, image);
         }
         return images.get(filename);
