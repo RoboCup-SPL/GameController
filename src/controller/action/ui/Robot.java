@@ -54,38 +54,7 @@ public class Robot extends GCAction
     public void perform(AdvancedData data)
     {
         PlayerInfo player = data.team[side].player[number];
-        // >> new player selection in penalty shootout: >>
-        if (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT
-                && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
-                        || data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
-                && data.gameState == AdvancedData.STATE_SET && !isCoach(data)) {
-
-            // make all other players to substitute:
-            for (int playerID = 0; playerID < Rules.league.teamSize; playerID++) {
-                if (playerID != number && !(Rules.league.isCoachAvailable && playerID == Rules.league.teamSize)) {
-                    PlayerInfo playerToSub = data.team[side].player[playerID];
-
-                    if (playerToSub.penalty != PlayerInfo.PENALTY_NONE) {
-                        data.addToPenaltyQueue(side, data.whenPenalized[side][playerID], playerToSub.penalty,
-                                data.robotPenaltyCount[side][playerID]);
-                    }
-
-                    playerToSub.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
-                    data.robotPenaltyCount[side][playerID] = 0;
-                    data.whenPenalized[side][playerID] = data.getTime();
-                }
-            }
-
-            // unpenalise selected player:
-            player.penalty = PlayerInfo.PENALTY_NONE;
-            data.penaltyShootOutPlayers[side][data.team[side].teamNumber == data.kickOffTeam ? 0 : 1] = number;
-
-            Log.state(data, "Selected Player" + Rules.league.teamColorName[data.team[side].teamColor] + " "
-                    + (number + 1) + " as " + (data.team[side].teamNumber == data.kickOffTeam ? "scorer" : "keeper"));
-        }
-        // << End <<
-        
-        else if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && !isCoach(data)) {
+        if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && !isCoach(data) && data.secGameState != AdvancedData.STATE2_PENALTYSHOOT) {
             ArrayList<PenaltyQueueData> playerInfoList = data.penaltyQueueForSubPlayers.get(side);
             if (playerInfoList.isEmpty()) {
                 player.penalty = Rules.league.substitutePenalty;
@@ -105,6 +74,35 @@ public class Robot extends GCAction
                         && !(EventHandler.getInstance().lastUIEvent instanceof MotionInSet))
                 || EventHandler.getInstance().lastUIEvent instanceof TeammatePushing) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
+        } 
+        else if (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT
+            && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE ||
+                data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
+            && (data.gameState == AdvancedData.STATE_SET ||
+                data.gameState == AdvancedData.STATE_INITIAL) && !isCoach(data)) {
+
+            // make all other players to substitute:
+            for (int playerID = 0; playerID < Rules.league.teamSize; playerID++) {
+                if (playerID != number && !(Rules.league.isCoachAvailable && playerID == Rules.league.teamSize)) {
+                    PlayerInfo playerToSub = data.team[side].player[playerID];
+    
+                    if (playerToSub.penalty != PlayerInfo.PENALTY_NONE) {
+                        data.addToPenaltyQueue(side, data.whenPenalized[side][playerID], playerToSub.penalty,
+                                data.robotPenaltyCount[side][playerID]);
+                    }
+    
+                    playerToSub.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
+                    data.robotPenaltyCount[side][playerID] = 0;
+                    data.whenPenalized[side][playerID] = data.getTime();
+                }
+            }
+    
+            // unpenalise selected player:
+            player.penalty = PlayerInfo.PENALTY_NONE;
+            data.penaltyShootOutPlayers[side][data.team[side].teamNumber == data.kickOffTeam ? 0 : 1] = number;
+    
+            Log.state(data, "Selected Player" + Rules.league.teamColorName[data.team[side].teamColor] + " "
+                    + (number + 1) + " as " + (data.team[side].teamNumber == data.kickOffTeam ? "taker" : "keeper"));
         }
         else if (player.penalty != PlayerInfo.PENALTY_NONE) {
             player.penalty = PlayerInfo.PENALTY_NONE;
@@ -127,7 +125,8 @@ public class Robot extends GCAction
                 && ((!(EventHandler.getInstance().lastUIEvent instanceof Penalty) || EventHandler.getInstance().lastUIEvent instanceof MotionInSet)
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
                 && (Rules.league.allowEarlyPenaltyRemoval || data.getRemainingPenaltyTime(side, number) == 0)
-                && (data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE || data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying)
+                && (data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
+                    || (data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying && data.secGameState != AdvancedData.STATE2_PENALTYSHOOT ))
                 && !isCoach(data)
                 || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_SERVICE
@@ -156,8 +155,10 @@ public class Robot extends GCAction
                 || (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT
                 	&& (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE || 
                 		data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
-                	&& data.gameState == AdvancedData.STATE_SET
-                	&& !isCoach(data));
+                    && (data.gameState == AdvancedData.STATE_SET ||
+                        data.gameState == AdvancedData.STATE_INITIAL)
+                	&& !isCoach(data)
+                	&& !(EventHandler.getInstance().lastUIEvent instanceof CoachMotion));
     }
     
     public boolean isCoach(AdvancedData data)

@@ -413,17 +413,18 @@ public class StartInput extends JFrame implements Serializable
     {
         String filename = Rules.league.leagueName + "/" + side + "/" + color;
         if (images.get(filename) == null) {
-            Color c = null;
-            try {
-                c = (Color)Class.forName("java.awt.Color").getField(color).get(null);
-            } catch (Exception e){
-                e.printStackTrace();
+
+            // Default color when color is not available in Rules.league.teamColor:
+            Color c = Color.WHITE;
+            
+            // Search the Java.awt.Color-Class for Color-Name:
+            for(int i=0; i<Rules.league.teamColorName.length; i++){
+                if(Rules.league.teamColorName[i].toLowerCase().equals(color.toLowerCase())){
+                    c = Rules.league.teamColor[i];
+                    break;
+                }
             }
             
-            if(c == null){
-                c = Color.WHITE;
-            }
-
             Image image = new BackgroundImage(ICONS_PATH + Rules.league.leagueDirectory + BACKGROUND_EXT, side==1, c).getImage();
             images.put(filename, image);
         }

@@ -181,8 +181,8 @@ public class GUI extends JFrame implements GCGUI
     private static final int FINISH_HIGHLIGHT_SECONDS = 10;
     private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
 
-    private static final Color COLOR_PENALTY_SHOOTOUT_TAKER = new Color(0x00FF00);
-    private static final Color COLOR_PENALTY_SHOOTOUT_KEEPER = new Color(0xFF3EF0);
+    private static final Color COLOR_PENALTY_SHOOTOUT_TAKER = new Color(0xBBFFBB);
+    private static final Color COLOR_PENALTY_SHOOTOUT_KEEPER = new Color(0xFFBBFF);
 
     /** Some attributes used in the GUI components. */
     private double lastSize = 0;
@@ -352,7 +352,7 @@ public class GUI extends JFrame implements GCGUI
             robots[i].setOpaque(false);
             
             for (int j=0; j<robot[i].length; j++) {
-                robot[i][j] = new Button();
+                robot[i][j] = new JButton();
                 robotLabel[i][j] = new JLabel();
                 robotLabel[i][j].setHorizontalAlignment(JLabel.CENTER);
                 lanIcon[i][j] = lanUnknown;

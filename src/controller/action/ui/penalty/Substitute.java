@@ -44,6 +44,7 @@ public class Substitute extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return Rules.league.teamSize > Rules.league.robotsPlaying;
+        return Rules.league.teamSize > Rules.league.robotsPlaying && 
+                data.secGameState != AdvancedData.STATE2_PENALTYSHOOT;
     }
 }
