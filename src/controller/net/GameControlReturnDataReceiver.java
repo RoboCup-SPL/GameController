@@ -9,7 +9,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.util.regex.Pattern;
 
 import common.Log;
 

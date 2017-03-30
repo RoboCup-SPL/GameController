@@ -5,14 +5,12 @@ import data.GameControlData;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import teamcomm.data.GameState;
 import teamcomm.net.logging.LogReplayer;
-import teamcomm.net.logging.Logger;
 
 /**
  * Class for the thread which receives messages from the GameController.

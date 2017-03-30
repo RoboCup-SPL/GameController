@@ -158,11 +158,12 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
     public void connectionStatusChanged(final RobotStateEvent e) {
         if (isVisible()) {
             switch (robot.getConnectionStatus()) {
-                case HIGH_LATENCY:
-                    connectionStatus.setIcon(iconHighLatency);
-                    break;
+                case INACTIVE:
                 case OFFLINE:
                     connectionStatus.setIcon(iconOffline);
+                    break;
+                case HIGH_LATENCY:
+                    connectionStatus.setIcon(iconHighLatency);
                     break;
                 case ONLINE:
                     connectionStatus.setIcon(iconOnline);

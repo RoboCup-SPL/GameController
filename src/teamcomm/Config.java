@@ -35,8 +35,8 @@ public class Config {
     @SuppressWarnings("unchecked")
     private Config() {
         HashMap<String, Serializable> m = new HashMap<>();
-        try {
-            final Object o = new ObjectInputStream(new BufferedInputStream(new FileInputStream(CONFIG_FILE))).readObject();
+        try (final ObjectInputStream stream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(CONFIG_FILE)))) {
+            final Object o = stream.readObject();
             if (m.getClass().isInstance(o)) {
                 m = (HashMap<String, Serializable>) o;
             }

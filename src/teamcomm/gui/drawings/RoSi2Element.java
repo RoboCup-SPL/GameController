@@ -1231,7 +1231,7 @@ public class RoSi2Element {
 
         private Normals computeNormals() {
             ArrayList<Normals.Normal> ns = new ArrayList<>(vertices.vertices.size());
-            for (Vertices.Vertex v : vertices.vertices) {
+            for (int i = 0; i < vertices.vertices.size(); ++i) {
                 ns.add(new Normals.Normal());
             }
 
