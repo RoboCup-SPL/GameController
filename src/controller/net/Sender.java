@@ -135,17 +135,26 @@ public class Sender extends Thread {
         }
 
         // Clone data
-        this.data = (AdvancedData) data.clone();
+        synchronized(this) {
+            this.data = (AdvancedData) data.clone();
+        }
     }
 
     @Override
     public void run() {
         while (!isInterrupted()) {
             if (data != null) {
-                data.updateTimes();
-                data.packetNumber = packetNumber;
-                teamcomm.net.logging.Logger.getInstance().log(data);
-                byte[] arr = data.toByteArray().array();
+                byte[] arr;
+                byte[] arr7 = null;
+                synchronized(this) {
+                    data.updateTimes();
+                    data.packetNumber = packetNumber;
+                    teamcomm.net.logging.Logger.getInstance().log(data);
+                    arr = data.toByteArray().array();
+                    if (Rules.league.compatibilityToVersion7) {
+                        arr7 = data.toByteArray7().array();
+                    }
+                }
                 DatagramPacket packet = new DatagramPacket(arr, arr.length, group, GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
 
                 try {
@@ -155,12 +164,8 @@ public class Sender extends Thread {
                     Log.error("Error while sending");
                     e.printStackTrace();
                 }
-            }
-
-            if (data != null) {
-                if (Rules.league.compatibilityToVersion7) {
-                    byte[] arr = data.toByteArray7().array();
-                    DatagramPacket packet = new DatagramPacket(arr, arr.length, group, GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
+                if (arr7 != null) {
+                    packet = new DatagramPacket(arr7, arr7.length, group, GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
 
                     try {
                         datagramSocket.send(packet);
