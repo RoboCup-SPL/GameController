@@ -17,7 +17,7 @@ The sources mentioned in some sections of this document are available at
 ### Acknowledgement
 
 The development was partially supported by the RoboCup Federation within the
-calls for Support for Projects for League Developments for 2013, 2015 and 2017.
+calls for Support for Projects for League Developments for 2013, 2015, and 2017.
 
 
 ## 1. Building from Source
@@ -41,7 +41,7 @@ Usage: `java -jar GameController.jar {options}`
                                     delayed switch to playing in SPL
     (-i | --interface) <interface>  set network interface (default is a
                                     connected IPv4 interface)
-    (-l | --league) (spl | spl_dropin | hl_kid | hl_teen | hl_adult)
+    (-l | --league) (spl | spl_mixedteam | hl_kid | hl_teen | hl_adult)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
 
@@ -161,7 +161,6 @@ only SPL
     O    - illegal ball contact
     U    - request for pickup
     C    - coach motion
-    T    - teammate pushing
     S    - substitute
 
 only Humanoid-League
@@ -277,13 +276,8 @@ The coach broadcasts messages as defined in SPLCoachMessage.h to the UDP port
 SPL_COACH_MESSAGE_PORT through the wireless network. Players are not permitted
 to listen to this port. The GameController will integrate the coach messages
 into the RoboCupGameControlData packet and forward them to the players according
-to the SPL rules. Since coach messages must be human readable, it is assumed
-that they are a zero-terminated string and all data after the first zero
-character is zeroed, too.
+to the SPL rules.
 
-The GameStateVisualizer also displays the coach messages.
-
-Please note that the field "team" now contains the team number, not the color.
 
 
 ## 7. Misc
@@ -291,28 +285,24 @@ Please note that the field "team" now contains the team number, not the color.
 The format of the packets the GameController broadcasts at port
 GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
 is defined in the file RoboCupGameControlData.h. It differs from the version used
-in 2014 in several ways:
+in 2016 in the following ways:
 
-- Inside the messages, teams are now identified by their number rather than their 
-  color (e.g. kickOffTeam, dropInTeam).
+- Coach messages now have a data packet size of 253 bytes instead of 81. 
 
-- SPLCoachMessage as well as TeamInfo now have a sequence number of 1 byte which
-  is set by the coach.
-
-- Coach messages now have a data packet size of 81 bytes instead of 40. 
-
-- RoboCupGameControlData now has the gameType flag, which indicates whether the
-  current game is a round-robin game (time does not stop), a drop-in player game
-  (the same, but only one half), or a play-off game, i.e. a (quarter / semi)
-  final (time is stopped).
+- The game type GAME_DROPIN was removed. Instead the two game types 
+  GAME_MIXEDTEAM_PLAYOFF and GAME_MIXEDTEAM_ROUNDROBIN were added.
 
 
 ## 8. Known Issues
 
 There are still a number of issues left:
-  
+
 - The qibuild file for libgamectrl is untested.
 
 - The alignment of button labels is bad if the buttons are small.
 
-- The GameController is not displaying properly on Windows-High-Res-Systems.
+- On Windows, the GameController is only displaying properly on HiDPI displays if
+  Java 9 is used.
+
+- The TeamCommunicationMonitor does not work in windowed mode (i.e. without `--gsv`) 
+  on Java 9.
