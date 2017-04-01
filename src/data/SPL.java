@@ -91,8 +91,8 @@ public class SPL extends Rules
         lostTime = true;
         /** Whether compatibility mode (version 7) is supported */
         compatibilityToVersion7 = false;
-        /** If true, the drop-in player competition is active */
-        dropInPlayerMode = false;
+        /** If true, the mixed team competition tournament is active */
+        mixedTeamMode = false;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = true;
     }

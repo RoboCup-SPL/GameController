@@ -272,9 +272,7 @@ public class View3DGSV extends View3D {
             String state;
             switch (data.secGameState) {
                 case GameControlData.STATE2_NORMAL:
-                    if (Rules.league.dropInPlayerMode) {
-                        state = "";
-                    } else if (data.firstHalf == GameControlData.C_TRUE) {
+                    if (data.firstHalf == GameControlData.C_TRUE) {
                         if (data.gameState == GameControlData.STATE_FINISHED) {
                             state = "Half Time";
                         } else {

@@ -217,8 +217,12 @@ public class GameController {
         data.team[1].teamColor = input.outTeamColor[1];
         data.kickOffTeam = (byte) input.outTeam[0];
         data.colorChangeAuto = input.outAutoColorChange;
-        data.gameType = Rules.league.dropInPlayerMode ? GameControlData.GAME_DROPIN
-                : input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
+        if (Rules.league.mixedTeamMode) {
+            data.gameType = input.outFulltime ? GameControlData.GAME_MIXEDTEAM_PLAYOFF : GameControlData.GAME_MIXEDTEAM_ROUNDROBIN;
+        } else {
+            data.gameType = input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
+        }
+        
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
         }

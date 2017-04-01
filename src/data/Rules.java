@@ -13,7 +13,7 @@ public abstract class Rules
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
-        new SPLDropIn(),
+        new SPLMixedTeam(),
         new HL(),
         new HLTeen(),
         new HLAdult()
@@ -101,8 +101,8 @@ public abstract class Rules
     public boolean lostTime;
     /** Whether compatibility mode (version 7) is supported */
     public boolean compatibilityToVersion7;
-    /** If true, the drop-in player competition is active */
-    public boolean dropInPlayerMode;
+    /** If true, the mixed team competition tournament is active */
+    public boolean mixedTeamMode;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
 }

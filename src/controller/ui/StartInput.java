@@ -28,7 +28,7 @@ import javax.swing.JRadioButton;
 import data.GameControlData;
 import data.Rules;
 import data.SPL;
-import data.SPLDropIn;
+import data.SPLMixedTeam;
 import data.Teams;
 
 
@@ -249,29 +249,21 @@ public class StartInput extends JFrame implements Serializable
                             }
                         }
                     }
-                    if (Rules.league instanceof SPLDropIn) {
-                        nofulltime.setVisible(false);
-                        fulltime.setVisible(false);
+                    nofulltime.setVisible(true);
+                    fulltime.setVisible(true);
+                    if (Rules.league instanceof SPL) {
+                        nofulltime.setText(FULLTIME_LABEL_NO);
+                        fulltime.setText(FULLTIME_LABEL_YES);
                         autoColorChange.setVisible(false);
+                        teamColorChange[0].setVisible(true);
+                        teamColorChange[1].setVisible(true);
+                    } else {
+                        nofulltime.setText(FULLTIME_LABEL_HL_NO);
+                        fulltime.setText(FULLTIME_LABEL_HL_YES);
+                        autoColorChange.setState(Rules.league.colorChangeAuto);
+                        autoColorChange.setVisible(true);
                         teamColorChange[0].setVisible(false);
                         teamColorChange[1].setVisible(false);
-                    } else {
-                        nofulltime.setVisible(true);
-                        fulltime.setVisible(true);
-                        if (Rules.league instanceof SPL) {
-                            nofulltime.setText(FULLTIME_LABEL_NO);
-                            fulltime.setText(FULLTIME_LABEL_YES);
-                            autoColorChange.setVisible(false);
-                            teamColorChange[0].setVisible(true);
-                            teamColorChange[1].setVisible(true);
-                        } else {
-                            nofulltime.setText(FULLTIME_LABEL_HL_NO);
-                            fulltime.setText(FULLTIME_LABEL_HL_YES);
-                            autoColorChange.setState(Rules.league.colorChangeAuto);
-                            autoColorChange.setVisible(true);
-                            teamColorChange[0].setVisible(false);
-                            teamColorChange[1].setVisible(false);
-                        }
                     }
                     showAvailableTeams();
                     startEnabling();
@@ -325,13 +317,8 @@ public class StartInput extends JFrame implements Serializable
         for (int i=0; i < 2; i++) {
             team[i].removeAllItems();
             String[] names = getShortTeams();
-            if (Rules.league.dropInPlayerMode) {
-                team[i].addItem(names[0]);
-                team[i].addItem(names[i == 0 ?  1 : 2]);
-            } else {
-                for (int j=0; j < names.length; j++) {
-                    team[i].addItem(names[j]);
-                }
+            for (int j=0; j < names.length; j++) {
+                team[i].addItem(names[j]);
             }
             setTeamIcon(i, outTeam[i]);
             teamIconLabel[i].setIcon(teamIcon[i]);

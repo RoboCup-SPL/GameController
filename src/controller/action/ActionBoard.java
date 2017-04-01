@@ -14,7 +14,6 @@ import controller.action.ui.Out;
 import controller.action.ui.Quit;
 import controller.action.ui.RefereeTimeout;
 import controller.action.ui.Robot;
-import controller.action.ui.TeammatePushing;
 import controller.action.ui.Testmode;
 import controller.action.ui.TimeOut;
 import controller.action.ui.Undo;
@@ -104,7 +103,6 @@ public class ActionBoard
     public static PickUpHL pickUpHL;
     public static ServiceHL serviceHL;
     public static CoachMotion coachMotion;
-    public static TeammatePushing teammatePushing;
     public static Substitute substitute;
     public static DropBall dropBall;
 
@@ -176,7 +174,6 @@ public class ActionBoard
         pickUpHL = new PickUpHL();
         serviceHL = new ServiceHL();
         coachMotion = new CoachMotion();
-        teammatePushing = new TeammatePushing();
         substitute = new Substitute();
         dropBall = new DropBall();
         

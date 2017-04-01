@@ -89,8 +89,8 @@ public class HL extends Rules
         lostTime = false;
         /** Whether compatibility mode (version 7) is supported */
         compatibilityToVersion7 = true;
-        /** If true, the drop-in player competition is active */
-        dropInPlayerMode = false;
+        /** If true, the mixed team competition tournament is active */
+        mixedTeamMode = false;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = false;
     }

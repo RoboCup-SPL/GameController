@@ -109,8 +109,9 @@ public class Sender extends Thread {
                 || (data.gameState == GameControlData.STATE_FINISHED && this.data.gameState != GameControlData.STATE_FINISHED)) {
             final StringBuilder logfileName;
             final String[] teamNames = Teams.getNames(false);
-            if (data.gameType == GameControlData.GAME_DROPIN) {
-                logfileName = new StringBuilder("Drop-in_");
+            if (data.gameType == GameControlData.GAME_MIXEDTEAM_ROUNDROBIN
+                    || data.gameType == GameControlData.GAME_MIXEDTEAM_PLAYOFF) {
+                logfileName = new StringBuilder("MixedTeam_");
                 if (data.firstHalf == GameControlData.C_TRUE) {
                     logfileName.append("1st");
                 } else {

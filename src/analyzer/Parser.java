@@ -59,7 +59,6 @@ public class Parser
         "Kickoff Goal",
         "Request for PickUp",
         "Coach Motion",
-        "Teammate Pushing",
         "Ball Manipulation",
         "Illegal Attack",
         "Illegal Defense",

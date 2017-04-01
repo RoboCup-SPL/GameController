@@ -5,7 +5,6 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
-import data.Rules;
 
 
 /**
@@ -53,11 +52,10 @@ public class SecondHalf extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (!Rules.league.dropInPlayerMode
-                && (((data.firstHalf != GameControlData.C_TRUE)
+        return (((data.firstHalf != GameControlData.C_TRUE)
                         && (data.secGameState == GameControlData.STATE2_NORMAL))
                    || ((data.secGameState == GameControlData.STATE2_NORMAL)
-                        && (data.gameState == GameControlData.STATE_FINISHED))))
+                        && (data.gameState == GameControlData.STATE_FINISHED)))
                 || data.testmode;
     }
 }

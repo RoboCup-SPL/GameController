@@ -170,7 +170,6 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_SUBSTITUTE = "Substitute";
     private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String DROP_BALL = "Dropped Ball";
-    private static final String TEAMMATE_PUSHING = "Teammate Pushing";
     private static final String CANCEL = "Cancel";
     private static final String COACH = "Coach";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
@@ -461,7 +460,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5] = new ToggleButton(PEN_KICK_OFF_GOAL);
             pen[6] = new ToggleButton(PEN_BALL_CONTACT);
             pen[7] = new ToggleButton(PEN_PICKUP);
-            pen[8] = new ToggleButton(Rules.league.dropInPlayerMode ? TEAMMATE_PUSHING : PEN_COACH_MOTION);
+            pen[8] = new ToggleButton(PEN_COACH_MOTION);
             pen[9] = new ToggleButton(PEN_SUBSTITUTE);
         } else if (Rules.league instanceof HL) {
             pen = new JToggleButton[7];
@@ -506,7 +505,7 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.71, .16, .08, .04, pushes[1]);
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
-        if (Rules.league instanceof SPL && !Rules.league.dropInPlayerMode) {
+        if (Rules.league instanceof SPL) {
             layout.add(.01, .77, .09, .09, timeOut[0]);
             layout.add(.9, .77, .09, .09, timeOut[1]);
             layout.add(.11, .77, .08, .09, stuck[0]);
@@ -514,13 +513,8 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.20, .77, .09, .09, out[0]);
             layout.add(.71, .77, .09, .09, out[1]);
         } else {
-            if (Rules.league instanceof SPL) {
-                layout.add(.01, .77, .135, .09, stuck[0]);
-                layout.add(.855, .77, .135, .09, stuck[1]);
-            } else {
-                layout.add(.01, .77, .135, .09, timeOut[0]);
-                layout.add(.855, .77, .135, .09, timeOut[1]);
-            }
+            layout.add(.01, .77, .135, .09, timeOut[0]);
+            layout.add(.855, .77, .135, .09, timeOut[1]);
             layout.add(.155, .77, .135, .09, out[0]);
             layout.add(.71, .77, .135, .09, out[1]);
         }
@@ -536,15 +530,15 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.4, .0, .2, .11, clockContainer);
         }
         if (!Rules.league.overtime) {
-            if (Rules.league.isRefereeTimeoutAvailable && !Rules.league.dropInPlayerMode) {
+            if (Rules.league.isRefereeTimeoutAvailable) {
                 layout.add(.31, .19, .09, .06, firstHalf);
                 layout.add(.407, .19, .09, .06, secondHalf);
                 layout.add(.503, .19, .09, .06, penaltyShoot);
                 layout.add(.60, .19, .09, .06, refereeTimeout);
-            } else { // no referee timeout in dropInPlayerMode is not supported!
+            } else {
                 layout.add(.31, .19, .12, .06, firstHalf);
                 layout.add(.44, .19, .12, .06, secondHalf);
-                layout.add(.57, .19, .12, .06, Rules.league.dropInPlayerMode ? refereeTimeout : penaltyShoot);
+                layout.add(.57, .19, .12, .06, penaltyShoot);
             }
         } else {
             if (Rules.league.isRefereeTimeoutAvailable) {
@@ -638,7 +632,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5].addActionListener(ActionBoard.kickOffGoal);
             pen[6].addActionListener(ActionBoard.ballContact);
             pen[7].addActionListener(ActionBoard.pickUp);
-            pen[8].addActionListener(Rules.league.dropInPlayerMode ? ActionBoard.teammatePushing : ActionBoard.coachMotion);
+            pen[8].addActionListener(ActionBoard.coachMotion);
             pen[9].addActionListener(ActionBoard.substitute);
         } else if (Rules.league instanceof HL) {
             pen[0].addActionListener(ActionBoard.ballManipulation);
@@ -1184,8 +1178,7 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setEnabled(ActionBoard.kickOffGoal.isLegal(data));
         pen[6].setEnabled(ActionBoard.ballContact.isLegal(data));
         pen[7].setEnabled(ActionBoard.pickUp.isLegal(data));
-        pen[8].setEnabled(Rules.league.dropInPlayerMode ? ActionBoard.teammatePushing.isLegal(data)
-                : ActionBoard.coachMotion.isLegal(data));
+        pen[8].setEnabled(ActionBoard.coachMotion.isLegal(data));
         pen[9].setEnabled(ActionBoard.substitute.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
@@ -1196,8 +1189,7 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setSelected(hightlightEvent == ActionBoard.kickOffGoal);
         pen[6].setSelected(hightlightEvent == ActionBoard.ballContact);
         pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
-        pen[8].setSelected(Rules.league.dropInPlayerMode ? hightlightEvent == ActionBoard.teammatePushing
-                : hightlightEvent == ActionBoard.coachMotion);
+        pen[8].setSelected(hightlightEvent == ActionBoard.coachMotion);
         pen[9].setSelected(hightlightEvent == ActionBoard.substitute);
 
         // Handle quick select for ILLEGAL_MOTION_IN_SET

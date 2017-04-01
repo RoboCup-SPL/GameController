@@ -36,7 +36,8 @@ public class GameControlData implements Serializable
     
     public static final byte GAME_ROUNDROBIN = 0;
     public static final byte GAME_PLAYOFF = 1;
-    public static final byte GAME_DROPIN = 2;
+    public static final byte GAME_MIXEDTEAM_ROUNDROBIN = 2;
+    public static final byte GAME_MIXEDTEAM_PLAYOFF = 3;
 
     public static final byte STATE_INITIAL = 0;
     public static final byte STATE_READY = 1;
@@ -224,9 +225,10 @@ public class GameControlData implements Serializable
         out += "      Packet Number: "+(packetNumber & 0xFF)+"\n";
         out += "   Players per Team: "+playersPerTeam+"\n";
         switch (gameType) {
-            case GAME_ROUNDROBIN: temp = "round robin"; break;
-            case GAME_PLAYOFF:    temp = "playoff";   break;
-            case GAME_DROPIN:    temp = "drop-in";   break;
+            case GAME_ROUNDROBIN:           temp = "round robin"; break;
+            case GAME_PLAYOFF:              temp = "playoff";   break;
+            case GAME_MIXEDTEAM_ROUNDROBIN: temp = "mixed team round robin";   break;
+            case GAME_MIXEDTEAM_PLAYOFF:    temp = "mixed team playoff";   break;
             default: temp = "undefinied("+gameType+")";
         }
         out += "           gameType: "+temp+"\n";

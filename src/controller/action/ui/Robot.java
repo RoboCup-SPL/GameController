@@ -71,8 +71,7 @@ public class Robot extends GCAction
         }
         else if (EventHandler.getInstance().lastUIEvent instanceof MotionInSet && player.penalty == PlayerInfo.PENALTY_NONE
                 || (EventHandler.getInstance().lastUIEvent instanceof Penalty 
-                        && !(EventHandler.getInstance().lastUIEvent instanceof MotionInSet))
-                || EventHandler.getInstance().lastUIEvent instanceof TeammatePushing) {
+                        && !(EventHandler.getInstance().lastUIEvent instanceof MotionInSet))) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         } 
         else if (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT
@@ -146,9 +145,7 @@ public class Robot extends GCAction
                     && (EventHandler.getInstance().lastUIEvent instanceof Penalty)
                     && !(EventHandler.getInstance().lastUIEvent instanceof CoachMotion)
                     && !(EventHandler.getInstance().lastUIEvent instanceof Substitute)
-                    && (!isCoach(data))
-                || (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE) 
-                    && (EventHandler.getInstance().lastUIEvent instanceof TeammatePushing))
+                    && (!isCoach(data)))
                 || data.testmode
                 
                 // new player selection in penalty shootout:

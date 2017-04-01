@@ -30,7 +30,8 @@
 
 #define GAME_ROUNDROBIN             0
 #define GAME_PLAYOFF                1
-#define GAME_DROPIN                 2
+#define GAME_MIXEDTEAM_ROUNDROBIN   2
+#define GAME_MIXEDTEAM_PLAYOFF      3
 
 #define STATE_INITIAL               0
 #define STATE_READY                 1
