@@ -308,5 +308,5 @@ There are still a number of issues left:
   on Java 9.
 
 - In GameStateVisualizer mode, the TeamCommunicationMonitor only opens on an external
-  display by default, if the external display is located on the right side of the
+  display by default if the external display is located on the right side of the
   primary display.
