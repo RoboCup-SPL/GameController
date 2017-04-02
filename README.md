@@ -128,7 +128,9 @@ is only available during stoppages of play.
 ### Penalty Shootout
 
 In the penalty shootout, press "Set" and place the robots in their correct
-locations. Press "Play" to start a single shot. The penalty shot is ended by
+locations. Select the two robots that are actually performing the current
+attempt as penalty taker and goalkeeper. All other robots are marked as
+substitutes. Press "Play" to start a single shot. The penalty shot is ended by
 either pressing "+" for the penalty taker or by pressing "Finish" if the shot
 failed. In both cases, a penalty shot ends in the state "Finished". Press "Set"
 again to start the next shot.
