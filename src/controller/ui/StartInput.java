@@ -28,7 +28,6 @@ import javax.swing.JRadioButton;
 import data.GameControlData;
 import data.Rules;
 import data.SPL;
-import data.SPLMixedTeam;
 import data.Teams;
 
 
