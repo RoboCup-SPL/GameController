@@ -3,7 +3,7 @@ package teamcomm.gui;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -27,7 +27,7 @@ import teamcomm.gui.drawings.Drawing;
  */
 public class View3DCanvas extends View3D {
 
-    private final GLCanvas canvas;
+    private final GLJPanel canvas;
     private final JMenu drawingsMenu = new JMenu("Drawings");
 
     /**
@@ -39,7 +39,7 @@ public class View3DCanvas extends View3D {
         final GLCapabilities caps = new GLCapabilities(glp);
         caps.setSampleBuffers(true);
         caps.setNumSamples(8);
-        canvas = new GLCanvas(caps);
+        canvas = new GLJPanel(caps);
         autoDrawable = canvas;
         autoDrawable.addGLEventListener(this);
 
@@ -99,7 +99,7 @@ public class View3DCanvas extends View3D {
      *
      * @return AWT canvas
      */
-    public GLCanvas getCanvas() {
+    public GLJPanel getCanvas() {
         return canvas;
     }
 
