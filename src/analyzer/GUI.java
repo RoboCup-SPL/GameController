@@ -5,8 +5,8 @@ import common.TotalScaleLayout;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -71,10 +71,8 @@ public class GUI extends JFrame implements ListSelectionListener
     public GUI()
     {
         super(TITLE);
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int width = gd.getDisplayMode().getWidth();
-        int height = gd.getDisplayMode().getHeight();
-        setLocation((width-WINDOW_WIDTH)/2, (height-WINDOW_HEIGHT)/2);
+        final Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+        setLocation((int) center.getX() - WINDOW_WIDTH / 2, (int) center.getY() - WINDOW_HEIGHT / 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         TotalScaleLayout layout = new TotalScaleLayout(this);

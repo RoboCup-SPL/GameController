@@ -3,11 +3,11 @@ package controller.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.AbstractButton;
@@ -261,10 +261,8 @@ public class GUI extends JFrame implements GCGUI
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(true);
 
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int width = gd.getDisplayMode().getWidth();
-        int height = gd.getDisplayMode().getHeight();
-        setLocation((width-WINDOW_WIDTH)/2, (height-WINDOW_HEIGHT)/2);
+        final Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+        setLocation((int) center.getX() - WINDOW_WIDTH / 2, (int) center.getY() - WINDOW_HEIGHT / 2);
         
         addWindowListener(new WindowAdapter()
         {
