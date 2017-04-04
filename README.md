@@ -304,8 +304,4 @@ There are still a number of issues left:
 - The alignment of button labels is bad if the buttons are small.
 
 - On Windows, Swing windows are only displayed correctly scaled on HiDPI displays if
-  Java 9 is used. However then, their initial position is wrong.
-
-- In GameStateVisualizer mode, the TeamCommunicationMonitor only opens on an external
-  display by default if the external display is located on the right side of the
-  primary display.
+  Java 9 is used.

@@ -24,6 +24,8 @@ import data.Rules;
 import data.Teams;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
@@ -88,8 +90,12 @@ public class View3DGSV extends View3D {
         window.setSurfaceScale(new float[]{ScalableSurface.AUTOMAX_PIXELSCALE, ScalableSurface.AUTOMAX_PIXELSCALE});
         window.setTitle("GameStateVisualizer");
         if (!forceWindowed) {
-            // Display on external display if possible. External display must on the right side of the primary display for this to work.
-            window.setPosition(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getWidth(), 0);
+            // Display on external display if possible.
+            final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+            final GraphicsDevice device = devices[devices[0].equals(
+                    GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()) ? devices.length - 1 : 0];
+            final GraphicsConfiguration configuration = device.getDefaultConfiguration();
+            window.setPosition((int) configuration.getBounds().getX(), (int) configuration.getBounds().getY());
             window.setUndecorated(true);
             window.setResizable(false);
             window.setFullscreen(true);
