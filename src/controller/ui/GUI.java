@@ -181,7 +181,7 @@ public class GUI extends JFrame implements GCGUI
     private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
 
     private static final Color COLOR_PENALTY_SHOOTOUT_TAKER = new Color(0xBBFFBB);
-    private static final Color COLOR_PENALTY_SHOOTOUT_KEEPER = new Color(0xFFBBFF);
+    private static final Color COLOR_PENALTY_SHOOTOUT_KEEPER = new Color(0xFF5555);
 
     /** Some attributes used in the GUI components. */
     private double lastSize = 0;
@@ -1058,6 +1058,10 @@ public class GUI extends JFrame implements GCGUI
                             robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker ? " Taker" : " Keeper"));
                             robot[i][j].setBackground(
                                     isTaker ? COLOR_PENALTY_SHOOTOUT_TAKER : COLOR_PENALTY_SHOOTOUT_KEEPER);
+                            if (IS_OSX) {
+                                robot[i][j].setOpaque(true);
+                                robot[i][j].setBorderPainted(false);
+                            }
 
                             // if keeper and taker are different, mark both but
                             // set only the background for the relevant player:
@@ -1068,6 +1072,10 @@ public class GUI extends JFrame implements GCGUI
                             if (data.team[i].teamNumber == data.kickOffTeam == isTaker) {
                                 robot[i][j].setBackground(
                                         isTaker ? COLOR_PENALTY_SHOOTOUT_TAKER : COLOR_PENALTY_SHOOTOUT_KEEPER);
+                                if (IS_OSX) {
+                                    robot[i][j].setOpaque(true);
+                                    robot[i][j].setBorderPainted(false);
+                                }
                             }
                         }
                     }
