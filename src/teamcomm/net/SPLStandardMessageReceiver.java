@@ -8,7 +8,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -54,7 +53,7 @@ public class SPLStandardMessageReceiver extends Thread {
                         socket.joinGroup(InetAddress.getByAddress(addr));
                     }
                 }
-            } catch (SocketException ex) {
+            } catch (IOException ex) {
                 // Ignore, because this is only for testing and does not work everywhere
             }
         }
