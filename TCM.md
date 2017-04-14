@@ -171,11 +171,13 @@ This plugin may be used as a reference when developing plugins for other teams.
 
 
 ## GameStateVisualizer mode
-The GameStateVisualizer (GSV) mode of the TCM replaces the GameStateVisualizer which
-was previously used for displaying the current game state to the audience at
-SPL matches.
+The GameStateVisualizer (GSV) mode of the TCM replaces the GameStateVisualizer
+which was previously used for displaying the current game state to the audience
+at SPL matches.
 
-To start it, pass the command line parameter `--gsv` to the TCM.
+To start it, pass the command line parameter `--gsv` to the TCM or use the menu
+option `Switch to GameStateVisualizer` in the `File` menu of the TCM's main
+window.
 
 In this mode, the TCM is always displayed in fullscreen mode unless the command
 line parameter `-w` was passed as well.
@@ -184,7 +186,8 @@ line parameter `-w` was passed as well.
 Some commands can be sent to the TCM when in GSV mode by pressing certain keys
 on the keyboard:
 
-    Esc                     - Close the TCM
+    Esc                     - Close the TCM.
+    F2                      - Switch to normal TCM mode.
     Arrow up/down           - Zoom the 3D field drawing in or out. This can also
                               be done by scrolling the mouse wheel.
     Ctrl + Arrow left/right - Switch the screen on which to display the

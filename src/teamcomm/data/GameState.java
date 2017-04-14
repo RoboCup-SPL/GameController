@@ -539,4 +539,14 @@ public class GameState {
         sendEvents(CHANGED_LEFT | CHANGED_RIGHT | CHANGED_OTHER);
     }
 
+    /**
+     * Unregisteres a GUI component as a listener receiving events about team
+     * changes.
+     *
+     * @param listener component
+     */
+    public void removeListener(final TeamEventListener listener) {
+        listeners.remove(TeamEventListener.class, listener);
+    }
+
 }

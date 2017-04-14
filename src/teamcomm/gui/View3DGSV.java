@@ -124,6 +124,11 @@ public class View3DGSV extends View3D {
                 switch (ke.getKeyCode()) {
                     case KeyEvent.VK_ESCAPE:
                         TeamCommunicationMonitor.shutdown();
+                        window.setVisible(false);
+                        break;
+                    case KeyEvent.VK_F2:
+                        TeamCommunicationMonitor.switchToTCM();
+                        window.setVisible(false);
                         break;
                     case KeyEvent.VK_UP:
                     case KeyEvent.VK_PLUS:

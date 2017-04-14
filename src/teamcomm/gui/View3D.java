@@ -66,8 +66,8 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
      * Terminates the field view.
      */
     public void terminate() {
+        GameState.getInstance().removeListener(this);
         animator.stop();
-        autoDrawable.destroy();
     }
 
     /**

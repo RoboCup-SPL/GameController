@@ -163,6 +163,16 @@ public class MainWindow extends JFrame implements TeamEventListener {
         });
         replayItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 
+        final JMenuItem switchItem = new JMenuItem("Switch to GameStateVisualizer");
+        switchItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                TeamCommunicationMonitor.switchToGSV();
+                setVisible(false);
+            }
+        });
+        fileMenu.add(switchItem);
+
         final JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.addActionListener(new ActionListener() {
             @Override
@@ -199,6 +209,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
      * Terminates the view.
      */
     public void terminate() {
+        GameState.getInstance().removeListener(this);
         fieldView.terminate();
     }
 

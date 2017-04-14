@@ -26,7 +26,7 @@ public class TeamCommunicationMonitor {
     private static boolean forceWindowed = false;
 
     private static boolean shutdown = false;
-    private static final Object shutdownMutex = new Object();
+    private static final Object commandMutex = new Object();
 
     /**
      * Startup method of the team communication monitor.
@@ -102,8 +102,8 @@ public class TeamCommunicationMonitor {
 
         // Initialize robot view part of the GUI
         System.setProperty("newt.window.icons", "null,null");
-        final MainWindow robotView = silentMode || gsvMode ? null : new MainWindow();
-        final View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV(forceWindowed) : null);
+        MainWindow robotView = silentMode || gsvMode ? null : new MainWindow();
+        View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV(forceWindowed) : null);
 
         // Start threads
         gcDataReceiver.start();
@@ -111,9 +111,25 @@ public class TeamCommunicationMonitor {
 
         // Wait for shutdown
         try {
-            synchronized (shutdownMutex) {
+            synchronized (commandMutex) {
                 while (!shutdown) {
-                    shutdownMutex.wait();
+                    if (!silentMode) {
+                        // Handle TCM/GSV mode changes
+                        if (gsvMode && gsvView == null) {
+                            if (robotView != null) {
+                                robotView.terminate();
+                                robotView = null;
+                            }
+                            gsvView = new View3DGSV(forceWindowed);
+                        } else if (!gsvMode && robotView == null) {
+                            if (gsvView != null) {
+                                gsvView.terminate();
+                                gsvView = null;
+                            }
+                            robotView = new MainWindow();
+                        }
+                    }
+                    commandMutex.wait();
                 }
             }
         } catch (InterruptedException ex) {
@@ -189,9 +205,29 @@ public class TeamCommunicationMonitor {
      * Shuts down the program by notifying the main thread.
      */
     public static void shutdown() {
-        synchronized (shutdownMutex) {
+        synchronized (commandMutex) {
             shutdown = true;
-            shutdownMutex.notifyAll();
+            commandMutex.notifyAll();
+        }
+    }
+
+    /**
+     * Switches from TCM to GSV mode by notifying the main thread.
+     */
+    public static void switchToGSV() {
+        synchronized (commandMutex) {
+            gsvMode = true;
+            commandMutex.notifyAll();
+        }
+    }
+
+    /**
+     * Switches from GSV to TCM mode by notifying the main thread.
+     */
+    public static void switchToTCM() {
+        synchronized (commandMutex) {
+            gsvMode = false;
+            commandMutex.notifyAll();
         }
     }
 }
