@@ -59,6 +59,12 @@
                 <attribute name="Class-Path" value="deps/gluegen-rt.jar deps/jogl-all.jar plugins/common.jar" />
             </manifest>
         </jar>
+        <jar destfile="${jar.dir}/GameControllerTester.jar" basedir="${classes.dir}" includes="${common_classes} teamcomm/data/event/ teamcomm/net/GameControlDataReceiver.class tester/">
+            <manifest>
+                <attribute name="Main-Class" value="tester.GameControllerTester"/>
+                <attribute name="Author" value="Felix Thielke" />
+            </manifest>
+        </jar>
 
         <mkdir dir="${jar.dir}/lib"/>
         <copy todir="${jar.dir}" overwrite="true">
