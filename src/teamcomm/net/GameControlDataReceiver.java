@@ -9,8 +9,11 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import teamcomm.data.GameState;
-import teamcomm.net.logging.LogReplayer;
+import java.util.EventObject;
+import javax.swing.event.EventListenerList;
+import teamcomm.data.event.GameControlDataEvent;
+import teamcomm.data.event.GameControlDataEventListener;
+import teamcomm.data.event.GameControlDataTimeoutEvent;
 
 /**
  * Class for the thread which receives messages from the GameController.
@@ -22,6 +25,8 @@ public class GameControlDataReceiver extends Thread {
     private static final int GAMECONTROLLER_TIMEOUT = 4000;
 
     private final DatagramSocket datagramSocket;
+
+    private final EventListenerList listeners = new EventListenerList();
 
     /**
      * Constructor.
@@ -37,6 +42,24 @@ public class GameControlDataReceiver extends Thread {
         datagramSocket.bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_GAMEDATA_PORT));
     }
 
+    public void addListener(final GameControlDataEventListener listener) {
+        listeners.add(GameControlDataEventListener.class, listener);
+    }
+
+    public void removeListener(final GameControlDataEventListener listener) {
+        listeners.remove(GameControlDataEventListener.class, listener);
+    }
+
+    private void fireEvent(final EventObject e) {
+        for (final GameControlDataEventListener listener : listeners.getListeners(GameControlDataEventListener.class)) {
+            if (e instanceof GameControlDataEvent) {
+                listener.gameControlDataChanged((GameControlDataEvent) e);
+            } else if (e instanceof GameControlDataTimeoutEvent) {
+                listener.gameControlDataTimeout((GameControlDataTimeoutEvent) e);
+            }
+        }
+    }
+
     @Override
     public void run() {
         while (!isInterrupted()) {
@@ -45,18 +68,13 @@ public class GameControlDataReceiver extends Thread {
                 final DatagramPacket packet = new DatagramPacket(buffer.array(), buffer.array().length);
                 datagramSocket.receive(packet);
 
-                if (!LogReplayer.getInstance().isReplaying()) {
-                    buffer.rewind();
-                    final GameControlData data = new GameControlData();
-                    if (data.fromByteArray(buffer)) {
-                        GameState.getInstance().updateGameData(data);
-                    }
+                buffer.rewind();
+                final GameControlData data = new GameControlData();
+                if (data.fromByteArray(buffer)) {
+                    fireEvent(new GameControlDataEvent(this, data));
                 }
             } catch (SocketTimeoutException e) {
-                if (!LogReplayer.getInstance().isReplaying()) {
-                    // GameController data is only valid for a limited amount of time
-                    GameState.getInstance().updateGameData(null);
-                }
+                fireEvent(new GameControlDataTimeoutEvent(this));
             } catch (IOException e) {
                 Log.error("something went wrong while receiving the game controller packages : " + e.getMessage());
             }

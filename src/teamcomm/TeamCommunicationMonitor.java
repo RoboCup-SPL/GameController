@@ -31,7 +31,7 @@ public class TeamCommunicationMonitor {
     /**
      * Startup method of the team communication monitor.
      *
-     * @param args This is ignored.
+     * @param args startup arguments.
      */
     public static void main(final String[] args) {
         GameControlDataReceiver gcDataReceiver = null;
@@ -96,6 +96,7 @@ public class TeamCommunicationMonitor {
                     JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         }
+        gcDataReceiver.addListener(GameState.getInstance());
 
         // Initialize listeners for robots
         receiver = SPLStandardMessageReceiverTCM.getInstance();

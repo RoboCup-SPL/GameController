@@ -12,6 +12,8 @@ import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.event.EventListenerList;
 import teamcomm.data.GameState;
+import teamcomm.data.event.GameControlDataEvent;
+import teamcomm.data.event.GameControlDataTimeoutEvent;
 import teamcomm.net.SPLStandardMessagePackage;
 import teamcomm.net.SPLStandardMessageReceiverTCM;
 
@@ -178,12 +180,12 @@ class LogReplayTask implements Runnable {
             if (obj.object instanceof SPLStandardMessagePackage) {
                 SPLStandardMessageReceiverTCM.getInstance().addToPackageQueue((SPLStandardMessagePackage) obj.object);
             } else if (obj.object instanceof GameControlData) {
-                GameState.getInstance().updateGameData((GameControlData) obj.object);
+                GameState.getInstance().gameControlDataChanged(new GameControlDataEvent(this, (GameControlData) obj.object));
             }
         } else {
             switch (obj.typeid) {
                 case 1:
-                    GameState.getInstance().updateGameData(null);
+                    GameState.getInstance().gameControlDataTimeout(new GameControlDataTimeoutEvent(this));
                     break;
             }
         }

@@ -21,6 +21,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.swing.event.EventListenerList;
 import teamcomm.PluginLoader;
+import teamcomm.data.event.GameControlDataEvent;
+import teamcomm.data.event.GameControlDataEventListener;
+import teamcomm.data.event.GameControlDataTimeoutEvent;
 import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
 import teamcomm.net.logging.LogReplayer;
@@ -31,7 +34,7 @@ import teamcomm.net.logging.Logger;
  *
  * @author Felix Thielke
  */
-public class GameState {
+public class GameState implements GameControlDataEventListener {
 
     /**
      * Index of the team playing on the left side of the field.
@@ -174,102 +177,124 @@ public class GameState {
     /**
      * Updates info about the game with a message from the GameController.
      *
-     * @param data data sent by the GameController
+     * @param e event containing the data sent by the GameController
      */
-    public void updateGameData(final GameControlData data) {
+    @Override
+    public void gameControlDataChanged(final GameControlDataEvent e) {
+        if (LogReplayer.getInstance().isReplaying()) {
+            return;
+        }
+
         int changed = 0;
 
-        if (data == null) {
-            if (lastGameControlData != null) {
-                synchronized (teamNumbers) {
-                    teamNumbers[TEAM_LEFT] = 0;
-                    teamNumbers[TEAM_RIGHT] = 0;
-                    int s = 0;
-                    for (final Entry<Integer, Collection<RobotState>> entry : robots.entrySet()) {
-                        if (!entry.getValue().isEmpty()) {
-                            teamNumbers[s++] = entry.getKey();
-                            if (s == 2) {
-                                break;
-                            }
-                        }
-                    }
-                }
-                changed = CHANGED_LEFT | CHANGED_RIGHT | CHANGED_OTHER;
-                Logger.getInstance().createLogfile();
+        if (lastGameControlData == null) {
+            synchronized (teamNumbers) {
+                teamNumbers[TEAM_LEFT] = e.data.team[0].teamNumber;
+                teamNumbers[TEAM_RIGHT] = e.data.team[1].teamNumber;
             }
+            changed = CHANGED_LEFT | CHANGED_RIGHT | CHANGED_OTHER;
         } else {
-            if (lastGameControlData == null) {
-                synchronized (teamNumbers) {
-                    teamNumbers[TEAM_LEFT] = data.team[0].teamNumber;
-                    teamNumbers[TEAM_RIGHT] = data.team[1].teamNumber;
+            synchronized (teamNumbers) {
+                if (e.data.team[0].teamNumber != teamNumbers[TEAM_LEFT]) {
+                    teamNumbers[TEAM_LEFT] = e.data.team[0].teamNumber;
+                    changed = CHANGED_LEFT | CHANGED_OTHER;
                 }
-                changed = CHANGED_LEFT | CHANGED_RIGHT | CHANGED_OTHER;
-            } else {
-                synchronized (teamNumbers) {
-                    if (data.team[0].teamNumber != teamNumbers[TEAM_LEFT]) {
-                        teamNumbers[TEAM_LEFT] = data.team[0].teamNumber;
-                        changed = CHANGED_LEFT | CHANGED_OTHER;
-                    }
-                    if (data.team[1].teamNumber != teamNumbers[TEAM_RIGHT]) {
-                        teamNumbers[TEAM_RIGHT] = data.team[1].teamNumber;
-                        changed = CHANGED_RIGHT | CHANGED_OTHER;
-                    }
+                if (e.data.team[1].teamNumber != teamNumbers[TEAM_RIGHT]) {
+                    teamNumbers[TEAM_RIGHT] = e.data.team[1].teamNumber;
+                    changed = CHANGED_RIGHT | CHANGED_OTHER;
                 }
-            }
-
-            teamColors.put((int) data.team[0].teamNumber, (int) data.team[0].teamColor);
-            teamColors.put((int) data.team[1].teamNumber, (int) data.team[1].teamColor);
-
-            // Update penalties
-            for (final TeamInfo team : data.team) {
-                final Collection<RobotState> teamRobots = robots.get((int) team.teamNumber);
-                if (teamRobots != null) {
-                    for (final RobotState r : teamRobots) {
-                        if (r.getPlayerNumber() != null && r.getPlayerNumber() <= team.player.length) {
-                            r.setPenalty(team.player[r.getPlayerNumber() - 1].penalty);
-                        }
-                    }
-                }
-            }
-
-            // Open a new logfile for the current GameController state if the
-            // state changed from or to initial/finished
-            final StringBuilder logfileName;
-            if ((data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99) && (data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99)) {
-                logfileName = new StringBuilder("Drop-in_");
-                if (data.firstHalf == GameControlData.C_TRUE) {
-                    logfileName.append("1st");
-                } else {
-                    logfileName.append("2nd");
-                }
-                logfileName.append("Half");
-            } else {
-                if (data.firstHalf == GameControlData.C_TRUE) {
-                    logfileName = new StringBuilder(getTeamName((int) data.team[0].teamNumber, false, false)).append("_").append(getTeamName((int) data.team[1].teamNumber, false, false)).append("_1st");
-                } else {
-                    logfileName = new StringBuilder(getTeamName((int) data.team[1].teamNumber, false, false)).append("_").append(getTeamName((int) data.team[0].teamNumber, false, false)).append("_2nd");
-                }
-                logfileName.append("Half");
-            }
-            if (data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {
-                Logger.getInstance().createLogfile(logfileName.toString());
-            } else if (data.gameState == GameControlData.STATE_INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_INITIAL)) {
-                Logger.getInstance().createLogfile(logfileName.append("_initial").toString());
-            } else if (data.gameState == GameControlData.STATE_FINISHED && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_FINISHED)) {
-                Logger.getInstance().createLogfile(logfileName.append("_finished").toString());
-            }
-
-            if (changed != 0) {
-                // (re)load plugins
-                PluginLoader.getInstance().update((int) data.team[0].teamNumber, (int) data.team[1].teamNumber);
             }
         }
-        lastGameControlData = data;
+
+        teamColors.put((int) e.data.team[0].teamNumber, (int) e.data.team[0].teamColor);
+        teamColors.put((int) e.data.team[1].teamNumber, (int) e.data.team[1].teamColor);
+
+        // Update penalties
+        for (final TeamInfo team : e.data.team) {
+            final Collection<RobotState> teamRobots = robots.get((int) team.teamNumber);
+            if (teamRobots != null) {
+                for (final RobotState r : teamRobots) {
+                    if (r.getPlayerNumber() != null && r.getPlayerNumber() <= team.player.length) {
+                        r.setPenalty(team.player[r.getPlayerNumber() - 1].penalty);
+                    }
+                }
+            }
+        }
+
+        // Open a new logfile for the current GameController state if the
+        // state changed from or to initial/finished
+        final StringBuilder logfileName;
+        if ((e.data.team[0].teamNumber == 98 || e.data.team[0].teamNumber == 99) && (e.data.team[1].teamNumber == 98 || e.data.team[1].teamNumber == 99)) {
+            logfileName = new StringBuilder("Drop-in_");
+            if (e.data.firstHalf == GameControlData.C_TRUE) {
+                logfileName.append("1st");
+            } else {
+                logfileName.append("2nd");
+            }
+            logfileName.append("Half");
+        } else {
+            if (e.data.firstHalf == GameControlData.C_TRUE) {
+                logfileName = new StringBuilder(getTeamName((int) e.data.team[0].teamNumber, false, false)).append("_").append(getTeamName((int) e.data.team[1].teamNumber, false, false)).append("_1st");
+            } else {
+                logfileName = new StringBuilder(getTeamName((int) e.data.team[1].teamNumber, false, false)).append("_").append(getTeamName((int) e.data.team[0].teamNumber, false, false)).append("_2nd");
+            }
+            logfileName.append("Half");
+        }
+        if (e.data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {
+            Logger.getInstance().createLogfile(logfileName.toString());
+        } else if (e.data.gameState == GameControlData.STATE_INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_INITIAL)) {
+            Logger.getInstance().createLogfile(logfileName.append("_initial").toString());
+        } else if (e.data.gameState == GameControlData.STATE_FINISHED && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_FINISHED)) {
+            Logger.getInstance().createLogfile(logfileName.append("_finished").toString());
+        }
+
+        if (changed != 0) {
+            // (re)load plugins
+            PluginLoader.getInstance().update((int) e.data.team[0].teamNumber, (int) e.data.team[1].teamNumber);
+        }
+        lastGameControlData = e.data;
 
         // Log the GameController data
-        if (data != null || changed != 0) {
-            Logger.getInstance().log(data);
+        if (e.data != null || changed != 0) {
+            Logger.getInstance().log(e.data);
         }
+
+        // send events
+        sendEvents(changed);
+    }
+
+    /**
+     * Updates info about the game when no message was received from the
+     * GameController.
+     *
+     * @param e event
+     */
+    @Override
+    public void gameControlDataTimeout(final GameControlDataTimeoutEvent e) {
+        if (LogReplayer.getInstance().isReplaying()) {
+            return;
+        }
+
+        int changed = 0;
+
+        if (lastGameControlData != null) {
+            synchronized (teamNumbers) {
+                teamNumbers[TEAM_LEFT] = 0;
+                teamNumbers[TEAM_RIGHT] = 0;
+                int s = 0;
+                for (final Entry<Integer, Collection<RobotState>> entry : robots.entrySet()) {
+                    if (!entry.getValue().isEmpty()) {
+                        teamNumbers[s++] = entry.getKey();
+                        if (s == 2) {
+                            break;
+                        }
+                    }
+                }
+            }
+            changed = CHANGED_LEFT | CHANGED_RIGHT | CHANGED_OTHER;
+            Logger.getInstance().createLogfile();
+        }
+        lastGameControlData = null;
 
         // send events
         sendEvents(changed);
