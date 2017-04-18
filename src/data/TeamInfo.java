@@ -4,42 +4,55 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-
 /**
- * This class is part of the data wich are send to the robots.
- * It just represents this data, reads and writes between C-structure and
- * Java, nothing more.
- * 
+ * This class is part of the data wich are send to the robots. It just
+ * represents this data, reads and writes between C-structure and Java, nothing
+ * more.
+ *
  * @author Michel Bartsch
  */
-public class TeamInfo implements Serializable
-{
+public class TeamInfo implements Serializable {
+
     private static final long serialVersionUID = 2795660408542807763L;
 
     /**
-     * How many players a team may have.
-     * Actually that many players in each team need to be sent, even if
-     * playersPerTeam in GameControlData is less.
+     * How many players a team may have. Actually that many players in each team
+     * need to be sent, even if playersPerTeam in GameControlData is less.
      */
     public static final byte MAX_NUM_PLAYERS = 11;
-    
-    /** The size in bytes this class has packed. */
-    public static final int SIZE =
-            1 + // teamNumber
-            1 + // teamColor
-            1 + // score
-            1 + // penaltyShot
-            2 + // singleShots
-            1 + // coach's sequence number
-            SPLCoachMessage.SPL_COACH_MESSAGE_SIZE + // coach's message
+
+    /**
+     * The size in bytes this class has packed.
+     */
+    public static final int SIZE
+            = 1
+            + // teamNumber
+            1
+            + // teamColor
+            1
+            + // score
+            1
+            + // penaltyShot
+            2
+            + // singleShots
+            1
+            + // coach's sequence number
+            SPLCoachMessage.SPL_COACH_MESSAGE_SIZE
+            + // coach's message
             (MAX_NUM_PLAYERS + 1) * PlayerInfo.SIZE; // +1 for the coach
 
-    /** The size in bytes this class has packed for version 7. */
-    public static final int SIZE7 =
-            1 + // teamNumber
-            1 + // teamColor
-            1 + // goal color
-            1 + // score
+    /**
+     * The size in bytes this class has packed for version 7.
+     */
+    public static final int SIZE7
+            = 1
+            + // teamNumber
+            1
+            + // teamColor
+            1
+            + // goal color
+            1
+            + // score
             (MAX_NUM_PLAYERS) * PlayerInfo.SIZE7;
 
     //this is streamed
@@ -52,23 +65,22 @@ public class TeamInfo implements Serializable
     public byte[] coachMessage = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
     public PlayerInfo coach = new PlayerInfo();
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
-    
+
     /**
      * Creates a new TeamInfo.
      */
-    public TeamInfo()
-    {
-        for (int i=0; i<player.length; i++) {
+    public TeamInfo() {
+        for (int i = 0; i < player.length; i++) {
             player[i] = new PlayerInfo();
         }
     }
-    
+
     /**
      * Packing this Java class to the C-structure to be send.
+     *
      * @return Byte array representing the C-structure.
      */
-    public byte[] toByteArray()
-    {
+    public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(teamNumber);
@@ -79,7 +91,7 @@ public class TeamInfo implements Serializable
         buffer.put(coachSequence);
         buffer.put(coachMessage);
         buffer.put(coach.toByteArray());
-        for (int i=0; i<MAX_NUM_PLAYERS; i++) {
+        for (int i = 0; i < MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray());
         }
 
@@ -87,32 +99,31 @@ public class TeamInfo implements Serializable
     }
 
     /**
-     * Packing this Java class to the C-structure to be send, using version 7
-     * of the protocol.
+     * Packing this Java class to the C-structure to be send, using version 7 of
+     * the protocol.
+     *
      * @return Byte array representing the C-structure.
      */
-    public byte[] toByteArray7()
-    {
+    public byte[] toByteArray7() {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE7);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(teamNumber);
         buffer.put(teamColor);
         buffer.put((byte) 1); // goal color is always yellow
         buffer.put(score);
-        for (int i=0; i<MAX_NUM_PLAYERS; i++) {
+        for (int i = 0; i < MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray7());
         }
 
         return buffer.array();
     }
-    
+
     /**
      * Unpacking the C-structure to the Java class.
-     * 
-     * @param buffer    The buffered C-structure.
+     *
+     * @param buffer The buffered C-structure.
      */
-    public void fromByteArray(ByteBuffer buffer)
-    {
+    public void fromByteArray(ByteBuffer buffer) {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         teamNumber = buffer.get();
         teamColor = buffer.get();
@@ -122,38 +133,62 @@ public class TeamInfo implements Serializable
         coachSequence = buffer.get();
         buffer.get(coachMessage);
         coach.fromByteArray(buffer);
-        for (int i=0; i<player.length; i++) {
+        for (int i = 0; i < player.length; i++) {
             player[i].fromByteArray(buffer);
         }
     }
-    
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         String out = "--------------------------------------\n";
         String temp;
-        
-        out += "         teamNumber: "+teamNumber+"\n";
+
+        out += "         teamNumber: " + teamNumber + "\n";
         switch (teamColor) {
-            case GameControlData.TEAM_BLUE: temp = "blue"; break;
-            case GameControlData.TEAM_RED:  temp = "red";  break;
-            case GameControlData.TEAM_YELLOW: temp = "yellow"; break;
-            case GameControlData.TEAM_BLACK:  temp = "black";  break;
-            case GameControlData.TEAM_WHITE:  temp = "white";  break;
-            case GameControlData.TEAM_GREEN:  temp = "green";  break;
-            case GameControlData.TEAM_ORANGE:  temp = "orange";  break;
-            case GameControlData.TEAM_PURPLE:  temp = "purple";  break;
-            case GameControlData.TEAM_BROWN:  temp = "brown";  break;
-            case GameControlData.TEAM_GRAY:  temp = "gray";  break;
-            default: temp = "undefinied("+teamColor+")";
+            case GameControlData.TEAM_BLUE:
+                temp = "blue";
+                break;
+            case GameControlData.TEAM_RED:
+                temp = "red";
+                break;
+            case GameControlData.TEAM_YELLOW:
+                temp = "yellow";
+                break;
+            case GameControlData.TEAM_BLACK:
+                temp = "black";
+                break;
+            case GameControlData.TEAM_WHITE:
+                temp = "white";
+                break;
+            case GameControlData.TEAM_GREEN:
+                temp = "green";
+                break;
+            case GameControlData.TEAM_ORANGE:
+                temp = "orange";
+                break;
+            case GameControlData.TEAM_PURPLE:
+                temp = "purple";
+                break;
+            case GameControlData.TEAM_BROWN:
+                temp = "brown";
+                break;
+            case GameControlData.TEAM_GRAY:
+                temp = "gray";
+                break;
+            default:
+                temp = "undefinied(" + teamColor + ")";
         }
-        out += "          teamColor: "+temp+"\n";
-        out += "              score: "+score+"\n";
-        out += "        penaltyShot: "+penaltyShot+"\n";
-        out += "        singleShots: "+Integer.toBinaryString(singleShots)+"\n";
-        out += "      coachSequence: "+coachSequence+"\n";
-        out += "       coachMessage: "+new String(coachMessage)+"\n";
-        out += "        coachStatus: "+coach.toString()+"\n";
+        out += "          teamColor: " + temp + "\n";
+        out += "              score: " + score + "\n";
+        out += "        penaltyShot: " + penaltyShot + "\n";
+        out += "        singleShots: " + Integer.toBinaryString(singleShots) + "\n";
+        out += "      coachSequence: " + coachSequence + "\n";
+        out += "       coachMessage: " + new String(coachMessage) + "\n";
+        out += "        coachStatus: ---\n" + coach.toString() + "---\n";
+
+        for (int i = 0; i < player.length; i++) {
+            out += "Player #" + i + "\n" + player[i].toString();
+        }
         return out;
     }
 }

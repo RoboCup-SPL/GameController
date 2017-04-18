@@ -3,6 +3,7 @@ package tester;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,9 +19,13 @@ import teamcomm.data.event.GameControlDataTimeoutEvent;
  */
 public class MainWindow extends JFrame implements GameControlDataEventListener {
 
+    private static final long serialVersionUID = -2470905865009860120L;
+
     private static final String DEFAULT_TEXT = "Waiting for messages from the GameController...";
 
-    final JLabel text = new JLabel(DEFAULT_TEXT, JLabel.LEADING);
+    final JLabel gcInfo = new JLabel(DEFAULT_TEXT, JLabel.CENTER);
+    final JLabel team0Info = new JLabel("", JLabel.CENTER);
+    final JLabel team1Info = new JLabel("", JLabel.CENTER);
 
     public MainWindow() {
         super("GameControllerTester");
@@ -36,11 +41,20 @@ public class MainWindow extends JFrame implements GameControlDataEventListener {
                         GameControllerTester.shutdown();
                     }
                 });
-                setPreferredSize(new Dimension(400, 300));
+                setPreferredSize(new Dimension(400, 1000));
 
                 final JPanel contentPane = new JPanel();
                 setContentPane(contentPane);
-                contentPane.add(text);
+                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                final JPanel gcInfoContainer = new JPanel();
+                gcInfoContainer.setLayout(new BoxLayout(gcInfoContainer, BoxLayout.X_AXIS));
+                gcInfoContainer.add(gcInfo);
+                contentPane.add(gcInfoContainer);
+                final JPanel teamInfoContainer = new JPanel();
+                teamInfoContainer.setLayout(new BoxLayout(teamInfoContainer, BoxLayout.X_AXIS));
+                teamInfoContainer.add(team0Info);
+                teamInfoContainer.add(team1Info);
+                contentPane.add(teamInfoContainer);
 
                 pack();
                 setVisible(true);
@@ -50,13 +64,16 @@ public class MainWindow extends JFrame implements GameControlDataEventListener {
 
     @Override
     public void gameControlDataChanged(final GameControlDataEvent e) {
-        text.setText("<html>" + e.data.toString().replaceAll("\n", "<br/>") + "</html>");
-        System.out.println(e.data.toString());
+        gcInfo.setText("<html>" + e.data.toString().replaceAll("\n", "<br/>") + "</html>");
+        team0Info.setText("<html>" + e.data.team[0].toString().replaceAll("\n", "<br/>") + "</html>");
+        team1Info.setText("<html>" + e.data.team[1].toString().replaceAll("\n", "<br/>") + "</html>");
     }
 
     @Override
     public void gameControlDataTimeout(final GameControlDataTimeoutEvent e) {
-        text.setText(DEFAULT_TEXT);
+        gcInfo.setText(DEFAULT_TEXT);
+        team0Info.setText("");
+        team1Info.setText("");
     }
 
 }
