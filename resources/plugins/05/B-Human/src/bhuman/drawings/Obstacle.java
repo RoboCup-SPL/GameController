@@ -1,12 +1,12 @@
 package bhuman.drawings;
 
 import bhuman.message.BHumanMessage;
-import bhuman.message.messages.ObstacleModelCompressed;
+import bhuman.message.BHumanMessageParts;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
-import teamcomm.gui.Camera;
 import teamcomm.data.RobotState;
+import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.PerPlayer;
 
 /**
@@ -16,6 +16,7 @@ import teamcomm.gui.drawings.PerPlayer;
  */
 public class Obstacle extends PerPlayer {
 
+    private static final float CROSS_RADIUS = 0.1f;
     private static final float OPACITY = 0.75f;
 
     @Override
@@ -24,9 +25,7 @@ public class Obstacle extends PerPlayer {
                 && rs.getLastMessage().valid
                 && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
-            final ObstacleModelCompressed obstacleModel = msg.queue
-                    .getMessage(ObstacleModelCompressed.class);
-            if (obstacleModel != null) {
+            if (msg.message.bhulks != null) {
                 final GLU glu = GLU.createGLU(gl);
                 final GLUquadric q = glu.gluNewQuadric();
 
@@ -35,22 +34,22 @@ public class Obstacle extends PerPlayer {
                 gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 
                 // Draw obstacles
-                for (final ObstacleModelCompressed.Obstacle obstacle : obstacleModel.obstacles) {
+                for (final BHumanMessageParts.BHULKsStandardMessagePart.Obstacle obstacle : msg.message.bhulks.obstacles) {
                     // Set color
                     switch (obstacle.type) {
-                        case GOALPOST:
+                        case goalpost:
                             gl.glColor4f(1.f, 1.f, 0.f, OPACITY);
                             break;
-                        case FALLENSOMEROBOT:
-                        case SOMEROBOT:
+                        case fallenSomeRobot:
+                        case someRobot:
                             gl.glColor4f(1.f, .5f, 0.f, OPACITY);
                             break;
-                        case FALLENOPPONENT:
-                        case OPPONENT:
+                        case fallenOpponent:
+                        case opponent:
                             gl.glColor4f(1.f, 0.f, 1.f, OPACITY);
                             break;
-                        case FALLENTEAMMATE:
-                        case TEAMMATE:
+                        case fallenTeammate:
+                        case teammate:
                             gl.glColor4f(0.f, 1.f, 1.f, OPACITY);
                             break;
                         default:
@@ -62,25 +61,19 @@ public class Obstacle extends PerPlayer {
                     gl.glTranslatef(msg.pose[0] / 1000.0f, msg.pose[1] / 1000.f, 0);
                     gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
 
-                    // cast short to float
-                    float centerX = obstacle.center.x;
-                    float centerY = obstacle.center.y;
-                    float leftX = obstacle.left.x;
-                    float leftY = obstacle.left.y;
-                    float rightX = obstacle.right.x;
-                    float rightY = obstacle.right.y;
-
-                    // Translate to obstacle
-                    gl.glBegin(GL2.GL_LINE_STRIP);
-                    gl.glVertex3f(leftX / 1000.f, leftY / 1000.f, 0.f);
-                    gl.glVertex3f(centerX / 1000.f, centerY / 1000.f, 0.f);
-                    gl.glVertex3f(rightX / 1000.f, rightY / 1000.f, 0.f);
-                    gl.glEnd();
-
                     // Draw line from obstacle to robot to determine which player saw that obstacle
                     gl.glBegin(GL2.GL_LINES);
                     gl.glVertex3f(0.f, 0.f, 0.f);
-                    gl.glVertex3f(centerX / 1000.f, centerY / 1000.f, 0.f);
+                    gl.glVertex3f(obstacle.center[0] / 1000.f, obstacle.center[1] / 1000.f, 0.f);
+                    gl.glEnd();
+
+                    // Translate to obstacle
+                    gl.glTranslatef(obstacle.center[0] / 1000.f, obstacle.center[1] / 1000.f, 0.f);
+                    gl.glBegin(GL2.GL_LINES);
+                    gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
+                    gl.glVertex2f(CROSS_RADIUS, CROSS_RADIUS);
+                    gl.glVertex2f(-CROSS_RADIUS, CROSS_RADIUS);
+                    gl.glVertex2f(CROSS_RADIUS, -CROSS_RADIUS);
                     gl.glEnd();
 
                     // Translate back

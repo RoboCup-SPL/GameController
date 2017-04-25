@@ -1,13 +1,11 @@
 package bhuman.message;
 
 import bhuman.message.messages.BehaviorStatus;
-import bhuman.message.messages.NetworkThumbnail;
 import bhuman.message.messages.RobotHealth;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 import teamcomm.data.AdvancedMessage;
-import util.Unsigned;
 
 /**
  * Custom message class for team B-Human.
@@ -19,31 +17,42 @@ public class BHumanMessage extends AdvancedMessage {
     private static final long serialVersionUID = 8509144227967224852L;
 
     /**
-     * The MessageQueue transferred in this message.
+     * The B-Human message parts transferred in this message.
      */
-    public MessageQueue queue;
+    public BHumanMessageParts message;
 
     @Override
     public String[] display() {
         final List<String> display = new LinkedList<>();
         if (valid) {
-            final RobotHealth health = queue.getCachedMessage(RobotHealth.class);
-            final BehaviorStatus status = queue.getCachedMessage(BehaviorStatus.class);
+            final RobotHealth health = message.queue == null ? null : message.queue.getCachedMessage(RobotHealth.class);
+            final BehaviorStatus status = message.queue == null ? null : message.queue.getCachedMessage(BehaviorStatus.class);
 
             if (health != null) {
                 display.add(health.robotName);
-                display.add("Location: " + health.location);
+                display.add("Location: " + String.valueOf(health.location));
                 display.add("Configuration: " + health.configuration);
-                display.add("Magic: " + Unsigned.toUnsigned(queue.getMagicNumber()));
+            }
+            display.add("Magic: " + (message.bhuman == null ? "null" : message.bhuman.magicNumber));
+            if (health != null) {
                 display.add("Battery: " + health.batteryLevel + "%");
                 if (health.jointWithMaxTemperature != null) {
                     display.add("Hottest joint: " + health.jointWithMaxTemperature.toString() + " (" + health.maxJointTemperature + "°C)");
                 }
                 display.add("");
             }
+            if (message.bhulks != null) {
+                display.add("Role: " + message.bhulks.currentlyPerfomingRole);
+            }
             if (status != null) {
-                display.add("Role: " + status.role);
                 display.add("Activity: " + status.activity);
+            }
+
+            if (message.queue != null) {
+                display.add("MessageQueue:");
+                for (final String name : message.queue.getMessageNames()) {
+                    display.add(" " + name);
+                }
             }
         }
 
@@ -52,16 +61,16 @@ public class BHumanMessage extends AdvancedMessage {
 
     @Override
     public void init() {
-        queue = new MessageQueue(this, ByteBuffer.wrap(data));
+        try {
+            message = new BHumanMessageParts(this, ByteBuffer.wrap(data));
 
-        // Update cached RobotHealth and BehaviorStatus
-        queue.getCachedMessage(RobotHealth.class);
-        queue.getCachedMessage(BehaviorStatus.class);
-
-        // Update thumbnail image
-        final NetworkThumbnail msg = queue.getMessage(NetworkThumbnail.class);
-        if (msg != null) {
-            Thumbnail.getInstance(teamNum + "," + playerNum).handleMessage(msg);
+            // Update cached RobotHealth and BehaviorStatus
+            if (message.queue != null) {
+                message.queue.getCachedMessage(RobotHealth.class);
+                message.queue.getCachedMessage(BehaviorStatus.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

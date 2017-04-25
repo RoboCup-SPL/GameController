@@ -1,10 +1,22 @@
 package bhuman.message;
 
+import bhuman.message.data.ComplexStreamReader;
+import bhuman.message.data.SimpleStreamReader;
+import common.Log;
 import data.SPLStandardMessage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import util.Unsigned;
 
 /**
@@ -14,25 +26,23 @@ import util.Unsigned;
  */
 public class MessageQueue {
 
-    private final String robotIdentifier;
+    private static final String CONFIG_FILE = "resources/bhumanpath.cfg";
+    private static final String MESSAGEIDS_H = "Tools/MessageQueue/MessageIDs.h";
+    private static final String MESSAGEIDS_H_PLUGIN = "resources/MessageIDs.h";
 
-    private final long timestamp;
-    private final long ballTimeWhenLastSeen;
-    private final long ballTimeWhenDisappeared;
-    private final short ballLastPerceptX;
-    private final short ballLastPerceptY;
-    private final float[] ballCovariance;
-    private final float robotPoseDeviation;
-    private final float[] robotPoseCovariance;
-    private final short robotPoseValidity;
-    private final byte magicNumber;
+    private final String robotIdentifier;
 
     private final long usedSize;
     private final int numberOfMessages;
 
     private static final Map<String, Map<Class<?>, Message<? extends Message>>> cachedMessages = new HashMap<>();
 
+    private static final Map<Short, List<Class<? extends Message>>> classes = new HashMap<>();
+    private static final Map<Short, List<String>> messageIds = new HashMap<>();
+
     private final Map<Class<?>, Message<? extends Message>> messages = new HashMap<>();
+
+    private final Set<String> messageNames = new TreeSet<>();
 
     /**
      * Constructor.
@@ -43,127 +53,33 @@ public class MessageQueue {
     public MessageQueue(final SPLStandardMessage origin, final ByteBuffer buf) {
         robotIdentifier = Unsigned.toUnsigned(origin.teamNum) + "," + origin.playerNum;
 
-        buf.rewind();
-        buf.order(ByteOrder.LITTLE_ENDIAN);
-
         // read header
-        timestamp = Unsigned.toUnsigned(buf.getInt());
-        ballTimeWhenLastSeen = Unsigned.toUnsigned(buf.getInt());
-        ballTimeWhenDisappeared = Unsigned.toUnsigned(buf.getInt());
-        ballLastPerceptX = buf.getShort();
-        ballLastPerceptY = buf.getShort();
-        ballCovariance = new float[]{buf.getFloat(), buf.getFloat(), buf.getFloat()};
-        robotPoseDeviation = buf.getFloat();
-        robotPoseCovariance = new float[]{
-            buf.getFloat(), buf.getFloat(), buf.getFloat(),
-            buf.getFloat(), buf.getFloat(), buf.getFloat()};
-        robotPoseValidity = Unsigned.toUnsigned(buf.get());
-        magicNumber = buf.get();
-
         usedSize = Unsigned.toUnsigned(buf.getInt());
         numberOfMessages = buf.getInt();
 
         // read messages
+        final short teamNumber = Unsigned.toUnsigned(origin.teamNum);
+        if (!messageIds.containsKey(teamNumber)) {
+            messageIds.put(teamNumber, parseMessageIDs(teamNumber));
+        }
+        if (!classes.containsKey(teamNumber)) {
+            classes.put(teamNumber, generateClasses(messageIds.get(teamNumber)));
+        }
         while (buf.hasRemaining()) {
             final short idIndex = Unsigned.toUnsigned(buf.get());
             final int size = Unsigned.toUnsigned(buf.get()) | (Unsigned.toUnsigned(buf.get()) << 8) | (Unsigned.toUnsigned(buf.get()) << 16);
             final byte[] data = new byte[size];
             buf.get(data);
-            final Message<? extends Message> msg = Message.factory(idIndex, Unsigned.toUnsigned(origin.teamNum), ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
+            messageNames.add(messageIds.get(teamNumber).get(idIndex));
+            final Message<? extends Message> msg = createMessage(idIndex, classes.get(teamNumber), ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
             if (msg != null) {
                 messages.put(msg.getClass(), msg);
             }
         }
     }
 
-    /**
-     * Returns the timestamp value from the MessageQueue header.
-     *
-     * @return timestamp
-     */
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     * Returns the ballTimeWhenLastSeen value from the MessageQueue header.
-     *
-     * @return ballTimeWhenLastSeen
-     */
-    public long getBallTimeWhenLastSeen() {
-        return ballTimeWhenLastSeen;
-    }
-
-    /**
-     * Returns the ballTimeWhenDisappeared value from the MessageQueue header.
-     *
-     * @return ballTimeWhenDisappeared
-     */
-    public long getBallTimeWhenDisappeared() {
-        return ballTimeWhenDisappeared;
-    }
-
-    /**
-     * Returns the ballLastPerceptX value from the MessageQueue header.
-     *
-     * @return ballLastPerceptX
-     */
-    public short getBallLastPerceptX() {
-        return ballLastPerceptX;
-    }
-
-    /**
-     * Returns the ballLastPerceptY value from the MessageQueue header.
-     *
-     * @return ballLastPerceptY
-     */
-    public short getBallLastPerceptY() {
-        return ballLastPerceptY;
-    }
-
-    /**
-     * Returns the ballCovariance value from the MessageQueue header.
-     *
-     * @return ballCovariance
-     */
-    public float[] getBallCovariance() {
-        return ballCovariance;
-    }
-
-    /**
-     * Returns the robotPoseDeviation value from the MessageQueue header.
-     *
-     * @return robotPoseDeviation
-     */
-    public float getRobotPoseDeviation() {
-        return robotPoseDeviation;
-    }
-
-    /**
-     * Returns the robotPoseCovariance value from the MessageQueue header.
-     *
-     * @return robotPoseCovariance
-     */
-    public float[] getRobotPoseCovariance() {
-        return robotPoseCovariance;
-    }
-
-    /**
-     * Returns the robotPoseValidity value from the MessageQueue header.
-     *
-     * @return robotPoseValidity
-     */
-    public short getRobotPoseValidity() {
-        return robotPoseValidity;
-    }
-
-    /**
-     * Returns the magicNumber value from the MessageQueue header.
-     *
-     * @return magicNumber
-     */
-    public byte getMagicNumber() {
-        return magicNumber;
+    public Set<String> getMessageNames() {
+        return messageNames;
     }
 
     /**
@@ -220,5 +136,89 @@ public class MessageQueue {
         }
 
         return message;
+    }
+
+    private static List<Class<? extends Message>> generateClasses(final List<String> msgIds) {
+        final List<Class<? extends Message>> teamClasses = new ArrayList<>(256);
+        for (int i = 0; i < 256; i++) {
+            teamClasses.add(null);
+        }
+        for (int i = 0; i < msgIds.size(); i++) {
+            try {
+                final Class<? extends Message> cls = Class.forName("bhuman.message.messages." + msgIds.get(i)).asSubclass(Message.class);
+
+                if (Message.class.isAssignableFrom(cls)) {
+                    teamClasses.set(i, cls);
+                }
+            } catch (ClassNotFoundException ex) {
+            }
+        }
+        return teamClasses;
+    }
+
+    private static List<String> parseMessageIDs(final short teamNumber) {
+        final List<String> msgIds = new ArrayList<>();
+        File messageIDsPath;
+        try {
+            messageIDsPath = new File(new BufferedReader(new FileReader("plugins/" + (teamNumber < 10 ? "0" + teamNumber : String.valueOf(teamNumber)) + "/" + CONFIG_FILE)).readLine(), MESSAGEIDS_H);
+        } catch (final FileNotFoundException ex) {
+            // Config file not found: use MessageIDs.h from the plugin dir
+            messageIDsPath = new File("plugins/" + (teamNumber < 10 ? "0" + teamNumber : String.valueOf(teamNumber)) + "/" + MESSAGEIDS_H_PLUGIN);
+        } catch (final IOException ex) {
+            Log.error("B-Human source path could not be read from " + CONFIG_FILE + ".");
+            messageIDsPath = new File("plugins/" + (teamNumber < 10 ? "0" + teamNumber : String.valueOf(teamNumber)) + "/" + MESSAGEIDS_H_PLUGIN);
+        }
+
+        try (final BufferedReader messageIDs_h = new BufferedReader(new FileReader(messageIDsPath))) {
+            while (!messageIDs_h.readLine().trim().startsWith("GLOBAL_ENUM(MessageID,")) {
+            }
+            String line = messageIDs_h.readLine().trim();
+            while (!line.startsWith("});")) {
+                if (!line.isEmpty() && !line.startsWith("//") && !line.startsWith("numOf")) {
+                    final String[] split = line.split("=", 2);
+                    final char start = split[0].charAt(0);
+                    if (start != '{' && start != ',') {
+                        msgIds.add(split[0].split(",", 2)[0].substring(2));
+                    }
+                }
+
+                line = messageIDs_h.readLine().trim();
+            }
+        } catch (IOException | NullPointerException ex) {
+            Log.error("Error while parsing MessageIDs from file " + messageIDsPath + ": " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+        }
+
+        return msgIds;
+    }
+
+    /**
+     * Creates the appropriate message for the given MessageID and raw data.
+     *
+     * @param messageId identifier of the message
+     * @param teamNumber team number of the message: used for locating the
+     * plugin dir
+     * @param data raw data of the message
+     * @return message or null if an error occurred
+     */
+    @SuppressWarnings("unchecked")
+    private Message<? extends Message> createMessage(final short messageId, final List<Class<? extends Message>> classes, final ByteBuffer data) {
+        // Instantiate the message class that fits the MessageID
+        final Class<? extends Message> cls = classes.get(messageId);
+        if (cls != null) {
+            try {
+                final Message cachedInst = getCachedMessage(cls);
+                final Message inst = cachedInst != null ? cachedInst : cls.newInstance();
+                final int streamedSize = SimpleStreamReader.class.isInstance(inst) ? SimpleStreamReader.class.cast(inst).getStreamedSize() : ComplexStreamReader.class.cast(inst).getStreamedSize(data);
+                if (data.remaining() != streamedSize && streamedSize != -1) {
+                    Log.error("Wrong size of " + messageIds.get(messageId) + " message: expected " + streamedSize + ", was " + data.remaining());
+                    return null;
+                }
+                return (Message<? extends Message>) inst.read(data);
+            } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException ex) {
+                Log.error(ex.toString());
+            }
+        }
+
+        return null;
     }
 }

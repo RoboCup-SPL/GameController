@@ -2,28 +2,31 @@ package bhuman.message.data;
 
 import common.Log;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import util.Unsigned;
 
 /**
- * StreamReader class for reading fixed-size arrays of streamed objects.
+ * StreamReader class for reading lists streamable objects.
  *
  * @author Felix Thielke
  * @param <T> type of objects stored in the arrays to read
  */
-public class ArrayReader<T> implements ComplexStreamReader<T[]> {
+public class ListReader<T> implements ComplexStreamReader<List<T>> {
 
     private final StreamReader<T> reader;
     private final Class<? extends StreamReader<T>> readerClass;
-    private final T[] array;
+    private final int listCountSize;
 
     /**
      * Constructor.
      *
      * @param reader object to use to read the elements
      */
-    public ArrayReader(final StreamReader<T> reader, final T[] array) {
+    public ListReader(final StreamReader<T> reader, final int listCountSize) {
         this.reader = reader;
         readerClass = null;
-        this.array = array;
+        this.listCountSize = listCountSize;
     }
 
     /**
@@ -32,48 +35,72 @@ public class ArrayReader<T> implements ComplexStreamReader<T[]> {
      *
      * @param cls class of objects to use to read the elements
      */
-    public ArrayReader(final Class<? extends StreamReader<T>> cls, final T[] array) {
+    public ListReader(final Class<? extends StreamReader<T>> cls, final int listCountSize) {
         reader = null;
         readerClass = cls;
-        this.array = array;
+        this.listCountSize = listCountSize;
+    }
+
+    /**
+     * Returns the count of elements in the given streamed array.
+     *
+     * @param stream stream
+     * @return count
+     */
+    public int getElementCount(final ByteBuffer stream) {
+        switch (listCountSize) {
+            case 1:
+                return Unsigned.toUnsigned(stream.get(stream.position()));
+            case 2:
+                return Unsigned.toUnsigned(stream.getShort(stream.position()));
+            case 4:
+                return stream.getInt(stream.position());
+            default:
+                Log.error("List count size " + listCountSize + " is not allowed!");
+                return 0;
+        }
     }
 
     @Override
-    public T[] read(final ByteBuffer stream) {
-        for (int i = 0; i < array.length; i++) {
+    public List<T> read(final ByteBuffer stream) {
+        final int count = getElementCount(stream);
+        stream.position(stream.position() + listCountSize);
+        final ArrayList<T> elems = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
             if (reader != null) {
-                array[i] = reader.read(stream);
+                elems.add(reader.read(stream));
             } else {
                 try {
-                    array[i] = readerClass.newInstance().read(stream);
+                    elems.add(readerClass.newInstance().read(stream));
                 } catch (InstantiationException | IllegalAccessException ex) {
-                    Log.error("Failed to instantiate reader class " + readerClass.getName());
                 }
             }
         }
-        return array;
+        return elems;
     }
 
     @Override
     public int getStreamedSize(final ByteBuffer stream) {
+        final int count = getElementCount(stream);
         try {
             if (reader != null && SimpleStreamReader.class.isInstance(reader)) {
-                return array.length * ((SimpleStreamReader<T>) reader).getStreamedSize();
+                return count * ((SimpleStreamReader<T>) reader).getStreamedSize();
             } else if (readerClass != null && SimpleStreamReader.class.isAssignableFrom(readerClass)) {
-                return array.length * ((SimpleStreamReader<T>) readerClass.newInstance()).getStreamedSize();
+                return count * ((SimpleStreamReader<T>) readerClass.newInstance()).getStreamedSize();
             }
 
             final ComplexStreamReader<T> reader = (ComplexStreamReader<T>) (this.reader != null ? this.reader : readerClass.newInstance());
             if (StreamedObject.class.isInstance(reader) && StreamedObject.class.cast(reader).isSimpleStreamReader()) {
-                return array.length * reader.getStreamedSize(stream);
+                return count * reader.getStreamedSize(stream);
             }
 
             final int position = stream.position();
+            stream.position(stream.position() + listCountSize);
             int size = 0;
-            for (int i = 0; i < array.length; i++) {
+            for (int i = 0; i < count; i++) {
                 final int elemSize = reader.getStreamedSize(stream);
                 size += elemSize;
-                if (i < array.length - 1) {
+                if (i < count - 1) {
                     if (elemSize > stream.remaining()) {
                         stream.position(position);
                         return size + elemSize;
@@ -86,16 +113,6 @@ public class ArrayReader<T> implements ComplexStreamReader<T[]> {
         } catch (InstantiationException | IllegalAccessException ex) {
             Log.error("Failed to instantiate reader class " + readerClass.getName());
             return 0;
-        }
-    }
-
-    public boolean isSimpleStreamReader() {
-        try {
-            return (reader != null && (SimpleStreamReader.class.isInstance(reader) || (StreamedObject.class.isInstance(reader) && StreamedObject.class.cast(reader).isSimpleStreamReader())))
-                    || (readerClass != null && (SimpleStreamReader.class.isAssignableFrom(readerClass) || (StreamedObject.class.isAssignableFrom(readerClass) && StreamedObject.class.cast(readerClass.newInstance()).isSimpleStreamReader())));
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Log.error("Failed to instantiate reader class " + readerClass.getName());
-            return false;
         }
     }
 

@@ -63,11 +63,11 @@ public abstract class NativeReaders {
     public static final SimpleStreamReader<Double> doubleReader = new DoubleReader();
 
     /**
-     * StreamReader for strings.
+     * ComplexStreamReader for strings.
      */
     public static final StringReader stringReader = new StringReader();
 
-    private static class BoolReader implements SimpleStreamReader<Boolean> {
+    public static class BoolReader implements SimpleStreamReader<Boolean> {
 
         @Override
         public int getStreamedSize() {
@@ -81,7 +81,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class CharReader implements SimpleStreamReader<Character> {
+    public static class CharReader implements SimpleStreamReader<Character> {
 
         @Override
         public int getStreamedSize() {
@@ -95,7 +95,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class SCharReader implements SimpleStreamReader<Byte> {
+    public static class SCharReader implements SimpleStreamReader<Byte> {
 
         @Override
         public int getStreamedSize() {
@@ -109,7 +109,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class UCharReader implements SimpleStreamReader<Short> {
+    public static class UCharReader implements SimpleStreamReader<Short> {
 
         @Override
         public int getStreamedSize() {
@@ -123,7 +123,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class ShortReader implements SimpleStreamReader<Short> {
+    public static class ShortReader implements SimpleStreamReader<Short> {
 
         @Override
         public int getStreamedSize() {
@@ -137,7 +137,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class UShortReader implements SimpleStreamReader<Integer> {
+    public static class UShortReader implements SimpleStreamReader<Integer> {
 
         @Override
         public int getStreamedSize() {
@@ -151,7 +151,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class IntReader implements SimpleStreamReader<Integer> {
+    public static class IntReader implements SimpleStreamReader<Integer> {
 
         @Override
         public int getStreamedSize() {
@@ -165,7 +165,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class UIntReader implements SimpleStreamReader<Long> {
+    public static class UIntReader implements SimpleStreamReader<Long> {
 
         @Override
         public int getStreamedSize() {
@@ -179,7 +179,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class FloatReader implements SimpleStreamReader<Float> {
+    public static class FloatReader implements SimpleStreamReader<Float> {
 
         @Override
         public int getStreamedSize() {
@@ -193,7 +193,7 @@ public abstract class NativeReaders {
 
     }
 
-    private static class DoubleReader implements SimpleStreamReader<Double> {
+    public static class DoubleReader implements SimpleStreamReader<Double> {
 
         @Override
         public int getStreamedSize() {
@@ -210,12 +210,13 @@ public abstract class NativeReaders {
     /**
      * StreamReader for strings.
      */
-    public static class StringReader implements StreamReader<String> {
+    public static class StringReader implements ComplexStreamReader<String> {
 
         public int getStreamedSize() {
             return -1;
         }
 
+        @Override
         public int getStreamedSize(final ByteBuffer stream) {
             return 4 + getLength(stream);
         }
