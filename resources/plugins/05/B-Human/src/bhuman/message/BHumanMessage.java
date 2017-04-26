@@ -49,9 +49,10 @@ public class BHumanMessage extends AdvancedMessage {
             }
 
             if (message.queue != null) {
+                display.add(DISPLAY_NEXT_COLUMN);
                 display.add("MessageQueue:");
                 for (final String name : message.queue.getMessageNames()) {
-                    display.add(" " + name);
+                    display.add("* " + name);
                 }
             }
         }

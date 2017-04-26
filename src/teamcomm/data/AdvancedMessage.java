@@ -11,6 +11,8 @@ public abstract class AdvancedMessage extends SPLStandardMessage {
 
     private static final long serialVersionUID = 5893551586737053344L;
 
+    public static final String DISPLAY_NEXT_COLUMN = "<NEXT_COLUMN>";
+
     /**
      * Returns an array of strings containing info from the message which should
      * be displayed in the detail window of the sending robots. Each string is

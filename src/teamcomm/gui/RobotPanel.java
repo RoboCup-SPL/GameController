@@ -39,7 +39,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
      */
     public static final int PANEL_HEIGHT = 105;
 
-    private static final double MPS_LEGAL_THRESHOLD = 5.25;
+    public static final double MPS_LEGAL_THRESHOLD = 5.25;
 
     private final RobotState robot;
     private final RobotDetailFrame detailFrame;
@@ -89,11 +89,11 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
                 foregroundContainer.setLayout(foregroundContainerLayout);
                 foregroundContainerLayout.setHorizontalGroup(
                         foregroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(foregroundPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_WIDTH, Short.MAX_VALUE)
+                                .addComponent(foregroundPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_WIDTH, Short.MAX_VALUE)
                 );
                 foregroundContainerLayout.setVerticalGroup(
                         foregroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(foregroundPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_HEIGHT, Short.MAX_VALUE)
+                                .addComponent(foregroundPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_HEIGHT, Short.MAX_VALUE)
                 );
                 add(foregroundContainer);
 
@@ -104,15 +104,15 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
                 backgroundContainer.setLayout(backgroundContainerLayout);
                 backgroundContainerLayout.setHorizontalGroup(
                         backgroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, backgroundContainerLayout.createSequentialGroup()
-                                .addGap(0, 220, Short.MAX_VALUE)
-                                .addComponent(connectionStatus))
+                                .addGroup(GroupLayout.Alignment.TRAILING, backgroundContainerLayout.createSequentialGroup()
+                                        .addGap(0, 220, Short.MAX_VALUE)
+                                        .addComponent(connectionStatus))
                 );
                 backgroundContainerLayout.setVerticalGroup(
                         backgroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(backgroundContainerLayout.createSequentialGroup()
-                                .addComponent(connectionStatus)
-                                .addGap(0, 181, Short.MAX_VALUE))
+                                .addGroup(backgroundContainerLayout.createSequentialGroup()
+                                        .addComponent(connectionStatus)
+                                        .addGap(0, 181, Short.MAX_VALUE))
                 );
                 add(backgroundContainer);
 
@@ -122,11 +122,11 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
                 backbackgroundContainer.setLayout(backbackgroundContainerLayout);
                 backbackgroundContainerLayout.setHorizontalGroup(
                         backbackgroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(teamLogo, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_WIDTH, Short.MAX_VALUE)
+                                .addComponent(teamLogo, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_WIDTH, Short.MAX_VALUE)
                 );
                 backbackgroundContainerLayout.setVerticalGroup(
                         backbackgroundContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(teamLogo, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_HEIGHT, Short.MAX_VALUE)
+                                .addComponent(teamLogo, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, PANEL_HEIGHT, Short.MAX_VALUE)
                 );
                 add(backbackgroundContainer);
 

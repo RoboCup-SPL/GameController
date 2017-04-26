@@ -2,8 +2,6 @@ package teamcomm.gui;
 
 import common.Log;
 import data.SPLStandardMessage;
-import java.awt.Color;
-import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
@@ -12,7 +10,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import teamcomm.data.AdvancedMessage;
 import teamcomm.data.GameState;
@@ -30,9 +31,9 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
     private static final long serialVersionUID = 4709653396291218508L;
 
     private final RobotState robot;
-    private final JPanel leftPanel = new JPanel();
-    private final JPanel rightPanel = new JPanel();
-    private final Color defaultColor = new JLabel("test").getForeground();
+    private final JLabel topLabel = new JLabel("", SwingConstants.CENTER);
+    private final JPanel infoContainer = new JPanel();
+    private final Border labelBorder = new EmptyBorder(0, 4, 4, 4);
 
     /**
      * Constructor.
@@ -68,21 +69,25 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
                 final JPanel contentPane = new JPanel();
                 setContentPane(contentPane);
 
-                contentPane.setLayout(new GridLayout(1, 2, 0, 5));
-                contentPane.add(leftPanel);
+                contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new JLabel("test").getForeground()), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
 
-                contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(defaultColor), robot.getAddress(), TitledBorder.CENTER, TitledBorder.TOP));
+                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
-                leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-                rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+                final JPanel topPanel = new JPanel();
+                topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+                topPanel.add(topLabel);
+                topPanel.setBorder(new EmptyBorder(0, 0, 10, 0));
+                contentPane.add(topPanel);
 
-                for (int i = 0; i < 23; i++) {
-                    leftPanel.add(new JLabel(" ", JLabel.LEFT));
-                }
+                infoContainer.setLayout(new BoxLayout(infoContainer, BoxLayout.X_AXIS));
+                final JLabel infoLabel = new JLabel("", SwingConstants.LEFT);
+                infoLabel.setBorder(labelBorder);
+                infoLabel.setAlignmentY(TOP_ALIGNMENT);
+                infoContainer.add(infoLabel);
+                contentPane.add(infoContainer);
 
                 update();
 
-                pack();
                 setResizable(false);
 
                 robot.addListener(listener);
@@ -122,161 +127,199 @@ public class RobotDetailFrame extends JFrame implements RobotStateEventListener 
      */
     private void update() {
         final SPLStandardMessage msg = robot.getLastMessage();
-        if (msg != null) {
-            final DecimalFormat df = new DecimalFormat("#.#####");
-            if (!msg.teamNumValid || msg.teamNum != robot.getTeamNumber()) {
-                ((JLabel) leftPanel.getComponent(0)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(0)).setText("Invalid team no: " + msg.teamNum);
-            } else {
-                ((JLabel) leftPanel.getComponent(0)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(0)).setText(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
-            }
-            if (robot.getPlayerNumber() == null || !msg.playerNumValid) {
-                ((JLabel) leftPanel.getComponent(1)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + msg.playerNum);
-            } else {
-                ((JLabel) leftPanel.getComponent(1)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(1)).setText("Player no: " + robot.getPlayerNumber());
-            }
-            ((JLabel) leftPanel.getComponent(2)).setText("Messages: " + robot.getMessageCount());
-            ((JLabel) leftPanel.getComponent(3)).setText("Per second: " + df.format(robot.getMessagesPerSecond()));
-            if (!msg.valid) {
-                ((JLabel) leftPanel.getComponent(4)).setForeground(Color.red);
-            }
-            ((JLabel) leftPanel.getComponent(4)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
-            if (msg.fallenValid) {
-                ((JLabel) leftPanel.getComponent(6)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(6)).setText(msg.fallen ? "fallen" : "upright");
-            } else {
-                ((JLabel) leftPanel.getComponent(6)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(6)).setText("unknown state");
-            }
-            if (msg.intentionValid) {
-                ((JLabel) leftPanel.getComponent(7)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(7)).setText("Activity: " + msg.intention.toString());
-            } else {
-                ((JLabel) leftPanel.getComponent(7)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(7)).setText("Activity: ?");
-            }
-            ((JLabel) leftPanel.getComponent(9)).setText("Confidence:");
-            if (msg.currentPositionConfidenceValid) {
-                ((JLabel) leftPanel.getComponent(10)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(10)).setText("Position: " + msg.currentPositionConfidence + "%");
-            } else {
-                ((JLabel) leftPanel.getComponent(10)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(10)).setText("Position: " + msg.currentPositionConfidence);
-            }
-            if (msg.currentSideConfidenceValid) {
-                ((JLabel) leftPanel.getComponent(11)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(11)).setText("Side: " + msg.currentSideConfidence + "%");
-            } else {
-                ((JLabel) leftPanel.getComponent(11)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(11)).setText("Side: " + msg.currentSideConfidence);
-            }
-            if (msg.averageWalkSpeedValid) {
-                ((JLabel) leftPanel.getComponent(13)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(13)).setText("Avg. walk speed: " + msg.averageWalkSpeed + "mm/s");
-            } else {
-                ((JLabel) leftPanel.getComponent(13)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(13)).setText("Avg. walk speed: " + msg.averageWalkSpeed);
-            }
-            if (msg.maxKickDistanceValid) {
-                ((JLabel) leftPanel.getComponent(14)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(14)).setText("Max. kick distance: " + msg.maxKickDistance + "mm");
-            } else {
-                ((JLabel) leftPanel.getComponent(14)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(14)).setText("Max. kick distance: " + msg.maxKickDistance);
-            }
-
-            for (int i = 0; i < 5; i++) {
-                if (msg.suggestionValid[i]) {
-                    ((JLabel) leftPanel.getComponent(16 + i)).setForeground(defaultColor);
-                    ((JLabel) leftPanel.getComponent(16 + i)).setText("Suggestion " + (i + 1) + ": " + msg.suggestion[i].toString());
-                } else {
-                    ((JLabel) leftPanel.getComponent(16 + i)).setForeground(Color.red);
-                    ((JLabel) leftPanel.getComponent(16 + i)).setText("Suggestion " + (i + 1) + ": ?");
-                }
-            }
-
-            if (msg.dataValid) {
-                ((JLabel) leftPanel.getComponent(22)).setForeground(defaultColor);
-                ((JLabel) leftPanel.getComponent(22)).setText("Additional data: " + msg.data.length + "B (" + (msg.data.length * 100 / SPLStandardMessage.SPL_STANDARD_MESSAGE_DATA_SIZE) + "%)");
-            } else {
-                ((JLabel) leftPanel.getComponent(22)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(22)).setText("Additional data: " + msg.nominalDataBytes + "B");
-            }
-
-            if (!msg.poseValid) {
-                while (leftPanel.getComponentCount() < 24) {
-                    leftPanel.add(new JLabel(" ", JLabel.LEFT));
-                }
-                ((JLabel) leftPanel.getComponent(23)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(23)).setText("Invalid pose: x" + df.format(msg.pose[0]) + " y" + df.format(msg.pose[1]) + " t" + df.format(msg.pose[2]));
-            }
-
-            if (!msg.walkingToValid) {
-                while (leftPanel.getComponentCount() < 25) {
-                    leftPanel.add(new JLabel(" ", JLabel.LEFT));
-                }
-                ((JLabel) leftPanel.getComponent(24)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(24)).setText("Invalid walking target: x" + df.format(msg.walkingTo[0]) + " y" + df.format(msg.walkingTo[1]));
-            }
-
-            if (!msg.shootingToValid) {
-                while (leftPanel.getComponentCount() < 26) {
-                    leftPanel.add(new JLabel(" ", JLabel.LEFT));
-                }
-                ((JLabel) leftPanel.getComponent(25)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(25)).setText("Invalid shooting target: x" + df.format(msg.shootingTo[0]) + " y" + df.format(msg.shootingTo[1]));
-            }
-
-            if (!msg.ballValid) {
-                while (leftPanel.getComponentCount() < 26) {
-                    leftPanel.add(new JLabel(" ", JLabel.LEFT));
-                }
-                ((JLabel) leftPanel.getComponent(25)).setForeground(Color.red);
-                ((JLabel) leftPanel.getComponent(25)).setText("Invalid ball data: age " + msg.ballAge + " x" + msg.ball[0] + "/" + msg.ballVel[0] + " y" + msg.ball[1] + "/" + msg.ballVel[1]);
-            }
+        if (msg == null) {
+            return;
         }
 
+        final DecimalFormat df = new DecimalFormat("#.00000");
+
+        // Top label
+        final StringBuilder sb = new StringBuilder("<html>");
+        if (!msg.teamNumValid || msg.teamNum != robot.getTeamNumber()) {
+            sb.append("<font color='red'>Invalid team no: ").append(msg.teamNum).append("</font>");
+        } else {
+            sb.append(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
+        }
+        sb.append("<br/>");
+        if (robot.getPlayerNumber() == null || !msg.playerNumValid) {
+            sb.append("<font color='red'>Player no: ").append(msg.playerNum).append("</font>");
+        } else {
+            sb.append("Player no: ").append(robot.getPlayerNumber());
+        }
+        sb.append("<br/>")
+                .append("Messages: ").append(robot.getMessageCount())
+                .append("<br/>");
+        final double mps = robot.getMessagesPerSecond();
+        if (mps > RobotPanel.MPS_LEGAL_THRESHOLD) {
+            sb.append("<font color='red'>");
+        }
+        sb.append("Per second: ").append(df.format(mps));
+        if (mps > RobotPanel.MPS_LEGAL_THRESHOLD) {
+            sb.append("</font>");
+        }
+        sb.append("<br/>");
+        if (!msg.valid) {
+            sb.append("<font color='red'>");
+        }
+        sb.append("Illegal: ").append(robot.getIllegalMessageCount()).append(" (").append(Math.round(robot.getIllegalMessageRatio() * 100.0)).append("%)");
+        if (!msg.valid) {
+            sb.append("</font>");
+        }
+        sb.append("</html>");
+        topLabel.setText(sb.toString());
+
+        // Left label
+        sb.setLength(6);
+        if (msg.fallenValid) {
+            sb.append(msg.fallen ? "fallen" : "upright");
+        } else {
+            sb.append("<font color='red'>unknown state</font>");
+        }
+        sb.append("<br/>");
+        if (msg.intentionValid) {
+            sb.append("Activity: ").append(msg.intention.toString());
+        } else {
+            sb.append("<font color='red'>Activity: ?</font>");
+        }
+        sb.append("<br/><br/>Confidence:<br/>");
+        if (msg.currentPositionConfidenceValid) {
+            sb.append("Position: ").append(msg.currentPositionConfidence).append("%");
+        } else {
+            sb.append("<font color='red'>Position: ").append(msg.currentPositionConfidence).append("%</font>");
+        }
+        sb.append("<br/>");
+        if (msg.currentSideConfidenceValid) {
+            sb.append("Side: ").append(msg.currentSideConfidence).append("%");
+        } else {
+            sb.append("<font color='red'>Side: ").append(msg.currentSideConfidence).append("%</font>");
+        }
+        sb.append("<br/><br/>");
+        if (msg.averageWalkSpeedValid) {
+            sb.append("Avg. walk speed: ").append(msg.averageWalkSpeed).append("mm/s");
+        } else {
+            sb.append("<font color='red'>Avg. walk speed: ").append(msg.averageWalkSpeed).append("mm/s</font>");
+        }
+        sb.append("<br/>");
+        if (msg.maxKickDistanceValid) {
+            sb.append("Max. kick distance: ").append(msg.maxKickDistance).append("mm");
+        } else {
+            sb.append("<font color='red'>Max. kick distance: ").append(msg.maxKickDistance).append("mm</font>");
+        }
+        sb.append("<br/><br/>");
+        for (int i = 0; i < 5; i++) {
+            if (msg.suggestionValid[i]) {
+                sb.append("Suggestion ").append(i + 1).append(": ").append(msg.suggestion[i].toString());
+            } else {
+                sb.append("<font color='red'>Suggestion ").append(i + 1).append(": ?</font>");
+            }
+            sb.append("<br/>");
+        }
+        sb.append("<br/>");
+        if (msg.dataValid) {
+            sb.append("Additional data: ").append(msg.data.length).append("B (").append(msg.data.length * 100 / SPLStandardMessage.SPL_STANDARD_MESSAGE_DATA_SIZE).append("%)");
+        } else {
+            sb.append("<font color='red'>Additional data: ").append(msg.nominalDataBytes).append("B</font>");
+        }
+
+        boolean additionalLine = false;
+
+        if (!msg.poseValid) {
+            if (!additionalLine) {
+                sb.append("<br/>");
+                additionalLine = true;
+            }
+            sb.append("<br/><font color='red'>Invalid pose: x").append(df.format(msg.pose[0])).append(" y").append(df.format(msg.pose[1])).append(" t").append(df.format(msg.pose[2])).append("</font>");
+        }
+
+        if (!msg.walkingToValid) {
+            if (!additionalLine) {
+                sb.append("<br/>");
+                additionalLine = true;
+            }
+            sb.append("<br/><font color='red'>Invalid walking target: x").append(df.format(msg.walkingTo[0])).append(" y").append(df.format(msg.walkingTo[1])).append("</font>");
+        }
+
+        if (!msg.shootingToValid) {
+            if (!additionalLine) {
+                sb.append("<br/>");
+                additionalLine = true;
+            }
+            sb.append("<br/><font color='red'>Invalid shooting target: x").append(df.format(msg.shootingTo[0])).append(" y").append(df.format(msg.shootingTo[1])).append("</font>");
+        }
+
+        if (!msg.ballValid) {
+            if (!additionalLine) {
+                sb.append("<br/>");
+            }
+            sb.append("<br/><font color='red'>Invalid ball data: age ").append(msg.ballAge).append(" x").append(msg.ball[0]).append("/").append(msg.ballVel[0]).append(" y").append(msg.ball[1]).append("/").append(msg.ballVel[1]).append("</font>");
+        }
+        sb.append("</html>");
+        ((JLabel) infoContainer.getComponent(0)).setText(sb.toString());
+
+        final String[] data;
         if (msg instanceof AdvancedMessage) {
-            final String[] data;
             try {
                 data = ((AdvancedMessage) msg).display();
             } catch (final Throwable e) {
                 Log.error(e.getClass().getSimpleName() + " was thrown while displaying custom message data from " + msg.getClass().getSimpleName() + ": " + e.getMessage());
                 return;
             }
-            if (data != null && data.length != 0) {
-                while (rightPanel.getComponentCount() < data.length + 6) {
-                    rightPanel.add(new JLabel(" ", JLabel.LEFT));
-                }
-                while (rightPanel.getComponentCount() > data.length + 6) {
-                    rightPanel.remove(rightPanel.getComponentCount() - 1);
-                }
-
-                for (int i = 0; i < data.length; i++) {
-                    if (data[i] != null) {
-                        if (data[i].isEmpty()) {
-                            ((JLabel) rightPanel.getComponent(i + 6)).setText(" ");
-                        } else {
-                            ((JLabel) rightPanel.getComponent(i + 6)).setText(data[i]);
-                        }
-                    }
-                }
-
-                if (getContentPane().getComponentCount() == 1) {
-                    getContentPane().add(rightPanel);
-                    pack();
-                }
-            } else if (getContentPane().getComponentCount() == 2) {
-                getContentPane().remove(rightPanel);
-                pack();
-            }
-        } else if (getContentPane().getComponentCount() == 2) {
-            getContentPane().remove(rightPanel);
-            pack();
+        } else {
+            data = null;
         }
+        if (data != null && data.length != 0) {
+            int column = 1;
+            boolean firstRow = true;
+            boolean contentInCurrentRow = false;
+
+            sb.setLength(6);
+            for (final String row : data) {
+                if (firstRow) {
+                    firstRow = false;
+                } else {
+                    sb.append("<br/>");
+                }
+
+                if (row.equals(AdvancedMessage.DISPLAY_NEXT_COLUMN)) {
+                    if (contentInCurrentRow) {
+                        if (infoContainer.getComponentCount() == column) {
+                            final JLabel newColumn = new JLabel("", SwingConstants.LEFT);
+                            newColumn.setAlignmentY(TOP_ALIGNMENT);
+                            newColumn.setBorder(labelBorder);
+                            infoContainer.add(newColumn);
+                        }
+                        ((JLabel) infoContainer.getComponent(column)).setText(sb.toString());
+                        column++;
+                        firstRow = true;
+                        contentInCurrentRow = false;
+                        sb.setLength(6);
+                    }
+                } else if (row.length() > 0) {
+                    sb.append(row);
+                    contentInCurrentRow = true;
+                }
+            }
+            if (contentInCurrentRow) {
+                if (infoContainer.getComponentCount() == column) {
+                    final JLabel newColumn = new JLabel("", JLabel.LEFT);
+                    newColumn.setAlignmentY(TOP_ALIGNMENT);
+                    newColumn.setBorder(labelBorder);
+                    infoContainer.add(newColumn);
+                }
+                ((JLabel) infoContainer.getComponent(column)).setText(sb.toString());
+                column++;
+            }
+
+            while (infoContainer.getComponentCount() > column) {
+                infoContainer.remove(column);
+            }
+        } else {
+            while (infoContainer.getComponentCount() > 1) {
+                infoContainer.remove(1);
+            }
+        }
+
+        pack();
     }
 
     @Override
