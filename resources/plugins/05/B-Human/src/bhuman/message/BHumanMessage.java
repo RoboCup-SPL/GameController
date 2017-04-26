@@ -3,6 +3,7 @@ package bhuman.message;
 import bhuman.message.messages.BehaviorStatus;
 import bhuman.message.messages.RobotHealth;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 import teamcomm.data.AdvancedMessage;
@@ -25,6 +26,7 @@ public class BHumanMessage extends AdvancedMessage {
     public String[] display() {
         final List<String> display = new LinkedList<>();
         if (valid) {
+            final DecimalFormat df = new DecimalFormat("#.00");
             final RobotHealth health = message.queue == null ? null : message.queue.getCachedMessage(RobotHealth.class);
             final BehaviorStatus status = message.queue == null ? null : message.queue.getCachedMessage(BehaviorStatus.class);
 
@@ -32,17 +34,26 @@ public class BHumanMessage extends AdvancedMessage {
                 display.add(health.robotName);
                 display.add("Location: " + String.valueOf(health.location));
                 display.add("Configuration: " + health.configuration);
-            }
-            display.add("Magic: " + (message.bhuman == null ? "null" : message.bhuman.magicNumber));
-            if (health != null) {
                 display.add("Battery: " + health.batteryLevel + "%");
                 if (health.jointWithMaxTemperature != null) {
-                    display.add("Hottest joint: " + health.jointWithMaxTemperature.toString() + " (" + health.maxJointTemperature + "°C)");
+                    display.add("Hottest joint: " + health.jointWithMaxTemperature + " (" + health.maxJointTemperature + "°C)");
                 }
+                display.add("Avg. motion time: " + df.format(health.avgMotionTime));
+                display.add("Cognition fps: " + df.format(health.cognitionFrameRate));
                 display.add("");
             }
+
+            if (message.bhuman != null) {
+                display.add("Magic: " + message.bhuman.magicNumber);
+                display.add("");
+            }
+
             if (message.bhulks != null) {
                 display.add("Role: " + message.bhulks.currentlyPerfomingRole);
+                display.add("TimeToReachBall: " + (message.bhulks.timeWhenReachBall - message.bhulks.timestamp) + "ms");
+                display.add("TimeTillQueenReachesBall: " + (message.bhulks.timeWhenReachBallQueen - message.bhulks.timestamp) + "ms");
+                display.add("TimeSinceLastJumped: " + (message.bhulks.timestamp - message.bhulks.timestampLastJumped) + "ms");
+                display.add("HearingConfidence: " + message.bhulks.confidenceOfLastWhistleDetection);
             }
             if (status != null) {
                 display.add("Activity: " + status.activity);
@@ -62,17 +73,7 @@ public class BHumanMessage extends AdvancedMessage {
 
     @Override
     public void init() {
-        try {
-            message = new BHumanMessageParts(this, ByteBuffer.wrap(data));
-
-            // Update cached RobotHealth and BehaviorStatus
-            if (message.queue != null) {
-                message.queue.getCachedMessage(RobotHealth.class);
-                message.queue.getCachedMessage(BehaviorStatus.class);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        message = new BHumanMessageParts(this, ByteBuffer.wrap(data));
     }
 
 }

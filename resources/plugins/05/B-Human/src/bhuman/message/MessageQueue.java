@@ -50,6 +50,7 @@ public class MessageQueue {
      * @param origin SPLStandardMessage containing this MessageQueue
      * @param buf raw data of the transmitted MessageQueue
      */
+    @SuppressWarnings("unchecked")
     public MessageQueue(final SPLStandardMessage origin, final ByteBuffer buf) {
         robotIdentifier = Unsigned.toUnsigned(origin.teamNum) + "," + origin.playerNum;
 
@@ -74,6 +75,7 @@ public class MessageQueue {
             final Message<? extends Message> msg = createMessage(idIndex, messageIds.get(teamNumber).get(idIndex), classes.get(teamNumber), ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
             if (msg != null) {
                 messages.put(msg.getClass(), msg);
+                getCachedMessage(msg.getClass());
             }
         }
     }
