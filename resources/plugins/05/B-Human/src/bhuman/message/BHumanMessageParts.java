@@ -1,16 +1,18 @@
 package bhuman.message;
 
-import bhuman.message.data.ListCountSize;
+import bhuman.message.data.ComplexStreamReader;
 import bhuman.message.data.NativeReaders;
 import bhuman.message.data.Primitive;
-import bhuman.message.data.Reader;
-import bhuman.message.data.StreamReader;
+import bhuman.message.data.SimpleStreamReader;
 import bhuman.message.data.StreamedObject;
 import common.Log;
 import data.SPLStandardMessage;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import util.Unsigned;
 
 /**
  *
@@ -19,7 +21,7 @@ import java.util.List;
 public class BHumanMessageParts {
 
     private static final String BHULKS_STANDARD_MESSAGE_STRUCT_HEADER = "BHLK";
-    private static final short BHULKS_STANDARD_MESSAGE_STRUCT_VERSION = 7;
+    private static final short BHULKS_STANDARD_MESSAGE_STRUCT_VERSION = 8;
 
     private static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
     private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 3;
@@ -103,7 +105,7 @@ public class BHumanMessageParts {
         this.queue = q;
     }
 
-    public static class BHULKsStandardMessagePart extends StreamedObject<BHULKsStandardMessagePart> {
+    public static class BHULKsStandardMessagePart implements ComplexStreamReader<BHULKsStandardMessagePart> {
 
         private static final int BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS = 10;
 
@@ -133,27 +135,9 @@ public class BHumanMessageParts {
             HearingConfidence(final byte value) {
                 this.value = value;
             }
-
-            public static HearingConfidence getHearingConfidence(final byte i) {
-                for (final HearingConfidence v : values()) {
-                    if (v.value == i) {
-                        return v;
-                    }
-                }
-                return null;
-            }
         }
 
-        public static class HearingConfidenceReader implements StreamReader<HearingConfidence> {
-
-            @Override
-            public HearingConfidence read(final ByteBuffer stream) {
-                return HearingConfidence.getHearingConfidence(stream.get());
-            }
-
-        }
-
-        public static class Obstacle extends StreamedObject<Obstacle> {
+        public static class Obstacle implements SimpleStreamReader<Obstacle> {
 
             public static enum ObstacleType {
                 goalpost,
@@ -171,41 +155,55 @@ public class BHumanMessageParts {
             // - y goes to left
             public float[] center = new float[2];
 
-            @Primitive("uint")
             public long timestampLastSeen; //< the name says it
             public ObstacleType type;          //< the name says it
-            public byte[] padding = new byte[3];
 
+            private final long baseTimestamp;
+
+            public Obstacle(final long timestamp) {
+                baseTimestamp = timestamp;
+            }
+
+            @Override
+            public int getStreamedSize() {
+                return 5;
+            }
+
+            @Override
+            public Obstacle read(final ByteBuffer stream) {
+                final int center0Struct = Unsigned.toUnsigned(stream.getShort());
+                final int center1Struct = Unsigned.toUnsigned(stream.getShort());
+
+                center[0] = (float) (short) (center0Struct << 2);
+                center[1] = (float) (short) (center1Struct << 2);
+
+                type = ObstacleType.values()[((center0Struct & 0xC000) >> 12) | ((center1Struct & 0xC000) >> 14)];
+
+                timestampLastSeen = baseTimestamp - (Unsigned.toUnsigned(stream.get()) << 6);
+
+                return this;
+            }
         }
 
-        public static class BNTPMessage extends StreamedObject<BNTPMessage> {
+        public static class BNTPMessage {
 
-            @Primitive("uint")
             public long requestOrigination;  //< The timestamp of the generation of the request
-            @Primitive("uint")
             public long requestReceipt;      //< The timestamp of the receipt of the request
-            @Primitive("uchar")
             public short receiver;             //< The robot, to which this message should be sent
-            public byte[] padding = new byte[2];
         }
 
         public Team member;
 
-        @Primitive("uint")
         public long timestamp;  //< the timestamp of this message
 
         public boolean isUpright;               //< The name says it all
         public boolean hasGroundContact;        //< The name says it all
-        @Primitive("uint")
         public long timeOfLastGroundContact; //< The name says it all
 
         // is the robot penalized?
         // Theoretically the game controller say it too, but this is for better information
         // spreading in case of bad WLAN quality in combination with PENALTY_MANUAL.
         public boolean isPenalized;
-
-        // GameControlData is omitted
-        public byte[] gameControlData = new byte[9];
 
         // the current meassurement of head joint: HeadYaw
         public float headYawAngle;
@@ -224,14 +222,11 @@ public class BHumanMessageParts {
         public boolean kingIsPlayingBall;
 
         // does/means what it says
-        @Primitive("uint")
         public long timeWhenReachBall;
-        @Primitive("uint")
         public long timeWhenReachBallQueen;
 
         // timestamp, when the ball was recognized
         // this is theoretically equal to SPLStandardMessage::ballAge, BUT it allows us to "ntp" it.
-        @Primitive("uint")
         public long ballTimeWhenLastSeen;
 
         // the pass target's player number, filled by the current Queen
@@ -244,24 +239,117 @@ public class BHumanMessageParts {
         // timestamp of "last jumped"
         // - "last jumped" describes a situation, when the robots self localisation
         //   corrects for an bigger update than normal
-        @Primitive("uint")
         public long timestampLastJumped;
 
         // whistle recognition stuff
-        @Reader(HearingConfidenceReader.class)
         public HearingConfidence confidenceOfLastWhistleDetection; //< confidence based on hearing capability
-        @Primitive("uint")
         public long lastTimeWhistleDetected; //< timestamp
 
         // the obstacles from the private obstacle model
-        @ListCountSize(1)
         public List<Obstacle> obstacles;
 
         // is this robot requesting an ntp message?
         public boolean requestsNTPMessage;
         // all ntp-message this robot sends to his teammates in response to their requests
-        @ListCountSize(1)
         public List<BNTPMessage> ntpMessages;
+
+        @Override
+        public int getStreamedSize(final ByteBuffer stream) {
+            int size = 4 // timestamp
+                    + 1 // headYawAngle
+                    + 1 // timeOfLastGroundContact
+                    + 1 // timestampLastJumped
+                    + 2 // timeWhenReachBall
+                    + 2 // timeWhenReachBallQueen
+                    + 1 // ballTimeWhenLastSeen
+                    + 2 // whistle stuff
+                    + 9 // gameControlData
+                    + 4; // roleAssignments, currentlyPerfomingRole, passTarget
+
+            if (stream.remaining() < size) {
+                return size;
+            }
+
+            size += 1 + (Unsigned.toUnsigned(stream.get(stream.position() + size)) & 0x7) * new Obstacle(0).getStreamedSize(); // obstacles
+
+            if (stream.remaining() < size) {
+                return size;
+            }
+
+            int ntpReceivers = Unsigned.toUnsigned(stream.getShort(stream.position() + size)) & 0x3FF;
+            int ntpCount = 0;
+            while (ntpReceivers != 0) {
+                if ((ntpReceivers & 1) == 1) {
+                    ntpCount++;
+                }
+                ntpReceivers >>= 1;
+            }
+            return size
+                    + 2 // member, isUpright, hasGroundContact, isPenalized, kingIsPlayingBall, requestsNTPMessage, \/
+                    + ntpCount * 5;
+        }
+
+        @Override
+        public BHULKsStandardMessagePart read(final ByteBuffer stream) {
+            timestamp = Unsigned.toUnsigned(stream.getInt());
+
+            headYawAngle = (float) ((double) stream.get() * Math.PI / 180.0);
+
+            timeOfLastGroundContact = timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 6);
+            timestampLastJumped = timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 7);
+
+            timeWhenReachBall = timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3);
+            timeWhenReachBallQueen = timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3);
+
+            ballTimeWhenLastSeen = timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 6);
+
+            final int whistleDetectionContainer = Unsigned.toUnsigned(stream.getShort());
+            confidenceOfLastWhistleDetection = HearingConfidence.values()[whistleDetectionContainer >> 14];
+            lastTimeWhistleDetected = timestamp - (long) (whistleDetectionContainer & 0x3FFF);
+
+            // GameControlData is omitted
+            stream.position(stream.position() + 9);
+
+            final long roleContainer = Unsigned.toUnsigned(stream.getInt());
+            long runner = 0x7 << ((BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - 1) * 3);
+            for (int i = 0; i < BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; ++i, runner >>= 3) {
+                roleAssignments[i] = Role.values()[(int) ((roleContainer & runner) >> ((BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - i - 1) * 3))];
+            }
+
+            final short numObsCurrPerforRolePassTargContainer = Unsigned.toUnsigned(stream.get());
+            passTarget = (byte) (numObsCurrPerforRolePassTargContainer >> 4);
+            currentlyPerfomingRole = Role.values()[(int) (((numObsCurrPerforRolePassTargContainer & 8) >> 1) | (roleContainer >> (BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS * 3)))];
+
+            final int numOfObstacles = numObsCurrPerforRolePassTargContainer & 0x7;
+            obstacles = new ArrayList<>(numOfObstacles);
+            for (int i = 0; i < numOfObstacles; i++) {
+                obstacles.add(new Obstacle(timestamp).read(stream));
+            }
+
+            final int boolAndNTPReceiptContainer = Unsigned.toUnsigned(stream.getShort());
+            runner = 1 << 15;
+            member = (boolAndNTPReceiptContainer & runner) != 0 ? Team.BHUMAN : Team.HULKS;
+            isUpright = (boolAndNTPReceiptContainer & (runner >>= 1)) != 0;
+            hasGroundContact = (boolAndNTPReceiptContainer & (runner >>= 1)) != 0;
+            isPenalized = (boolAndNTPReceiptContainer & (runner >>= 1)) != 0;
+            kingIsPlayingBall = (boolAndNTPReceiptContainer & (runner >>= 1)) != 0;
+            requestsNTPMessage = (boolAndNTPReceiptContainer & (runner >>= 1)) != 0;
+            ntpMessages = new LinkedList<>();
+            for (short i = 1; runner != 0; ++i) {
+                if ((boolAndNTPReceiptContainer & (runner >>= 1)) != 0) {
+                    final BNTPMessage message = new BNTPMessage();
+                    message.receiver = i;
+                    ntpMessages.add(message);
+                    final long timeStruct32 = Unsigned.toUnsigned(stream.getInt());
+                    final long timeStruct8 = (long) Unsigned.toUnsigned(stream.get());
+
+                    message.requestOrigination = timeStruct32 & 0xFFFFFFF;
+                    message.requestReceipt = timestamp - ((timeStruct32 >> 20) & 0xF00) | timeStruct8;
+                }
+            }
+
+            return this;
+        }
     }
 
     public static class BHumanStandardMessagePart extends StreamedObject<BHumanStandardMessagePart> {

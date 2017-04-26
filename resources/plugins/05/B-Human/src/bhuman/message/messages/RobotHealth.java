@@ -183,7 +183,7 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
 
         final int startPosition = stream.position();
         final MessageIds fieldToUpdate = msgIdReader.read(stream);
-        int size;
+        int size = msgIdReader.getStreamedSize();
         switch (fieldToUpdate) {
             case load0:
             case load1:
@@ -196,15 +196,14 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
             case location0:
             case location1:
             case location2:
-                size = msgIdReader.getStreamedSize() + 1;
+                size += 1;
                 break;
             default: {
                 try {
                     final StreamReader<?> reader = getFieldReader(getClass().getField(fieldToUpdate.name()));
-                    size = SimpleStreamReader.class.isInstance(reader) ? SimpleStreamReader.class.cast(reader).getStreamedSize() : ComplexStreamReader.class.cast(reader).getStreamedSize(stream);
+                    size += SimpleStreamReader.class.isInstance(reader) ? SimpleStreamReader.class.cast(reader).getStreamedSize() : ComplexStreamReader.class.cast(reader).getStreamedSize(stream);
                 } catch (NoSuchFieldException | SecurityException ex) {
                     Log.error("Could not get size of RobotHealth field " + fieldToUpdate.name());
-                    size = 0;
                 }
             }
         }

@@ -71,7 +71,7 @@ public class MessageQueue {
             final byte[] data = new byte[size];
             buf.get(data);
             messageNames.add(messageIds.get(teamNumber).get(idIndex));
-            final Message<? extends Message> msg = createMessage(idIndex, classes.get(teamNumber), ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
+            final Message<? extends Message> msg = createMessage(idIndex, messageIds.get(teamNumber).get(idIndex), classes.get(teamNumber), ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
             if (msg != null) {
                 messages.put(msg.getClass(), msg);
             }
@@ -201,7 +201,7 @@ public class MessageQueue {
      * @return message or null if an error occurred
      */
     @SuppressWarnings("unchecked")
-    private Message<? extends Message> createMessage(final short messageId, final List<Class<? extends Message>> classes, final ByteBuffer data) {
+    private Message<? extends Message> createMessage(final short messageId, final String messageName, final List<Class<? extends Message>> classes, final ByteBuffer data) {
         // Instantiate the message class that fits the MessageID
         final Class<? extends Message> cls = classes.get(messageId);
         if (cls != null) {
@@ -210,7 +210,7 @@ public class MessageQueue {
                 final Message inst = cachedInst != null ? cachedInst : cls.newInstance();
                 final int streamedSize = SimpleStreamReader.class.isInstance(inst) ? SimpleStreamReader.class.cast(inst).getStreamedSize() : ComplexStreamReader.class.cast(inst).getStreamedSize(data);
                 if (data.remaining() != streamedSize && streamedSize != -1) {
-                    Log.error("Wrong size of " + messageIds.get(messageId) + " message: expected " + streamedSize + ", was " + data.remaining());
+                    Log.error("Wrong size of " + messageName + " message: expected " + streamedSize + ", was " + data.remaining());
                     return null;
                 }
                 return (Message<? extends Message>) inst.read(data);
