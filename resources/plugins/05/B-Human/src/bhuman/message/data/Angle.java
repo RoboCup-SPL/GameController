@@ -34,4 +34,10 @@ public class Angle implements SimpleStreamReader<Angle> {
         return (float) ((double) radians * 180.0 / Math.PI);
     }
 
+    public static Angle fromDegrees(final double degrees) {
+        final Angle a = new Angle();
+        a.radians = (float) (degrees * Math.PI / 180.0);
+        return a;
+    }
+
 }

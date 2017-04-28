@@ -16,8 +16,6 @@ import teamcomm.gui.drawings.PerPlayer;
  */
 public class FieldFeatures extends PerPlayer {
 
-    private static final long LAST_SEEN_THRESHOLD = 300;
-
     private static final float PENALTY_AREA_WIDTH = 2.2f;
     private static final float PENALTY_AREA_DEPTH = 0.6f;
     private static final float CENTER_CIRCLE_RADIUS = 0.75f;
@@ -52,7 +50,7 @@ public class FieldFeatures extends PerPlayer {
                     // Draw field features
                     for (final FieldFeatureOverview.Feature feature : FieldFeatureOverview.Feature.values()) {
                         final FieldFeatureOverview.FieldFeatureStatus status = fieldFeatures.statuses.get(feature);
-                        if (msg.message.bhulks != null && msg.message.bhulks.timestamp - status.lastSeen < LAST_SEEN_THRESHOLD) {
+                        if (status.isValid) {
                             // Draw line from robot to field feature
                             gl.glBegin(GL2.GL_LINES);
                             gl.glVertex3f(0.f, 0.f, 0.f);
@@ -106,10 +104,9 @@ public class FieldFeatures extends PerPlayer {
                                     gl.glEnd();
                                     break;
                                 case OuterCorner: {
-                                    final boolean isRightCorner = (status.rotation.radians + 2 * Math.PI) % (2 * Math.PI) <= Math.PI;
                                     final float hypotsize = (float) (Math.sqrt(2) * FIELD_FEATURE_SIZE);
                                     gl.glBegin(GL2.GL_QUADS);
-                                    if (isRightCorner) {
+                                    if (status.isRightSided) {
                                         gl.glVertex2f(-LINE_RADIUS, 0);
                                         gl.glVertex2f(LINE_RADIUS, 0);
                                         gl.glVertex2f(LINE_RADIUS, FIELD_FEATURE_SIZE);
@@ -125,7 +122,7 @@ public class FieldFeatures extends PerPlayer {
                                     gl.glVertex2f(FIELD_FEATURE_SIZE, -LINE_RADIUS);
                                     gl.glVertex2f(FIELD_FEATURE_SIZE, LINE_RADIUS);
                                     gl.glEnd();
-                                    if (isRightCorner) {
+                                    if (status.isRightSided) {
                                         gl.glRotatef(45, 0, 0, 1);
                                     } else {
                                         gl.glRotatef(-45, 0, 0, 1);
@@ -136,7 +133,7 @@ public class FieldFeatures extends PerPlayer {
                                     gl.glVertex2f(FIELD_FEATURE_SIZE / 2, -LINE_RADIUS);
                                     gl.glVertex2f(FIELD_FEATURE_SIZE / 2, LINE_RADIUS);
                                     gl.glEnd();
-                                    if (isRightCorner) {
+                                    if (status.isRightSided) {
                                         gl.glRotatef(-45, 0, 0, 1);
                                         gl.glTranslatef(0.f, FIELD_FEATURE_SIZE, 0.f);
                                         gl.glRotatef(-45, 0, 0, 1);

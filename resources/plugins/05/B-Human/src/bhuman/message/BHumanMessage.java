@@ -65,23 +65,15 @@ public class BHumanMessage extends AdvancedMessage {
                 if (fieldFeatures != null) {
                     display.add(DISPLAY_NEXT_COLUMN);
                     display.add("FieldFeatures:");
-                    display.add("valid: " + (fieldFeatures.combinedStatus.isValid ? "yes" : "no"));
-                    if (message.bhulks != null) {
-                        display.add("timeSinceSeen: " + (message.bhulks.timestamp - fieldFeatures.combinedStatus.lastSeen) + "ms");
-                    } else {
-                        display.add("lastSeen: " + fieldFeatures.combinedStatus.lastSeen + "ms");
-                    }
+                    display.add("valid: " + (fieldFeatures.isValid ? "yes" : "no"));
+                    display.add("timeSinceSeen: " + fieldFeatures.lastSeen + "ms");
                     for (final FieldFeatureOverview.Feature f : FieldFeatureOverview.Feature.values()) {
                         final FieldFeatureOverview.FieldFeatureStatus s = fieldFeatures.statuses.get(f);
                         display.add("");
                         display.add(f.toString());
                         display.add("valid: " + (s.isValid ? "yes" : "no"));
 
-                        if (message.bhulks != null) {
-                            display.add("timeSinceSeen: " + (message.bhulks.timestamp - s.lastSeen) + "ms");
-                        } else {
-                            display.add("lastSeen: " + s.lastSeen + "ms");
-                        }
+                        display.add("timeSinceSeen: " + s.lastSeen + "ms");
                         display.add("x: " + s.translation.x + "mm");
                         display.add("y: " + s.translation.y + "mm");
                         display.add("\u03B8: " + s.rotation.toDegrees() + "°");
