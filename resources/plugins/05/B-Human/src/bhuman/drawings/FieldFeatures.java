@@ -106,27 +106,45 @@ public class FieldFeatures extends PerPlayer {
                                     gl.glEnd();
                                     break;
                                 case OuterCorner: {
+                                    final boolean isRightCorner = (status.rotation.radians + 2 * Math.PI) % (2 * Math.PI) <= Math.PI;
                                     final float hypotsize = (float) (Math.sqrt(2) * FIELD_FEATURE_SIZE);
                                     gl.glBegin(GL2.GL_QUADS);
-                                    gl.glVertex2f(-LINE_RADIUS, 0);
-                                    gl.glVertex2f(LINE_RADIUS, 0);
-                                    gl.glVertex2f(LINE_RADIUS, FIELD_FEATURE_SIZE);
-                                    gl.glVertex2f(-LINE_RADIUS, FIELD_FEATURE_SIZE);
+                                    if (isRightCorner) {
+                                        gl.glVertex2f(-LINE_RADIUS, 0);
+                                        gl.glVertex2f(LINE_RADIUS, 0);
+                                        gl.glVertex2f(LINE_RADIUS, FIELD_FEATURE_SIZE);
+                                        gl.glVertex2f(-LINE_RADIUS, FIELD_FEATURE_SIZE);
+                                    } else {
+                                        gl.glVertex2f(-LINE_RADIUS, -FIELD_FEATURE_SIZE);
+                                        gl.glVertex2f(LINE_RADIUS, -FIELD_FEATURE_SIZE);
+                                        gl.glVertex2f(LINE_RADIUS, 0);
+                                        gl.glVertex2f(-LINE_RADIUS, 0);
+                                    }
                                     gl.glVertex2f(0, LINE_RADIUS);
                                     gl.glVertex2f(0, -LINE_RADIUS);
                                     gl.glVertex2f(FIELD_FEATURE_SIZE, -LINE_RADIUS);
                                     gl.glVertex2f(FIELD_FEATURE_SIZE, LINE_RADIUS);
                                     gl.glEnd();
-                                    gl.glRotatef(45, 0, 0, 1);
+                                    if (isRightCorner) {
+                                        gl.glRotatef(45, 0, 0, 1);
+                                    } else {
+                                        gl.glRotatef(-45, 0, 0, 1);
+                                    }
                                     gl.glBegin(GL2.GL_QUADS);
                                     gl.glVertex2f(0, LINE_RADIUS);
                                     gl.glVertex2f(0, -LINE_RADIUS);
                                     gl.glVertex2f(FIELD_FEATURE_SIZE / 2, -LINE_RADIUS);
                                     gl.glVertex2f(FIELD_FEATURE_SIZE / 2, LINE_RADIUS);
                                     gl.glEnd();
-                                    gl.glRotatef(-45, 0, 0, 1);
-                                    gl.glTranslatef(0.f, FIELD_FEATURE_SIZE, 0.f);
-                                    gl.glRotatef(-45, 0, 0, 1);
+                                    if (isRightCorner) {
+                                        gl.glRotatef(-45, 0, 0, 1);
+                                        gl.glTranslatef(0.f, FIELD_FEATURE_SIZE, 0.f);
+                                        gl.glRotatef(-45, 0, 0, 1);
+                                    } else {
+                                        gl.glRotatef(45, 0, 0, 1);
+                                        gl.glTranslatef(0.f, -FIELD_FEATURE_SIZE, 0.f);
+                                        gl.glRotatef(45, 0, 0, 1);
+                                    }
                                     gl.glBegin(GL2.GL_QUADS);
                                     gl.glVertex2f(0, LINE_RADIUS);
                                     gl.glVertex2f(0, -LINE_RADIUS);
@@ -189,17 +207,17 @@ public class FieldFeatures extends PerPlayer {
                                     gl.glTranslatef(FIELD_FEATURE_SIZE, 0.f, 0.f);
                                     gl.glRotatef(-45, 0, 0, 1);
                                     gl.glBegin(GL2.GL_QUADS);
-                                    gl.glVertex2f(0, FIELD_FEATURE_SIZE - LINE_RADIUS);
-                                    gl.glVertex2f(0, FIELD_FEATURE_SIZE + LINE_RADIUS);
-                                    gl.glVertex2f(-hypotsize, FIELD_FEATURE_SIZE + LINE_RADIUS);
-                                    gl.glVertex2f(-hypotsize, FIELD_FEATURE_SIZE - LINE_RADIUS);
+                                    gl.glVertex2f(0, -LINE_RADIUS);
+                                    gl.glVertex2f(0, LINE_RADIUS);
+                                    gl.glVertex2f(-hypotsize, LINE_RADIUS);
+                                    gl.glVertex2f(-hypotsize, -LINE_RADIUS);
                                     gl.glEnd();
                                     gl.glRotatef(90, 0, 0, 1);
                                     gl.glBegin(GL2.GL_QUADS);
-                                    gl.glVertex2f(0, FIELD_FEATURE_SIZE - LINE_RADIUS);
-                                    gl.glVertex2f(0, FIELD_FEATURE_SIZE + LINE_RADIUS);
-                                    gl.glVertex2f(-hypotsize, FIELD_FEATURE_SIZE + LINE_RADIUS);
-                                    gl.glVertex2f(-hypotsize, FIELD_FEATURE_SIZE - LINE_RADIUS);
+                                    gl.glVertex2f(0, -LINE_RADIUS);
+                                    gl.glVertex2f(0, LINE_RADIUS);
+                                    gl.glVertex2f(-hypotsize, LINE_RADIUS);
+                                    gl.glVertex2f(-hypotsize, -LINE_RADIUS);
                                     gl.glEnd();
                                 }
                                 break;
