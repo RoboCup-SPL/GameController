@@ -4,7 +4,9 @@ import common.Log;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,7 @@ import java.util.Map;
  *
  * @author Felix Thielke
  */
-public class StreamedObject<T extends StreamedObject> implements ComplexStreamReader<T> {
+public class StreamedObject<T extends StreamedObject> implements ProbablySimpleStreamReader<T> {
 
     private static final Map<Class<? extends StreamedObject>, Integer> streamedSizes = new HashMap<>();
 
@@ -27,6 +29,7 @@ public class StreamedObject<T extends StreamedObject> implements ComplexStreamRe
         return (T) this;
     }
 
+    @Override
     public boolean isSimpleStreamReader() {
         if (!streamedSizes.containsKey(getClass())) {
             getStreamedSize(ByteBuffer.allocateDirect(0));
@@ -50,8 +53,8 @@ public class StreamedObject<T extends StreamedObject> implements ComplexStreamRe
                 if (SimpleStreamReader.class.isInstance(reader)) {
                     size += SimpleStreamReader.class.cast(reader).getStreamedSize();
                 } else if (ComplexStreamReader.class.isInstance(reader)) {
-                    if ((ArrayReader.class.isInstance(reader) && ArrayReader.class.cast(reader).isSimpleStreamReader()) || (StreamedObject.class.isInstance(reader) && StreamedObject.class.cast(reader).isSimpleStreamReader())) {
-                        size += ComplexStreamReader.class.cast(reader).getStreamedSize(stream);
+                    if (ProbablySimpleStreamReader.class.isInstance(reader) && ProbablySimpleStreamReader.class.cast(reader).isSimpleStreamReader()) {
+                        size += ProbablySimpleStreamReader.class.cast(reader).getStreamedSize(stream);
                     } else {
                         simple = false;
                         if (startPosition + size > stream.limit()) {
@@ -127,6 +130,13 @@ public class StreamedObject<T extends StreamedObject> implements ComplexStreamRe
                             return (StreamReader<?>) type.newInstance();
                         } else if (Enum.class.isAssignableFrom(type)) {
                             return new EnumReader(type);
+                        } else if (EnumMap.class.isAssignableFrom(type)) {
+                            try {
+                                final Type[] typeArguments = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
+                                return new EnumMapReader(Class.forName(typeArguments[0].getTypeName()), Class.forName(typeArguments[1].getTypeName()));
+                            } catch (ClassNotFoundException ex) {
+                                Log.error("field " + field.getName() + " in class " + getClass().getName() + " could not be read automatically because the type was not found");
+                            }
                         } else if (List.class.isAssignableFrom(type)) {
                             try {
                                 final Class<?> componentType = Class.forName(((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0].getTypeName());

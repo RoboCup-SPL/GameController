@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
  * @author Felix Thielke
  * @param <T> type of objects stored in the arrays to read
  */
-public class ArrayReader<T> implements ComplexStreamReader<T[]> {
+public class ArrayReader<T> implements ProbablySimpleStreamReader<T[]> {
 
     private final StreamReader<T> reader;
     private final Class<? extends StreamReader<T>> readerClass;
@@ -64,7 +64,7 @@ public class ArrayReader<T> implements ComplexStreamReader<T[]> {
             }
 
             final ComplexStreamReader<T> reader = (ComplexStreamReader<T>) (this.reader != null ? this.reader : readerClass.newInstance());
-            if (StreamedObject.class.isInstance(reader) && StreamedObject.class.cast(reader).isSimpleStreamReader()) {
+            if (ProbablySimpleStreamReader.class.isInstance(reader) && ProbablySimpleStreamReader.class.cast(reader).isSimpleStreamReader()) {
                 return array.length * reader.getStreamedSize(stream);
             }
 
@@ -89,14 +89,18 @@ public class ArrayReader<T> implements ComplexStreamReader<T[]> {
         }
     }
 
+    @Override
     public boolean isSimpleStreamReader() {
+        final StreamReader<T> reader;
         try {
-            return (reader != null && (SimpleStreamReader.class.isInstance(reader) || (StreamedObject.class.isInstance(reader) && StreamedObject.class.cast(reader).isSimpleStreamReader())))
-                    || (readerClass != null && (SimpleStreamReader.class.isAssignableFrom(readerClass) || (StreamedObject.class.isAssignableFrom(readerClass) && StreamedObject.class.cast(readerClass.newInstance()).isSimpleStreamReader())));
+            reader = this.reader != null ? this.reader : readerClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
-            Log.error("Failed to instantiate reader class " + readerClass.getName());
+            Log.error("Cannot instantiate reader class " + readerClass.getName());
             return false;
         }
+
+        return SimpleStreamReader.class.isInstance(reader)
+                || (ProbablySimpleStreamReader.class.isInstance(reader) && ProbablySimpleStreamReader.class.cast(reader).isSimpleStreamReader());
     }
 
 }

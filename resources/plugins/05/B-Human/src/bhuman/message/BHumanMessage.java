@@ -1,6 +1,7 @@
 package bhuman.message;
 
 import bhuman.message.messages.BehaviorStatus;
+import bhuman.message.messages.FieldFeatureOverview;
 import bhuman.message.messages.RobotHealth;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
@@ -60,6 +61,33 @@ public class BHumanMessage extends AdvancedMessage {
             }
 
             if (message.queue != null) {
+                final FieldFeatureOverview fieldFeatures = message.queue.getMessage(FieldFeatureOverview.class);
+                if (fieldFeatures != null) {
+                    display.add(DISPLAY_NEXT_COLUMN);
+                    display.add("FieldFeatures:");
+                    display.add("valid: " + (fieldFeatures.combinedStatus.isValid ? "yes" : "no"));
+                    if (message.bhulks != null) {
+                        display.add("timeSinceSeen: " + (message.bhulks.timestamp - fieldFeatures.combinedStatus.lastSeen) + "ms");
+                    } else {
+                        display.add("lastSeen: " + fieldFeatures.combinedStatus.lastSeen + "ms");
+                    }
+                    for (final FieldFeatureOverview.Feature f : FieldFeatureOverview.Feature.values()) {
+                        final FieldFeatureOverview.FieldFeatureStatus s = fieldFeatures.statuses.get(f);
+                        display.add("");
+                        display.add(f.toString());
+                        display.add("valid: " + (s.isValid ? "yes" : "no"));
+
+                        if (message.bhulks != null) {
+                            display.add("timeSinceSeen: " + (message.bhulks.timestamp - s.lastSeen) + "ms");
+                        } else {
+                            display.add("lastSeen: " + s.lastSeen + "ms");
+                        }
+                        display.add("x: " + s.translation.x + "mm");
+                        display.add("y: " + s.translation.y + "mm");
+                        display.add("\u03B8: " + s.rotation.toDegrees() + "°");
+                    }
+                }
+
                 display.add(DISPLAY_NEXT_COLUMN);
                 display.add("MessageQueue:");
                 for (final String name : message.queue.getMessageNames()) {
