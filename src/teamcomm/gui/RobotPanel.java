@@ -16,6 +16,7 @@ import javax.swing.OverlayLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import teamcomm.PluginLoader;
 import teamcomm.data.RobotState;
 import teamcomm.data.event.RobotStateEvent;
 import teamcomm.data.event.RobotStateEventListener;
@@ -144,7 +145,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
             }
         });
 
-        detailFrame = new RobotDetailFrame(robot, robotPanel);
+        detailFrame = PluginLoader.getInstance().createRobotDetailFrame(robot, robotPanel);
     }
 
     @Override

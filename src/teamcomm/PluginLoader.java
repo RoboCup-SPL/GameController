@@ -4,6 +4,7 @@ import common.Log;
 import data.SPLStandardMessage;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -19,7 +20,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import javax.swing.JPanel;
 import teamcomm.data.AdvancedMessage;
+import teamcomm.data.RobotState;
+import teamcomm.gui.RobotDetailFrame;
+import teamcomm.gui.RobotDetailFrameDefault;
 import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Static;
@@ -43,6 +48,7 @@ public class PluginLoader {
 
     private final File pluginDir = new File(PLUGIN_PATH);
     private final Map<Integer, Class<? extends AdvancedMessage>> messageClasses = new HashMap<>();
+    private final Map<Integer, Class<? extends RobotDetailFrame>> robotDetailFrameClasses = new HashMap<>();
     private final Map<Integer, Collection<Drawing>> drawings = new HashMap<>();
 
     private PluginLoader() {
@@ -68,6 +74,28 @@ public class PluginLoader {
         final Class<? extends AdvancedMessage> c = messageClasses.get(teamNumber);
 
         return c != null ? c : SPLStandardMessage.class;
+    }
+
+    /**
+     * Create a RobotDetailFrame for the given robot of the given team.
+     *
+     * @param robot robot to create the frame for
+     * @param anchor anchor of the frame
+     * @return class for instantiating messages from the given team
+     */
+    public RobotDetailFrame createRobotDetailFrame(final RobotState robot, final JPanel anchor) {
+        final Class<? extends RobotDetailFrame> c = robotDetailFrameClasses.get(robot.getTeamNumber());
+
+        if (c != null) {
+            try {
+                return c.getConstructor(RobotState.class, JPanel.class).newInstance(robot, anchor);
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                e.printStackTrace();
+                Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom RobotDetailFrame " + c.getName() + ": " + e.getMessage());
+            }
+        }
+
+        return new RobotDetailFrameDefault(robot, anchor);
     }
 
     /**
@@ -192,6 +220,12 @@ public class PluginLoader {
                             } catch (final Throwable e) {
                                 Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom message class " + cls.getName() + ": " + e.getMessage());
                             }
+                        }
+                    } else if (RobotDetailFrame.class.isAssignableFrom(cls)) {
+                        // Class is a RobotDetailFrame class: set it as default if no
+                        // other RobotDetailFrame class exists for the team
+                        if (!robotDetailFrameClasses.containsKey(teamNumber)) {
+                            robotDetailFrameClasses.put(teamNumber, cls.asSubclass(RobotDetailFrame.class));
                         }
                     } else if (PerPlayer.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
                         // Class is a drawing: add it to the team drawings
