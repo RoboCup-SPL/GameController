@@ -105,7 +105,7 @@ public abstract class Eigen {
         }
     }
 
-    private static abstract class Vector2<T extends Number> implements SimpleStreamReader<Vector2<T>> {
+    public static abstract class Vector2<T extends Number> implements SimpleStreamReader<Vector2<T>> {
 
         public T x;
         public T y;

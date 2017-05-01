@@ -1,10 +1,12 @@
 package bhuman.message;
 
+import bhuman.message.data.Angle;
 import bhuman.message.data.ComplexStreamReader;
 import bhuman.message.data.NativeReaders;
 import bhuman.message.data.Primitive;
 import bhuman.message.data.SimpleStreamReader;
 import bhuman.message.data.StreamedObject;
+import bhuman.message.data.Timestamp;
 import common.Log;
 import data.SPLStandardMessage;
 import java.nio.ByteBuffer;
@@ -155,7 +157,7 @@ public class BHumanMessageParts {
             // - y goes to left
             public float[] center = new float[2];
 
-            public long timestampLastSeen; //< the name says it
+            public Timestamp timestampLastSeen; //< the name says it
             public ObstacleType type;          //< the name says it
 
             private final long baseTimestamp;
@@ -179,7 +181,7 @@ public class BHumanMessageParts {
 
                 type = ObstacleType.values()[((center0Struct & 0xC000) >> 12) | ((center1Struct & 0xC000) >> 14)];
 
-                timestampLastSeen = baseTimestamp - (Unsigned.toUnsigned(stream.get()) << 6);
+                timestampLastSeen = new Timestamp(baseTimestamp - (Unsigned.toUnsigned(stream.get()) << 6));
 
                 return this;
             }
@@ -198,7 +200,7 @@ public class BHumanMessageParts {
 
         public boolean isUpright;               //< The name says it all
         public boolean hasGroundContact;        //< The name says it all
-        public long timeOfLastGroundContact; //< The name says it all
+        public Timestamp timeOfLastGroundContact; //< The name says it all
 
         // is the robot penalized?
         // Theoretically the game controller say it too, but this is for better information
@@ -206,7 +208,7 @@ public class BHumanMessageParts {
         public boolean isPenalized;
 
         // the current meassurement of head joint: HeadYaw
-        public float headYawAngle;
+        public Angle headYawAngle;
 
         // the role this robot is currently performing
         public Role currentlyPerfomingRole;
@@ -222,12 +224,12 @@ public class BHumanMessageParts {
         public boolean kingIsPlayingBall;
 
         // does/means what it says
-        public long timeWhenReachBall;
-        public long timeWhenReachBallQueen;
+        public Timestamp timeWhenReachBall;
+        public Timestamp timeWhenReachBallQueen;
 
         // timestamp, when the ball was recognized
         // this is theoretically equal to SPLStandardMessage::ballAge, BUT it allows us to "ntp" it.
-        public long ballTimeWhenLastSeen;
+        public Timestamp ballTimeWhenLastSeen;
 
         // the pass target's player number, filled by the current Queen
         //    robot if necessary
@@ -239,11 +241,11 @@ public class BHumanMessageParts {
         // timestamp of "last jumped"
         // - "last jumped" describes a situation, when the robots self localisation
         //   corrects for an bigger update than normal
-        public long timestampLastJumped;
+        public Timestamp timestampLastJumped;
 
         // whistle recognition stuff
         public HearingConfidence confidenceOfLastWhistleDetection; //< confidence based on hearing capability
-        public long lastTimeWhistleDetected; //< timestamp
+        public Timestamp lastTimeWhistleDetected; //< timestamp
 
         // the obstacles from the private obstacle model
         public List<Obstacle> obstacles;
@@ -293,19 +295,19 @@ public class BHumanMessageParts {
         public BHULKsStandardMessagePart read(final ByteBuffer stream) {
             timestamp = Unsigned.toUnsigned(stream.getInt());
 
-            headYawAngle = (float) ((double) stream.get() * Math.PI / 180.0);
+            headYawAngle = Angle.fromDegrees((double) stream.get());
 
-            timeOfLastGroundContact = timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 6);
-            timestampLastJumped = timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 7);
+            timeOfLastGroundContact = new Timestamp(timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 6));
+            timestampLastJumped = new Timestamp(timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 7));
 
-            timeWhenReachBall = timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3);
-            timeWhenReachBallQueen = timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3);
+            timeWhenReachBall = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3));
+            timeWhenReachBallQueen = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3));
 
-            ballTimeWhenLastSeen = timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 6);
+            ballTimeWhenLastSeen = new Timestamp(timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 6));
 
             final int whistleDetectionContainer = Unsigned.toUnsigned(stream.getShort());
             confidenceOfLastWhistleDetection = HearingConfidence.values()[whistleDetectionContainer >> 14];
-            lastTimeWhistleDetected = timestamp - (long) (whistleDetectionContainer & 0x3FFF);
+            lastTimeWhistleDetected = new Timestamp(timestamp - (long) (whistleDetectionContainer & 0x3FFF));
 
             // GameControlData is omitted
             stream.position(stream.position() + 9);
@@ -357,8 +359,7 @@ public class BHumanMessageParts {
         @Primitive("uchar")
         public short magicNumber;
 
-        @Primitive("uint")
-        public long ballTimeWhenDisappearedSeenPercentage;
+        public Timestamp ballTimeWhenDisappearedSeenPercentage;
 
         public short ballLastPerceptX;
         public short ballLastPerceptY;

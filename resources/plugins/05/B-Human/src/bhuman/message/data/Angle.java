@@ -40,4 +40,9 @@ public class Angle implements SimpleStreamReader<Angle> {
         return a;
     }
 
+    @Override
+    public String toString() {
+        return toDegrees() + "°";
+    }
+
 }
