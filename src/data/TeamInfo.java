@@ -187,7 +187,7 @@ public class TeamInfo implements Serializable {
         out += "        coachStatus: ---\n" + coach.toString() + "---\n";
 
         for (int i = 0; i < player.length; i++) {
-            out += "Player #" + i + "\n" + player[i].toString();
+            out += "Player #" + (i + 1) + "\n" + player[i].toString();
         }
         return out;
     }
