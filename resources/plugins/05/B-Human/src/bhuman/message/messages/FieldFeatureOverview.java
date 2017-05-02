@@ -57,7 +57,7 @@ public class FieldFeatureOverview implements SimpleStreamReader<FieldFeatureOver
             status.isRightSided = (isRightSidedContainer & runner) != 0;
             runner >>= 1;
 
-            status.rotation = Angle.fromDegrees(((double) stream.get()) * 180.0 / 127.0);
+            status.rotation = new Angle((float) (((double) stream.get()) * Math.PI / 127.0));
             status.translation = new Eigen.Vector2f((float) (((int) stream.get()) << 6), (float) (((int) stream.get()) << 6));
             status.lastSeen = ((long) Unsigned.toUnsigned(stream.get())) << 3;
             if (status.isValid = status.lastSeen < 300) {

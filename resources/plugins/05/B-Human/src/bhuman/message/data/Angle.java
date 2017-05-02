@@ -14,6 +14,13 @@ public class Angle implements SimpleStreamReader<Angle> {
      */
     public float radians;
 
+    public Angle() {
+    }
+
+    public Angle(final float radians) {
+        this.radians = radians;
+    }
+
     @Override
     public int getStreamedSize() {
         return NativeReaders.floatReader.getStreamedSize();
@@ -35,9 +42,7 @@ public class Angle implements SimpleStreamReader<Angle> {
     }
 
     public static Angle fromDegrees(final double degrees) {
-        final Angle a = new Angle();
-        a.radians = (float) (degrees * Math.PI / 180.0);
-        return a;
+        return new Angle((float) (degrees * Math.PI / 180.0));
     }
 
     @Override

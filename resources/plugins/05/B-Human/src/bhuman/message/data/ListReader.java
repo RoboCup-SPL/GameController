@@ -84,19 +84,19 @@ public class ListReader<T> implements ComplexStreamReader<List<T>> {
         final int count = getElementCount(stream);
         try {
             if (reader != null && SimpleStreamReader.class.isInstance(reader)) {
-                return count * ((SimpleStreamReader<T>) reader).getStreamedSize();
+                return listCountSize + count * ((SimpleStreamReader<T>) reader).getStreamedSize();
             } else if (readerClass != null && SimpleStreamReader.class.isAssignableFrom(readerClass)) {
-                return count * ((SimpleStreamReader<T>) readerClass.newInstance()).getStreamedSize();
+                return listCountSize + count * ((SimpleStreamReader<T>) readerClass.newInstance()).getStreamedSize();
             }
 
             final ComplexStreamReader<T> reader = (ComplexStreamReader<T>) (this.reader != null ? this.reader : readerClass.newInstance());
-            if (StreamedObject.class.isInstance(reader) && StreamedObject.class.cast(reader).isSimpleStreamReader()) {
-                return count * reader.getStreamedSize(stream);
+            if (ProbablySimpleStreamReader.class.isInstance(reader) && ProbablySimpleStreamReader.class.cast(reader).isSimpleStreamReader()) {
+                return listCountSize + count * reader.getStreamedSize(stream);
             }
 
             final int position = stream.position();
             stream.position(stream.position() + listCountSize);
-            int size = 0;
+            int size = listCountSize;
             for (int i = 0; i < count; i++) {
                 final int elemSize = reader.getStreamedSize(stream);
                 size += elemSize;

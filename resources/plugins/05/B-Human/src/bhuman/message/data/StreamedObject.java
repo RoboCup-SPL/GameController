@@ -68,6 +68,7 @@ public class StreamedObject<T extends StreamedObject> implements ProbablySimpleS
                 }
             }
         }
+        stream.position(startPosition);
 
         streamedSizes.put(getClass(), simple ? size : -1);
 

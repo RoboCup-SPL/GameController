@@ -18,14 +18,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
 import teamcomm.data.RobotState;
 import teamcomm.data.event.RobotStateEvent;
 import teamcomm.gui.RobotDetailFrame;
 
 /**
- * Default class for the windows showing detailed information about robots.
+ * Class for the windows showing detailed information about robots. It displays
+ * all message info in a tree-structure.
  *
  * @author Felix Thielke
  */
@@ -33,14 +34,31 @@ public class BHumanDetailFrame extends RobotDetailFrame {
 
     private static final long serialVersionUID = -6514911326043029354L;
 
-    private final MutableTreeNode rootNode = new DefaultMutableTreeNode("Robot");
-    private final MutableTreeNode splNode = new DefaultMutableTreeNode("SPLStandardMessage");
-    private final MutableTreeNode bhulksNode = new DefaultMutableTreeNode("BHULKsStandardMessage");
-    private final MutableTreeNode bhumanNode = new DefaultMutableTreeNode("BHumanStandardMessage");
-    private final MutableTreeNode messagequeueNode = new DefaultMutableTreeNode("MessageQueue");
+    private final Node rootNode = new Node("Robot");
+    private final Node splNode = new Node("SPLStandardMessage");
+    private final Node bhulksNode = new Node("BHULKsStandardMessage");
+    private final Node bhumanNode = new Node("BHumanStandardMessage");
+    private final Node messagequeueNode = new Node("MessageQueue");
     private final DefaultTreeModel model = new DefaultTreeModel(rootNode);
 
     private long baseTimestamp = 0;
+
+    private static class Node extends DefaultMutableTreeNode {
+
+        public Node() {
+        }
+
+        public Node(final Object userObject) {
+            super(userObject);
+        }
+
+        private static final long serialVersionUID = -3966229572117914445L;
+
+        @Override
+        public boolean isLeaf() {
+            return super.isLeaf() && LeafNode.class.isInstance(getUserObject());
+        }
+    }
 
     private static class LeafNode {
 
@@ -77,6 +95,12 @@ public class BHumanDetailFrame extends RobotDetailFrame {
         rootNode.insert(messagequeueNode, 3);
         final JTree tree = new JTree(rootNode);
         tree.setModel(model);
+        tree.setSelectionModel(null);
+        tree.putClientProperty("JTree.lineStyle", "Horizontal");
+
+        final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+        renderer.setLeafIcon(null);
+        tree.setCellRenderer(renderer);
 
         final JScrollPane contentPane = new JScrollPane(tree);
         setContentPane(contentPane);
@@ -109,11 +133,11 @@ public class BHumanDetailFrame extends RobotDetailFrame {
         int index = 0;
         for (final Field field : SPLStandardMessage.class.getFields()) {
             if (!Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
-                final MutableTreeNode node;
+                final Node node;
                 if (splNode.getChildCount() > index) {
-                    node = (MutableTreeNode) splNode.getChildAt(index);
+                    node = (Node) splNode.getChildAt(index);
                 } else {
-                    node = new DefaultMutableTreeNode();
+                    node = new Node();
                     splNode.insert(node, index);
                     model.nodesWereInserted(splNode, new int[]{index});
                 }
@@ -141,15 +165,15 @@ public class BHumanDetailFrame extends RobotDetailFrame {
             removeNodes(messagequeueNode);
         } else {
             for (final String name : bmsg.message.queue.getMessageNames()) {
-                MutableTreeNode node = null;
+                Node node = null;
                 for (final Enumeration en = messagequeueNode.children(); en.hasMoreElements();) {
-                    final DefaultMutableTreeNode n = (DefaultMutableTreeNode) en.nextElement();
+                    final Node n = (Node) en.nextElement();
                     if (n.getUserObject().equals(name)) {
                         node = n;
                     }
                 }
                 if (node == null) {
-                    node = new DefaultMutableTreeNode(name);
+                    node = new Node(name);
                     messagequeueNode.insert(node, messagequeueNode.getChildCount());
                     model.nodesWereInserted(messagequeueNode, new int[]{messagequeueNode.getChildCount() - 1});
                 }
@@ -173,8 +197,8 @@ public class BHumanDetailFrame extends RobotDetailFrame {
         }
     }
 
-    private void updateNode(final MutableTreeNode node, final String name, final Object obj) {
-        if (!name.equals(((DefaultMutableTreeNode) node).getUserObject())) {
+    private void updateNode(final Node node, final String name, final Object obj) {
+        if (!name.equals(node.getUserObject())) {
             node.setUserObject(name);
             model.nodeChanged(node);
         }
@@ -192,27 +216,29 @@ public class BHumanDetailFrame extends RobotDetailFrame {
                 model.nodeChanged(node);
             } else if (Eigen.Vector2.class.isAssignableFrom(type)) {
                 removeNodes(node, 2);
-                final MutableTreeNode x, y;
+                final Node x, y;
                 switch (node.getChildCount()) {
                     case 2:
-                        x = (MutableTreeNode) node.getChildAt(0);
-                        y = (MutableTreeNode) node.getChildAt(1);
+                        x = (Node) node.getChildAt(0);
+                        y = (Node) node.getChildAt(1);
                         break;
                     case 1:
-                        x = (MutableTreeNode) node.getChildAt(0);
-                        y = new DefaultMutableTreeNode();
+                        x = (Node) node.getChildAt(0);
+                        y = new Node();
                         node.insert(y, 1);
                         model.nodesWereInserted(node, new int[]{1});
                         break;
                     default:
-                        x = new DefaultMutableTreeNode();
-                        y = new DefaultMutableTreeNode();
+                        x = new Node();
+                        y = new Node();
                         node.insert(x, 0);
                         node.insert(y, 1);
                         model.nodesWereInserted(node, new int[]{0, 1});
                 }
-                x.setUserObject("x: " + Eigen.Vector2.class.cast(obj).x);
-                y.setUserObject("y: " + Eigen.Vector2.class.cast(obj).y);
+                x.setUserObject(new LeafNode("x", Eigen.Vector2.class.cast(obj).x.toString()));
+                y.setUserObject(new LeafNode("y", Eigen.Vector2.class.cast(obj).y.toString()));
+                model.nodeChanged(x);
+                model.nodeChanged(y);
             } else if (type.isArray()) {
                 if (char.class.isAssignableFrom(type.getComponentType())) {
                     removeNodes(node);
@@ -220,11 +246,11 @@ public class BHumanDetailFrame extends RobotDetailFrame {
                     model.nodeChanged(node);
                 } else {
                     for (int i = 0; i < Array.getLength(obj); i++) {
-                        final MutableTreeNode n;
+                        final Node n;
                         if (node.getChildCount() > i) {
-                            n = (MutableTreeNode) node.getChildAt(i);
+                            n = (Node) node.getChildAt(i);
                         } else {
-                            n = new DefaultMutableTreeNode();
+                            n = new Node();
                             node.insert(n, i);
                             model.nodesWereInserted(node, new int[]{i});
                         }
@@ -235,11 +261,11 @@ public class BHumanDetailFrame extends RobotDetailFrame {
             } else if (List.class.isAssignableFrom(type)) {
                 int i = 0;
                 for (final Object o : List.class.cast(obj)) {
-                    final MutableTreeNode n;
+                    final Node n;
                     if (node.getChildCount() > i) {
-                        n = (MutableTreeNode) node.getChildAt(i);
+                        n = (Node) node.getChildAt(i);
                     } else {
-                        n = new DefaultMutableTreeNode();
+                        n = new Node();
                         node.insert(n, i);
                         model.nodesWereInserted(node, new int[]{i});
                     }
@@ -250,11 +276,11 @@ public class BHumanDetailFrame extends RobotDetailFrame {
             } else if (Map.class.isAssignableFrom(type)) {
                 int i = 0;
                 for (final Object entry : Map.class.cast(obj).entrySet()) {
-                    final MutableTreeNode n;
+                    final Node n;
                     if (node.getChildCount() > i) {
-                        n = (MutableTreeNode) node.getChildAt(i);
+                        n = (Node) node.getChildAt(i);
                     } else {
-                        n = new DefaultMutableTreeNode();
+                        n = new Node();
                         node.insert(n, i);
                         model.nodesWereInserted(node, new int[]{i});
                     }
@@ -266,11 +292,11 @@ public class BHumanDetailFrame extends RobotDetailFrame {
                 int index = 0;
                 for (final Field f : type.getFields()) {
                     if (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers())) {
-                        final MutableTreeNode n;
+                        final Node n;
                         if (node.getChildCount() > index) {
-                            n = (MutableTreeNode) node.getChildAt(index);
+                            n = (Node) node.getChildAt(index);
                         } else {
-                            n = new DefaultMutableTreeNode();
+                            n = new Node();
                             node.insert(n, index);
                             model.nodesWereInserted(node, new int[]{index});
                         }
@@ -285,11 +311,11 @@ public class BHumanDetailFrame extends RobotDetailFrame {
         }
     }
 
-    private void removeNodes(final MutableTreeNode parent) {
+    private void removeNodes(final Node parent) {
         removeNodes(parent, 0);
     }
 
-    private void removeNodes(final MutableTreeNode parent, final int startindex) {
+    private void removeNodes(final Node parent, final int startindex) {
         if (parent.getChildCount() > startindex) {
             final int[] indices = new int[parent.getChildCount() - startindex];
             final Object[] nodes = new Object[parent.getChildCount() - startindex];
@@ -305,8 +331,7 @@ public class BHumanDetailFrame extends RobotDetailFrame {
     }
 
     @Override
-    public void connectionStatusChanged(final RobotStateEvent e
-    ) {
+    public void connectionStatusChanged(final RobotStateEvent e) {
 
     }
 }
