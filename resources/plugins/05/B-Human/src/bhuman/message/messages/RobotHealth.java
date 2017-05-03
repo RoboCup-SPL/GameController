@@ -141,7 +141,7 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
     /**
      * For fancier drawing :-)
      */
-    public String robotName;
+    public String robotName = "";
     /**
      * A ball percept counter used to determine ball percepts per hour
      */

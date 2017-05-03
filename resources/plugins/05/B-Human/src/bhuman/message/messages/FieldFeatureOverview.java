@@ -36,7 +36,7 @@ public class FieldFeatureOverview implements SimpleStreamReader<FieldFeatureOver
 
     public boolean isValid;
     public long lastSeen;
-    public EnumMap<Feature, FieldFeatureStatus> statuses;
+    public EnumMap<Feature, FieldFeatureStatus> statuses = new EnumMap<>(Feature.class);
 
     @Override
     public int getStreamedSize() {
@@ -47,7 +47,6 @@ public class FieldFeatureOverview implements SimpleStreamReader<FieldFeatureOver
     public FieldFeatureOverview read(final ByteBuffer stream) {
         isValid = false;
         lastSeen = 0;
-        statuses = new EnumMap<>(Feature.class);
 
         final short isRightSidedContainer = Unsigned.toUnsigned(stream.get());
 

@@ -13,6 +13,7 @@ import java.lang.reflect.Modifier;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -164,18 +165,25 @@ public class BHumanDetailFrame extends RobotDetailFrame {
         if (bmsg.message.queue == null) {
             removeNodes(messagequeueNode);
         } else {
-            for (final String name : bmsg.message.queue.getMessageNames()) {
+            final Set<String> names = bmsg.message.queue.getMessageNames();
+            for (final String name : names) {
                 Node node = null;
+                int nodePosition = 0;
                 for (final Enumeration en = messagequeueNode.children(); en.hasMoreElements();) {
                     final Node n = (Node) en.nextElement();
-                    if (n.getUserObject().equals(name)) {
+                    final int compare = String.class.cast(n.getUserObject()).compareTo(name);
+                    if (compare == 0) {
                         node = n;
+                        break;
+                    } else if (compare > 0) {
+                        break;
                     }
+                    nodePosition++;
                 }
                 if (node == null) {
                     node = new Node(name);
-                    messagequeueNode.insert(node, messagequeueNode.getChildCount());
-                    model.nodesWereInserted(messagequeueNode, new int[]{messagequeueNode.getChildCount() - 1});
+                    messagequeueNode.insert(node, nodePosition);
+                    model.nodesWereInserted(messagequeueNode, new int[]{nodePosition});
                 }
                 try {
                     final Class<? extends Message> type = Class.forName("bhuman.message.messages." + name).asSubclass(Message.class);
@@ -186,6 +194,16 @@ public class BHumanDetailFrame extends RobotDetailFrame {
                         }
                     }
                 } catch (ClassNotFoundException ex) {
+                }
+            }
+            index = 0;
+            for (final Enumeration en = messagequeueNode.children(); en.hasMoreElements();) {
+                final Node n = (Node) en.nextElement();
+                if (!names.contains(String.class.cast(n.getUserObject()))) {
+                    messagequeueNode.remove(index);
+                    model.nodesWereRemoved(messagequeueNode, new int[]{index}, new Node[]{n});
+                } else {
+                    index++;
                 }
             }
 
@@ -323,8 +341,12 @@ public class BHumanDetailFrame extends RobotDetailFrame {
                 indices[i] = i + startindex;
                 nodes[i] = parent.getChildAt(i + startindex);
             }
-            while (parent.getChildCount() > startindex) {
-                parent.remove(startindex);
+            if (startindex == 0) {
+                parent.removeAllChildren();
+            } else {
+                while (parent.getChildCount() > startindex) {
+                    parent.remove(startindex);
+                }
             }
             model.nodesWereRemoved(parent, indices, nodes);
         }

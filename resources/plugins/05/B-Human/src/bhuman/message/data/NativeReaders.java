@@ -1,7 +1,10 @@
 package bhuman.message.data;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 import util.Unsigned;
 
 /**
@@ -67,7 +70,60 @@ public abstract class NativeReaders {
      */
     public static final StringReader stringReader = new StringReader();
 
-    public static class BoolReader implements SimpleStreamReader<Boolean> {
+    private static final Map<Class<?>, StreamReader<?>> readers = new HashMap<>();
+    private static final Map<Class<?>, Class<?>> arrayReaderClasses = new HashMap<>();
+
+    public static StreamReader<?> getByType(final Class<?> type) {
+        if (readers.isEmpty()) {
+            readers.put(boolean.class, boolReader);
+            readers.put(Boolean.class, boolReader);
+            readers.put(byte.class, scharReader);
+            readers.put(Byte.class, scharReader);
+            readers.put(char.class, charReader);
+            readers.put(Character.class, charReader);
+            readers.put(double.class, doubleReader);
+            readers.put(Double.class, doubleReader);
+            readers.put(float.class, floatReader);
+            readers.put(Float.class, floatReader);
+            readers.put(int.class, intReader);
+            readers.put(Integer.class, intReader);
+            readers.put(short.class, shortReader);
+            readers.put(Short.class, shortReader);
+            readers.put(String.class, stringReader);
+        }
+        return readers.get(type);
+    }
+
+    public static StreamReader<?> getArrayReaderByComponentType(final Class<?> type, final int arrayLength) {
+        if (arrayReaderClasses.isEmpty()) {
+            arrayReaderClasses.put(boolean.class, BoolArrayReader.class);
+            arrayReaderClasses.put(Boolean.class, BoolArrayReader.class);
+            arrayReaderClasses.put(byte.class, SCharArrayReader.class);
+            arrayReaderClasses.put(Byte.class, SCharArrayReader.class);
+            arrayReaderClasses.put(char.class, CharArrayReader.class);
+            arrayReaderClasses.put(Character.class, CharArrayReader.class);
+            arrayReaderClasses.put(double.class, DoubleArrayReader.class);
+            arrayReaderClasses.put(Double.class, DoubleArrayReader.class);
+            arrayReaderClasses.put(float.class, FloatArrayReader.class);
+            arrayReaderClasses.put(Float.class, FloatArrayReader.class);
+            arrayReaderClasses.put(int.class, IntArrayReader.class);
+            arrayReaderClasses.put(Integer.class, IntArrayReader.class);
+            arrayReaderClasses.put(short.class, ShortArrayReader.class);
+            arrayReaderClasses.put(Short.class, ShortArrayReader.class);
+        }
+        final Class<?> readerClass = arrayReaderClasses.get(type);
+        if (readerClass != null) {
+            try {
+                return StreamReader.class.cast(readerClass.getConstructor(int.class).newInstance(arrayLength));
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            }
+        } else if (String.class.isAssignableFrom(type)) {
+            return new ArrayReader<>(stringReader, new String[arrayLength]);
+        }
+        return readers.get(type);
+    }
+
+    private static class BoolReader implements SimpleStreamReader<Boolean> {
 
         @Override
         public int getStreamedSize() {
@@ -81,7 +137,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class CharReader implements SimpleStreamReader<Character> {
+    private static class CharReader implements SimpleStreamReader<Character> {
 
         @Override
         public int getStreamedSize() {
@@ -95,7 +151,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class SCharReader implements SimpleStreamReader<Byte> {
+    private static class SCharReader implements SimpleStreamReader<Byte> {
 
         @Override
         public int getStreamedSize() {
@@ -109,7 +165,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class UCharReader implements SimpleStreamReader<Short> {
+    private static class UCharReader implements SimpleStreamReader<Short> {
 
         @Override
         public int getStreamedSize() {
@@ -123,7 +179,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class ShortReader implements SimpleStreamReader<Short> {
+    private static class ShortReader implements SimpleStreamReader<Short> {
 
         @Override
         public int getStreamedSize() {
@@ -137,7 +193,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class UShortReader implements SimpleStreamReader<Integer> {
+    private static class UShortReader implements SimpleStreamReader<Integer> {
 
         @Override
         public int getStreamedSize() {
@@ -151,7 +207,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class IntReader implements SimpleStreamReader<Integer> {
+    private static class IntReader implements SimpleStreamReader<Integer> {
 
         @Override
         public int getStreamedSize() {
@@ -165,7 +221,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class UIntReader implements SimpleStreamReader<Long> {
+    private static class UIntReader implements SimpleStreamReader<Long> {
 
         @Override
         public int getStreamedSize() {
@@ -179,7 +235,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class FloatReader implements SimpleStreamReader<Float> {
+    private static class FloatReader implements SimpleStreamReader<Float> {
 
         @Override
         public int getStreamedSize() {
@@ -193,7 +249,7 @@ public abstract class NativeReaders {
 
     }
 
-    public static class DoubleReader implements SimpleStreamReader<Double> {
+    private static class DoubleReader implements SimpleStreamReader<Double> {
 
         @Override
         public int getStreamedSize() {
