@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -273,13 +274,11 @@ public class LogEntryTable extends JPanel{
                 }
             }
             
-            // Scroll:
             if(entryPanel != null){
-                // TODO:
-                // getBounds() is strangely [0,0,0,0]
-                
-                JScrollPane parent = (JScrollPane)getParent().getParent().getParent();
-                parent.scrollRectToVisible(entryPanel.getTimeField().getBounds());
+                getParent().getParent().getParent().validate();
+                getParent().getParent().getParent().repaint();
+                JComponent parent = (JComponent) getParent().getParent();
+                parent.scrollRectToVisible(entryPanel.getBounds());
             }
         } else {
             createLogEntryTable();

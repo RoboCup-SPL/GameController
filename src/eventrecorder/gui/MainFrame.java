@@ -112,39 +112,6 @@ public class MainFrame extends JFrame {
         
         // Set Menubar:
         setJMenuBar(new MenuBar());
-        
-        // Update some running informations on the gui:
-        timer.scheduleAtFixedRate(new TimerTask(){
-            @Override
-            public void run() {
-                if(EventRecorder.model.isManuallyRunning){
-                    EventRecorder.model.currentTime--;
-                }
-                
-                currentTimeLabel.setText((EventRecorder.model.currentTime < 0? "-":"")+TIME_FORMAT.format(Math.abs(EventRecorder.model.currentTime*1000)));
-                currentTimeLabel.revalidate();
-                currentTimeLabel.repaint();
-
-                // Update the startButton activated state:
-                if(EventRecorder.model.isManuallyRunning != startButton.isActivated()){
-                    startButton.setActivated(EventRecorder.model.isManuallyRunning);
-                }
-                
-                boolean activeGameController = EventRecorder.model.lastGameControllerInfo + EventRecorder.GAMECONTROLLER_TIMEOUT >= System.currentTimeMillis();
-                
-                // Activate or deactivate buttons:
-                if(startButton.isEnabled() == activeGameController){
-                    startButton.setEnabled(!activeGameController);
-                    resetButton.setEnabled(!activeGameController);
-                    
-                    statusPanel.removeAll();
-                    statusPanel.add(activeGameController?CONNECTED_LABEL:DISCONNECTED_LABEL);
-                    statusPanel.setBackground(activeGameController?CONNECTED_BACKGROUND_COLOR:DISCONNECTED_BACKGROUND_COLOR);
-                    statusPanel.revalidate();
-                    statusPanel.repaint();
-                }                
-            }
-        }, 1000, 1000);
 
         // Calculate fitting window size and position:
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -352,6 +319,39 @@ public class MainFrame extends JFrame {
         
         add(mainWrapper);
         setVisible(true);
+
+        // Update some running informations on the gui:
+        timer.scheduleAtFixedRate(new TimerTask(){
+            @Override
+            public void run() {
+                if(EventRecorder.model.isManuallyRunning){
+                    EventRecorder.model.currentTime--;
+                }
+                
+                currentTimeLabel.setText((EventRecorder.model.currentTime < 0? "-":"")+TIME_FORMAT.format(Math.abs(EventRecorder.model.currentTime*1000)));
+                currentTimeLabel.revalidate();
+                currentTimeLabel.repaint();
+
+                // Update the startButton activated state:
+                if(EventRecorder.model.isManuallyRunning != startButton.isActivated()){
+                    startButton.setActivated(EventRecorder.model.isManuallyRunning);
+                }
+                
+                boolean activeGameController = EventRecorder.model.lastGameControllerInfo + EventRecorder.GAMECONTROLLER_TIMEOUT >= System.currentTimeMillis();
+                
+                // Activate or deactivate buttons:
+                if(startButton.isEnabled() == activeGameController){
+                    startButton.setEnabled(!activeGameController);
+                    resetButton.setEnabled(!activeGameController);
+                    
+                    statusPanel.removeAll();
+                    statusPanel.add(activeGameController?CONNECTED_LABEL:DISCONNECTED_LABEL);
+                    statusPanel.setBackground(activeGameController?CONNECTED_BACKGROUND_COLOR:DISCONNECTED_BACKGROUND_COLOR);
+                    statusPanel.revalidate();
+                    statusPanel.repaint();
+                }                
+            }
+        }, 1000, 1000);
     }    
 
     /**
