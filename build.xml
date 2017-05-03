@@ -66,6 +66,13 @@
             </manifest>
         </jar>
 
+        <jar destfile="${jar.dir}/EventRecorder.jar" basedir="${classes.dir}" includes="${common_classes} eventrecorder/ teamcomm/net/">
+            <manifest>
+                <attribute name="Main-Class" value="eventrecorder.EventRecorder"/>
+                <attribute name="Author" value="Andre Muehlenbrock" />
+            </manifest>
+        </jar>
+
         <mkdir dir="${jar.dir}/lib"/>
         <copy todir="${jar.dir}" overwrite="true">
             <fileset dir="${resources.dir}">
