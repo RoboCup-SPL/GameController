@@ -3,6 +3,11 @@ package eventrecorder.action;
 import eventrecorder.EventRecorder;
 import eventrecorder.LogEntry;
 
+/**
+ * Action for delete a logEntry.
+ * 
+ * @author Andre Muehlenbrock
+ */
 public class EntryDeleteAction extends Action{
     private int savedPosition;
     

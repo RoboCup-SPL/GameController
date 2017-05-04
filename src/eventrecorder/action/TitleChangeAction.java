@@ -3,6 +3,12 @@ package eventrecorder.action;
 import eventrecorder.EventRecorder;
 import eventrecorder.LogEntry;
 
+/**
+ * Action for changing title and additional information.
+ * 
+ * @author Andre Muehlenbrock
+ */
+
 public class TitleChangeAction extends Action{
     String savedTitle;
     String savedAdditional;

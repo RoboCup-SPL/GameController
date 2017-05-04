@@ -5,17 +5,11 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -25,7 +19,7 @@ import eventrecorder.export.MarkDownExporter;
 /**
  * The menu bar at the top of the program.
  *
- * @author AndreM
+ * @author Andre Muehlenbrock
  */
 
 public class MenuBar extends JMenuBar {

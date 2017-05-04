@@ -7,7 +7,12 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
-@SuppressWarnings("serial")
+/**
+ * A JButton with two ImageIcons which can be switched by clicking.
+ * 
+ * @author Andre Muehlenbrock
+ */
+
 public class ImageToggleButton extends JToggleButton{
 	private ImageIcon enabledIcon;
 	private ImageIcon disabledIcon;

@@ -15,7 +15,7 @@ import eventrecorder.action.EntryDeleteAction;
 /**
  * Displays a line in the logEntryTable.
  * 
- * @author AndreM
+ * @author Andre Muehlenbrock
  */
 
 public class EntryPanel extends JPanel{

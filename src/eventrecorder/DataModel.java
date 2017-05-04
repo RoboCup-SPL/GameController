@@ -1,12 +1,11 @@
 package eventrecorder;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Contains all information of the actual shown records.
  * 
- * @author AndreM
+ * @author Andre Muehlenbrock
  */
 
 public class DataModel {

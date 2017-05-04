@@ -2,12 +2,13 @@ package eventrecorder.gui;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import eventrecorder.EventRecorder;
@@ -20,7 +21,7 @@ import eventrecorder.action.EntryChangeTextAction;
  * 
  * Here is also implemented when a Change-Action is called.
  * 
- * @author AndreM
+ * @author Andre Muehlenbrock
  */
 
 public class TextField extends JTextField{
@@ -40,6 +41,8 @@ public class TextField extends JTextField{
             
             @Override
             public void focusGained(FocusEvent e) {
+                makeVisibleInScrollPane();
+                
                 savedText = getText();
             }
 
@@ -66,6 +69,26 @@ public class TextField extends JTextField{
         }
         
         savedText = null;
+    }
+    
+    /**
+     * This method scrolls the parent scrollpane so that this element is visible.
+     * 
+     * Ugly code but it works... It is necessary that the parent/child structure is:
+     * ScrollPane -> (JViewport) -> LogEntryTable -> EntryPanel -> This
+     */
+    
+    public void makeVisibleInScrollPane(){
+        LogEntryTable entryTable = (LogEntryTable) getParent().getParent();
+        entryTable.getParent().getParent().getParent().validate();
+        entryTable.getParent().getParent().getParent().repaint();
+        JComponent parent = (JComponent) entryTable.getParent().getParent();
+        JScrollPane scrollPane = (JScrollPane)entryTable.getParent().getParent().getParent();
+        float scrollPaneValue = scrollPane.getVerticalScrollBar().getValue();
+        
+        Rectangle b = getParent().getBounds();
+        
+        parent.scrollRectToVisible(new Rectangle(0, (int)(b.y - scrollPaneValue), b.width, b.height));
     }
     
     public LogEntry getLogEntry(){

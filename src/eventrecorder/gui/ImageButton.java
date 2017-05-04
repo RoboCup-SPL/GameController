@@ -4,9 +4,14 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-@SuppressWarnings("serial")
+/**
+ * A JButton with an ImageIcon.
+ * 
+ * @author Andre Muehlenbrock
+ */
 public class ImageButton extends JButton{
-	ImageIcon enabledIcon;
+    private static final long serialVersionUID = -2848062138312840891L;
+    ImageIcon enabledIcon;
 	ImageIcon disabledIcon;
 	
 	public ImageButton(String tooltip, String path, int width, int height){

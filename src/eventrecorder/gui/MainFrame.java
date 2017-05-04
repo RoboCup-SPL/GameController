@@ -184,7 +184,6 @@ public class MainFrame extends JFrame {
             }
         });
         
-        
         // Start/Stop and Reset-Button:
         startButton = new ImageToggleButton("Play and Pause", ICONS_PATH+"pause_icon.png", ICONS_PATH+"play_icon.png", false,24,24); 
         startButton.addActionListener(new ActionListener(){
@@ -300,7 +299,6 @@ public class MainFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(entryTableWrapper);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(SCROLL_SPEED);
         scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_SPEED);
         
         // Add all subPanels to the main panel:
@@ -318,8 +316,8 @@ public class MainFrame extends JFrame {
         mainWrapper.add(main, BorderLayout.CENTER);
         
         add(mainWrapper);
-        setVisible(true);
-
+        setVisible(true);       
+        
         // Update some running informations on the gui:
         timer.scheduleAtFixedRate(new TimerTask(){
             @Override
@@ -417,7 +415,7 @@ public class MainFrame extends JFrame {
                 UIManager.put(key, f);
         }
     }
-
+    
     public void actionWasExecuted(Action action) {
         undoButton.setEnabled(EventRecorder.history.undoPossible());
         redoButton.setEnabled(EventRecorder.history.redoPossible());

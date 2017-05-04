@@ -5,10 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import eventrecorder.EventRecorder;
 import eventrecorder.LogEntry;
@@ -89,52 +86,51 @@ public class LogEntryTable extends JPanel{
             if(e.getKeyCode() == KeyEvent.VK_ENTER){
                 thisField.executeChangeAction();
                 EventRecorder.history.execute(new EntryCreateAction(new LogEntry("", "", LogType.Manually)));
+                
                 e.consume();
-            } else 
-
-            if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE && thisField.getCaretPosition() == 0){
+            } else  if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE && thisField.getCaretPosition() == 0){
                 if(prevPanel != null && thisField.getSelectedText() == null){                    
                     if("".equals(thisPanel.getTextField().getText()) && "".equals(thisPanel.getTimeField().getText())){
                         thisField.executeChangeAction();
                         EventRecorder.history.execute(new EntryDeleteAction(entry));
+                        
+                        e.consume();
                     } else {
                         prevPanel.getTextField().setCaretPosition(prevPanel.getTextField().getText().length());
                         prevPanel.getTextField().requestFocus();
+                        
+                        e.consume();
                     }
-                    e.consume();
                 }
-            } else 
-            
-            if(e.getKeyCode() == KeyEvent.VK_UP){
+            } else if(e.getKeyCode() == KeyEvent.VK_UP){
                 if(prevPanel != null){
                     int newCaretPosition = Math.min(prevPanel.getTimeField().getText().length(), thisField.getCaretPosition());
                     prevPanel.getTimeField().setCaretPosition(newCaretPosition);
                     prevPanel.getTimeField().requestFocus();
                     
+                    e.consume();
                 }
-            } else 
-            
-            if(e.getKeyCode() == KeyEvent.VK_DOWN){
+            } else if(e.getKeyCode() == KeyEvent.VK_DOWN){
                 if(nextPanel != null){
                     int newCaretPosition = Math.min(nextPanel.getTimeField().getText().length(), thisField.getCaretPosition());
                     nextPanel.getTimeField().setCaretPosition(newCaretPosition);
                     nextPanel.getTimeField().requestFocus();
+                    
+                    e.consume();
                 }
-            } else 
-            
-            if(e.getKeyCode() == KeyEvent.VK_RIGHT && thisField.getCaretPosition() == thisField.getText().length()){
+            } else if(e.getKeyCode() == KeyEvent.VK_RIGHT && thisField.getCaretPosition() == thisField.getText().length()){
                 thisPanel.getTextField().setCaretPosition(0);
                 thisPanel.getTextField().requestFocus();
-            } else 
-
-            if(e.getKeyCode() == KeyEvent.VK_LEFT && thisField.getCaretPosition() == 0){
+                
+                e.consume();
+            } else if(e.getKeyCode() == KeyEvent.VK_LEFT && thisField.getCaretPosition() == 0){
                 if(prevPanel != null){
                     prevPanel.getTextField().setCaretPosition(prevPanel.getTextField().getText().length());
                     prevPanel.getTextField().requestFocus();
+                    
+                    e.consume();
                 }
-            } else 
-            
-            if(thisField.getLogEntry().firstTimeSet){
+            } else if(thisField.getLogEntry().firstTimeSet){
                 EventRecorder.history.execute(new EntryChangeTimeAction(thisField.getLogEntry(), MainFrame.TIME_FORMAT.format(EventRecorder.model.currentTime*1000),""));
             }
         }
@@ -166,58 +162,67 @@ public class LogEntryTable extends JPanel{
             if(e.getKeyCode() == KeyEvent.VK_ENTER){
                 thisField.executeChangeAction();
                 EventRecorder.history.execute(new EntryCreateAction(new LogEntry("", "", LogType.Manually),id+1));
-
+                
                 e.consume();
-            } else 
-            
-            if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE && thisField.getCaretPosition() == 0 && thisField.getSelectedText() == null){
+            } else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE && thisField.getCaretPosition() == 0 && thisField.getSelectedText() == null){
                 if("".equals(thisPanel.getTextField().getText())){
                     thisField.executeChangeAction();
                     EventRecorder.history.execute(new EntryDeleteAction(entry));
+                    
+                    e.consume();
                 } else {
                     thisField.executeChangeAction();
                     thisPanel.getTimeField().setCaretPosition(thisPanel.getTimeField().getText().length());
                     thisPanel.getTimeField().requestFocus();
+                    
+                    e.consume();
                 }
-                e.consume();
-            } else 
-            
-            if(e.getKeyCode() == KeyEvent.VK_UP){
+            } else if(e.getKeyCode() == KeyEvent.VK_UP){
                 if(prevPanel != null){
                     int newCaretPosition = Math.min(prevPanel.getTextField().getText().length(), thisField.getCaretPosition());
                     prevPanel.getTextField().setCaretPosition(newCaretPosition);
                     prevPanel.getTextField().requestFocus();
                     
+                    e.consume();
                 }
-            } else 
-            
-            if(e.getKeyCode() == KeyEvent.VK_DOWN){
+            } else if(e.getKeyCode() == KeyEvent.VK_DOWN){
                 if(nextPanel != null){
                     int newCaretPosition = Math.min(nextPanel.getTextField().getText().length(), thisField.getCaretPosition());
                     nextPanel.getTextField().setCaretPosition(newCaretPosition);
                     nextPanel.getTextField().requestFocus();
+                    
+                    e.consume();
                 }
-            } else 
-            
-            if(e.getKeyCode() == KeyEvent.VK_LEFT && thisField.getCaretPosition() == 0){
+            } else if(e.getKeyCode() == KeyEvent.VK_LEFT && thisField.getCaretPosition() == 0){
                 thisPanel.getTimeField().setCaretPosition(thisPanel.getTimeField().getText().length());
                 thisPanel.getTimeField().requestFocus();
-            } else 
-            
-            if(e.getKeyCode() == KeyEvent.VK_RIGHT && thisField.getCaretPosition() == thisField.getText().length()){
+                
+                e.consume();
+            } else if(e.getKeyCode() == KeyEvent.VK_RIGHT && thisField.getCaretPosition() == thisField.getText().length()){
                 if(nextPanel != null){
                     nextPanel.getTimeField().setCaretPosition(0);
                     nextPanel.getTimeField().requestFocus();
+                    
+                    e.consume();
                 }
-            } else 
-            
-            if(thisField.getLogEntry().firstTimeSet){
+            } else if(thisField.getLogEntry().firstTimeSet){
                 String time = (EventRecorder.model.currentTime < 0? "-":"")+MainFrame.TIME_FORMAT.format(Math.abs(EventRecorder.model.currentTime*1000));
                 EventRecorder.history.execute(new EntryChangeTimeAction(thisField.getLogEntry(), time, ""));
+                
+                e.consume();
             }
         }
     }
-
+/*
+    public void scrollToEntryPanel(EntryPanel entryPanel){
+        if(entryPanel != null){
+            getParent().getParent().getParent().validate();
+            getParent().getParent().getParent().repaint();
+            JComponent parent = (JComponent) getParent().getParent();
+            parent.scrollRectToVisible(entryPanel.getBounds());
+        }
+    }
+  */
     
     public void entryActionWasExecuted(Action action){
         int id = getIdByLogEntry(action.getAffectedLogEntry());
@@ -272,13 +277,6 @@ public class LogEntryTable extends JPanel{
                         entryPanel.getTextField().requestFocus();
                     }
                 }
-            }
-            
-            if(entryPanel != null){
-                getParent().getParent().getParent().validate();
-                getParent().getParent().getParent().repaint();
-                JComponent parent = (JComponent) getParent().getParent();
-                parent.scrollRectToVisible(entryPanel.getBounds());
             }
         } else {
             createLogEntryTable();

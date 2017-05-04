@@ -2,8 +2,6 @@ package eventrecorder;
 
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 
@@ -15,7 +13,7 @@ import eventrecorder.GameControlDataReceiver;
 /**
  * This is a little tool to record events while a game takes place.
  * 
- * @author AndreM
+ * @author Andre Muehlenbrock
  */
 
 public class EventRecorder {
@@ -30,7 +28,6 @@ public class EventRecorder {
     public static MainFrame gui;
     
     public static GameControlDataReceiver gcDataReceiver;
-    private static Timer timer = new Timer();
     
     private static GameControlData lastData = null;
     private static byte lastGameState = -1;

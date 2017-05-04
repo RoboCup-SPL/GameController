@@ -2,6 +2,8 @@ package eventrecorder;
 
 /**
  * Circular-Last-In-First-Out-Buffer specially for redo/undo-functionality.
+ * 
+ * @author Andre Muehlenbrock
  */
 
 public class CircularLiFoBuffer<T> {

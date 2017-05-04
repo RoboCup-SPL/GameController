@@ -2,10 +2,13 @@ package eventrecorder.gui;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import eventrecorder.EventRecorder;
@@ -37,6 +40,8 @@ public class TimeField extends JTextField {
             
             @Override
             public void focusGained(FocusEvent e) {
+                makeVisibleInScrollPane();
+                
                 savedTime = getText();
             }
 
@@ -56,6 +61,26 @@ public class TimeField extends JTextField {
         }
     }
 
+    /**
+     * This method scrolls the parent scrollpane so that this element is visible.
+     * 
+     * Ugly code but it works... It is necessary that the parent/child structure is:
+     * ScrollPane -> (JViewport) -> LogEntryTable -> EntryPanel -> This
+     */
+    
+    public void makeVisibleInScrollPane(){
+        LogEntryTable entryTable = (LogEntryTable) getParent().getParent();
+        entryTable.getParent().getParent().getParent().validate();
+        entryTable.getParent().getParent().getParent().repaint();
+        JComponent parent = (JComponent) entryTable.getParent().getParent();
+        JScrollPane scrollPane = (JScrollPane)entryTable.getParent().getParent().getParent();
+        float scrollPaneValue = scrollPane.getVerticalScrollBar().getValue();
+        
+        Rectangle b = getParent().getBounds();
+        
+        parent.scrollRectToVisible(new Rectangle(0, (int)(b.y - scrollPaneValue), b.width, b.height));
+    }
+    
     public void executeChangeAction(){
         String newTime = getText();
         
