@@ -303,7 +303,7 @@ public class BHumanMessageParts {
             timeWhenReachBall = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3));
             timeWhenReachBallQueen = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3));
 
-            ballTimeWhenLastSeen = new Timestamp(timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 6));
+            ballTimeWhenLastSeen = new Timestamp().read(stream);
 
             final int whistleDetectionContainer = Unsigned.toUnsigned(stream.getShort());
             confidenceOfLastWhistleDetection = HearingConfidence.values()[whistleDetectionContainer >> 14];
