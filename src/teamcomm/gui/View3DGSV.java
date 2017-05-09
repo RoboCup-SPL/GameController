@@ -350,6 +350,24 @@ public class View3DGSV extends View3D {
             }
             textRenderers[RENDERER_STATE].endRendering();
 
+            if (data.gameState == GameControlData.STATE_READY || data.gameState == GameControlData.STATE_SET) {
+                switchTo2D(gl);
+                final float iconSize = textRendererSizes[RENDERER_STATE] * 2 / 3;
+                try {
+                    final float x;
+                    if (data.kickOffTeam == data.team[1].teamNumber) {
+                        x = (float) ((window.getWidth() - textRenderers[RENDERER_STATE].getBounds(state).getWidth()) / 2) - window.getWidth() * 20 / 1920 - iconSize;
+                    } else if (data.kickOffTeam == data.team[0].teamNumber) {
+                        x = (float) ((window.getWidth() + textRenderers[RENDERER_STATE].getBounds(state).getWidth()) / 2) + window.getWidth() * 20 / 1920;
+                    } else {
+                        x = -iconSize * 2;
+                    }
+                    Image.drawImage2D(gl, TextureLoader.getInstance().loadTexture(gl, new File("scene/Textures/ball_icon.png")), x, textRendererSizes[RENDERER_SECSTATE] + textRendererSizes[RENDERER_TIME] + window.getHeight() * 15 / 1080 + textRendererSizes[RENDERER_STATE] * 2 / 3 - iconSize / 2, iconSize, iconSize);
+                } catch (final IOException ex) {
+                }
+                switchTo3D(gl);
+            }
+
             // Score
             textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
             drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
