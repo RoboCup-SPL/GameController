@@ -32,7 +32,7 @@ import teamcomm.gui.drawings.Static;
  */
 public abstract class View3D implements GLEventListener, TeamEventListener {
 
-    public static final int ANIMATION_FPS = 30;
+    public static final int ANIMATION_FPS = 10;
 
     protected AnimatorBase animator;
     protected GLAutoDrawable autoDrawable;
