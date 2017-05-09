@@ -192,3 +192,8 @@ on the keyboard:
                               be done by scrolling the mouse wheel.
     Ctrl + Arrow left/right - Switch the screen on which to display the
                               fullscreen GSV window.
+
+## Acknowledgements
+The ball icon used for displaying the kickoff team in the GSV mode was taken
+from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Emoji_u26bd_transparent.svg)
+and is licensed as CC-BY-4.0.
