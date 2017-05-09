@@ -106,6 +106,13 @@ public class TeamCommunicationMonitor {
         MainWindow robotView = silentMode || gsvMode ? null : new MainWindow();
         View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV(forceWindowed) : null);
 
+        // Set initial state for PluginLoader
+        if (silentMode || gsvMode) {
+            PluginLoader.getInstance().disablePlugins();
+        } else {
+            PluginLoader.getInstance().enablePlugins();
+        }
+
         // Start threads
         gcDataReceiver.start();
         receiver.start();
@@ -122,12 +129,14 @@ public class TeamCommunicationMonitor {
                                 robotView = null;
                             }
                             gsvView = new View3DGSV(forceWindowed);
+                            PluginLoader.getInstance().disablePlugins();
                         } else if (!gsvMode && robotView == null) {
                             if (gsvView != null) {
                                 gsvView.terminate();
                                 gsvView = null;
                             }
                             robotView = new MainWindow();
+                            PluginLoader.getInstance().enablePlugins();
                         }
                     }
                     commandMutex.wait();

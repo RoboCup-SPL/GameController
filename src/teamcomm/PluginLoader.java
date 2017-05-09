@@ -51,6 +51,8 @@ public class PluginLoader {
     private final Map<Integer, Class<? extends RobotDetailFrame>> robotDetailFrameClasses = new HashMap<>();
     private final Map<Integer, Collection<Drawing>> drawings = new HashMap<>();
 
+    private boolean pluginsDisabled = false;
+
     private PluginLoader() {
         scanJar(new File(pluginDir, COMMON_DRAWINGS_PLUGIN), TEAMNUMBER_COMMON);
     }
@@ -64,6 +66,14 @@ public class PluginLoader {
         return instance;
     }
 
+    public void enablePlugins() {
+        pluginsDisabled = false;
+    }
+
+    public void disablePlugins() {
+        pluginsDisabled = true;
+    }
+
     /**
      * Returns the class of messages from the given team.
      *
@@ -71,7 +81,7 @@ public class PluginLoader {
      * @return class for instantiating messages from the given team
      */
     public Class<? extends SPLStandardMessage> getMessageClass(final int teamNumber) {
-        final Class<? extends AdvancedMessage> c = messageClasses.get(teamNumber);
+        final Class<? extends AdvancedMessage> c = pluginsDisabled ? null : messageClasses.get(teamNumber);
 
         return c != null ? c : SPLStandardMessage.class;
     }
@@ -84,7 +94,7 @@ public class PluginLoader {
      * @return class for instantiating messages from the given team
      */
     public RobotDetailFrame createRobotDetailFrame(final RobotState robot, final JPanel anchor) {
-        final Class<? extends RobotDetailFrame> c = robotDetailFrameClasses.get(robot.getTeamNumber());
+        final Class<? extends RobotDetailFrame> c = pluginsDisabled ? null : robotDetailFrameClasses.get(robot.getTeamNumber());
 
         if (c != null) {
             try {
@@ -114,7 +124,7 @@ public class PluginLoader {
      * @return drawings
      */
     public Collection<Drawing> getDrawings(final int teamNumber) {
-        final Collection<Drawing> ds = drawings.get(teamNumber);
+        final Collection<Drawing> ds = pluginsDisabled ? null : drawings.get(teamNumber);
 
         return ds != null ? ds : new ArrayList<Drawing>(0);
     }
