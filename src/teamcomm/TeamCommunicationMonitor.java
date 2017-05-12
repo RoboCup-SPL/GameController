@@ -24,6 +24,7 @@ public class TeamCommunicationMonitor {
     private static boolean silentMode = false;
     private static boolean gsvMode = false;
     private static boolean forceWindowed = false;
+    private static boolean forceEnablePlugins = false;
 
     private static boolean shutdown = false;
     private static final Object commandMutex = new Object();
@@ -107,7 +108,7 @@ public class TeamCommunicationMonitor {
         View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV(forceWindowed) : null);
 
         // Set initial state for PluginLoader
-        if (silentMode || gsvMode) {
+        if ((silentMode || gsvMode) && !forceEnablePlugins) {
             PluginLoader.getInstance().disablePlugins();
         } else {
             PluginLoader.getInstance().enablePlugins();
@@ -129,7 +130,9 @@ public class TeamCommunicationMonitor {
                                 robotView = null;
                             }
                             gsvView = new View3DGSV(forceWindowed);
-                            PluginLoader.getInstance().disablePlugins();
+                            if (!forceEnablePlugins) {
+                                PluginLoader.getInstance().disablePlugins();
+                            }
                         } else if (!gsvMode && robotView == null) {
                             if (gsvView != null) {
                                 gsvView.terminate();
@@ -185,6 +188,8 @@ public class TeamCommunicationMonitor {
     private static final String ARG_GSV = "--gsv";
     private static final String ARG_WINDOWED = "--windowed";
     private static final String ARG_WINDOWED_SHORT = "-w";
+    private static final String ARG_FORCEPLUGINS = "--forceplugins";
+    private static final String ARG_FORCEPLUGINS_SHORT = "-p";
 
     private static void parseArgs(final String[] args) {
         for (final String arg : args) {
@@ -194,7 +199,9 @@ public class TeamCommunicationMonitor {
                     System.out.println("Usage: java -jar TeamCommunicationMonitor.jar {options}"
                             + "\n  (-h | --help)                   display help"
                             + "\n  (-s | --silent)                 start in silent mode"
-                            + "\n  (--gsv)                         start as GameStateVisualizer");
+                            + "\n  (--gsv)                         start as GameStateVisualizer"
+                            + "\n  (-w | --windowed)               GSV: force windowed mode"
+                            + "\n  (-p | --forceplugins)           GVS: force usage of plugins");
                     System.exit(0);
                 case ARG_SILENT_SHORT:
                 case ARG_SILENT:
@@ -203,6 +210,10 @@ public class TeamCommunicationMonitor {
                 case ARG_WINDOWED_SHORT:
                 case ARG_WINDOWED:
                     forceWindowed = true;
+                    break;
+                case ARG_FORCEPLUGINS_SHORT:
+                case ARG_FORCEPLUGINS:
+                    forceEnablePlugins = true;
                     break;
                 case ARG_GSV:
                     gsvMode = true;

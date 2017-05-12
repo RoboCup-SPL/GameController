@@ -191,16 +191,20 @@ public class View3DGSV extends View3D {
         glad.getGL().glClearColor(1.f, 1.f, 1.f, 1.f);
 
         for (final Drawing d : drawings) {
-            switch (d.getClass().getName()) {
-                case "teamcomm.gui.drawings.common.Ball":
-                case "teamcomm.gui.drawings.common.Field":
-                case "teamcomm.gui.drawings.common.Player":
-                case "teamcomm.gui.drawings.common.PlayerNumber":
-                case "teamcomm.gui.drawings.common.PlayerTarget":
-                    d.setActive(true);
-                    break;
-                default:
-                    d.setActive(false);
+            if (d.getClass().getName().startsWith("teamcomm.gui.drawings.common")) {
+                switch (d.getClass().getSimpleName()) {
+                    case "Ball":
+                    case "Field":
+                    case "Player":
+                    case "PlayerNumber":
+                    case "PlayerTarget":
+                        d.setActive(true);
+                        break;
+                    default:
+                        d.setActive(false);
+                }
+            } else {
+                d.setActive(true);
             }
         }
         camera.addRadius(4.f);
