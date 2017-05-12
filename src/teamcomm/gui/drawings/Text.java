@@ -24,7 +24,7 @@ public class Text {
      * @param size height of the font
      */
     public static void drawText(final String text, final float centerX, final float centerY, final float size) {
-        drawText(text, centerX, centerY, size, new float[]{1, 1, 1, 1});
+        drawText(text, centerX, centerY, size, new float[]{1, 1, 1});
     }
 
     /**
@@ -43,7 +43,7 @@ public class Text {
         }
 
         renderer.begin3DRendering();
-        renderer.setColor(color[0], color[1], color[2], color[3]);
+        renderer.setColor(color[0], color[1], color[2], color.length < 4 ? 1 : color[3]);
         final Rectangle2D bounds = renderer.getBounds(text);
         renderer.draw3D(text, centerX - (float) (bounds.getWidth() * size / FONT_SIZE) / 2, centerY - (float) (bounds.getHeight() * size / FONT_SIZE) / 2, 0, size / FONT_SIZE);
         renderer.end3DRendering();

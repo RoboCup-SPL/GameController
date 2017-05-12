@@ -2,7 +2,9 @@ package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
 import data.PlayerInfo;
+import data.Rules;
 import data.SPLStandardMessage;
+import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.PerPlayer;
@@ -28,7 +30,7 @@ public class PlayerNumber extends PerPlayer {
             }
 
             camera.turnTowardsCamera(gl);
-            Text.drawText("" + msg.playerNum, 0, 0, 0.25f);
+            Text.drawText("" + msg.playerNum, 0, 0, 0.3f, Rules.LEAGUES[0].teamColor[GameState.getInstance().getTeamColor(player.getTeamNumber())].getRGBColorComponents(null));
 
             gl.glPopMatrix();
         }
