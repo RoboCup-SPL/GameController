@@ -3,7 +3,7 @@ package eventrecorder.action;
 import eventrecorder.LogEntry;
 
 /**
- * Changes the values of a LogEntry
+ * Changes the text value of a LogEntry
  * 
  * @author Andre Muehlenbrock
  */

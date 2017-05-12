@@ -2,13 +2,18 @@ package eventrecorder.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
@@ -24,6 +29,7 @@ import java.util.prefs.Preferences;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -71,6 +77,9 @@ public class MainFrame extends JFrame {
     public static final int START_WINDOW_WIDTH = 800;
     public static final int START_WINDOW_HEIGHT = 600;
 
+    public static final int CURRENT_TIME_SMALL_STEP = 5;
+    public static final int CURRENT_TIME_BIG_STEP = 60;
+    
     private Preferences prefs;
     
     private LogEntryTable entryTable;
@@ -89,6 +98,8 @@ public class MainFrame extends JFrame {
     private JTextArea additionalField;
 
     private JTextField titleField;
+    
+    private boolean activeGameController;
     
     /**
      * Creates the Main Window.
@@ -154,7 +165,7 @@ public class MainFrame extends JFrame {
         // Undo and Redo Line:
         JPanel topLine = new JPanel();
         topLine.setLayout(new BorderLayout());
-        undoButton = new ImageButton("Make Undo",ICONS_PATH+"undo.png",ICONS_PATH+"undo_disabled.png", EventRecorder.history.undoPossible(),24,24); 
+        undoButton = new ImageButton("Make Undo ( Strg+Z )",ICONS_PATH+"undo.png",ICONS_PATH+"undo_disabled.png", EventRecorder.history.undoPossible(),24,24); 
         undoButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -162,7 +173,7 @@ public class MainFrame extends JFrame {
             }
         });
         
-        redoButton = new ImageButton("Make Redo",ICONS_PATH+"redo.png",ICONS_PATH+"redo_disabled.png", EventRecorder.history.redoPossible(),24,24); 
+        redoButton = new ImageButton("Make Redo ( Strg+Y )",ICONS_PATH+"redo.png",ICONS_PATH+"redo_disabled.png", EventRecorder.history.redoPossible(),24,24); 
         redoButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -176,7 +187,7 @@ public class MainFrame extends JFrame {
         currentTimeLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         
 
-        ImageButton createNewButton = new ImageButton("New", ICONS_PATH+"plus_icon.png", 24,24);
+        ImageButton createNewButton = new ImageButton("New ( Strg+New )", ICONS_PATH+"plus_icon.png", 24,24);
         createNewButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -185,7 +196,7 @@ public class MainFrame extends JFrame {
         });
         
         // Start/Stop and Reset-Button:
-        startButton = new ImageToggleButton("Play and Pause", ICONS_PATH+"pause_icon.png", ICONS_PATH+"play_icon.png", false,24,24); 
+        startButton = new ImageToggleButton("Play and Pause ( Strg+Space )", ICONS_PATH+"pause_icon.png", ICONS_PATH+"play_icon.png", false,24,24); 
         startButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -215,6 +226,55 @@ public class MainFrame extends JFrame {
         currentTimeLabel.setAlignmentX(0.5f);
         currentTimeWrapper.add(currentTimeLabel);
         currentTimeWrapper.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JButton timeMinusMinusButton = new JButton("--");
+        timeMinusMinusButton.setToolTipText("Decrease by 60 seconds ( Strg+Shift+Minus )");
+        timeMinusMinusButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventRecorder.model.currentTime -= CURRENT_TIME_BIG_STEP;
+                updateTimeAndButtons();
+            }
+        });
+        JButton timeMinusButton = new JButton("-");
+        timeMinusButton.setToolTipText("Decrease by 5 seconds ( Strg+Minus )");
+        timeMinusButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventRecorder.model.currentTime -= CURRENT_TIME_SMALL_STEP;
+                updateTimeAndButtons();
+            }
+        });
+
+        JButton timePlusButton = new JButton("+");
+        timePlusButton.setToolTipText("Increase by 5 seconds ( Strg+Plus )");
+        timePlusButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventRecorder.model.currentTime += CURRENT_TIME_SMALL_STEP;
+                updateTimeAndButtons();
+            }
+        });
+
+        JButton timePlusPlusButton = new JButton("++");
+        timePlusPlusButton.setToolTipText("Increase by 60 seconds ( Strg+Shift+Plus )");
+        timePlusPlusButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventRecorder.model.currentTime += CURRENT_TIME_BIG_STEP;
+                updateTimeAndButtons();
+            }
+        });
+        
+        JPanel currentTimePanel = new JPanel();
+        currentTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        currentTimePanel.add(timeMinusMinusButton);
+        currentTimePanel.add(timeMinusButton);
+        currentTimePanel.add(currentTimeWrapper);
+        currentTimePanel.add(timePlusButton);
+        currentTimePanel.add(timePlusPlusButton);
+        
+        
         
         JPanel timeControlPanel = new JPanel();
         timeControlPanel.add(createNewButton);
@@ -222,7 +282,7 @@ public class MainFrame extends JFrame {
         timeControlPanel.add(resetButton);
         
         topLine.add(redoUndoPanel, BorderLayout.WEST);
-        topLine.add(currentTimeWrapper, BorderLayout.CENTER);
+        topLine.add(currentTimePanel, BorderLayout.CENTER);
         topLine.add(timeControlPanel, BorderLayout.EAST);
         
         head.add(topLine);
@@ -315,6 +375,21 @@ public class MainFrame extends JFrame {
         mainWrapper.add(statusPanel, BorderLayout.NORTH);
         mainWrapper.add(main, BorderLayout.CENTER);
         
+        /*String shortCutInfoString = "<html><body><b>Strg + Enter</b>: New Entry "
+                + "&nbsp;&nbsp;&nbsp; <b>Strg + Plus</b>: Increase Time"
+                + "&nbsp;&nbsp;&nbsp; <b>Strg + Minus</b>: Reduce Time"
+                + "&nbsp;&nbsp;&nbsp; <b>Strg + Space</b>: Start/Stop Timer"
+                + "</body></html>";
+        
+        JPanel shortCutInfoPanel = new JPanel();
+        JLabel shortCutInfoLabel = new JLabel(shortCutInfoString);
+        shortCutInfoLabel.setFont(new Font(shortCutInfoLabel.getFont().getFontName(),Font.PLAIN, 11));
+        shortCutInfoPanel.add(shortCutInfoLabel);
+        shortCutInfoPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+        shortCutInfoPanel.setLayout(new BoxLayout(shortCutInfoPanel,BoxLayout.X_AXIS));
+        
+        mainWrapper.add(shortCutInfoPanel,BorderLayout.SOUTH);*/
+        
         add(mainWrapper);
         setVisible(true);       
         
@@ -322,36 +397,145 @@ public class MainFrame extends JFrame {
         timer.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
-                if(EventRecorder.model.isManuallyRunning){
-                    EventRecorder.model.currentTime--;
-                }
-                
-                currentTimeLabel.setText((EventRecorder.model.currentTime < 0? "-":"")+TIME_FORMAT.format(Math.abs(EventRecorder.model.currentTime*1000)));
-                currentTimeLabel.revalidate();
-                currentTimeLabel.repaint();
-
-                // Update the startButton activated state:
-                if(EventRecorder.model.isManuallyRunning != startButton.isActivated()){
-                    startButton.setActivated(EventRecorder.model.isManuallyRunning);
-                }
-                
-                boolean activeGameController = EventRecorder.model.lastGameControllerInfo + EventRecorder.GAMECONTROLLER_TIMEOUT >= System.currentTimeMillis();
-                
-                // Activate or deactivate buttons:
-                if(startButton.isEnabled() == activeGameController){
-                    startButton.setEnabled(!activeGameController);
-                    resetButton.setEnabled(!activeGameController);
-                    
-                    statusPanel.removeAll();
-                    statusPanel.add(activeGameController?CONNECTED_LABEL:DISCONNECTED_LABEL);
-                    statusPanel.setBackground(activeGameController?CONNECTED_BACKGROUND_COLOR:DISCONNECTED_BACKGROUND_COLOR);
-                    statusPanel.revalidate();
-                    statusPanel.repaint();
-                }                
+               updateTimeAndButtons();
             }
         }, 1000, 1000);
+        
+        setupShortCuts();
     }    
+    
+    private void setupShortCuts(){
+        KeyboardFocusManager keyManager;
 
+        keyManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
+
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if (e.getID() == KeyEvent.KEY_PRESSED) {
+                    if (e.isControlDown()) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            EventRecorder.history
+                                    .execute(new EntryCreateAction(new LogEntry("", "", LogType.Manually)));
+                            e.consume();
+                            return true;
+                            
+                        } else if(e.getKeyCode() == KeyEvent.VK_Z){
+                            // Before undo, the action on focusLost has to be executed: 
+                            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                            if(focusOwner instanceof TextField)
+                                ((TextField)focusOwner).executeChangeAction();
+                            if(focusOwner instanceof TimeField)
+                                ((TextField)focusOwner).executeChangeAction();
+                            
+                            // Undo:
+                            EventRecorder.history.undo();
+                            e.consume();
+                            return true;
+                        } else if(e.getKeyCode() == KeyEvent.VK_Y){
+                            // Before redo, the action on focusLost has to be executed: 
+                            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                            if(focusOwner instanceof TextField)
+                                ((TextField)focusOwner).executeChangeAction();
+                            if(focusOwner instanceof TimeField)
+                                ((TextField)focusOwner).executeChangeAction();
+                            
+                            // Redo:
+                            EventRecorder.history.redo();
+                            e.consume();
+                            return true;
+                        } else if(e.getKeyCode() == KeyEvent.VK_W){
+                            // Delete last typed word:
+                            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+
+                            String text = null;
+                            if(focusOwner instanceof JTextField)
+                                text = ((JTextField)focusOwner).getText();
+                            if(focusOwner instanceof JTextArea)
+                                text = ((JTextArea)focusOwner).getText();
+
+                            String[] textParts = text.split(" ");
+                            
+                            text = "";
+                            for(int i=0;i<textParts.length-1;i++){
+                                text += textParts[i]+" ";
+                            }
+                            
+                            if(focusOwner instanceof JTextField)
+                                ((JTextField)focusOwner).setText(text);
+                            if(focusOwner instanceof JTextArea)
+                                ((JTextArea)focusOwner).setText(text);
+
+                        } else if(e.getKeyCode() == KeyEvent.VK_PLUS){
+                            // Increase current time:
+                            if(!activeGameController){
+                                if(e.isShiftDown()){
+                                    EventRecorder.model.currentTime += CURRENT_TIME_BIG_STEP;
+                                } else {
+                                    EventRecorder.model.currentTime += CURRENT_TIME_SMALL_STEP;
+                                }
+                                updateTimeAndButtons();
+                            }
+                            e.consume();
+                            return true;
+                        } else if(e.getKeyCode() == KeyEvent.VK_MINUS){
+                            // Decrease current time:
+                            if(!activeGameController){
+                                if(e.isShiftDown()){
+                                    EventRecorder.model.currentTime -= CURRENT_TIME_BIG_STEP;
+                                } else {
+                                    EventRecorder.model.currentTime -= CURRENT_TIME_SMALL_STEP;
+                                }
+                                updateTimeAndButtons();
+                            }
+                            e.consume();
+                            return true;
+                        } else if(e.getKeyCode() == KeyEvent.VK_SPACE){
+                            // Increase current time:
+                            if(!activeGameController){
+                                EventRecorder.model.isManuallyRunning = !EventRecorder.model.isManuallyRunning;
+                            }
+                            e.consume();
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+        });
+    }
+
+    private void updateTimeAndButtons(){
+        if(EventRecorder.model.isManuallyRunning){
+            EventRecorder.model.currentTime--;
+        }
+        
+        currentTimeLabel.setText((EventRecorder.model.currentTime < 0? "-":"")+TIME_FORMAT.format(Math.abs(EventRecorder.model.currentTime*1000)));
+        currentTimeLabel.revalidate();
+        currentTimeLabel.repaint();
+
+        // Update the startButton activated state:
+        if(EventRecorder.model.isManuallyRunning != startButton.isActivated()){
+            startButton.setActivated(EventRecorder.model.isManuallyRunning);
+        }
+        
+        activeGameController = EventRecorder.model.lastGameControllerInfo + EventRecorder.GAMECONTROLLER_TIMEOUT >= System.currentTimeMillis();
+        
+        // Activate or deactivate buttons:
+        if(startButton.isEnabled() == activeGameController){
+            startButton.setEnabled(!activeGameController);
+            resetButton.setEnabled(!activeGameController);
+            
+            statusPanel.removeAll();
+            statusPanel.add(activeGameController?CONNECTED_LABEL:DISCONNECTED_LABEL);
+            statusPanel.setBackground(activeGameController?CONNECTED_BACKGROUND_COLOR:DISCONNECTED_BACKGROUND_COLOR);
+            statusPanel.revalidate();
+            statusPanel.repaint();
+        }                
+    }
+    
     /**
      * Ask the user whether he wants to save the records and save it if desired.
      * 

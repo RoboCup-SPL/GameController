@@ -18,6 +18,7 @@ public class ActionHistory {
                 actions.push(action);
             
             notifyGUI(action);
+            System.out.println("Execute: "+action.getClass().getSimpleName());
             return true;
         }
         
@@ -35,7 +36,8 @@ public class ActionHistory {
             return false;
 
         Action action = actions.pop();
-        
+
+        System.out.println("Undo: "+action.getClass().getSimpleName());
         if(action.undoAction()){
             notifyGUI(action);
             return true;
@@ -56,6 +58,7 @@ public class ActionHistory {
         
 
         Action action = actions.popForward();
+        System.out.println("Redo: "+action.getClass().getSimpleName());
         if(action.executeAction()){
             notifyGUI(action);
             return true;

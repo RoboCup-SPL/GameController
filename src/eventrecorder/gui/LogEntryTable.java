@@ -205,11 +205,9 @@ public class LogEntryTable extends JPanel{
                     
                     e.consume();
                 }
-            } else if(thisField.getLogEntry().firstTimeSet){
+            } else if(thisField.getLogEntry().firstTimeSet && !thisField.getText().isEmpty()){
                 String time = (EventRecorder.model.currentTime < 0? "-":"")+MainFrame.TIME_FORMAT.format(Math.abs(EventRecorder.model.currentTime*1000));
                 EventRecorder.history.execute(new EntryChangeTimeAction(thisField.getLogEntry(), time, ""));
-                
-                e.consume();
             }
         }
     }
