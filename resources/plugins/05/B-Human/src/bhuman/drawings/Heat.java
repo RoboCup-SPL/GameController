@@ -1,7 +1,7 @@
 package bhuman.drawings;
 
 import bhuman.message.BHumanMessage;
-import bhuman.message.BHumanMessageParts;
+import bhuman.message.messages.RobotHealth;
 import com.jogamp.opengl.GL2;
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +13,15 @@ import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.TextureLoader;
 
 /**
- * Custom drawing for visualizing when a whistle was heard.
+ * Custom drawing for visualizing when a robot's joints are hot.
  *
  * @author Felix Thielke
  */
-public class WhistleHeard extends PerPlayer {
+public class Heat extends PerPlayer {
+
+    private static final int HEAT_TEMPERATURE = 70;
+    private static final int FIRE_TEMPERATURE = 90;
+    private static final int FIRE_EXCLAMATION_MARK_TEMPERATURE = 100;
 
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
@@ -25,12 +29,21 @@ public class WhistleHeard extends PerPlayer {
                 && rs.getLastMessage().valid
                 && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
-            if (msg.message.bhulks != null && msg.message.bhulks.confidenceOfLastWhistleDetection != BHumanMessageParts.BHULKsStandardMessagePart.HearingConfidence.iAmDeaf && msg.message.bhulks.lastTimeWhistleDetected.getTimeSince(msg.message.bhulks.timestamp) >= -200) {
+            final RobotHealth health;
+            if (msg.message.queue != null && (health = msg.message.queue.getCachedMessage(RobotHealth.class)) != null && health.maxJointTemperature >= HEAT_TEMPERATURE) {
                 gl.glPushMatrix();
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1);
                 camera.turnTowardsCamera(gl);
+                final String filename;
+                if (health.maxJointTemperature >= FIRE_EXCLAMATION_MARK_TEMPERATURE) {
+                    filename = "fire!_icon.png";
+                } else if (health.maxJointTemperature >= FIRE_TEMPERATURE) {
+                    filename = "fire_icon.png";
+                } else {
+                    filename = "heat_icon.png";
+                }
                 try {
-                    final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/whistle.png").getAbsoluteFile();
+                    final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/" + filename).getAbsoluteFile();
                     Image.drawImage(gl, TextureLoader.getInstance().loadTexture(gl, f), 0, 0, 0.2f);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null,
@@ -50,7 +63,7 @@ public class WhistleHeard extends PerPlayer {
 
     @Override
     public int getPriority() {
-        return 8;
+        return 9;
     }
 
 }
