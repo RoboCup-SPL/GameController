@@ -2,9 +2,11 @@ package teamcomm.net;
 
 import common.Log;
 import data.GameControlData;
+import data.TrueDataRequest;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -24,9 +26,15 @@ public class GameControlDataReceiver extends Thread {
 
     private static final int GAMECONTROLLER_TIMEOUT = 4000;
 
+    private static final int REQUEST_TRUE_DATA_AFTER = 1000;
+
     private final DatagramSocket datagramSocket;
 
     private final EventListenerList listeners = new EventListenerList();
+
+    private final boolean tryToGetTrueData;
+
+    private long timestampOfLastTrueGameControlData = 0;
 
     /**
      * Constructor.
@@ -34,7 +42,19 @@ public class GameControlDataReceiver extends Thread {
      * @throws SocketException if the socket cannot be bound
      */
     public GameControlDataReceiver() throws SocketException {
+        this(false);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param tryToGetTrueData set to true to request true game state data from
+     * the GameController
+     * @throws SocketException if the socket cannot be bound
+     */
+    public GameControlDataReceiver(final boolean tryToGetTrueData) throws SocketException {
         setName("GameControlDataReceiver");
+        this.tryToGetTrueData = tryToGetTrueData;
 
         datagramSocket = new DatagramSocket(null);
         datagramSocket.setReuseAddress(true);
@@ -60,6 +80,17 @@ public class GameControlDataReceiver extends Thread {
         }
     }
 
+    /**
+     * Sends a request for true game state data to the GameController.
+     *
+     * @param gameControllerAddress InetAddress of the GameController
+     * @throws IOException if an error occurred while sending
+     */
+    private void requestTrueData(final InetAddress gameControllerAddress) throws IOException {
+        final byte[] request = TrueDataRequest.createRequest().toByteArray();
+        new DatagramSocket().send(new DatagramPacket(request, request.length, gameControllerAddress, TrueDataRequest.GAMECONTROLLER_TRUEDATAREQUEST_PORT));
+    }
+
     @Override
     public void run() {
         while (!isInterrupted()) {
@@ -71,7 +102,21 @@ public class GameControlDataReceiver extends Thread {
                 buffer.rewind();
                 final GameControlData data = new GameControlData();
                 if (data.fromByteArray(buffer)) {
-                    fireEvent(new GameControlDataEvent(this, data));
+                    if (tryToGetTrueData == data.isTrueData || (tryToGetTrueData && System.currentTimeMillis() - timestampOfLastTrueGameControlData > 2 * REQUEST_TRUE_DATA_AFTER)) {
+                        fireEvent(new GameControlDataEvent(this, data));
+                    }
+
+                    if (tryToGetTrueData) {
+                        if (data.isTrueData) {
+                            timestampOfLastTrueGameControlData = System.currentTimeMillis();
+                        } else if (System.currentTimeMillis() - timestampOfLastTrueGameControlData >= REQUEST_TRUE_DATA_AFTER) {
+                            try {
+                                requestTrueData(packet.getAddress());
+                            } catch (IOException e) {
+                                Log.error("something went wrong trying to request true game data : " + e.getMessage());
+                            }
+                        }
+                    }
                 }
             } catch (SocketTimeoutException e) {
                 fireEvent(new GameControlDataTimeoutEvent(this));

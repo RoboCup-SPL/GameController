@@ -89,7 +89,7 @@ public class TeamCommunicationMonitor {
 
         // Initialize listener for GameController messages
         try {
-            gcDataReceiver = new GameControlDataReceiver();
+            gcDataReceiver = new GameControlDataReceiver(true);
         } catch (SocketException ex) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up GameController listener.",

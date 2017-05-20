@@ -6,6 +6,7 @@ import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
+import controller.net.TrueDataSender;
 import controller.ui.GUI;
 import controller.ui.KeyboardListener;
 import controller.ui.StartInput;
@@ -222,12 +223,16 @@ public class GameController {
         } else {
             data.gameType = input.outFulltime ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
         }
-        
+
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
         }
 
         try {
+            // TrueDataSender
+            TrueDataSender.initialize(localAddress.getAddress());
+            TrueDataSender.getInstance().start();
+
             //sender
             Sender.initialize(localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast());
             Sender sender = Sender.getInstance();
@@ -298,12 +303,14 @@ public class GameController {
             Log.error("Error while trying to release the application lock.");
         }
         Sender.getInstance().interrupt();
+        TrueDataSender.getInstance().interrupt();
         GameControlReturnDataReceiver.getInstance().interrupt();
         SPLCoachMessageReceiver.getInstance().interrupt();
         splStandardMessageReceiver.interrupt();
         Thread.interrupted(); // clean interrupted status
         try {
             Sender.getInstance().join();
+            TrueDataSender.getInstance().join();
             GameControlReturnDataReceiver.getInstance().join();
             SPLCoachMessageReceiver.getInstance().join();
         } catch (InterruptedException e) {
@@ -317,13 +324,13 @@ public class GameController {
         teamcomm.net.logging.Logger.getInstance().closeLogfile();
 
         gui.dispose();
-        
+
         // Try to join SPLStandardMessageReceiver
         try {
             splStandardMessageReceiver.join(1000);
         } catch (InterruptedException ex) {
         }
         System.exit(0);
-        
+
     }
 }

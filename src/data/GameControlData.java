@@ -22,6 +22,7 @@ public class GameControlData implements Serializable {
     public static final int GAMECONTROLLER_GAMEDATA_PORT = 3838; // port to send game state packets to
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
+    public static final String GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER = "RGTD";
     public static final byte GAMECONTROLLER_STRUCT_VERSION = 10;
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
@@ -112,6 +113,8 @@ public class GameControlData implements Serializable {
             + // secsRemaining
             2 * TeamInfo.SIZE7;
 
+    public boolean isTrueData;
+
     //this is streamed
     // GAMECONTROLLER_STRUCT_HEADER                             // header to identify the structure
     // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
@@ -174,6 +177,34 @@ public class GameControlData implements Serializable {
     }
 
     /**
+     * Returns the corresponding byte-stream of the real state of this object.
+     *
+     * @return the corresponding byte-stream of the real state of this object
+     */
+    public ByteBuffer getTrueDataAsByteArray() {
+        final ByteBuffer buffer = ByteBuffer.allocate(SIZE);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        buffer.put(GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER.getBytes(), 0, 4);
+        buffer.putShort(GAMECONTROLLER_STRUCT_VERSION);
+        buffer.put(packetNumber);
+        buffer.put(playersPerTeam);
+        buffer.put(gameType);
+        buffer.put(gameState);
+        buffer.put(firstHalf);
+        buffer.put(kickOffTeam);
+        buffer.put(secGameState);
+        buffer.put(dropInTeam);
+        buffer.putShort(dropInTime);
+        buffer.putShort(secsRemaining);
+        buffer.putShort(secondaryTime);
+        for (TeamInfo aTeam : team) {
+            buffer.put(aTeam.toByteArray());
+        }
+
+        return buffer;
+    }
+
+    /**
      * Returns the corresponding byte-stream of the state of this object in the
      * format of protocol version 7.
      *
@@ -216,6 +247,7 @@ public class GameControlData implements Serializable {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         byte[] header = new byte[4];
         buffer.get(header, 0, 4);
+        isTrueData = new String(header).equals(GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER);
         if (buffer.getShort() != GAMECONTROLLER_STRUCT_VERSION) {
             return false;
         }

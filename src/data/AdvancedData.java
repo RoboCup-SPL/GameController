@@ -1,5 +1,7 @@
 package data;
 
+import common.Log;
+import controller.action.ActionBoard;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,89 +10,132 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import common.Log;
-import controller.action.ActionBoard;
-
 /**
  * This class extends the GameControlData that is send to the robots. It
- * contains all the additional informations the GameControler needs to
- * represent a state of the game, for example time in millis.
- * 
+ * contains all the additional informations the GameControler needs to represent
+ * a state of the game, for example time in millis.
+ *
  * There are no synchronized get and set methods because in this architecture
  * only actions in their perform method are allowed to write into this and they
  * are all in the same thread. Look in the EventHandler for more information.
- * 
+ *
  * @author Michel Bartsch
  * @author Dennis Schürholz (bhuman@dennisschuerholz.de)
  */
-public class AdvancedData extends GameControlData implements Cloneable
-{
+public class AdvancedData extends GameControlData implements Cloneable {
+
     private static final long serialVersionUID = 2720243434306304319L;
 
-    /** This message is set when the data is put into the timeline */
+    /**
+     * This message is set when the data is put into the timeline
+     */
     public String message = "";
 
-    /** How much time summed up before the current state? (ms)*/
+    /**
+     * How much time summed up before the current state? (ms)
+     */
     public long timeBeforeCurrentGameState;
-    
-    /** When was switched to the current state? (ms) */
+
+    /**
+     * When was switched to the current state? (ms)
+     */
     public long whenCurrentGameStateBegan;
-    
-    /** How long ago started the current game state? (ms) Only set when written to log! */
+
+    /**
+     * How long ago started the current game state? (ms) Only set when written
+     * to log!
+     */
     public long timeSinceCurrentGameStateBegan;
 
-    /** When was the last drop-in? (ms, 0 = never) */
+    /**
+     * When was the last drop-in? (ms, 0 = never)
+     */
     public long whenDropIn;
-    
-    /** When was each player penalized last (ms, 0 = never)? */
-    public long[][] whenPenalized = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize+1] : new long[2][Rules.league.teamSize];
 
-    /** How often was each team penalized? */
+    /**
+     * When was each player penalized last (ms, 0 = never)?
+     */
+    public long[][] whenPenalized = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize + 1] : new long[2][Rules.league.teamSize];
+
+    /**
+     * How often was each team penalized?
+     */
     public int[] penaltyCount = new int[2];
 
-    /** How often was each team penalized at before the robot got penalized? */
+    /**
+     * How often was each team penalized at before the robot got penalized?
+     */
     public int[][] robotPenaltyCount = new int[2][Rules.league.teamSize];
 
-    /** Which players were already ejected? */
-    public boolean [][] ejected = Rules.league.isCoachAvailable ? new boolean[2][Rules.league.teamSize+1] : new boolean[2][Rules.league.teamSize];
-    
-    /** Pushing counters for each team, 0:left side, 1:right side. */
+    /**
+     * Which players were already ejected?
+     */
+    public boolean[][] ejected = Rules.league.isCoachAvailable ? new boolean[2][Rules.league.teamSize + 1] : new boolean[2][Rules.league.teamSize];
+
+    /**
+     * Pushing counters for each team, 0:left side, 1:right side.
+     */
     public int[] pushes = {0, 0};
-    
-    /** If true, the referee set a timeout */
+
+    /**
+     * If true, the referee set a timeout
+     */
     public boolean refereeTimeout = false;
 
-    /** If true, this team is currently taking a timeOut, 0:left side, 1:right side. */
+    /**
+     * If true, this team is currently taking a timeOut, 0:left side, 1:right
+     * side.
+     */
     public boolean[] timeOutActive = {false, false};
-    
-    /** TimeOut counters for each team, 0:left side, 1:right side. */
+
+    /**
+     * TimeOut counters for each team, 0:left side, 1:right side.
+     */
     public boolean[] timeOutTaken = {false, false};
-    
-    /** If true, left side has the kickoff. */
+
+    /**
+     * If true, left side has the kickoff.
+     */
     public boolean leftSideKickoff = true;
-    
-    /** If true, the colors change automatically. */
+
+    /**
+     * If true, the colors change automatically.
+     */
     public boolean colorChangeAuto;
-    
-    /** If true, the testmode has been activated. */
+
+    /**
+     * If true, the testmode has been activated.
+     */
     public boolean testmode = false;
 
-    /** If true, the clock has manually been paused in the testmode. */
+    /**
+     * If true, the clock has manually been paused in the testmode.
+     */
     public boolean manPause = false;
-    
-    /** If true, the clock has manually been started in the testmode. */
+
+    /**
+     * If true, the clock has manually been started in the testmode.
+     */
     public boolean manPlay = false;
-    
-    /** When was the last manual intervention to the clock? */
+
+    /**
+     * When was the last manual intervention to the clock?
+     */
     public long manWhenClockChanged;
-    
-    /** Time offset resulting from manually stopping the clock. */
+
+    /**
+     * Time offset resulting from manually stopping the clock.
+     */
     public long manTimeOffset;
-    
-    /** Time offset resulting from starting the clock when it should be stopped. */
+
+    /**
+     * Time offset resulting from starting the clock when it should be stopped.
+     */
     public long manRemainingGameTimeOffset;
 
-    /** Used to backup the secondary game state during a timeout. */
+    /**
+     * Used to backup the secondary game state during a timeout.
+     */
     public byte previousSecGameState = STATE2_NORMAL;
 
     public static final byte KICKOFF_HALF = 0;
@@ -100,28 +145,36 @@ public class AdvancedData extends GameControlData implements Cloneable
     public static final byte KICKOFF_GOAL = 4;
     public byte kickOffReason = KICKOFF_HALF;
 
-    /** Keeps the penalties for the players if there are substituted */
+    /**
+     * Keeps the penalties for the players if there are substituted
+     */
     public ArrayList<ArrayList<PenaltyQueueData>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<PenaltyQueueData>>();
 
-    /** Keep the timestamp when a coach message was received*/
+    /**
+     * Keep the timestamp when a coach message was received
+     */
     public long timestampCoachPackage[] = {0, 0};
 
-    /** Keep the coach messages*/
-    public  ArrayList<SPLCoachMessage> splCoachMessageQueue = new ArrayList<SPLCoachMessage>();
+    /**
+     * Keep the coach messages
+     */
+    public ArrayList<SPLCoachMessage> splCoachMessageQueue = new ArrayList<SPLCoachMessage>();
 
-    /** Saves the selected penalty taker and keeper of both teams. First index is team-number, second index is taker (0) or keeper (1)  */
-    public int[][] penaltyShootOutPlayers = new int[][] { { -1, -1 }, { -1, -1 } };
+    /**
+     * Saves the selected penalty taker and keeper of both teams. First index is
+     * team-number, second index is taker (0) or keeper (1)
+     */
+    public int[][] penaltyShootOutPlayers = new int[][]{{-1, -1}, {-1, -1}};
 
     /**
      * Creates a new AdvancedData.
      */
-    public AdvancedData()
-    {
+    public AdvancedData() {
         if (Rules.league.startWithPenalty) {
             secGameState = GameControlData.STATE2_PENALTYSHOOT;
         }
-        for (int i=0; i<2; i++) {
-            for (int j=0; j < team[i].player.length; j++) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < team[i].player.length; j++) {
                 if (j >= Rules.league.robotsPlaying) {
                     team[i].player[j].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
                 }
@@ -131,11 +184,12 @@ public class AdvancedData extends GameControlData implements Cloneable
     }
 
     /**
-     * Generically clone this object. Everything referenced must be Serializable.
+     * Generically clone this object. Everything referenced must be
+     * Serializable.
+     *
      * @return A deep copy of this object.
      */
-    public Object clone()
-    {
+    public Object clone() {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             new ObjectOutputStream(out).writeObject(this);
@@ -148,46 +202,47 @@ public class AdvancedData extends GameControlData implements Cloneable
         }
         return null; // Should never be reached
     }
-    
+
     /**
-     * Returns the side on which a team plays. The team should be playing
-     * via this GameController.
-     * 
-     * @param teamNumber    The unique teamNumber.
-     * 
+     * Returns the side on which a team plays. The team should be playing via
+     * this GameController.
+     *
+     * @param teamNumber The unique teamNumber.
+     *
      * @return The side of the team, 0:left side, 1:right side.
      */
-    public int getSide(short teamNumber)
-    {
+    public int getSide(short teamNumber) {
         return teamNumber == team[0].teamNumber ? 0 : 1;
     }
-    
+
     /**
      * Returns the current time. Can be stopped in test mode.
-     * @return The current time in ms. May become incompatible to
-     *         the time delivered by System.currentTimeMillis().
+     *
+     * @return The current time in ms. May become incompatible to the time
+     * delivered by System.currentTimeMillis().
      */
-    public long getTime()
-    {
+    public long getTime() {
         return manPause ? manWhenClockChanged : System.currentTimeMillis() + manTimeOffset;
     }
-    
+
     /**
      * Returns the number of seconds since a certain timestamp.
+     *
      * @param millis The timestamp in ms.
      * @return The number of seconds since the timestamp.
      */
     public int getSecondsSince(long millis) {
         return millis == 0 ? 100000 : (int) (getTime() - millis) / 1000;
     }
-    
+
     /**
-     * The number of seconds until a certion duration is over. The time
-     * already passed is specified as a timestamp when it began.
+     * The number of seconds until a certion duration is over. The time already
+     * passed is specified as a timestamp when it began.
+     *
      * @param millis The timestamp in ms.
      * @param duration The full duration in s.
-     * @param The number of seconds that still remain from the duration.
-     *        Can be negative.
+     * @param The number of seconds that still remain from the duration. Can be
+     * negative.
      */
     public int getRemainingSeconds(long millis, int durationInSeconds) {
         return durationInSeconds - getSecondsSince(millis);
@@ -196,8 +251,7 @@ public class AdvancedData extends GameControlData implements Cloneable
     /**
      * Update all durations in the GameControlData packet.
      */
-    public void updateTimes()
-    {
+    public void updateTimes() {
         secsRemaining = (short) getRemainingGameTime(false);
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         Integer subT = getSecondaryTime(0);
@@ -205,7 +259,7 @@ public class AdvancedData extends GameControlData implements Cloneable
         if (subT == null) {
             secondaryTime = 0;
         } else {
-            secondaryTime = (short)(int)subT;
+            secondaryTime = (short) (int) subT;
         }
         for (int side = 0; side < team.length; ++side) {
             for (int number = 0; number < team[side].player.length; ++number) {
@@ -215,50 +269,51 @@ public class AdvancedData extends GameControlData implements Cloneable
             }
         }
     }
-    
+
     /**
-     * Add the time passed in the current game state to the time that already passed before.
-     * Is usually called during changes of the game state.
+     * Add the time passed in the current game state to the time that already
+     * passed before. Is usually called during changes of the game state.
      */
-    public void addTimeInCurrentState()
-    {
+    public void addTimeInCurrentState() {
         timeBeforeCurrentGameState += getTime() - whenCurrentGameStateBegan;
     }
-    
+
     /**
-     * Calculates the remaining game time in the current phase of the game.
-     * This is what the primary clock will show.
-     * @param real If true, the real time will be returned. If false, the first number of seconds in the playing state
-     *             in play-off games will not be updated.
+     * Calculates the remaining game time in the current phase of the game. This
+     * is what the primary clock will show.
+     *
+     * @param real If true, the real time will be returned. If false, the first
+     * number of seconds in the playing state in play-off games will not be
+     * updated.
      * @return The remaining number of seconds.
      */
-    public int getRemainingGameTime(boolean real)
-    {
+    public int getRemainingGameTime(boolean real) {
         int regularNumberOfPenaltyShots = (gameType == GAME_PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
-        int duration = secGameState == STATE2_TIMEOUT ? secsRemaining : 
-                secGameState == STATE2_NORMAL ? Rules.league.halfTime
-                : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
-                : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
-                ? Rules.league.penaltyShotTimeSuddenDeath
-                : Rules.league.penaltyShotTime;
+        int duration = secGameState == STATE2_TIMEOUT ? secsRemaining
+                : secGameState == STATE2_NORMAL ? Rules.league.halfTime
+                        : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
+                                : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
+                                ? Rules.league.penaltyShotTimeSuddenDeath
+                                : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL// during timeouts
                 || (gameState == STATE_READY || gameState == STATE_SET)
                 && ((gameType == GAME_PLAYOFF) && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
-                ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                : real || (gameType != GAME_PLAYOFF && timeBeforeCurrentGameState > 0) || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
-                || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying 
-                ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
-                : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
+                        ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
+                        : real || (gameType != GAME_PLAYOFF && timeBeforeCurrentGameState > 0) || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
+                        || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying
+                        ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
+                        : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
         return duration - timePlayed;
     }
-    
+
     /**
      * The method returns the remaining pause time.
-     * @return The remaining number of seconds of the game pause or null if there currently is no pause.
+     *
+     * @return The remaining number of seconds of the game pause or null if
+     * there currently is no pause.
      */
-    public Integer getRemainingPauseTime()
-    {
+    public Integer getRemainingPauseTime() {
         if (secGameState == GameControlData.STATE2_NORMAL
                 && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf == C_TRUE)) {
@@ -271,25 +326,23 @@ public class AdvancedData extends GameControlData implements Cloneable
             return null;
         }
     }
-    
+
     /**
-     * Resets the penalize time of all players to 0.
-     * This does not unpenalize them.
+     * Resets the penalize time of all players to 0. This does not unpenalize
+     * them.
      */
-    public void resetPenaltyTimes()
-    {
+    public void resetPenaltyTimes() {
         for (long[] players : whenPenalized) {
             for (int i = 0; i < players.length; ++i) {
                 players[i] = 0;
             }
         }
     }
-    
+
     /**
      * Resets all penalties.
      */
-    public void resetPenalties()
-    {
+    public void resetPenalties() {
         for (int i = 0; i < team.length; ++i) {
             pushes[i] = 0;
             for (int j = 0; j < Rules.league.teamSize; j++) {
@@ -312,15 +365,16 @@ public class AdvancedData extends GameControlData implements Cloneable
             penaltyQueueForSubPlayers.get(i).clear();
         }
     }
-    
+
     /**
      * Calculates the remaining time a certain robot has to stay penalized.
-     * @param side 0 or 1 depending on whether the robot's team is shown left or right.
+     *
+     * @param side 0 or 1 depending on whether the robot's team is shown left or
+     * right.
      * @param number The robot's number starting with 0.
      * @return The number of seconds the robot has to stay penalized.
      */
-    public int getRemainingPenaltyTime(int side, int number)
-    {
+    public int getRemainingPenaltyTime(int side, int number) {
         int penalty = team[side].player[number].penalty;
         int penaltyTime = -1;
         if (penalty != PlayerInfo.PENALTY_MANUAL && penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
@@ -329,37 +383,37 @@ public class AdvancedData extends GameControlData implements Cloneable
         assert penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE || penaltyTime != -1;
         return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
                 : gameState == STATE_READY && Rules.league.returnRobotsInGameStoppages && whenPenalized[side][number] >= whenCurrentGameStateBegan
-                ? Rules.league.readyTime - getSecondsSince(whenCurrentGameStateBegan)
-                : Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
+                        ? Rules.league.readyTime - getSecondsSince(whenCurrentGameStateBegan)
+                        : Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
     }
-    
+
     /**
      * Calculates the Number of robots in play (not substitute) on one side
+     *
      * @param side 0 or 1 depending on whether the team is shown left or right.
      * @return The number of robots without substitute penalty on the side
      */
-    public int getNumberOfRobotsInPlay(int side)
-    {
+    public int getNumberOfRobotsInPlay(int side) {
         int count = 0;
-        for (int i=0; i<team[side].player.length; i++) {
+        for (int i = 0; i < team[side].player.length; i++) {
             if (team[side].player[i].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
                 count++;
             }
         }
         return count;
     }
-    
+
     /**
-     * Determines the secondary time. Although this is a GUI feature, the secondary time
-     * will also be encoded in the network packet.
-     * @param timeKickOffBlockedOvertime In case the kickOffBlocked time is delivered, this
-     *                                   parameter specified how long negative values will
-     *                                   be returned before the time is switched off.
+     * Determines the secondary time. Although this is a GUI feature, the
+     * secondary time will also be encoded in the network packet.
+     *
+     * @param timeKickOffBlockedOvertime In case the kickOffBlocked time is
+     * delivered, this parameter specified how long negative values will be
+     * returned before the time is switched off.
      * @return The secondary time in seconds or null if there currently is none.
      */
-    public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
-    {
-        if(timeKickOffBlockedOvertime == 0 // preparing data packet
+    public Integer getSecondaryTime(int timeKickOffBlockedOvertime) {
+        if (timeKickOffBlockedOvertime == 0 // preparing data packet
                 && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
                 && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
             return null;
@@ -370,11 +424,9 @@ public class AdvancedData extends GameControlData implements Cloneable
         }
         if (gameState == STATE_INITIAL && (timeOutActive[0] || timeOutActive[1])) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
-        }
-        else if (gameState == STATE_INITIAL && (refereeTimeout)) {
+        } else if (gameState == STATE_INITIAL && (refereeTimeout)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
-        }
-        else if (gameState == STATE_READY) {
+        } else if (gameState == STATE_READY) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
         } else if (gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
                 && timeKickOffBlocked >= -timeKickOffBlockedOvertime) {
@@ -389,19 +441,18 @@ public class AdvancedData extends GameControlData implements Cloneable
     }
 
     /**
-     * Dispatch the coach messages. Since coach messages are texts, the messages are zeroed
-     * after the first zero character, to avoid the transport of information the
-     * GameStateVisualizer would not show.
+     * Dispatch the coach messages. Since coach messages are texts, the messages
+     * are zeroed after the first zero character, to avoid the transport of
+     * information the GameStateVisualizer would not show.
      */
-    public void updateCoachMessages()
-    {
+    public void updateCoachMessages() {
         int i = 0;
         while (i < splCoachMessageQueue.size()) {
             if (splCoachMessageQueue.get(i).getRemainingTimeToSend() == 0) {
                 for (int j = 0; j < 2; j++) {
                     if (team[j].teamNumber == splCoachMessageQueue.get(i).team) {
                         byte[] message = splCoachMessageQueue.get(i).message;
-                        
+
                         // All chars after the first zero are zeroed, too
                         int k = 0;
                         while (k < message.length && message[k] != 0) {
@@ -410,10 +461,10 @@ public class AdvancedData extends GameControlData implements Cloneable
                         while (k < message.length) {
                             message[k++] = 0;
                         }
-                        
+
                         team[j].coachSequence = splCoachMessageQueue.get(i).sequence;
                         team[j].coachMessage = message;
-                        Log.toFile("Coach Message Team "+  Rules.league.teamColorName[team[j].teamColor]+" "+ new String(message));
+                        Log.toFile("Coach Message Team " + Rules.league.teamColorName[team[j].teamColor] + " " + new String(message));
                         splCoachMessageQueue.remove(i);
                         break;
                     }
@@ -423,7 +474,7 @@ public class AdvancedData extends GameControlData implements Cloneable
             }
         }
     }
-    
+
     public void updatePenalties() {
         if (secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
                 && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying) {
@@ -437,7 +488,8 @@ public class AdvancedData extends GameControlData implements Cloneable
         }
     }
 
-    public class PenaltyQueueData  implements Serializable {
+    public class PenaltyQueueData implements Serializable {
+
         private static final long serialVersionUID = 7536004813202642582L;
 
         public long whenPenalized;

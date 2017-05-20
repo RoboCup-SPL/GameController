@@ -5,7 +5,6 @@ import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
 import data.Teams;
-
 import java.io.IOException;
 import java.net.*;
 
@@ -137,6 +136,9 @@ public class Sender extends Thread {
 
         // Clone data
         this.data = (AdvancedData) data.clone();
+
+        // Hand data over to the TrueDataSender
+        TrueDataSender.getInstance().send(data);
     }
 
     @Override

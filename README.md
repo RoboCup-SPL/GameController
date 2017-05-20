@@ -295,6 +295,23 @@ in 2016 in the following ways:
   GAME_MIXEDTEAM_PLAYOFF and GAME_MIXEDTEAM_ROUNDROBIN were added.
 
 
+Since 2015, after a change from Set to Playing in SPL games the GameController
+does not send the correct game state and time for 15 seconds. This behaviour
+became necessary so the robots have to listen for the whistle blown by the head
+referee, but it is disruptive for applications such as the GameStateVisualizer
+that display the current game state to the audience. Therefore, the
+GameController now listens for TrueDataRequest messages
+(see controller.data.TrueDataRequest) and sends the true game state to all
+clients that requested it in this way.
+The true game state is sent on the same port as the broadcasted GameControlData
+and can be identified by its header. See teamcomm.net.GameControlDataReceiver
+for a reference implementation of requesting the true game state and
+distinguishing it from the normal broadcast message.
+If a robot (identified through GameControlReturnData messages) sends a request
+for receiving the true game state, the request is ignored and its network
+address is written into the GameController's error log.
+
+
 ## 8. Known Issues
 
 There are still a number of issues left:
