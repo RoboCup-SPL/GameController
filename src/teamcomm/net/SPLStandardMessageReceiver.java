@@ -3,20 +3,27 @@ package teamcomm.net;
 import common.Log;
 import data.SPLStandardMessage;
 import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketTimeoutException;
+import java.net.StandardProtocolFamily;
+import java.net.StandardSocketOptions;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.spi.AbstractSelector;
+import java.nio.channels.spi.SelectorProvider;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 import teamcomm.net.logging.Logger;
 
 /**
- * Class for a thread which handles messages from the robots. It spawns one
- * thread for listening on each team port up to team number 100 and processes
- * the messages received by these threads.
+ * Class for a thread which handles messages from the robots. It spawns another
+ * thread for listening on team ports up to team number 100 and processes the
+ * messages received by that thread.
  *
  * @author Felix Thielke
  */
@@ -24,57 +31,80 @@ public class SPLStandardMessageReceiver extends Thread {
 
     private class ReceiverThread extends Thread {
 
-        private final MulticastSocket socket;
-        private final int team;
+        private final AbstractSelector selector;
+        private int openChannels = 0;
 
-        public ReceiverThread(final int team) throws IOException {
-            setName("SPLStandardMessageReceiver_team" + team);
+        public ReceiverThread() throws IOException {
+            setName("SPLStandardMessageReceiver");
 
-            this.team = team;
+            selector = SelectorProvider.provider().openSelector();
+        }
 
-            // Bind socket to team port
-            socket = new MulticastSocket(null);
-            socket.setReuseAddress(true);
-            socket.bind(new InetSocketAddress("0.0.0.0", getTeamport(team)));
-
+        private void openChannel(final int team) throws IOException {
+            // Bind channel to team port
+            final DatagramChannel channel = SelectorProvider.provider().openDatagramChannel(StandardProtocolFamily.INET);
+            channel.configureBlocking(false);
+            channel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+            channel.bind(new InetSocketAddress("0.0.0.0", getTeamport(team)));
             try {
                 // Join multicast group on all network interfaces (for compatibility with SimRobot)
-                socket.joinGroup(InetAddress.getByName("239.0.0.1"));
+                final Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
                 final byte[] localaddr = InetAddress.getLocalHost().getAddress();
                 localaddr[0] = (byte) 239;
-                socket.joinGroup(InetAddress.getByAddress(localaddr));
-                final Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+
+                final NetworkInterface defNI = new MulticastSocket().getNetworkInterface();
+                channel.setOption(StandardSocketOptions.IP_MULTICAST_IF, defNI);
+                channel.join(InetAddress.getByName("239.0.0.1"), defNI);
+                channel.join(InetAddress.getByAddress(localaddr), defNI);
+
                 while (nis.hasMoreElements()) {
                     final NetworkInterface ni = nis.nextElement();
-                    final Enumeration<InetAddress> addrs = ni.getInetAddresses();
-                    while (addrs.hasMoreElements()) {
-                        final byte[] addr = addrs.nextElement().getAddress();
-                        addr[0] = (byte) 239;
-                        socket.joinGroup(InetAddress.getByAddress(addr));
-                    }
+                    channel.join(InetAddress.getByName("239.0.0.1"), ni);
+                    channel.join(InetAddress.getByAddress(localaddr), ni);
                 }
             } catch (IOException ex) {
                 // Ignore, because this is only for testing and does not work everywhere
             }
+
+            // Register channel with selector
+            channel.register(selector, SelectionKey.OP_READ, team);
         }
 
         @Override
         public void run() {
-            byte[] buffer = new byte[SPLStandardMessage.SIZE];
+            ByteBuffer buffer = ByteBuffer.allocate(SPLStandardMessage.SIZE);
             while (!isInterrupted()) {
                 try {
-                    final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                    socket.receive(packet);
+                    if (selector.select(openChannels < MAX_TEAMNUMBER ? 50 : 500) > 0) {
+                        final Iterator<SelectionKey> it = selector.selectedKeys().iterator();
 
-                    if (processPackets()) {
-                        if (packet.getAddress().getAddress()[0] != 10) {
-                            queue.add(new SPLStandardMessagePackage("10.0." + team + "." + buffer[5], team, buffer));
-                        } else {
-                            queue.add(new SPLStandardMessagePackage(packet.getAddress().getHostAddress(), team, buffer));
+                        while (it.hasNext()) {
+                            final SelectionKey key = it.next();
+                            final int team = (int) key.attachment();
+                            final DatagramChannel channel = (DatagramChannel) key.channel();
+                            final InetSocketAddress address = (InetSocketAddress) channel.receive(buffer);
+
+                            if (address != null && processPackets()) {
+                                if (address.getAddress().getAddress()[0] != 10) {
+                                    queue.add(new SPLStandardMessagePackage("10.0." + team + "." + buffer.get(5), team, buffer.array()));
+                                } else {
+                                    queue.add(new SPLStandardMessagePackage(address.getAddress().getHostAddress(), team, buffer.array()));
+                                }
+                            }
+
+                            buffer = ByteBuffer.allocate(SPLStandardMessage.SIZE);
+                            it.remove();
                         }
                     }
 
-                    buffer = new byte[SPLStandardMessage.SIZE];
+                    if (openChannels < MAX_TEAMNUMBER) {
+                        openChannels++;
+                        try {
+                            openChannel(openChannels);
+                        } catch (IOException e) {
+                            Log.error("could not open UDP socket for team " + openChannels + ": " + e.getMessage());
+                        }
+                    }
                 } catch (SocketTimeoutException e) {
                 } catch (IOException e) {
                     Log.error("something went wrong while receiving the message packages: " + e.getMessage());
@@ -86,7 +116,7 @@ public class SPLStandardMessageReceiver extends Thread {
 
     private static final int MAX_TEAMNUMBER = 100;
 
-    private final ReceiverThread[] receivers = new ReceiverThread[MAX_TEAMNUMBER];
+    private final ReceiverThread receiver;
     private final LinkedBlockingQueue<SPLStandardMessagePackage> queue = new LinkedBlockingQueue<>();
 
     /**
@@ -96,10 +126,8 @@ public class SPLStandardMessageReceiver extends Thread {
      * threads
      */
     public SPLStandardMessageReceiver() throws IOException {
-        // Create receiver threads
-        for (int i = 0; i < MAX_TEAMNUMBER; i++) {
-            receivers[i] = new ReceiverThread(i + 1);
-        }
+        // Create receiver thread
+        receiver = new ReceiverThread();
     }
 
     protected boolean processPackets() {
@@ -112,10 +140,8 @@ public class SPLStandardMessageReceiver extends Thread {
     @Override
     public void run() {
         try {
-            // Start receivers
-            for (final ReceiverThread receiver : receivers) {
-                receiver.start();
-            }
+            // Start receiver
+            receiver.start();
 
             // Handle received packages
             while (!isInterrupted()) {
@@ -130,14 +156,10 @@ public class SPLStandardMessageReceiver extends Thread {
             }
         } catch (InterruptedException ex) {
         } finally {
-            for (final ReceiverThread receiver : receivers) {
-                receiver.interrupt();
-            }
+            receiver.interrupt();
 
             try {
-                for (final ReceiverThread receiver : receivers) {
-                    receiver.join();
-                }
+                receiver.join();
             } catch (InterruptedException ex) {
 
             }
