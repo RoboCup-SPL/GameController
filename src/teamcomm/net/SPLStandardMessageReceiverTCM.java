@@ -77,7 +77,7 @@ public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
                 }
             }
 
-            GameState.getInstance().receiveMessage(p.host, m.teamNumValid ? m.teamNum : p.team, m);
+            GameState.getInstance().receiveMessage(p.host, p.team, m);
         } catch (InstantiationException | IllegalAccessException ex) {
             Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
         }

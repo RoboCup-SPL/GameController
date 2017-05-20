@@ -121,23 +121,30 @@ public class GameState implements GameControlDataEventListener {
                             final RobotState r = iter.next();
                             if (r.updateConnectionStatus() == RobotState.ConnectionStatus.INACTIVE) {
                                 iter.remove();
+                            }
+                        }
 
-                                final Collection<RobotState> team = robots.get(r.getTeamNumber());
-                                team.remove(r);
+                        for (final Entry<Integer, Collection<RobotState>> team : robots.entrySet()) {
+                            final Iterator<RobotState> it = team.getValue().iterator();
+                            while (it.hasNext()) {
+                                final RobotState r = it.next();
+                                if (!robotsByAddress.containsKey(r.getAddress())) {
+                                    it.remove();
 
-                                synchronized (teamNumbers) {
-                                    if (r.getTeamNumber() == teamNumbers[TEAM_LEFT]) {
-                                        changed |= CHANGED_LEFT;
-                                        if (team.isEmpty() && lastGameControlData == null) {
-                                            teamNumbers[TEAM_LEFT] = 0;
+                                    synchronized (teamNumbers) {
+                                        if (team.getKey() == teamNumbers[TEAM_LEFT]) {
+                                            changed |= CHANGED_LEFT;
+                                            if (team.getValue().isEmpty() && lastGameControlData == null) {
+                                                teamNumbers[TEAM_LEFT] = 0;
+                                            }
+                                        } else if (team.getKey() == teamNumbers[TEAM_RIGHT]) {
+                                            changed |= CHANGED_RIGHT;
+                                            if (team.getValue().isEmpty() && lastGameControlData == null) {
+                                                teamNumbers[TEAM_RIGHT] = 0;
+                                            }
+                                        } else {
+                                            changed |= CHANGED_OTHER;
                                         }
-                                    } else if (r.getTeamNumber() == teamNumbers[TEAM_RIGHT]) {
-                                        changed |= CHANGED_RIGHT;
-                                        if (team.isEmpty() && lastGameControlData == null) {
-                                            teamNumbers[TEAM_RIGHT] = 0;
-                                        }
-                                    } else {
-                                        changed |= CHANGED_OTHER;
                                     }
                                 }
                             }
