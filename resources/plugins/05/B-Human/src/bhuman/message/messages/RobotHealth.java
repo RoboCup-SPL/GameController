@@ -25,27 +25,23 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
         cognitionFrameRate,
         batteryLevel,
         totalCurrent,
-        maxJointTemperature,
+        maxJointTemperatureStatus,
         jointWithMaxTemperature,
         cpuTemperature,
-        load0,
-        load1,
-        load2,
+        load,
         memoryUsage,
-        robotName,
-        ballPercepts,
-        linePercepts,
         wlan,
+        robotName,
         configuration,
-        hash0,
-        hash1,
-        hash2,
-        hash3,
-        hash4,
-        clean,
-        location0,
-        location1,
-        location2
+        location,
+        scenario
+    }
+
+    public static enum TemperatureStatus {
+        regular,
+        hot,
+        veryHot,
+        criticallyHot
     }
 
     public static enum Joint {
@@ -103,7 +99,7 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
     public float minMotionTime;
 
     /**
-     * < Frames per second within process "Cognition"
+     * Frames per second within process "Cognition"
      */
     public float cognitionFrameRate;
     /**
@@ -118,8 +114,7 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
     /**
      * Highest temperature of a robot actuator
      */
-    @Primitive("uchar")
-    public short maxJointTemperature;
+    public TemperatureStatus maxJointTemperatureStatus = TemperatureStatus.regular;
     /**
      * The hottest joint.
      */
@@ -139,40 +134,26 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
     @Primitive("uchar")
     public short memoryUsage;
     /**
-     * For fancier drawing :-)
-     */
-    public String robotName = "";
-    /**
-     * A ball percept counter used to determine ball percepts per hour
-     */
-    @Primitive("uint")
-    public long ballPercepts;
-    /**
-     * A line percept counter used to determine line percepts per hour
-     */
-    @Primitive("uint")
-    public long linePercepts;
-    /**
      * Status of the wlan hardware. true: wlan hardware is ok. false: wlan
      * hardware is (probably physically) broken.
      */
     public boolean wlan;
     /**
+     * For fancier drawing :-)
+     */
+    public String robotName = "";
+    /**
      * The configuration that was deployed.
      */
     public Configuration configuration;
     /**
-     * The first 5 digits of the hash of the git HEAD that was deployed.
+     * The location selected.
      */
-    public char[] hash = new char[5];
+    public String location = "";
     /**
-     * Was the working copy clean when it was deployed?
+     * The scenario selected.
      */
-    public boolean clean;
-    /**
-     * The first 3 letters of the location selected.
-     */
-    public char[] location = new char[3];
+    public String scenario = "";
 
     @Override
     public int getStreamedSize(final ByteBuffer stream) {
@@ -185,18 +166,8 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
         final MessageIds fieldToUpdate = msgIdReader.read(stream);
         int size = msgIdReader.getStreamedSize();
         switch (fieldToUpdate) {
-            case load0:
-            case load1:
-            case load2:
-            case hash0:
-            case hash1:
-            case hash2:
-            case hash3:
-            case hash4:
-            case location0:
-            case location1:
-            case location2:
-                size += 1;
+            case load:
+                size += 3;
                 break;
             default: {
                 try {
@@ -216,38 +187,8 @@ public class RobotHealth extends StreamedObject<RobotHealth> implements Message<
     public RobotHealth read(final ByteBuffer stream) {
         final MessageIds fieldToUpdate = new EnumReader<>(MessageIds.class).read(stream);
         switch (fieldToUpdate) {
-            case load0:
-                load[0] = NativeReaders.ucharReader.read(stream);
-                break;
-            case load1:
-                load[1] = NativeReaders.ucharReader.read(stream);
-                break;
-            case load2:
-                load[2] = NativeReaders.ucharReader.read(stream);
-                break;
-            case hash0:
-                hash[0] = NativeReaders.charReader.read(stream);
-                break;
-            case hash1:
-                hash[1] = NativeReaders.charReader.read(stream);
-                break;
-            case hash2:
-                hash[2] = NativeReaders.charReader.read(stream);
-                break;
-            case hash3:
-                hash[3] = NativeReaders.charReader.read(stream);
-                break;
-            case hash4:
-                hash[4] = NativeReaders.charReader.read(stream);
-                break;
-            case location0:
-                location[0] = NativeReaders.charReader.read(stream);
-                break;
-            case location1:
-                location[1] = NativeReaders.charReader.read(stream);
-                break;
-            case location2:
-                location[2] = NativeReaders.charReader.read(stream);
+            case load:
+                load = new NativeReaders.UCharArrayReader(3).read(stream);
                 break;
             default: {
                 try {

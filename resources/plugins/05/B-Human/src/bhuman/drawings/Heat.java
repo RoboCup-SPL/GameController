@@ -19,10 +19,6 @@ import teamcomm.gui.drawings.TextureLoader;
  */
 public class Heat extends PerPlayer {
 
-    private static final int HEAT_TEMPERATURE = 70;
-    private static final int FIRE_TEMPERATURE = 90;
-    private static final int FIRE_EXCLAMATION_MARK_TEMPERATURE = 100;
-
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
         if (rs.getLastMessage() != null
@@ -30,17 +26,23 @@ public class Heat extends PerPlayer {
                 && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
             final RobotHealth health;
-            if (msg.message.queue != null && (health = msg.message.queue.getCachedMessage(RobotHealth.class)) != null && health.maxJointTemperature >= HEAT_TEMPERATURE) {
+            if (msg.message.queue != null && (health = msg.message.queue.getCachedMessage(RobotHealth.class)) != null && health.maxJointTemperatureStatus != RobotHealth.TemperatureStatus.regular) {
                 gl.glPushMatrix();
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1);
                 camera.turnTowardsCamera(gl);
                 final String filename;
-                if (health.maxJointTemperature >= FIRE_EXCLAMATION_MARK_TEMPERATURE) {
-                    filename = "fire!_icon.png";
-                } else if (health.maxJointTemperature >= FIRE_TEMPERATURE) {
-                    filename = "fire_icon.png";
-                } else {
-                    filename = "heat_icon.png";
+                switch (health.maxJointTemperatureStatus) {
+                    case hot:
+                        filename = "heat_icon.png";
+                        break;
+                    case veryHot:
+                        filename = "fire_icon.png";
+                        break;
+                    case criticallyHot:
+                        filename = "fire!_icon.png";
+                        break;
+                    default:
+                        filename = "";
                 }
                 try {
                     final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/" + filename).getAbsoluteFile();

@@ -37,7 +37,7 @@ public class BHumanMessage extends AdvancedMessage {
                 display.add("Configuration: " + health.configuration);
                 display.add("Battery: " + health.batteryLevel + "%");
                 if (health.jointWithMaxTemperature != null) {
-                    display.add("Hottest joint: " + health.jointWithMaxTemperature + " (" + health.maxJointTemperature + "°C)");
+                    display.add("Hottest joint: " + health.jointWithMaxTemperature + " (" + health.maxJointTemperatureStatus + ")");
                 }
                 display.add("Avg. motion time: " + df.format(health.avgMotionTime));
                 display.add("Cognition fps: " + df.format(health.cognitionFrameRate));
