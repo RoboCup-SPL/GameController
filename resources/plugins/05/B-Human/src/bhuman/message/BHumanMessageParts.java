@@ -71,35 +71,39 @@ public class BHumanMessageParts {
             Log.error("Expected BHULKs message struct header, found: " + header);
         }
 
-        header = new NativeReaders.SimpleStringReader(4).read(data);
-        version = NativeReaders.ucharReader.read(data);
-        if (header.equals(BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER)) {
-            if (version == BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION) {
-                bhum = new BHumanStandardMessagePart();
-                if (bhum.getStreamedSize(data) <= data.remaining()) {
-                    bhum.read(data);
+        if (data.hasRemaining()) {
+            header = new NativeReaders.SimpleStringReader(4).read(data);
+            version = NativeReaders.ucharReader.read(data);
+            if (header.equals(BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER)) {
+                if (version == BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION) {
+                    bhum = new BHumanStandardMessagePart();
+                    if (bhum.getStreamedSize(data) <= data.remaining()) {
+                        bhum.read(data);
+                    } else {
+                        Log.error("Wrong size of B-Human standard message struct: was " + data.remaining() + ", expected " + bhum.getStreamedSize(data));
+                    }
                 } else {
-                    Log.error("Wrong size of B-Human standard message struct: was " + data.remaining() + ", expected " + bhum.getStreamedSize(data));
+                    Log.error("Wrong B-Human standard message struct version: was " + version + ", expected " + BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION);
                 }
             } else {
-                Log.error("Wrong B-Human standard message struct version: was " + version + ", expected " + BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION);
+                data.position(data.position() - 5);
+                Log.error("Expected B-Human standard message struct header, found: " + header);
             }
-        } else {
-            data.position(data.position() - 5);
-            Log.error("Expected B-Human standard message struct header, found: " + header);
         }
 
-        header = new NativeReaders.SimpleStringReader(4).read(data);
-        version = NativeReaders.ucharReader.read(data);
-        if (header.equals(BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER)) {
-            if (version == BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION) {
-                q = new MessageQueue(origin, data);
+        if (data.hasRemaining()) {
+            header = new NativeReaders.SimpleStringReader(4).read(data);
+            version = NativeReaders.ucharReader.read(data);
+            if (header.equals(BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER)) {
+                if (version == BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION) {
+                    q = new MessageQueue(origin, data);
+                } else {
+                    Log.error("Wrong B-Human arbitrary message struct version: was " + version + ", expected " + BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION);
+                }
             } else {
-                Log.error("Wrong B-Human arbitrary message struct version: was " + version + ", expected " + BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION);
+                data.position(data.position() - 5);
+                Log.error("Expected B-Human arbitrary message struct header, found: " + header);
             }
-        } else {
-            data.position(data.position() - 5);
-            Log.error("Expected B-Human arbitrary message struct header, found: " + header);
         }
 
         this.bhulks = bhlk;
@@ -263,7 +267,7 @@ public class BHumanMessageParts {
                     + 1 // timestampLastJumped
                     + 2 // timeWhenReachBall
                     + 2 // timeWhenReachBallQueen
-                    + 1 // ballTimeWhenLastSeen
+                    + 4 // ballTimeWhenLastSeen
                     + 2 // whistle stuff
                     + 9 // gameControlData
                     + 4; // roleAssignments, currentlyPerfomingRole, passTarget
