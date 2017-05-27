@@ -125,6 +125,7 @@ public class BHumanDetailFrame extends RobotDetailFrame {
     /**
      * Updates the frame with information of the given robot.
      */
+    @SuppressWarnings("unchecked")
     private void update(final RobotState robot) {
         final SPLStandardMessage msg = robot.getLastMessage();
         if (msg == null) {
