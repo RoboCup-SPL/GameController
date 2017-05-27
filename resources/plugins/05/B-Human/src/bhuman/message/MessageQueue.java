@@ -50,7 +50,6 @@ public class MessageQueue {
      * @param origin SPLStandardMessage containing this MessageQueue
      * @param buf raw data of the transmitted MessageQueue
      */
-    @SuppressWarnings("unchecked")
     public MessageQueue(final SPLStandardMessage origin, final ByteBuffer buf) {
         robotIdentifier = Unsigned.toUnsigned(origin.teamNum) + "," + origin.playerNum;
 
@@ -75,7 +74,7 @@ public class MessageQueue {
             final Message<? extends Message> msg = createMessage(idIndex, messageIds.get(teamNumber).get(idIndex), classes.get(teamNumber), ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
             if (msg != null) {
                 messages.put(msg.getClass(), msg);
-                getCachedMessage(msg.getClass());
+                getGenericCachedMessage(msg.getClass());
             }
         }
     }
@@ -114,6 +113,16 @@ public class MessageQueue {
     }
 
     /**
+     * Gets a message of the given class from the MessageQueue.
+     *
+     * @param cls class of the message
+     * @return message or null if there is none
+     */
+    public Message getGenericMessage(final Class<? extends Message> cls) {
+        return messages.get(cls);
+    }
+
+    /**
      * Gets an optionally cached message of the given class from the
      * MessageQueue. If no compatible message is found in the MessageQueue, the
      * last compatible message that was returned by a call to this method on
@@ -135,6 +144,29 @@ public class MessageQueue {
             cache.put(cls, message);
         } else {
             message = cls.cast(cache.get(cls));
+        }
+
+        return message;
+    }
+
+    /**
+     * Gets a message of the given class from the MessageQueue.
+     *
+     * @param cls class of the message
+     * @return message or null if there is none
+     */
+    public Message getGenericCachedMessage(final Class<? extends Message> cls) {
+        Map<Class<?>, Message<? extends Message>> cache = cachedMessages.get(robotIdentifier);
+        if (cache == null) {
+            cache = new HashMap<>();
+            cachedMessages.put(robotIdentifier, cache);
+        }
+
+        Message<? extends Message> message = messages.get(cls);
+        if (message != null) {
+            cache.put(cls, message);
+        } else {
+            message = cache.get(cls);
         }
 
         return message;
@@ -202,13 +234,12 @@ public class MessageQueue {
      * @param data raw data of the message
      * @return message or null if an error occurred
      */
-    @SuppressWarnings("unchecked")
     private Message<? extends Message> createMessage(final short messageId, final String messageName, final List<Class<? extends Message>> classes, final ByteBuffer data) {
         // Instantiate the message class that fits the MessageID
         final Class<? extends Message> cls = classes.get(messageId);
         if (cls != null) {
             try {
-                final Message cachedInst = getCachedMessage(cls);
+                final Message cachedInst = getGenericCachedMessage(cls);
                 final Message inst = cachedInst != null ? cachedInst : cls.newInstance();
                 final int streamedSize = SimpleStreamReader.class.isInstance(inst) ? SimpleStreamReader.class.cast(inst).getStreamedSize() : ComplexStreamReader.class.cast(inst).getStreamedSize(data);
                 if (data.remaining() != streamedSize && streamedSize != -1) {

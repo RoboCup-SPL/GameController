@@ -125,7 +125,6 @@ public class BHumanDetailFrame extends RobotDetailFrame {
     /**
      * Updates the frame with information of the given robot.
      */
-    @SuppressWarnings("unchecked")
     private void update(final RobotState robot) {
         final SPLStandardMessage msg = robot.getLastMessage();
         if (msg == null) {
@@ -189,7 +188,7 @@ public class BHumanDetailFrame extends RobotDetailFrame {
                 try {
                     final Class<? extends Message> type = Class.forName("bhuman.message.messages." + name).asSubclass(Message.class);
                     if (type != null) {
-                        final Message message = bmsg.message.queue.getMessage(type);
+                        final Message message = bmsg.message.queue.getGenericMessage(type);
                         if (message != null) {
                             updateNode(node, name, message);
                         }
