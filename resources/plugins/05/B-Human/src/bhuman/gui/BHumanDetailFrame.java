@@ -211,6 +211,7 @@ public class BHumanDetailFrame extends RobotDetailFrame {
             final RobotHealth health = bmsg.message.queue.getCachedMessage(RobotHealth.class);
             if (health != null && !health.robotName.isEmpty()) {
                 rootNode.setUserObject(health.robotName);
+                model.nodeChanged(rootNode);
                 setTitle(health.robotName);
             }
         }
