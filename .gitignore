@@ -1,5 +1,6 @@
 build/
 nbproject/
+.settings/
 *~
 error.txt
 /resources/plugins/05/resources/bhumanpath.cfg
