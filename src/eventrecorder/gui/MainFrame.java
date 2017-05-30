@@ -100,6 +100,12 @@ public class MainFrame extends JFrame {
     private JTextField titleField;
     
     private boolean activeGameController;
+
+    private JButton timePlusPlusButton;
+    private JButton timePlusButton;
+
+    private JButton timeMinusMinusButton;
+    private JButton timeMinusButton;
     
     /**
      * Creates the Main Window.
@@ -227,7 +233,7 @@ public class MainFrame extends JFrame {
         currentTimeWrapper.add(currentTimeLabel);
         currentTimeWrapper.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JButton timeMinusMinusButton = new JButton("--");
+        timeMinusMinusButton = new JButton("--");
         timeMinusMinusButton.setToolTipText("Decrease by 60 seconds ( Strg+Shift+Minus )");
         timeMinusMinusButton.addActionListener(new ActionListener(){
             @Override
@@ -236,7 +242,7 @@ public class MainFrame extends JFrame {
                 updateTimeAndButtons();
             }
         });
-        JButton timeMinusButton = new JButton("-");
+        timeMinusButton = new JButton("-");
         timeMinusButton.setToolTipText("Decrease by 5 seconds ( Strg+Minus )");
         timeMinusButton.addActionListener(new ActionListener(){
             @Override
@@ -246,7 +252,7 @@ public class MainFrame extends JFrame {
             }
         });
 
-        JButton timePlusButton = new JButton("+");
+        timePlusButton = new JButton("+");
         timePlusButton.setToolTipText("Increase by 5 seconds ( Strg+Plus )");
         timePlusButton.addActionListener(new ActionListener(){
             @Override
@@ -256,7 +262,7 @@ public class MainFrame extends JFrame {
             }
         });
 
-        JButton timePlusPlusButton = new JButton("++");
+        timePlusPlusButton = new JButton("++");
         timePlusPlusButton.setToolTipText("Increase by 60 seconds ( Strg+Shift+Plus )");
         timePlusPlusButton.addActionListener(new ActionListener(){
             @Override
@@ -527,6 +533,11 @@ public class MainFrame extends JFrame {
         if(startButton.isEnabled() == activeGameController){
             startButton.setEnabled(!activeGameController);
             resetButton.setEnabled(!activeGameController);
+
+            timeMinusMinusButton.setEnabled(!activeGameController);
+            timeMinusButton.setEnabled(!activeGameController);
+            timePlusButton.setEnabled(!activeGameController);
+            timePlusPlusButton.setEnabled(!activeGameController);
             
             statusPanel.removeAll();
             statusPanel.add(activeGameController?CONNECTED_LABEL:DISCONNECTED_LABEL);

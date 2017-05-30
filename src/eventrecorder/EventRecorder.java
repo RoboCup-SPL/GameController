@@ -8,7 +8,10 @@ import javax.swing.JOptionPane;
 import data.GameControlData;
 import eventrecorder.action.EntryCreateAction;
 import eventrecorder.gui.MainFrame;
-import eventrecorder.GameControlDataReceiver;
+import teamcomm.data.event.GameControlDataEvent;
+import teamcomm.data.event.GameControlDataEventListener;
+import teamcomm.data.event.GameControlDataTimeoutEvent;
+import teamcomm.net.GameControlDataReceiver;
 
 /**
  * This is a little tool to record events while a game takes place.
@@ -39,7 +42,7 @@ public class EventRecorder {
 
         // Initialize listener for GameController messages
         try {
-            gcDataReceiver = new GameControlDataReceiver();
+            gcDataReceiver = new GameControlDataReceiver(true);
         } catch (SocketException ex) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up GameController listener.",
@@ -48,6 +51,21 @@ public class EventRecorder {
             System.exit(-1);
         }
 
+        // Add this as GameControlDataListener:
+        gcDataReceiver.addListener(new GameControlDataEventListener(){
+
+            @Override
+            public void gameControlDataChanged(GameControlDataEvent e) {
+                EventRecorder.updateGameData(e.data);
+            }
+
+            @Override
+            public void gameControlDataTimeout(GameControlDataTimeoutEvent e) {
+                EventRecorder.updateGameData(null);
+            }
+            
+        });
+        
         // Start listening:
         gcDataReceiver.start();
     }
