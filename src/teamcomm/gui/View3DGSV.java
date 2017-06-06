@@ -8,6 +8,7 @@ import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
+import com.jogamp.newt.event.WindowListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.SwingUtilities;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
 import teamcomm.gui.drawings.Drawing;
@@ -237,6 +239,20 @@ public class View3DGSV extends View3D {
         for (int i = 0; i < textRenderers.length; i++) {
             textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i]), true, true);
         }
+    }
+
+    @Override
+    public void terminate() {
+        super.terminate();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                for (final WindowListener wl : window.getWindowListeners()) {
+                    window.removeWindowListener(wl);
+                }
+                window.destroy();
+            }
+        });
     }
 
     @Override

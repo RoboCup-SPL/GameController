@@ -125,21 +125,25 @@ public class TeamCommunicationMonitor {
                 while (!shutdown) {
                     if (!silentMode) {
                         // Handle TCM/GSV mode changes
-                        if (gsvMode && gsvView == null) {
+                        if (gsvMode) {
                             if (robotView != null) {
                                 robotView.terminate();
                                 robotView = null;
                             }
-                            gsvView = new View3DGSV(forceWindowed);
+                            if (gsvView == null) {
+                                gsvView = new View3DGSV(forceWindowed);
+                            }
                             if (!forceEnablePlugins) {
                                 PluginLoader.getInstance().disablePlugins();
                             }
-                        } else if (!gsvMode && robotView == null) {
+                        } else if (!gsvMode) {
                             if (gsvView != null) {
                                 gsvView.terminate();
                                 gsvView = null;
                             }
-                            robotView = new MainWindow();
+                            if (robotView == null) {
+                                robotView = new MainWindow();
+                            }
                             PluginLoader.getInstance().enablePlugins();
                         }
                     }
