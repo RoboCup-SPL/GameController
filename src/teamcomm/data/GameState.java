@@ -210,7 +210,7 @@ public class GameState implements GameControlDataEventListener {
                 }
                 if (e.data.team[1].teamNumber != teamNumbers[TEAM_RIGHT]) {
                     teamNumbers[TEAM_RIGHT] = e.data.team[1].teamNumber;
-                    changed = CHANGED_RIGHT | CHANGED_OTHER;
+                    changed |= CHANGED_RIGHT | CHANGED_OTHER;
                 }
             }
         }
@@ -338,7 +338,7 @@ public class GameState implements GameControlDataEventListener {
                             // (re)load plugins
                             PluginLoader.getInstance().update(teamNumber);
 
-                            changed = i + 1 | CHANGED_OTHER;
+                            changed |= (i + 1) | CHANGED_OTHER;
                             break;
                         }
                     }
