@@ -33,6 +33,13 @@ By passing the command line parameter `-s` or `--silent`, the TCM is started in
 "silent" mode, in which it does not display anything but still stores all
 received messages in log files.
 
+Although the TCM was made for usage in SPL games, the league can be changed by
+passing the command line parameter `-l` or `--league`. This is mainly useful for
+the GameStateVisualizer mode.
+The league spl_mixedteam for the Mixed Teams Competition of the SPL does not
+need to be specified explicitly as in SPL games, mixed teams are automatically
+detected via their team number.
+
 
 ## User Interface
 
@@ -193,7 +200,7 @@ on the keyboard:
     Ctrl + Arrow left/right - Switch the screen on which to display the
                               fullscreen GSV window.
 
-## Acknowledgements
+## Attributions
 The ball icon used for displaying the kickoff team in the GSV mode was taken
 from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Emoji_u26bd_transparent.svg)
 and is licensed as CC-BY-4.0.
