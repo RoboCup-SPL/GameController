@@ -2,6 +2,8 @@ package teamcomm.gui;
 
 import com.jogamp.opengl.GL2;
 import data.Rules;
+import data.SPL;
+import data.SPLMixedTeam;
 import data.Teams;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -48,16 +50,15 @@ public class TeamLogoLoader {
     public BufferedImage getTeamLogo(final int team) {
         BufferedImage image = logos.get(team);
         if (image == null) {
-            if (Rules.league == Rules.LEAGUES[0] && team >= 90 && team < 100) {
-                Rules.league = Rules.LEAGUES[1];
+            if (Rules.league == Rules.getLeagueRules(SPL.class) && team >= 90 && team < 100) {
+                Rules.league = Rules.getLeagueRules(SPLMixedTeam.class);
                 try {
                     image = Teams.getIcon(team);
                 } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
                     return null;
                 } finally {
-                    Rules.league = Rules.LEAGUES[0];
+                    Rules.league = Rules.getLeagueRules(SPL.class);
                 }
-                Rules.league = Rules.LEAGUES[0];
             } else {
                 try {
                     image = Teams.getIcon(team);
@@ -83,16 +84,15 @@ public class TeamLogoLoader {
 
     public TextureLoader.Texture getTeamLogoTexture(final GL2 gl, final int team) throws IOException {
         final File path;
-        if (Rules.league == Rules.LEAGUES[0] && team >= 90 && team < 100) {
-            Rules.league = Rules.LEAGUES[1];
+        if (Rules.league == Rules.getLeagueRules(SPL.class) && team >= 90 && team < 100) {
+            Rules.league = Rules.getLeagueRules(SPLMixedTeam.class);
             try {
                 path = Teams.getIconPath(team);
             } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
                 throw new IOException();
             } finally {
-                Rules.league = Rules.LEAGUES[0];
+                Rules.league = Rules.getLeagueRules(SPL.class);
             }
-            Rules.league = Rules.LEAGUES[0];
         } else {
             try {
                 path = Teams.getIconPath(team);

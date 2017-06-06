@@ -19,6 +19,18 @@ public abstract class Rules
         new HLAdult()
     };
     
+    /**
+     * Returns the Rules object for the given class.
+     */
+    public static Rules getLeagueRules(final Class<? extends Rules> c) {
+        for(final Rules r : LEAGUES) {
+            if(c.isInstance(r) && r.getClass().isAssignableFrom(c)) {
+                return r;
+            }
+        }
+        return null;
+    }
+    
     /** The rules of the league playing. */
     public static Rules league = LEAGUES[0];
     /** The league´s name this rules are for. */

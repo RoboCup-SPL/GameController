@@ -3,6 +3,8 @@ package teamcomm.data;
 import common.ApplicationLock;
 import data.GameControlData;
 import data.Rules;
+import data.SPL;
+import data.SPLMixedTeam;
 import data.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
@@ -231,8 +233,8 @@ public class GameState implements GameControlDataEventListener {
         // Open a new logfile for the current GameController state if the
         // state changed from or to initial/finished
         final StringBuilder logfileName;
-        if ((e.data.team[0].teamNumber == 98 || e.data.team[0].teamNumber == 99) && (e.data.team[1].teamNumber == 98 || e.data.team[1].teamNumber == 99)) {
-            logfileName = new StringBuilder("Drop-in_");
+        if (Rules.league == Rules.getLeagueRules(SPLMixedTeam.class) || (e.data.team[0].teamNumber >= 90 && e.data.team[0].teamNumber < 100 && e.data.team[1].teamNumber >= 90 && e.data.team[1].teamNumber < 100)) {
+            logfileName = new StringBuilder("MixedTeams_");
             if (e.data.firstHalf == GameControlData.C_TRUE) {
                 logfileName.append("1st");
             } else {
@@ -458,15 +460,14 @@ public class GameState implements GameControlDataEventListener {
         Integer color = teamColors.get(teamNumber);
         if (color == null) {
             String[] colorStrings = null;
-            if (Rules.league == Rules.LEAGUES[0] && teamNumber >= 90 && teamNumber < 100) {
-                Rules.league = Rules.LEAGUES[1];
+            if (Rules.league == Rules.getLeagueRules(SPL.class) && teamNumber >= 90 && teamNumber < 100) {
+                Rules.league = Rules.getLeagueRules(SPLMixedTeam.class);
                 try {
                     colorStrings = Teams.getColors(teamNumber);
                 } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
                 } finally {
-                    Rules.league = Rules.LEAGUES[0];
+                    Rules.league = Rules.getLeagueRules(SPL.class);
                 }
-                Rules.league = Rules.LEAGUES[0];
             } else {
                 try {
                     colorStrings = Teams.getColors(teamNumber);
@@ -525,14 +526,14 @@ public class GameState implements GameControlDataEventListener {
      */
     public String getTeamName(final Integer teamNumber, final boolean withNumber, final boolean withPrefix) {
         final String[] teamNames;
-        if (Rules.league == Rules.LEAGUES[0] && teamNumber >= 90 && teamNumber < 100) {
-            Rules.league = Rules.LEAGUES[1];
+        if (Rules.league == Rules.getLeagueRules(SPL.class) && teamNumber >= 90 && teamNumber < 100) {
+            Rules.league = Rules.getLeagueRules(SPLMixedTeam.class);
             try {
                 teamNames = Teams.getNames(withNumber);
             } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
                 return null;
             } finally {
-                Rules.league = Rules.LEAGUES[0];
+                Rules.league = Rules.getLeagueRules(SPL.class);
             }
         } else {
             try {
