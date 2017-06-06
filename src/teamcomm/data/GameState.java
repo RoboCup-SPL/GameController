@@ -458,14 +458,20 @@ public class GameState implements GameControlDataEventListener {
         Integer color = teamColors.get(teamNumber);
         if (color == null) {
             String[] colorStrings = null;
-            try {
-                if (teamNumber == 98 || teamNumber == 99) {
-                    Rules.league = Rules.LEAGUES[1];
-                } else {
+            if (Rules.league == Rules.LEAGUES[0] && teamNumber >= 90 && teamNumber < 100) {
+                Rules.league = Rules.LEAGUES[1];
+                try {
+                    colorStrings = Teams.getColors(teamNumber);
+                } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                } finally {
                     Rules.league = Rules.LEAGUES[0];
                 }
-                colorStrings = Teams.getColors(teamNumber);
-            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                Rules.league = Rules.LEAGUES[0];
+            } else {
+                try {
+                    colorStrings = Teams.getColors(teamNumber);
+                } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                }
             }
             if (colorStrings == null || colorStrings.length < 1) {
                 if (teamNumber == teamNumbers[TEAM_RIGHT]) {
@@ -518,12 +524,23 @@ public class GameState implements GameControlDataEventListener {
      * @return the team name
      */
     public String getTeamName(final Integer teamNumber, final boolean withNumber, final boolean withPrefix) {
-        if (teamNumber == 98 || teamNumber == 99) {
+        final String[] teamNames;
+        if (Rules.league == Rules.LEAGUES[0] && teamNumber >= 90 && teamNumber < 100) {
             Rules.league = Rules.LEAGUES[1];
+            try {
+                teamNames = Teams.getNames(withNumber);
+            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                return null;
+            } finally {
+                Rules.league = Rules.LEAGUES[0];
+            }
         } else {
-            Rules.league = Rules.LEAGUES[0];
+            try {
+                teamNames = Teams.getNames(withNumber);
+            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                return null;
+            }
         }
-        final String[] teamNames = Teams.getNames(withNumber);
         if (teamNumber != null) {
             if (teamNumber < teamNames.length && teamNames[teamNumber] != null) {
                 return ((withPrefix ? "Team " : "") + teamNames[teamNumber]);

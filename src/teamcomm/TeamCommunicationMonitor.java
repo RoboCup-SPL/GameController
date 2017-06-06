@@ -2,6 +2,7 @@ package teamcomm;
 
 import com.jogamp.opengl.GLProfile;
 import common.ApplicationLock;
+import data.Rules;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.net.SocketException;
@@ -183,6 +184,8 @@ public class TeamCommunicationMonitor {
 
     private static final String ARG_HELP_SHORT = "-h";
     private static final String ARG_HELP = "--help";
+    private static final String ARG_LEAGUE_SHORT = "-l";
+    private static final String ARG_LEAGUE = "--league";
     private static final String ARG_SILENT_SHORT = "-s";
     private static final String ARG_SILENT = "--silent";
     private static final String ARG_GSV = "--gsv";
@@ -192,17 +195,27 @@ public class TeamCommunicationMonitor {
     private static final String ARG_FORCEPLUGINS_SHORT = "-p";
 
     private static void parseArgs(final String[] args) {
-        for (final String arg : args) {
-            switch (arg) {
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i].toLowerCase()) {
                 case ARG_HELP_SHORT:
                 case ARG_HELP:
                     System.out.println("Usage: java -jar TeamCommunicationMonitor.jar {options}"
                             + "\n  (-h | --help)                   display help"
+                            + "\n  (-l | --league) <league>        select league"
                             + "\n  (-s | --silent)                 start in silent mode"
                             + "\n  (--gsv)                         start as GameStateVisualizer"
                             + "\n  (-w | --windowed)               GSV: force windowed mode"
                             + "\n  (-p | --forceplugins)           GVS: force usage of plugins");
                     System.exit(0);
+                case ARG_LEAGUE_SHORT:
+                case ARG_LEAGUE:
+                    final String leagueName = args[++i];
+                    for (final Rules league : Rules.LEAGUES) {
+                        if (league.leagueDirectory.equalsIgnoreCase(leagueName)) {
+                            Rules.league = league;
+                        }
+                    }
+                    break;
                 case ARG_SILENT_SHORT:
                 case ARG_SILENT:
                     silentMode = true;

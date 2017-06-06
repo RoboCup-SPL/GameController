@@ -21,7 +21,6 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
-import data.Teams;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
@@ -270,18 +269,17 @@ public class View3DGSV extends View3D {
 
         // Draw 2D HUD
         final GameState gs = GameState.getInstance();
-        if (gs.getLastGameControlData()
-                != null) {
+        if (gs.getLastGameControlData() != null) {
             final GameControlData data = gs.getLastGameControlData();
 
             // Team Logos
             switchTo2D(gl);
             try {
-                Image.drawImage2DContain(gl, TextureLoader.getInstance().loadTexture(gl, Teams.getIconPath(data.team[1].teamNumber)), 20 * window.getWidth() / 1920, 20 * window.getWidth() / 1920, window.getWidth() / 6, window.getWidth() / 6);
+                Image.drawImage2DContain(gl, TeamLogoLoader.getInstance().getTeamLogoTexture(gl, data.team[1].teamNumber), 20 * window.getWidth() / 1920, 20 * window.getWidth() / 1920, window.getWidth() / 6, window.getWidth() / 6);
             } catch (final Exception e) {
             }
             try {
-                Image.drawImage2DContain(gl, TextureLoader.getInstance().loadTexture(gl, Teams.getIconPath(data.team[0].teamNumber)), window.getWidth() - window.getWidth() / 6 - 20 * window.getWidth() / 1920, 20 * window.getWidth() / 1920, window.getWidth() / 6, window.getWidth() / 6);
+                Image.drawImage2DContain(gl, TeamLogoLoader.getInstance().getTeamLogoTexture(gl, data.team[0].teamNumber), window.getWidth() - window.getWidth() / 6 - 20 * window.getWidth() / 1920, 20 * window.getWidth() / 1920, window.getWidth() / 6, window.getWidth() / 6);
             } catch (final Exception e) {
             }
             switchTo3D(gl);

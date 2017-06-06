@@ -1,13 +1,17 @@
 package teamcomm.gui;
 
+import com.jogamp.opengl.GL2;
 import data.Rules;
 import data.Teams;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
+import teamcomm.gui.drawings.TextureLoader;
 
 /**
  * Singleton class managing the loading of team logos.
@@ -44,15 +48,22 @@ public class TeamLogoLoader {
     public BufferedImage getTeamLogo(final int team) {
         BufferedImage image = logos.get(team);
         if (image == null) {
-            try {
-                if (team == 98 || team == 99) {
-                    Rules.league = Rules.LEAGUES[1];
-                } else {
+            if (Rules.league == Rules.LEAGUES[0] && team >= 90 && team < 100) {
+                Rules.league = Rules.LEAGUES[1];
+                try {
+                    image = Teams.getIcon(team);
+                } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                    return null;
+                } finally {
                     Rules.league = Rules.LEAGUES[0];
                 }
-                image = Teams.getIcon(team);
-            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
-                return null;
+                Rules.league = Rules.LEAGUES[0];
+            } else {
+                try {
+                    image = Teams.getIcon(team);
+                } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                    return null;
+                }
             }
 
             if (image != null) {
@@ -68,6 +79,28 @@ public class TeamLogoLoader {
         }
 
         return image;
+    }
+
+    public TextureLoader.Texture getTeamLogoTexture(final GL2 gl, final int team) throws IOException {
+        final File path;
+        if (Rules.league == Rules.LEAGUES[0] && team >= 90 && team < 100) {
+            Rules.league = Rules.LEAGUES[1];
+            try {
+                path = Teams.getIconPath(team);
+            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                throw new IOException();
+            } finally {
+                Rules.league = Rules.LEAGUES[0];
+            }
+            Rules.league = Rules.LEAGUES[0];
+        } else {
+            try {
+                path = Teams.getIconPath(team);
+            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+                throw new IOException();
+            }
+        }
+        return TextureLoader.getInstance().loadTexture(gl, path);
     }
 
     /**
