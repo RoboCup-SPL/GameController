@@ -345,7 +345,7 @@ public class GUI extends JFrame implements GCGUI
         }
         for (int i=0; i<2; i++) {
             robots[i] = new JPanel();
-            robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, 10));
+            robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, 0));
             robots[i].setOpaque(false);
             
             for (int j=0; j<robot[i].length; j++) {
@@ -359,7 +359,7 @@ public class GUI extends JFrame implements GCGUI
                 robotTime[i][j].setVisible(false);
                 TotalScaleLayout robotLayout = new TotalScaleLayout(robot[i][j]);
                 robot[i][j].setLayout(robotLayout);
-                robotLayout.add(.1, .1, .8, .5, robotLabel[i][j]);
+                robotLayout.add(.1, .1, .8, .8, robotLabel[i][j]);
                 robotLayout.add(.1, .7, .8, .2, robotTime[i][j]);
                 robots[i].add(robot[i][j]);
             }
