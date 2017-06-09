@@ -345,7 +345,7 @@ public class GUI extends JFrame implements GCGUI
         }
         for (int i=0; i<2; i++) {
             robots[i] = new JPanel();
-            robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, 0));
+            robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, Math.max(0, 11 - robot[i].length)));
             robots[i].setOpaque(false);
             
             for (int j=0; j<robot[i].length; j++) {
