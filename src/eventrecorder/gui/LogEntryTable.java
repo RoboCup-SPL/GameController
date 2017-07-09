@@ -211,16 +211,6 @@ public class LogEntryTable extends JPanel{
             }
         }
     }
-/*
-    public void scrollToEntryPanel(EntryPanel entryPanel){
-        if(entryPanel != null){
-            getParent().getParent().getParent().validate();
-            getParent().getParent().getParent().repaint();
-            JComponent parent = (JComponent) getParent().getParent();
-            parent.scrollRectToVisible(entryPanel.getBounds());
-        }
-    }
-  */
     
     public void entryActionWasExecuted(Action action){
         int id = getIdByLogEntry(action.getAffectedLogEntry());
@@ -256,7 +246,11 @@ public class LogEntryTable extends JPanel{
             EntryPanel entryPanel = new EntryPanel(action.getAffectedLogEntry());
             entryPanel.getTimeField().addKeyListener(new TimeFieldKeyListener(this,action.getAffectedLogEntry()));
             entryPanel.getTextField().addKeyListener(new TextFieldKeyListener(this,action.getAffectedLogEntry()));
-            add(entryPanel);
+            
+            int index = EventRecorder.model.logEntries.indexOf(action.getAffectedLogEntry());
+            
+            if(index != -1)
+            	add(entryPanel, index);
         } else if(action instanceof EntryCreateAction || action instanceof EntryDeleteAction){        
             createLogEntryTable();            
             int newId = getIdByLogEntry(action.getAffectedLogEntry());

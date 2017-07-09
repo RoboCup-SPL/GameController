@@ -88,7 +88,14 @@ public class EventRecorder {
                     gameStateString += " ( "+ (data.firstHalf == GameControlData.C_TRUE? "First Half":"Second Half")+" )";
                 }
                 
-                history.execute(new EntryCreateAction(new LogEntry(gameStateString,SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.GameState),false));
+
+                // Insert before empty logEntries:
+            	int insertPlace = EventRecorder.model.logEntries.size();
+            	
+            	while(insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text))
+            		--insertPlace;
+            	
+                history.execute(new EntryCreateAction(new LogEntry(gameStateString,SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.GameState), insertPlace, false));
             }
             
             // Save current timestamp:
