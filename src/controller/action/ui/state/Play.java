@@ -5,6 +5,8 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
+import data.PlayerInfo;
+import data.TeamInfo;
 
 
 /**
@@ -51,8 +53,30 @@ public class Play extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_SET)
+        return (data.gameState == GameControlData.STATE_SET 
+                && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
+                    || bothTeamsHavePlayers(data)))
             || (data.gameState == GameControlData.STATE_PLAYING)
             || data.testmode;
+    }
+    
+    /**
+     * Checks whether both teams have at least one player that is not penalized.
+     * This is a precondition for a penalty shot.
+     * 
+     * @param data      The current data to check with.
+     * @return At least one player not penalized in both teams?
+     */
+    private boolean bothTeamsHavePlayers(AdvancedData data)
+    {
+        boolean bothPlaying = true;
+        for (TeamInfo teamInfo : data.team) {
+            boolean playing = false;
+            for (PlayerInfo playerInfo : teamInfo.player) {
+                playing |= playerInfo != null && playerInfo.penalty == PlayerInfo.PENALTY_NONE;
+            }
+            bothPlaying &= playing;
+        }
+        return bothPlaying;
     }
 }
