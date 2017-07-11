@@ -41,7 +41,7 @@ Usage: `java -jar GameController.jar {options}`
                                     delayed switch to playing in SPL
     (-i | --interface) <interface>  set network interface (default is a
                                     connected IPv4 interface)
-    (-l | --league) (spl | spl_mixedteam | hl_kid | hl_teen | hl_adult)
+    (-l | --league) (spl | spl_mixedteam | spl_penaltyshootout | hl_kid | hl_teen | hl_adult)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
 
