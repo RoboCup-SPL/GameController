@@ -17,11 +17,6 @@ import teamcomm.gui.drawings.Text;
 public class GameControllerInfo extends Static {
 
     @Override
-    protected void init(GL2 gl) {
-        setActive(false);
-    }
-
-    @Override
     public void draw(final GL2 gl, final Camera camera) {
         final GameControlData data = GameState.getInstance().getLastGameControlData();
         if (data != null) {
