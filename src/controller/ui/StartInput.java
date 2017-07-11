@@ -28,6 +28,7 @@ import javax.swing.JRadioButton;
 import data.GameControlData;
 import data.Rules;
 import data.SPL;
+import data.SPLPenaltyShootout;
 import data.Teams;
 
 
@@ -246,8 +247,8 @@ public class StartInput extends JFrame implements Serializable
                             }
                         }
                     }
-                    nofulltime.setVisible(true);
-                    fulltime.setVisible(true);
+                    nofulltime.setVisible(!(Rules.league instanceof SPLPenaltyShootout));
+                    fulltime.setVisible(!(Rules.league instanceof SPLPenaltyShootout));
                     if (Rules.league instanceof SPL) {
                         nofulltime.setText(FULLTIME_LABEL_NO);
                         fulltime.setText(FULLTIME_LABEL_YES);
