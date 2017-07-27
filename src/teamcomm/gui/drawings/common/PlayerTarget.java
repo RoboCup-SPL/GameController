@@ -36,6 +36,7 @@ public class PlayerTarget extends PerPlayer {
             gl.glEnd();
 
             // Draw cross on walking target
+            gl.glPushMatrix();
             gl.glTranslatef(walkingToX, walkingToY, 0);
             gl.glBegin(GL2.GL_LINES);
             gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
@@ -43,7 +44,7 @@ public class PlayerTarget extends PerPlayer {
             gl.glVertex2f(-CROSS_RADIUS, CROSS_RADIUS);
             gl.glVertex2f(CROSS_RADIUS, -CROSS_RADIUS);
             gl.glEnd();
-            gl.glTranslatef(-walkingToX, -walkingToY, 0);
+            gl.glPopMatrix();
 
             // Set color
             gl.glColor3f(1, 0, 0);
@@ -59,6 +60,7 @@ public class PlayerTarget extends PerPlayer {
                 gl.glEnd();
 
                 // Draw cross on shooting target
+                gl.glPushMatrix();
                 gl.glTranslatef(shootingToX, shootingToY, 0);
                 gl.glBegin(GL2.GL_LINES);
                 gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
@@ -66,7 +68,7 @@ public class PlayerTarget extends PerPlayer {
                 gl.glVertex2f(-CROSS_RADIUS, CROSS_RADIUS);
                 gl.glVertex2f(CROSS_RADIUS, -CROSS_RADIUS);
                 gl.glEnd();
-                gl.glTranslatef(-shootingToX, -shootingToY, 0);
+                gl.glPopMatrix();
             }
         }
     }
