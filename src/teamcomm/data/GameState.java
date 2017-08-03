@@ -226,6 +226,11 @@ public class GameState implements GameControlDataEventListener {
             }
         }
 
+        if (changed != 0) {
+            // (re)load plugins
+            PluginLoader.getInstance().update((int) e.data.team[0].teamNumber, (int) e.data.team[1].teamNumber);
+        }
+
         if (LogReplayer.getInstance().isReplaying()) {
             lastGameControlData = e.data;
             return;
@@ -258,10 +263,6 @@ public class GameState implements GameControlDataEventListener {
             Logger.getInstance().createLogfile(logfileName.append("_finished").toString());
         }
 
-        if (changed != 0) {
-            // (re)load plugins
-            PluginLoader.getInstance().update((int) e.data.team[0].teamNumber, (int) e.data.team[1].teamNumber);
-        }
         lastGameControlData = e.data;
 
         // Log the GameController data
