@@ -190,10 +190,6 @@ public class GameState implements GameControlDataEventListener {
      */
     @Override
     public void gameControlDataChanged(final GameControlDataEvent e) {
-        if (LogReplayer.getInstance().isReplaying()) {
-            return;
-        }
-
         int changed = 0;
 
         if (lastGameControlData == null) {
@@ -228,6 +224,11 @@ public class GameState implements GameControlDataEventListener {
                     }
                 }
             }
+        }
+
+        if (LogReplayer.getInstance().isReplaying()) {
+            lastGameControlData = e.data;
+            return;
         }
 
         // Open a new logfile for the current GameController state if the
