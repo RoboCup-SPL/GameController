@@ -24,35 +24,37 @@ public class GameControllerInfo extends Static {
             gl.glTranslatef(0, 4, .5f);
             camera.turnTowardsCamera(gl);
 
-            // Display half
-            final String half;
-            if (data.team[0].teamNumber == 98 || data.team[0].teamNumber == 99 || data.team[1].teamNumber == 98 || data.team[1].teamNumber == 99) {
-                half = "Drop-in Game";
-            } else {
-                if (data.firstHalf == GameControlData.C_TRUE) {
-                    if (data.secGameState == GameControlData.STATE2_TIMEOUT) {
-                        half = "Timeout";
+            // Display secondary state
+            final String secState;
+            switch (data.secGameState) {
+                case GameControlData.STATE2_NORMAL:
+                    if (data.firstHalf == GameControlData.C_TRUE) {
+                        if (data.gameState == GameControlData.STATE_FINISHED) {
+                            secState = "Half Time";
+                        } else {
+                            secState = "First Half";
+                        }
                     } else {
-                        half = "1st half";
+                        if (data.gameState == GameControlData.STATE_INITIAL) {
+                            secState = "Half Time";
+                        } else {
+                            secState = "Second Half";
+                        }
                     }
-                } else {
-                    switch (data.secGameState) {
-                        case GameControlData.STATE2_NORMAL:
-                        case GameControlData.STATE2_OVERTIME:
-                            half = "2nd half";
-                            break;
-                        case GameControlData.STATE2_TIMEOUT:
-                            half = "Timeout";
-                            break;
-                        case GameControlData.STATE2_PENALTYSHOOT:
-                            half = "Penalty Shootout";
-                            break;
-                        default:
-                            half = "";
-                    }
-                }
+                    break;
+                case GameControlData.STATE2_OVERTIME:
+                    secState = "Overtime";
+                    break;
+                case GameControlData.STATE2_PENALTYSHOOT:
+                    secState = "Penalty Shootout";
+                    break;
+                case GameControlData.STATE2_TIMEOUT:
+                    secState = "Time Out";
+                    break;
+                default:
+                    secState = "";
             }
-            Text.drawText(half, 0, 0.9f, 0.3f);
+            Text.drawText(secState, 0, 0.9f, 0.3f);
 
             int minutes = (data.secsRemaining < 0 ? (-data.secsRemaining) : data.secsRemaining) / 60;
             int seconds = (data.secsRemaining < 0 ? (-data.secsRemaining) : data.secsRemaining) % 60;
