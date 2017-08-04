@@ -68,7 +68,7 @@ public class BHumanMessageParts {
                 Log.error("Wrong BHULKs message struct version: was " + version + ", expected " + BHULKS_STANDARD_MESSAGE_STRUCT_VERSION);
             }
         } else {
-            Log.error("Expected BHULKs message struct header, found: " + header);
+            Log.error("Could not find BHULKs message struct header");
         }
 
         if (data.hasRemaining()) {
@@ -87,7 +87,7 @@ public class BHumanMessageParts {
                 }
             } else {
                 data.position(data.position() - 5);
-                Log.error("Expected B-Human standard message struct header, found: " + header);
+                Log.error("Wrong B-Human standard message struct header");
             }
         }
 
@@ -102,7 +102,7 @@ public class BHumanMessageParts {
                 }
             } else {
                 data.position(data.position() - 5);
-                Log.error("Expected B-Human arbitrary message struct header, found: " + header);
+                Log.error("Wrong B-Human arbitrary message struct header");
             }
         }
 
