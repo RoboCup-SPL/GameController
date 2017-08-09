@@ -839,7 +839,7 @@ public class GUI extends JFrame implements GCGUI
         clockReset.setVisible(ActionBoard.clockReset.isLegal(data));
         clockPause.setVisible(ActionBoard.clockPause.isLegal(data));
         if (Rules.league.lostTime) {
-            incGameClock.setEnabled(ActionBoard.incGameClock.isLegal(data));
+            incGameClock.setVisible(ActionBoard.incGameClock.isLegal(data));
         }
     }
     
