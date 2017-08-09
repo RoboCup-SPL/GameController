@@ -255,9 +255,9 @@ public class GUI extends JFrame implements GCGUI
      *                      the display`s resolution to the GUI`s size.
      * @param data      The starting data.
      */
-    public GUI(boolean fullscreen, GameControlData data)
+    public GUI(boolean fullscreen, String additionalInfo, GameControlData data)
     {
-        super(WINDOW_TITLE);
+        super(WINDOW_TITLE + " (" + additionalInfo + ")");
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(true);
 

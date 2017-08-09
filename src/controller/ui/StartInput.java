@@ -74,6 +74,7 @@ public class StartInput extends JFrame implements Serializable
     public int[] outTeam = {0, 0};
     public byte[] outTeamColor = new byte[2];
     public boolean outFulltime;
+    public String outGameTypeTitle;
     public boolean outFullscreen;
     public boolean outAutoColorChange;
 
@@ -296,6 +297,11 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = fulltime.isSelected() && fulltime.isVisible();
+                    if (Rules.league instanceof SPL) {
+                        outGameTypeTitle = outFulltime ? FULLTIME_LABEL_YES : FULLTIME_LABEL_NO;
+                    } else {
+                        outGameTypeTitle = outFulltime ? FULLTIME_LABEL_HL_YES : FULLTIME_LABEL_HL_NO;
+                    }
                     outFullscreen = fullscreen.getState();
                     outAutoColorChange = autoColorChange.getState();
                     finished = true;

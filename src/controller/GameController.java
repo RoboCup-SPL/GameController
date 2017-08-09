@@ -284,7 +284,7 @@ public class GameController {
                 + " (" + Rules.league.teamColorName[data.team[0].teamColor]
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
                 + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
-        GUI gui = new GUI(input.outFullscreen, data);
+        GUI gui = new GUI(input.outFullscreen, input.outGameTypeTitle, data);
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);
