@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 
 import data.GameControlData;
+import data.PlayerInfo;
+import data.TeamInfo;
 import eventrecorder.action.EntryCreateAction;
 import eventrecorder.gui.MainFrame;
 import teamcomm.data.event.GameControlDataEvent;
@@ -33,9 +35,16 @@ public class EventRecorder {
     public static GameControlDataReceiver gcDataReceiver;
     
     private static GameControlData lastData = null;
+    private static TeamInfo[] lastTeamData = null;
     private static byte lastGameState = -1;
     
-    public static void main(String args[]){
+    private static boolean[] logPenalty = new boolean[16];
+    
+    public TeamInfo[] getLastTeamData() {
+    	return lastTeamData;
+    }
+    
+    public static void main(String args[]){    	
         model = new DataModel();
         history = new ActionHistory();
         gui = new MainFrame();
@@ -97,6 +106,34 @@ public class EventRecorder {
             	
                 history.execute(new EntryCreateAction(new LogEntry(gameStateString,SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.GameState), insertPlace, false));
             }
+
+            // Check for changed penalties:
+            if(lastTeamData != null) {
+            	for(int i=0; i<data.team.length && i<lastTeamData.length; ++i) {
+            		for(int p=0; p<data.team[i].player.length && p<lastTeamData[i].player.length; ++p) {
+            			if(data.team[i].player[p].penalty != lastTeamData[i].player[p].penalty
+            					&& logPenalty[data.team[i].player[p].penalty]) {
+            				
+            				String penaltyString = data.team[i].player[p].penalty == 0 ? "Back In Game" : 
+            					capitalize(PlayerInfo.getPenaltyName(data.team[i].player[p].penalty));
+            				
+            				String totalString = data.team[i].getTeamColorName().toUpperCase()+" "+(p+1)+": "+
+            						penaltyString;
+            				
+            				// Insert before empty logEntries:
+                        	int insertPlace = EventRecorder.model.logEntries.size();
+                        	
+                        	while(insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text))
+                        		--insertPlace;
+                        	
+                            history.execute(new EntryCreateAction(new LogEntry(totalString,SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.PlayerState), insertPlace, false));
+            				
+            			}
+            		}
+            	}
+            }
+
+            lastTeamData = data.team;
             
             // Save current timestamp:
             model.lastGameControllerInfo = System.currentTimeMillis();
@@ -105,6 +142,19 @@ public class EventRecorder {
         lastData = data;
     }
     
+    public static String capitalize(String string) {
+        StringBuffer result = new StringBuffer();
+
+        String[] array = string.split(" ");
+        for (String s : array) {
+            char[] charArray = s.trim().toCharArray();
+            charArray[0] = Character.toUpperCase(charArray[0]);
+            s = new String(charArray);
+            result.append(s).append(" ");
+        }
+        
+        return result.toString().trim();
+    }
     
     public static void cleanExit(){
         gcDataReceiver.interrupt();
@@ -118,4 +168,8 @@ public class EventRecorder {
         
         System.exit(0);
     }
+
+	public static void setLogPenalty(int i, boolean log) {
+		logPenalty[i] = log;
+	}
 }

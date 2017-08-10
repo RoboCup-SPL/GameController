@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.prefs.Preferences;
@@ -30,6 +31,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -112,6 +114,8 @@ public class MainFrame extends JFrame {
      */
     
     public MainFrame(){
+    	JComponent.setDefaultLocale(Locale.ENGLISH);
+    	
         // Load preferences:
         prefs = Preferences.userRoot().node(this.getClass().getName());
         EventRecorder.model.title = prefs.get("DEFAULT_TITLE", "1. Testgame");

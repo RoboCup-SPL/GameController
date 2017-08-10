@@ -98,83 +98,65 @@ public class PlayerInfo implements Serializable {
         secsTillUnpenalised = buffer.get();
     }
 
-    @Override
-    public String toString() {
-        String out = "";
-        String temp;
-
+    public static String getPenaltyName(int penalty) {
         if (Rules.league instanceof SPL) {
             switch (penalty) {
                 case PENALTY_NONE:
-                    temp = "none";
-                    break;
+                	return "none";
                 case PENALTY_SPL_ILLEGAL_BALL_CONTACT:
-                    temp = "illegal ball contact";
-                    break;
+                	return "illegal ball contact";
                 case PENALTY_SPL_PLAYER_PUSHING:
-                    temp = "pushing";
-                    break;
+                	return "pushing";
                 case PENALTY_SPL_ILLEGAL_MOTION_IN_SET:
-                    temp = "illegal motion in set";
-                    break;
+                	return "illegal motion in set";
                 case PENALTY_SPL_INACTIVE_PLAYER:
-                    temp = "inactive";
-                    break;
+                	return "inactive";
                 case PENALTY_SPL_ILLEGAL_DEFENDER:
-                    temp = "illegal defender";
-                    break;
+                	return "illegal defender";
                 case PENALTY_SPL_LEAVING_THE_FIELD:
-                    temp = "leaving the field";
-                    break;
+                	return "leaving the field";
                 case PENALTY_SPL_KICK_OFF_GOAL:
-                    temp = "kickoff goal";
-                    break;
+                	return "kickoff goal";
                 case PENALTY_SPL_REQUEST_FOR_PICKUP:
-                    temp = "request for pickup";
-                    break;
+                	return "request for pickup";
                 case PENALTY_SPL_COACH_MOTION:
-                    temp = "coach motion";
-                    break;
+                	return "coach motion";
                 case PENALTY_SUBSTITUTE:
-                    temp = "substitute";
-                    break;
+                	return "substitute";
                 case PENALTY_MANUAL:
-                    temp = "manual";
-                    break;
+                	return "manual";
                 default:
-                    temp = "undefined(" + penalty + ")";
+                	return "undefined(" + penalty + ")";
             }
         } else {
             switch (penalty) {
                 case PENALTY_NONE:
                 case PENALTY_HL_BALL_MANIPULATION:
-                    temp = "none";
-                    break;
+                	return "none";
                 case PENALTY_HL_PHYSICAL_CONTACT:
-                    temp = "pushing";
-                    break;
+                	return "pushing";
                 case PENALTY_HL_ILLEGAL_ATTACK:
-                    temp = "illegal attack";
-                    break;
+                	return "illegal attack";
                 case PENALTY_HL_ILLEGAL_DEFENSE:
-                    temp = "illegal defender";
-                    break;
+                	return "illegal defender";
                 case PENALTY_HL_PICKUP_OR_INCAPABLE:
-                    temp = "pickup/incapable";
-                    break;
+                	return "pickup/incapable";
                 case PENALTY_HL_SERVICE:
-                    temp = "service";
-                    break;
+                	return "service";
                 case PENALTY_MANUAL:
-                    temp = "manual";
-                    break;
+                	return "manual";
                 case PENALTY_SUBSTITUTE:
-                    temp = "substitute";
-                    break;
+                	return "substitute";
                 default:
-                    temp = "undefined(" + penalty + ")";
+                    return "undefined(" + penalty + ")";
             }
         }
+    }
+    
+    @Override
+    public String toString() {
+        String out = "";
+        String temp = getPenaltyName(penalty);
         out += "            penalty: " + temp + "\n";
         out += "secsTillUnpenalised: " + secsTillUnpenalised + "\n";
         return out;

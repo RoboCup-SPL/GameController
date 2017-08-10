@@ -7,13 +7,21 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.prefs.Preferences;
+
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextArea;
+
+import data.PlayerInfo;
 
 /**
  * The menu bar at the top of the program.
@@ -75,5 +83,43 @@ public class MenuBar extends JMenuBar {
         file.add(exit);
 
         add(file);
+        
+
+        JMenu logging = new JMenu("Logging");
+        
+        JPanel loggingPanel = new JPanel();
+        loggingPanel.setLayout(new BoxLayout(loggingPanel, BoxLayout.Y_AXIS));
+        
+        loggingPanel.add(new JLabel("<html><body><b>Penalty Logging Settings:</b></body></html>"));
+        loggingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+
+        Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+        for(int i=0;i<10;i++) {
+            boolean checked = prefs.getBoolean("LOG_PENALTY_"+i, i == 4 || i == 6);
+            // Load settings:
+			EventRecorder.setLogPenalty(i, checked);
+        	
+			String penaltyString = i == 0 ? "Back In Game" : 
+				EventRecorder.capitalize(PlayerInfo.getPenaltyName(i));
+			
+			final int finalI = i;
+			
+			// Setup the Checkbox:
+        	final JCheckBox checkBox = new JCheckBox(penaltyString);
+        	checkBox.setSelected(checked);
+        	checkBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					EventRecorder.setLogPenalty(finalI, checkBox.isSelected());
+				}
+        	});
+        	
+        	loggingPanel.add(checkBox);
+        }
+        
+        loggingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        
+        logging.add(loggingPanel);
+        add(logging);
     }
 }

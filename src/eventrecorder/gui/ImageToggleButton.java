@@ -14,6 +14,7 @@ import javax.swing.JToggleButton;
  */
 
 public class ImageToggleButton extends JToggleButton{
+	private static final long serialVersionUID = 1L;
 	private ImageIcon enabledIcon;
 	private ImageIcon disabledIcon;
 	private boolean isActivated;

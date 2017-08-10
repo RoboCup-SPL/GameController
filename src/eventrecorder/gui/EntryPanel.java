@@ -41,7 +41,7 @@ public class EntryPanel extends JPanel{
         controlEntryPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         
         
-        final JComboBox<LogType> logTypeChooser = new JComboBox<LogType>(new LogType[]{LogType.Manually, LogType.GameState});
+        final JComboBox<LogType> logTypeChooser = new JComboBox<LogType>(new LogType[]{LogType.Manually, LogType.GameState, LogType.PlayerState});
         logTypeChooser.setSelectedItem(e.type);
         logTypeChooser.addActionListener(new ActionListener(){
 

@@ -137,47 +137,40 @@ public class TeamInfo implements Serializable {
             player[i].fromByteArray(buffer);
         }
     }
+    
+    public String getTeamColorName() {
+        switch (teamColor) {
+	        case GameControlData.TEAM_BLUE:
+	            return "blue";
+	        case GameControlData.TEAM_RED:
+	        	return "red";
+	        case GameControlData.TEAM_YELLOW:
+	        	return "yellow";
+	        case GameControlData.TEAM_BLACK:
+	        	return "black";
+	        case GameControlData.TEAM_WHITE:
+	        	return "white";
+	        case GameControlData.TEAM_GREEN:
+	        	return "green";
+	        case GameControlData.TEAM_ORANGE:
+	        	return "orange";
+	        case GameControlData.TEAM_PURPLE:
+	        	return "purple";
+	        case GameControlData.TEAM_BROWN:
+	        	return "brown";
+	        case GameControlData.TEAM_GRAY:
+	        	return "gray";
+	        default:
+	            return "undefinied(" + teamColor + ")";
+        }
+    }
 
     @Override
     public String toString() {
         String out = "--------------------------------------\n";
-        String temp;
+        String temp = getTeamColorName();
 
         out += "         teamNumber: " + teamNumber + "\n";
-        switch (teamColor) {
-            case GameControlData.TEAM_BLUE:
-                temp = "blue";
-                break;
-            case GameControlData.TEAM_RED:
-                temp = "red";
-                break;
-            case GameControlData.TEAM_YELLOW:
-                temp = "yellow";
-                break;
-            case GameControlData.TEAM_BLACK:
-                temp = "black";
-                break;
-            case GameControlData.TEAM_WHITE:
-                temp = "white";
-                break;
-            case GameControlData.TEAM_GREEN:
-                temp = "green";
-                break;
-            case GameControlData.TEAM_ORANGE:
-                temp = "orange";
-                break;
-            case GameControlData.TEAM_PURPLE:
-                temp = "purple";
-                break;
-            case GameControlData.TEAM_BROWN:
-                temp = "brown";
-                break;
-            case GameControlData.TEAM_GRAY:
-                temp = "gray";
-                break;
-            default:
-                temp = "undefinied(" + teamColor + ")";
-        }
         out += "          teamColor: " + temp + "\n";
         out += "              score: " + score + "\n";
         out += "        penaltyShot: " + penaltyShot + "\n";
