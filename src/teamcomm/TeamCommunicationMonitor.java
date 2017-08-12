@@ -36,6 +36,7 @@ public class TeamCommunicationMonitor {
      * @param args startup arguments.
      */
     public static void main(final String[] args) {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
         GameControlDataReceiver gcDataReceiver = null;
         SPLStandardMessageReceiverTCM receiver = null;
 

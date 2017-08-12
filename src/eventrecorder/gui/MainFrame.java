@@ -114,8 +114,11 @@ public class MainFrame extends JFrame {
      */
     
     public MainFrame(){
-    	JComponent.setDefaultLocale(Locale.ENGLISH);
-    	
+        JComponent.setDefaultLocale(Locale.ENGLISH);
+        
+        // Enable fullscreen mode on macOS
+        getRootPane().putClientProperty("apple.awt.fullscreenable", Boolean.valueOf(true));
+        
         // Load preferences:
         prefs = Preferences.userRoot().node(this.getClass().getName());
         EventRecorder.model.title = prefs.get("DEFAULT_TITLE", "1. Testgame");

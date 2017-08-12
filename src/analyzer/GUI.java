@@ -71,6 +71,7 @@ public class GUI extends JFrame implements ListSelectionListener
     public GUI()
     {
         super(TITLE);
+        getRootPane().putClientProperty("apple.awt.fullscreenable", Boolean.valueOf(true));
         final Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         setLocation((int) center.getX() - WINDOW_WIDTH / 2, (int) center.getY() - WINDOW_HEIGHT / 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

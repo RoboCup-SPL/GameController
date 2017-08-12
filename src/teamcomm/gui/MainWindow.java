@@ -74,6 +74,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
     private void initialize() {
         // Setup window
+        getRootPane().putClientProperty("apple.awt.fullscreenable", Boolean.valueOf(true));
         setLocationByPlatform(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
