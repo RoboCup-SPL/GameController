@@ -1,6 +1,6 @@
 package eventrecorder.action;
 
-import eventrecorder.LogEntry;
+import eventrecorder.data.LogEntry;
 
 /**
  * Changes the text value of a LogEntry

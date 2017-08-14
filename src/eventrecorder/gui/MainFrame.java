@@ -45,12 +45,12 @@ import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
 import eventrecorder.EventRecorder;
-import eventrecorder.LogEntry;
-import eventrecorder.LogType;
 import eventrecorder.action.Action;
 import eventrecorder.action.EntryCreateAction;
 import eventrecorder.action.TitleChangeAction;
 import eventrecorder.export.MarkDownExporter;
+import eventrecorder.data.LogEntry;
+import eventrecorder.data.LogType;
 
 /**
  * Main window of the event recorder tool.

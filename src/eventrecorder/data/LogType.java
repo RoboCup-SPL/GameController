@@ -1,4 +1,4 @@
-package eventrecorder;
+package eventrecorder.data;
 
 /**
  * Possible types of a LogEntry.

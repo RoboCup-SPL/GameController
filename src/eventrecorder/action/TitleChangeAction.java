@@ -1,7 +1,7 @@
 package eventrecorder.action;
 
 import eventrecorder.EventRecorder;
-import eventrecorder.LogEntry;
+import eventrecorder.data.LogEntry;
 
 /**
  * Action for changing title and additional information.

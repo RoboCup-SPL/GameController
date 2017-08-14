@@ -1,6 +1,6 @@
 package eventrecorder.action;
 
-import eventrecorder.LogEntry;
+import eventrecorder.data.LogEntry;
 
 /**
  * Abstract class of the Command pattern. 

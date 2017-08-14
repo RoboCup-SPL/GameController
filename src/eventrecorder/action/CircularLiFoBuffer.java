@@ -1,4 +1,4 @@
-package eventrecorder;
+package eventrecorder.action;
 
 /**
  * Circular-Last-In-First-Out-Buffer specially for redo/undo-functionality.

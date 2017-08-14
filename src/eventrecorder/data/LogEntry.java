@@ -1,4 +1,4 @@
-package eventrecorder;
+package eventrecorder.data;
 
 /**
  * Data of an entry.

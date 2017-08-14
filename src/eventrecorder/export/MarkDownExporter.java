@@ -1,8 +1,8 @@
 package eventrecorder.export;
 
-import eventrecorder.DataModel;
-import eventrecorder.LogEntry;
-import eventrecorder.LogType;
+import eventrecorder.data.DataModel;
+import eventrecorder.data.LogEntry;
+import eventrecorder.data.LogType;
 
 /**
  * Exports the given data model to a markdown string.

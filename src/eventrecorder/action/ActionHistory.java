@@ -1,6 +1,6 @@
-package eventrecorder;
+package eventrecorder.action;
 
-import eventrecorder.action.Action;
+import eventrecorder.EventRecorder;
 
 /**
  * Saves all executed actions for undo- and redo-functionality.

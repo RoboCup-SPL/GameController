@@ -1,4 +1,4 @@
-package eventrecorder;
+package eventrecorder.data;
 
 import java.util.ArrayList;
 

@@ -11,10 +11,10 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import eventrecorder.EventRecorder;
-import eventrecorder.LogEntry;
-import eventrecorder.LogType;
 import eventrecorder.action.EntryDeleteAction;
 import eventrecorder.action.EntryTypeChangeAction;
+import eventrecorder.data.LogEntry;
+import eventrecorder.data.LogType;
 
 /**
  * Displays a line in the logEntryTable.

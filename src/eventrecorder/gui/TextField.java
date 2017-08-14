@@ -12,9 +12,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import eventrecorder.EventRecorder;
-import eventrecorder.LogEntry;
-import eventrecorder.LogType;
 import eventrecorder.action.EntryChangeTextAction;
+import eventrecorder.data.LogEntry;
+import eventrecorder.data.LogType;
 
 /**
  * This class just display the text of a given LogEntry.

@@ -8,13 +8,13 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import eventrecorder.EventRecorder;
-import eventrecorder.LogEntry;
-import eventrecorder.LogType;
 import eventrecorder.action.Action;
 import eventrecorder.action.EntryChangeTextAction;
 import eventrecorder.action.EntryChangeTimeAction;
 import eventrecorder.action.EntryCreateAction;
 import eventrecorder.action.EntryDeleteAction;
+import eventrecorder.data.LogEntry;
+import eventrecorder.data.LogType;
 
 /**
  * This class is the shown logEntryTable which displays all saved log entries.
