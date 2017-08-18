@@ -289,7 +289,10 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public int getRemainingGameTime(boolean real) {
         int regularNumberOfPenaltyShots = (gameType == GAME_PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
-        int duration = secGameState == STATE2_TIMEOUT ? secsRemaining
+        int duration = secGameState == STATE2_TIMEOUT
+                ? (previousSecGameState == STATE2_NORMAL ? Rules.league.halfTime
+                        : previousSecGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
+                                : Rules.league.penaltyShotTime)
                 : secGameState == STATE2_NORMAL ? Rules.league.halfTime
                         : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
                                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
