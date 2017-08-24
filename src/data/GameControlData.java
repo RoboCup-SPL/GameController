@@ -120,7 +120,7 @@ public class GameControlData implements Serializable {
     // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
     public byte packetNumber = 0;
     public byte playersPerTeam = (byte) Rules.league.teamSize;   // The number of players on a team
-    public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_DROPIN)
+    public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_MIXEDTEAM_ROUNDROBIN, GAME_MIXEDTEAM_PLAYOFF)
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
     public byte kickOffTeam;                                    // the next team to kick off

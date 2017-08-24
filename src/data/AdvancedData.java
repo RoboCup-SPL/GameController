@@ -171,7 +171,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public AdvancedData() {
         if (Rules.league.startWithPenalty) {
-            secGameState = GameControlData.STATE2_PENALTYSHOOT;
+            secGameState = STATE2_PENALTYSHOOT;
         }
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < team[i].player.length; j++) {
@@ -288,7 +288,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * @return The remaining number of seconds.
      */
     public int getRemainingGameTime(boolean real) {
-        int regularNumberOfPenaltyShots = (gameType == GAME_PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
+        int regularNumberOfPenaltyShots = (gameType == GAME_PLAYOFF || gameType == GAME_MIXEDTEAM_PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
         int duration = secGameState == STATE2_TIMEOUT
                 ? (previousSecGameState == STATE2_NORMAL ? Rules.league.halfTime
                         : previousSecGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
@@ -300,10 +300,10 @@ public class AdvancedData extends GameControlData implements Cloneable {
                                 : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL// during timeouts
                 || (gameState == STATE_READY || gameState == STATE_SET)
-                && ((gameType == GAME_PLAYOFF) && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
+                && ((gameType == GAME_PLAYOFF || gameType == GAME_MIXEDTEAM_PLAYOFF) && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
                         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                        : real || (gameType != GAME_PLAYOFF && timeBeforeCurrentGameState > 0) || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
+                        : real || (gameType != GAME_PLAYOFF && gameType != GAME_MIXEDTEAM_PLAYOFF && timeBeforeCurrentGameState > 0) || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
                         || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying
                         ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
                         : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
@@ -317,11 +317,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * there currently is no pause.
      */
     public Integer getRemainingPauseTime() {
-        if (secGameState == GameControlData.STATE2_NORMAL
+        if (secGameState == STATE2_NORMAL
                 && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf == C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pauseTime);
-        } else if (Rules.league.pausePenaltyShootOutTime != 0 && (gameType == GAME_PLAYOFF) && team[0].score == team[1].score
+        } else if (Rules.league.pausePenaltyShootOutTime != 0 && (gameType == GAME_PLAYOFF || gameType == GAME_MIXEDTEAM_PLAYOFF) && team[0].score == team[1].score
                 && (gameState == STATE_INITIAL && secGameState == STATE2_PENALTYSHOOT && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf != C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pausePenaltyShootOutTime);

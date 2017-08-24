@@ -36,7 +36,7 @@ public class Play extends GCAction
         if (data.gameState == GameControlData.STATE_PLAYING) {
             return;
         }
-        if ((data.gameType != GameControlData.GAME_PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
+        if ((data.gameType != GameControlData.GAME_PLAYOFF && data.gameType != GameControlData.GAME_MIXEDTEAM_PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = data.getTime();
