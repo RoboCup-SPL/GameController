@@ -47,6 +47,12 @@
                 <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
             </manifest>
         </jar>
+        <jar destfile="${jar.dir}/LogExporter.jar" basedir="${classes.dir}" includes="${common_classes} exporter/ teamcomm/">
+            <manifest>
+                <attribute name="Main-Class" value="exporter.LogExporter"/>
+                <attribute name="Author" value="Tim Laue" />
+            </manifest>
+        </jar>
         <jar destfile="${jar.dir}/plugins/common.jar" basedir="${classes.dir}" includes="teamcomm/gui/drawings/common/">
             <manifest>
                 <attribute name="Author" value="Felix Thielke" />
