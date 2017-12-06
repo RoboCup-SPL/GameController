@@ -1187,18 +1187,19 @@ public class GUI extends JFrame implements GCGUI
         pen[8].setEnabled(ActionBoard.coachMotion.isLegal(data));
         pen[9].setEnabled(ActionBoard.substitute.isLegal(data));
         
-        GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
-        if(hightlightEvent != null && !hightlightEvent.isLegal(data))
+        GCAction highlightEvent = EventHandler.getInstance().lastUIEvent;
+        if (highlightEvent != null && !highlightEvent.isLegal(data)) {
           EventHandler.getInstance().lastUIEvent = null;
-        pen[0].setSelected(hightlightEvent == ActionBoard.pushing);
-        pen[1].setSelected(hightlightEvent == ActionBoard.leaving);
-        pen[2].setSelected(hightlightEvent == ActionBoard.inactive);
-        pen[3].setSelected(hightlightEvent == ActionBoard.defender);
-        pen[5].setSelected(hightlightEvent == ActionBoard.kickOffGoal);
-        pen[6].setSelected(hightlightEvent == ActionBoard.ballContact);
-        pen[7].setSelected(hightlightEvent == ActionBoard.pickUp);
-        pen[8].setSelected(hightlightEvent == ActionBoard.coachMotion);
-        pen[9].setSelected(hightlightEvent == ActionBoard.substitute);
+        }
+        pen[0].setSelected(highlightEvent == ActionBoard.pushing);
+        pen[1].setSelected(highlightEvent == ActionBoard.leaving);
+        pen[2].setSelected(highlightEvent == ActionBoard.inactive);
+        pen[3].setSelected(highlightEvent == ActionBoard.defender);
+        pen[5].setSelected(highlightEvent == ActionBoard.kickOffGoal);
+        pen[6].setSelected(highlightEvent == ActionBoard.ballContact);
+        pen[7].setSelected(highlightEvent == ActionBoard.pickUp);
+        pen[8].setSelected(highlightEvent == ActionBoard.coachMotion);
+        pen[9].setSelected(highlightEvent == ActionBoard.substitute);
 
         // Handle quick select for ILLEGAL_MOTION_IN_SET
         if (pen[4].isEnabled()) {
