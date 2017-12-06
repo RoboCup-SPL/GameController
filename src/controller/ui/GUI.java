@@ -1188,6 +1188,8 @@ public class GUI extends JFrame implements GCGUI
         pen[9].setEnabled(ActionBoard.substitute.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
+        if(hightlightEvent != null && !hightlightEvent.isLegal(data))
+          EventHandler.getInstance().lastUIEvent = null;
         pen[0].setSelected(hightlightEvent == ActionBoard.pushing);
         pen[1].setSelected(hightlightEvent == ActionBoard.leaving);
         pen[2].setSelected(hightlightEvent == ActionBoard.inactive);
