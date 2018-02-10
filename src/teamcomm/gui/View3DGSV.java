@@ -198,7 +198,6 @@ public class View3DGSV extends View3D {
                     case "Field":
                     case "Player":
                     case "PlayerNumber":
-                    case "PlayerTarget":
                         d.setActive(true);
                         break;
                     default:

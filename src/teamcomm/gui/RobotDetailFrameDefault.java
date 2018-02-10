@@ -129,51 +129,6 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
 
         // Left label
         sb.setLength(6);
-        if (msg.fallenValid) {
-            sb.append(msg.fallen ? "fallen" : "upright");
-        } else {
-            sb.append("<font color='red'>unknown state</font>");
-        }
-        sb.append("<br/>");
-        if (msg.intentionValid) {
-            sb.append("Activity: ").append(msg.intention.toString());
-        } else {
-            sb.append("<font color='red'>Activity: ?</font>");
-        }
-        sb.append("<br/><br/>Confidence:<br/>");
-        if (msg.currentPositionConfidenceValid) {
-            sb.append("Position: ").append(msg.currentPositionConfidence).append("%");
-        } else {
-            sb.append("<font color='red'>Position: ").append(msg.currentPositionConfidence).append("%</font>");
-        }
-        sb.append("<br/>");
-        if (msg.currentSideConfidenceValid) {
-            sb.append("Side: ").append(msg.currentSideConfidence).append("%");
-        } else {
-            sb.append("<font color='red'>Side: ").append(msg.currentSideConfidence).append("%</font>");
-        }
-        sb.append("<br/><br/>");
-        if (msg.averageWalkSpeedValid) {
-            sb.append("Avg. walk speed: ").append(msg.averageWalkSpeed).append("mm/s");
-        } else {
-            sb.append("<font color='red'>Avg. walk speed: ").append(msg.averageWalkSpeed).append("mm/s</font>");
-        }
-        sb.append("<br/>");
-        if (msg.maxKickDistanceValid) {
-            sb.append("Max. kick distance: ").append(msg.maxKickDistance).append("mm");
-        } else {
-            sb.append("<font color='red'>Max. kick distance: ").append(msg.maxKickDistance).append("mm</font>");
-        }
-        sb.append("<br/><br/>");
-        for (int i = 0; i < 5; i++) {
-            if (msg.suggestionValid[i]) {
-                sb.append("Suggestion ").append(i + 1).append(": ").append(msg.suggestion[i].toString());
-            } else {
-                sb.append("<font color='red'>Suggestion ").append(i + 1).append(": ?</font>");
-            }
-            sb.append("<br/>");
-        }
-        sb.append("<br/>");
         if (msg.dataValid) {
             sb.append("Additional data: ").append(msg.data.length).append("B (").append(msg.data.length * 100 / SPLStandardMessage.SPL_STANDARD_MESSAGE_DATA_SIZE).append("%)");
         } else {
@@ -181,6 +136,30 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
         }
 
         boolean additionalLine = false;
+
+        if (!msg.headerValid) {
+            if (!additionalLine) {
+                sb.append("<br/>");
+                additionalLine = true;
+            }
+            sb.append("<br/><font color='red'>Invalid header: ").append(msg.header).append("</font>");
+        }
+
+        if (!msg.versionValid) {
+            if (!additionalLine) {
+                sb.append("<br/>");
+                additionalLine = true;
+            }
+            sb.append("<br/><font color='red'>Invalid version: ").append(msg.version).append("</font>");
+        }
+
+        if (!msg.fallenValid) {
+            if (!additionalLine) {
+                sb.append("<br/>");
+                additionalLine = true;
+            }
+            sb.append("<br/><font color='red'>Invalid fallen state</font>");
+        }
 
         if (!msg.poseValid) {
             if (!additionalLine) {
@@ -190,27 +169,11 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
             sb.append("<br/><font color='red'>Invalid pose: x").append(df.format(msg.pose[0])).append(" y").append(df.format(msg.pose[1])).append(" t").append(df.format(msg.pose[2])).append("</font>");
         }
 
-        if (!msg.walkingToValid) {
-            if (!additionalLine) {
-                sb.append("<br/>");
-                additionalLine = true;
-            }
-            sb.append("<br/><font color='red'>Invalid walking target: x").append(df.format(msg.walkingTo[0])).append(" y").append(df.format(msg.walkingTo[1])).append("</font>");
-        }
-
-        if (!msg.shootingToValid) {
-            if (!additionalLine) {
-                sb.append("<br/>");
-                additionalLine = true;
-            }
-            sb.append("<br/><font color='red'>Invalid shooting target: x").append(df.format(msg.shootingTo[0])).append(" y").append(df.format(msg.shootingTo[1])).append("</font>");
-        }
-
         if (!msg.ballValid) {
             if (!additionalLine) {
                 sb.append("<br/>");
             }
-            sb.append("<br/><font color='red'>Invalid ball data: age ").append(msg.ballAge).append(" x").append(msg.ball[0]).append("/").append(msg.ballVel[0]).append(" y").append(msg.ball[1]).append("/").append(msg.ballVel[1]).append("</font>");
+            sb.append("<br/><font color='red'>Invalid ball data: age ").append(msg.ballAge).append(" x").append(msg.ball[0]).append(" y").append(msg.ball[1]).append("</font>");
         }
         sb.append("</html>");
         ((JLabel) infoContainer.getComponent(0)).setText(sb.toString());

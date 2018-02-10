@@ -46,14 +46,6 @@ public class Ball extends PerPlayer {
             // Draw ball
             gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "ball"));
 
-            // Draw ball velocity
-            gl.glBegin(GL.GL_LINES);
-            gl.glColor3f(1, 0, 0);
-            gl.glNormal3f(0, 0, 1);
-            gl.glVertex3f(0, 0, BALL_RADIUS);
-            gl.glVertex3f(msg.ballVel[0] / 1000.f, msg.ballVel[1] / 1000.f, BALL_RADIUS);
-            gl.glEnd();
-
             // Translate back to robot
             gl.glTranslatef(-ball[0], -ball[1], 0);
 
