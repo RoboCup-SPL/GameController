@@ -204,7 +204,7 @@ public class MessageQueue {
         }
 
         try (final BufferedReader messageIDs_h = new BufferedReader(new FileReader(messageIDsPath))) {
-            while (!messageIDs_h.readLine().trim().startsWith("GLOBAL_ENUM(MessageID,")) {
+            while (!messageIDs_h.readLine().trim().startsWith("ENUM(MessageID,")) {
             }
             String line = messageIDs_h.readLine().trim();
             while (!line.startsWith("});")) {
