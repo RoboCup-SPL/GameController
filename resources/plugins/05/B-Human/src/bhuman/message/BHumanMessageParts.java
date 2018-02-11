@@ -23,10 +23,10 @@ import util.Unsigned;
 public class BHumanMessageParts {
 
     private static final String BHULKS_STANDARD_MESSAGE_STRUCT_HEADER = "BHLK";
-    private static final short BHULKS_STANDARD_MESSAGE_STRUCT_VERSION = 8;
+    private static final short BHULKS_STANDARD_MESSAGE_STRUCT_VERSION = 9;
 
     private static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
-    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 3;
+    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 4;
 
     private static final String BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER = "BHUA";
     private static final short BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION = 0;
@@ -269,7 +269,6 @@ public class BHumanMessageParts {
                     + 2 // timeWhenReachBallQueen
                     + 4 // ballTimeWhenLastSeen
                     + 2 // whistle stuff
-                    + 9 // gameControlData
                     + 4; // roleAssignments, currentlyPerfomingRole, passTarget
 
             if (stream.remaining() < size) {
@@ -312,9 +311,6 @@ public class BHumanMessageParts {
             final int whistleDetectionContainer = Unsigned.toUnsigned(stream.getShort());
             confidenceOfLastWhistleDetection = HearingConfidence.values()[whistleDetectionContainer >> 14];
             lastTimeWhistleDetected = new Timestamp(timestamp - (long) (whistleDetectionContainer & 0x3FFF));
-
-            // GameControlData is omitted
-            stream.position(stream.position() + 9);
 
             final long roleContainer = Unsigned.toUnsigned(stream.getInt());
             long runner = 0x7 << ((BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - 1) * 3);
@@ -363,8 +359,15 @@ public class BHumanMessageParts {
         @Primitive("uchar")
         public short magicNumber;
 
+        public short walkingToX;
+        public short walkingToY;
+        public short shootingToX;
+        public short shootingToY;
+
         public Timestamp ballTimeWhenDisappearedSeenPercentage;
 
+        public short ballVelocityX;
+        public short ballVelocityY;
         public short ballLastPerceptX;
         public short ballLastPerceptY;
         public float[] ballCovariance = new float[3];
