@@ -50,13 +50,13 @@ public class SPL extends Rules
         /** Time in seconds between second half and penalty shoot. */
         pausePenaltyShootOutTime = 5*60;
         /** Time in seconds one penalty shoot is long. */
-        penaltyShotTime = 45;
+        penaltyShotTime = 30;
         /** If there can be a penalty-shoot retry. */
         penaltyShotRetries = false;
         /** If there is a sudden-death. */
         suddenDeath = true;
         /** Time in seconds one penalty shoot is long in sudden-death. */
-        penaltyShotTimeSuddenDeath = 45;
+        penaltyShotTimeSuddenDeath = 30;
         /** Number of penalty-shoots for each team when a half has 10minutes. */
         numberOfPenaltyShotsShort = 3;
         /** Number of penalty-shoots for each team after full 10minutes playing. */
