@@ -20,8 +20,8 @@ public class ObstacleModel implements ComplexStreamReader<ObstacleModel>, Messag
         public float covXX;
         public float covXY;
         public float covYY;
-        public Eigen.Vector2f left;
-        public Eigen.Vector2f right;
+        public Eigen.Vector2s left;
+        public Eigen.Vector2s right;
     }
 
     public List<Obstacle> obstacles = new LinkedList<>();
