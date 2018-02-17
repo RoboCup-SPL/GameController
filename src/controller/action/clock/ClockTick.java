@@ -45,7 +45,6 @@ public class ClockTick extends GCAction
                 }
             }
         }
-        data.updateCoachMessages();
         data.updatePenalties();
     }
     

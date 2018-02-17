@@ -24,7 +24,6 @@ import controller.action.ui.half.SecondHalf;
 import controller.action.ui.half.SecondHalfOvertime;
 import controller.action.ui.penalty.Attack;
 import controller.action.ui.penalty.BallManipulation;
-import controller.action.ui.penalty.CoachMotion;
 import controller.action.ui.penalty.Defender;
 import controller.action.ui.penalty.Defense;
 import controller.action.ui.penalty.MotionInSet;
@@ -102,12 +101,11 @@ public class ActionBoard
     public static Defense defense;
     public static PickUpHL pickUpHL;
     public static ServiceHL serviceHL;
-    public static CoachMotion coachMotion;
     public static Substitute substitute;
     public static DropBall dropBall;
 
-    public static Manual[][] manualPen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
-    public static Manual[][] manualUnpen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
+    public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
+    public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
     
     
     /**
@@ -126,11 +124,7 @@ public class ActionBoard
         }
         cancelUndo = new CancelUndo();
         
-        if (Rules.league.isCoachAvailable) {
-            robot = new Robot[2][Rules.league.teamSize+1];
-        } else {
-            robot = new Robot[2][Rules.league.teamSize];
-        }
+        robot = new Robot[2][Rules.league.teamSize];
         
         for (int i=0; i<2; i++) {
             goalDec[i] = new Goal(i, -1);
@@ -173,7 +167,6 @@ public class ActionBoard
         defense = new Defense();
         pickUpHL = new PickUpHL();
         serviceHL = new ServiceHL();
-        coachMotion = new CoachMotion();
         substitute = new Substitute();
         dropBall = new DropBall();
         

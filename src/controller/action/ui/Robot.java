@@ -6,7 +6,6 @@ import common.Log;
 import controller.EventHandler;
 import controller.action.ActionType;
 import controller.action.GCAction;
-import controller.action.ui.penalty.CoachMotion;
 import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.MotionInSet;
 import controller.action.ui.penalty.PickUp;
@@ -54,7 +53,7 @@ public class Robot extends GCAction
     public void perform(AdvancedData data)
     {
         PlayerInfo player = data.team[side].player[number];
-        if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && !isCoach(data) && data.secGameState != AdvancedData.STATE2_PENALTYSHOOT) {
+        if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && data.secGameState != AdvancedData.STATE2_PENALTYSHOOT) {
             ArrayList<PenaltyQueueData> playerInfoList = data.penaltyQueueForSubPlayers.get(side);
             if (playerInfoList.isEmpty()) {
                 player.penalty = Rules.league.substitutePenalty;
@@ -78,11 +77,11 @@ public class Robot extends GCAction
             && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE ||
                 data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
             && (data.gameState == AdvancedData.STATE_SET ||
-                data.gameState == AdvancedData.STATE_INITIAL) && !isCoach(data)) {
+                data.gameState == AdvancedData.STATE_INITIAL)) {
 
             // make all other players to substitute:
             for (int playerID = 0; playerID < Rules.league.teamSize; playerID++) {
-                if (playerID != number && !(Rules.league.isCoachAvailable && playerID == Rules.league.teamSize)) {
+                if (playerID != number && playerID != Rules.league.teamSize) {
                     PlayerInfo playerToSub = data.team[side].player[playerID];
     
                     if (playerToSub.penalty != PlayerInfo.PENALTY_NONE) {
@@ -126,7 +125,6 @@ public class Robot extends GCAction
                 && (Rules.league.allowEarlyPenaltyRemoval || data.getRemainingPenaltyTime(side, number) == 0)
                 && (data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
                     || (data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying && data.secGameState != AdvancedData.STATE2_PENALTYSHOOT ))
-                && !isCoach(data)
                 || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_SERVICE
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
@@ -138,14 +136,10 @@ public class Robot extends GCAction
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
                 || EventHandler.getInstance().lastUIEvent instanceof Substitute
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
-                && (!isCoach(data) && (!(Rules.league instanceof SPL) || number != 0))
-                || (EventHandler.getInstance().lastUIEvent instanceof CoachMotion)
-                    && (isCoach(data) && (data.team[side].coach.penalty != PlayerInfo.PENALTY_SPL_COACH_MOTION))
+                && (!(Rules.league instanceof SPL) || number != 0))
                 || data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
                     && (EventHandler.getInstance().lastUIEvent instanceof Penalty)
-                    && !(EventHandler.getInstance().lastUIEvent instanceof CoachMotion)
                     && !(EventHandler.getInstance().lastUIEvent instanceof Substitute)
-                    && (!isCoach(data)))
                 || data.testmode
                 
                 // new player selection in penalty shootout:
@@ -153,13 +147,6 @@ public class Robot extends GCAction
                 	&& (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE || 
                 		data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
                     && (data.gameState == AdvancedData.STATE_SET ||
-                        data.gameState == AdvancedData.STATE_INITIAL)
-                	&& !isCoach(data)
-                	&& !(EventHandler.getInstance().lastUIEvent instanceof CoachMotion));
+                        data.gameState == AdvancedData.STATE_INITIAL));
     }
-    
-    public boolean isCoach(AdvancedData data)
-    {
-        return Rules.league.isCoachAvailable && number == Rules.league.teamSize;
-    }
-}
+   }

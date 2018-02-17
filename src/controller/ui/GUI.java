@@ -159,7 +159,6 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
     private static final String PEN_KICK_OFF_GOAL = "Kickoff Goal";
-    private static final String PEN_COACH_MOTION = "Coach Motion";
     private static final String PEN_PICKUP = "Pick-Up";
     private static final String PEN_MANIPULATION = "Ball Manipulation";
     private static final String PEN_PHYSICAL = "Physical Contact";
@@ -171,7 +170,6 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String DROP_BALL = "Dropped Ball";
     private static final String CANCEL = "Cancel";
-    private static final String COACH = "Coach";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
     private static final Color COLOR_STANDARD = (new JButton()).getBackground();
@@ -332,17 +330,11 @@ public class GUI extends JFrame implements GCGUI
         
         //  robots
         robots = new JPanel[2];
-        if (Rules.league.isCoachAvailable) {
-            robot = new JButton[2][Rules.league.teamSize+1];
-            robotLabel = new JLabel[2][Rules.league.teamSize+1];
-            lanIcon = new ImageIcon[2][Rules.league.teamSize+1];
-            robotTime = new JProgressBar[2][Rules.league.teamSize+1];
-        } else {
-            robot = new JButton[2][Rules.league.teamSize];
-            robotLabel = new JLabel[2][Rules.league.teamSize];
-            lanIcon = new ImageIcon[2][Rules.league.teamSize];
-            robotTime = new JProgressBar[2][Rules.league.teamSize];
-        }
+        robot = new JButton[2][Rules.league.teamSize];
+        robotLabel = new JLabel[2][Rules.league.teamSize];
+        lanIcon = new ImageIcon[2][Rules.league.teamSize];
+        robotTime = new JProgressBar[2][Rules.league.teamSize];
+        
         for (int i=0; i<2; i++) {
             robots[i] = new JPanel();
             robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, Math.max(0, 11 - robot[i].length) * 2));
@@ -448,7 +440,7 @@ public class GUI extends JFrame implements GCGUI
         stateGroup.add(finish);
         //  penalties
         if (Rules.league instanceof SPL) {
-            pen = new JToggleButton[10];
+            pen = new JToggleButton[9];
             
             pen[0] = new ToggleButton(PEN_PUSHING);
             pen[1] = new ToggleButton(PEN_LEAVING);
@@ -458,8 +450,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5] = new ToggleButton(PEN_KICK_OFF_GOAL);
             pen[6] = new ToggleButton(PEN_BALL_CONTACT);
             pen[7] = new ToggleButton(PEN_PICKUP);
-            pen[8] = new ToggleButton(PEN_COACH_MOTION);
-            pen[9] = new ToggleButton(PEN_SUBSTITUTE);
+            pen[8] = new ToggleButton(PEN_SUBSTITUTE);
         } else if (Rules.league instanceof HL) {
             pen = new JToggleButton[7];
             pen[0] = new ToggleButton(PEN_MANIPULATION);
@@ -568,10 +559,7 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.505, .57, .185, .08, pen[5]);
             layout.add(.31, .67, .185, .08, pen[6]);
             layout.add(.505, .67, .185, .08, pen[7]);
-            layout.add(.31, .77, .185, .08, pen[8]);
-            if (Rules.league.teamSize > Rules.league.robotsPlaying) {
-                layout.add(.505, .77, .185, .08, pen[9]);
-            }
+            layout.add(.505, .77, .185, .08, pen[8]);
         } else if (Rules.league instanceof HL) {
             layout.add(.31,  .38, .185, .08, pen[0]);
             layout.add(.505, .38, .185, .08, pen[1]);
@@ -630,8 +618,7 @@ public class GUI extends JFrame implements GCGUI
             pen[5].addActionListener(ActionBoard.kickOffGoal);
             pen[6].addActionListener(ActionBoard.ballContact);
             pen[7].addActionListener(ActionBoard.pickUp);
-            pen[8].addActionListener(ActionBoard.coachMotion);
-            pen[9].addActionListener(ActionBoard.substitute);
+            pen[8].addActionListener(ActionBoard.substitute);
         } else if (Rules.league instanceof HL) {
             pen[0].addActionListener(ActionBoard.ballManipulation);
             pen[1].addActionListener(ActionBoard.pushing);
@@ -992,90 +979,79 @@ public class GUI extends JFrame implements GCGUI
         RobotOnlineStatus[][] onlineStatus = RobotWatcher.updateRobotOnlineStatus();
         for (int i=0; i<robot.length; i++) {
             for (int j=0; j<robot[i].length; j++) {
-                if (ActionBoard.robot[i][j].isCoach(data)) {
-                   if (data.team[i].coach.penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION) {
-                      robot[i][j].setEnabled(false);
-                      robotLabel[i][j].setText(EJECTED);
-                  } else {
-                      robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+COACH);
-                  }
-                }
-                else {
-                    if (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
-                        if (!data.ejected[i][j]) {
-                            int seconds = data.getRemainingPenaltyTime(i, j);
-                            boolean pickup = ((Rules.league instanceof SPL &&
-                                        data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
-                                   || (Rules.league instanceof HL &&
-                                       ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE
-                                      || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_SERVICE ))
-                                    );
-                            boolean illegalMotion = Rules.league instanceof SPL
-                                    && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET;
-                            if (seconds == 0) {
-                                if (pickup) {
-                                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_PICKUP+")");
-                                    highlight(robot[i][j], true);
-                                } else if (illegalMotion) {
-                                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_MOTION_IN_SET_SHORT+")");
-                                    highlight(robot[i][j], true);
-                                } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
-                                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
-                                    highlight(robot[i][j], false);
-                                } else if (!(Rules.league instanceof SPL) ||
-                                        !(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_COACH_MOTION)) {
-                                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds));
-                                    highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
-                                }
-                            }  else {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
+                if (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
+                    if (!data.ejected[i][j]) {
+                        int seconds = data.getRemainingPenaltyTime(i, j);
+                        boolean pickup = ((Rules.league instanceof SPL &&
+                                    data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
+                               || (Rules.league instanceof HL &&
+                                   ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE
+                                  || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_SERVICE ))
+                                );
+                        boolean illegalMotion = Rules.league instanceof SPL
+                                && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET;
+                        if (seconds == 0) {
+                            if (pickup) {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_PICKUP+")");
+                                highlight(robot[i][j], true);
+                            } else if (illegalMotion) {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_MOTION_IN_SET_SHORT+")");
+                                highlight(robot[i][j], true);
+                            } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
+                                highlight(robot[i][j], false);
+                            } else if (!(Rules.league instanceof SPL)) {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds));
                                 highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                             }
-                            int penTime = (seconds + data.getSecondsSince(data.whenPenalized[i][j]));
-                            if (seconds != 0) {
-                                robotTime[i][j].setValue(1000 * seconds / penTime);
-                            }
-                            robotTime[i][j].setVisible(seconds != 0);
-                        } else {
-                            robotLabel[i][j].setText(EJECTED);
-                            robotTime[i][j].setVisible(false);
-                            highlight(robot[i][j], false);
+                        }  else {
+                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
+                            highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
+                        int penTime = (seconds + data.getSecondsSince(data.whenPenalized[i][j]));
+                        if (seconds != 0) {
+                            robotTime[i][j].setValue(1000 * seconds / penTime);
+                        }
+                        robotTime[i][j].setVisible(seconds != 0);
                     } else {
-                        robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1));
+                        robotLabel[i][j].setText(EJECTED);
                         robotTime[i][j].setVisible(false);
                         highlight(robot[i][j], false);
                     }
-                    
-                    // Adds an information if player is selected for penalty
-                    // shootout:
-                    if (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT) {
-                        // if the same robot is taker and keeper in a team, show
-                        // just the current info:
-                        if (data.penaltyShootOutPlayers[i][0] == j
-                                && data.penaltyShootOutPlayers[i][0] == data.penaltyShootOutPlayers[i][1]) {
-                            boolean isTaker = data.team[i].teamNumber == data.kickOffTeam;
-                            robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker ? " Taker" : " Keeper"));
+                } else {
+                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1));
+                    robotTime[i][j].setVisible(false);
+                    highlight(robot[i][j], false);
+                }
+                
+                // Adds an information if player is selected for penalty
+                // shootout:
+                if (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT) {
+                    // if the same robot is taker and keeper in a team, show
+                    // just the current info:
+                    if (data.penaltyShootOutPlayers[i][0] == j
+                            && data.penaltyShootOutPlayers[i][0] == data.penaltyShootOutPlayers[i][1]) {
+                        boolean isTaker = data.team[i].teamNumber == data.kickOffTeam;
+                        robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker ? " Taker" : " Keeper"));
+                        robot[i][j].setBackground(
+                                isTaker ? COLOR_PENALTY_SHOOTOUT_TAKER : COLOR_PENALTY_SHOOTOUT_KEEPER);
+                        if (IS_OSX) {
+                            robot[i][j].setOpaque(true);
+                            robot[i][j].setBorderPainted(false);
+                        }
+
+                        // if keeper and taker are different, mark both but
+                        // set only the background for the relevant player:
+                    } else if (data.penaltyShootOutPlayers[i][0] == j || data.penaltyShootOutPlayers[i][1] == j) {
+                        boolean isTaker = data.penaltyShootOutPlayers[i][0] == j;
+                        robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker ? " Taker" : " Keeper"));
+
+                        if (data.team[i].teamNumber == data.kickOffTeam == isTaker) {
                             robot[i][j].setBackground(
                                     isTaker ? COLOR_PENALTY_SHOOTOUT_TAKER : COLOR_PENALTY_SHOOTOUT_KEEPER);
                             if (IS_OSX) {
                                 robot[i][j].setOpaque(true);
                                 robot[i][j].setBorderPainted(false);
-                            }
-
-                            // if keeper and taker are different, mark both but
-                            // set only the background for the relevant player:
-                        } else if (data.penaltyShootOutPlayers[i][0] == j || data.penaltyShootOutPlayers[i][1] == j) {
-                            boolean isTaker = data.penaltyShootOutPlayers[i][0] == j;
-                            robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker ? " Taker" : " Keeper"));
-
-                            if (data.team[i].teamNumber == data.kickOffTeam == isTaker) {
-                                robot[i][j].setBackground(
-                                        isTaker ? COLOR_PENALTY_SHOOTOUT_TAKER : COLOR_PENALTY_SHOOTOUT_KEEPER);
-                                if (IS_OSX) {
-                                    robot[i][j].setOpaque(true);
-                                    robot[i][j].setBorderPainted(false);
-                                }
                             }
                         }
                     }
@@ -1184,8 +1160,7 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setEnabled(ActionBoard.kickOffGoal.isLegal(data));
         pen[6].setEnabled(ActionBoard.ballContact.isLegal(data));
         pen[7].setEnabled(ActionBoard.pickUp.isLegal(data));
-        pen[8].setEnabled(ActionBoard.coachMotion.isLegal(data));
-        pen[9].setEnabled(ActionBoard.substitute.isLegal(data));
+        pen[8].setEnabled(ActionBoard.substitute.isLegal(data));
         
         GCAction highlightEvent = EventHandler.getInstance().lastUIEvent;
         if (highlightEvent != null && !highlightEvent.isLegal(data)) {
@@ -1198,8 +1173,7 @@ public class GUI extends JFrame implements GCGUI
         pen[5].setSelected(highlightEvent == ActionBoard.kickOffGoal);
         pen[6].setSelected(highlightEvent == ActionBoard.ballContact);
         pen[7].setSelected(highlightEvent == ActionBoard.pickUp);
-        pen[8].setSelected(highlightEvent == ActionBoard.coachMotion);
-        pen[9].setSelected(highlightEvent == ActionBoard.substitute);
+        pen[8].setSelected(highlightEvent == ActionBoard.substitute);
 
         // Handle quick select for ILLEGAL_MOTION_IN_SET
         if (pen[4].isEnabled()) {

@@ -83,8 +83,6 @@ public class HL extends Rules
         pushesToEjection = new int[] {};
         /** Defines if the option for a referee timeout is available */
         isRefereeTimeoutAvailable = false;
-        /** Defines if coach is available */
-        isCoachAvailable = false;
         /** Allowed to compensate for lost time? */
         lostTime = false;
         /** Whether compatibility mode (version 7) is supported */

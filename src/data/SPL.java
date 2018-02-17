@@ -86,8 +86,6 @@ public class SPL extends Rules
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
         /** Defines if coach is available */
-        isCoachAvailable = true;
-        /** Allowed to compensate for lost time? */
         lostTime = true;
         /** Whether compatibility mode (version 7) is supported */
         compatibilityToVersion7 = false;

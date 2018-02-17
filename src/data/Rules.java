@@ -108,8 +108,6 @@ public abstract class Rules
     public boolean timeOutPerHalf;
     /** On how many pushings is a robot ejected. */
     public int[] pushesToEjection;
-    /** Defines if coach is available */
-    public boolean isCoachAvailable;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
     /** Whether compatibility mode (version 7) is supported */

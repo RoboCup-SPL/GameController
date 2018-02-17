@@ -55,7 +55,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
     /**
      * When was each player penalized last (ms, 0 = never)?
      */
-    public long[][] whenPenalized = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize + 1] : new long[2][Rules.league.teamSize];
+    public long[][] whenPenalized = new long[2][Rules.league.teamSize];
 
     /**
      * How often was each team penalized?
@@ -70,7 +70,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
     /**
      * Which players were already ejected?
      */
-    public boolean[][] ejected = Rules.league.isCoachAvailable ? new boolean[2][Rules.league.teamSize + 1] : new boolean[2][Rules.league.teamSize];
+    public boolean[][] ejected = new boolean[2][Rules.league.teamSize];
 
     /**
      * Pushing counters for each team, 0:left side, 1:right side.
@@ -149,16 +149,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * Keeps the penalties for the players if there are substituted
      */
     public ArrayList<ArrayList<PenaltyQueueData>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<PenaltyQueueData>>();
-
-    /**
-     * Keep the timestamp when a coach message was received
-     */
-    public long timestampCoachPackage[] = {0, 0};
-
-    /**
-     * Keep the coach messages
-     */
-    public ArrayList<SPLCoachMessage> splCoachMessageQueue = new ArrayList<SPLCoachMessage>();
 
     /**
      * Saves the selected penalty taker and keeper of both teams. First index is
@@ -349,7 +339,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
         for (int i = 0; i < team.length; ++i) {
             pushes[i] = 0;
             for (int j = 0; j < Rules.league.teamSize; j++) {
-                if (!ActionBoard.robot[i][j].isCoach(this) && team[i].player[j].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
+                if (team[i].player[j].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
                     team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
                     if (Rules.league.resetEjectedRobotsOnHalftime) {
                         ejected[i][j] = false;
@@ -440,31 +430,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
             }
         } else {
             return getRemainingPauseTime();
-        }
-    }
-
-    /**
-     * Dispatch the coach messages. Since coach messages are texts, the messages
-     * are zeroed after the first zero character, to avoid the transport of
-     * information the GameStateVisualizer would not show.
-     */
-    public void updateCoachMessages() {
-        int i = 0;
-        while (i < splCoachMessageQueue.size()) {
-            if (splCoachMessageQueue.get(i).getRemainingTimeToSend() == 0) {
-                for (int j = 0; j < 2; j++) {
-                    if (team[j].teamNumber == splCoachMessageQueue.get(i).team) {
-                        byte[] message = splCoachMessageQueue.get(i).message;
-                        team[j].coachSequence = splCoachMessageQueue.get(i).sequence;
-                        team[j].coachMessage = message;
-                        Log.toFile("Coach Message Team " + Rules.league.teamColorName[team[j].teamColor] + " " + new String(message));
-                        splCoachMessageQueue.remove(i);
-                        break;
-                    }
-                }
-            } else {
-                i++;
-            }
         }
     }
 

@@ -4,7 +4,6 @@ import common.ApplicationLock;
 import common.Log;
 import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
-import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
 import controller.net.TrueDataSender;
 import controller.ui.GUI;
@@ -247,10 +246,6 @@ public class GameController {
             GameControlReturnDataReceiver receiver = GameControlReturnDataReceiver.getInstance();
             receiver.start();
 
-            if (Rules.league.isCoachAvailable) {
-                SPLCoachMessageReceiver spl = SPLCoachMessageReceiver.getInstance();
-                spl.start();
-            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up GameController on port: " + GameControlData.GAMECONTROLLER_RETURNDATA_PORT + ".",
@@ -305,14 +300,12 @@ public class GameController {
         Sender.getInstance().interrupt();
         TrueDataSender.getInstance().interrupt();
         GameControlReturnDataReceiver.getInstance().interrupt();
-        SPLCoachMessageReceiver.getInstance().interrupt();
         splStandardMessageReceiver.interrupt();
         Thread.interrupted(); // clean interrupted status
         try {
             Sender.getInstance().join();
             TrueDataSender.getInstance().join();
             GameControlReturnDataReceiver.getInstance().join();
-            SPLCoachMessageReceiver.getInstance().join();
         } catch (InterruptedException e) {
             Log.error("Waiting for threads to shutdown was interrupted.");
         }

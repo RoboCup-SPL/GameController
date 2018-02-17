@@ -56,7 +56,7 @@ public class Set extends GCAction {
                 int number = data.penaltyShootOutPlayers[side][data.team[side].teamNumber == data.kickOffTeam ? 0 : 1];
 
                 for (int playerID = 0; playerID < Rules.league.teamSize; playerID++) {
-                    if (playerID != number && !(Rules.league.isCoachAvailable && playerID == Rules.league.teamSize)) {
+                    if (playerID != number) {
                         PlayerInfo playerToSub = data.team[side].player[playerID];
 
                         if (playerToSub.penalty != PlayerInfo.PENALTY_NONE) {

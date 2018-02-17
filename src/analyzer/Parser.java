@@ -58,7 +58,6 @@ public class Parser
         "Leaving the Field",
         "Kickoff Goal",
         "Request for PickUp",
-        "Coach Motion",
         "Ball Manipulation",
         "Illegal Attack",
         "Illegal Defense",
@@ -71,7 +70,6 @@ public class Parser
         "Playing",
         "Ready",
         "Set",
-        "Coach Message"
     };
     
     

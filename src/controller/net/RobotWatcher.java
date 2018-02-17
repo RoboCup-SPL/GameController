@@ -19,12 +19,12 @@ public class RobotWatcher
     private static RobotWatcher instance = new RobotWatcher();
 
     /** A timestamp when the last reply from each robot was received. */
-    private long [][] robotsLastAnswer = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize+1] : new long[2][Rules.league.teamSize];
+    private long [][] robotsLastAnswer = new long[2][Rules.league.teamSize];
     /** Last message reeived from each robot.
      *  Look at GameControlReturnData for information about messages */
-    private int [][] robotsLastMessage = Rules.league.isCoachAvailable ? new int[2][Rules.league.teamSize+1] : new int[2][Rules.league.teamSize];
+    private int [][] robotsLastMessage = new int[2][Rules.league.teamSize];
     /** The calculated information about the online-status. */
-    private RobotOnlineStatus [][] status = Rules.league.isCoachAvailable ? new RobotOnlineStatus[2][Rules.league.teamSize+1] : new RobotOnlineStatus[2][Rules.league.teamSize];
+    private RobotOnlineStatus [][] status = new RobotOnlineStatus[2][Rules.league.teamSize];
 
     /** What the constants name says. */
     private final static int MILLIS_UNTIL_ROBOT_IS_OFFLINE = 4*1000;
@@ -39,9 +39,6 @@ public class RobotWatcher
             for (int j = 0; j < Rules.league.teamSize; j++) {
                 robotsLastMessage[i][j] = PlayerInfo.PENALTY_NONE;
                 status[i][j] = RobotOnlineStatus.UNKNOWN;
-            }
-            if (Rules.league.isCoachAvailable) {
-                status[i][Rules.league.teamSize] = RobotOnlineStatus.UNKNOWN;
             }
         }
     }
@@ -93,12 +90,9 @@ public class RobotWatcher
             for (int j=0; j < instance.status[i].length; j++) {
                 if (currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_IS_OFFLINE) {
                     instance.status[i][j] = RobotOnlineStatus.OFFLINE;
-                    if (++robotsOffline >= Rules.league.teamSize + (Rules.league.isCoachAvailable ? 1 : 0)) {
+                    if (++robotsOffline >= Rules.league.teamSize) {
                         for (int k=0; k < Rules.league.teamSize; k++) {
                             instance.status[i][k] = RobotOnlineStatus.UNKNOWN;
-                        }
-                        if (Rules.league.isCoachAvailable) {
-                            instance.status[i][Rules.league.teamSize] = RobotOnlineStatus.UNKNOWN;
                         }
                     }
                 } else if (currentTime - instance.robotsLastAnswer[i][j] > MILLIS_UNTIL_ROBOT_HAS_HIGH_LATANCY) {
@@ -109,10 +103,5 @@ public class RobotWatcher
             }
         }
         return instance.status;
-    }
-    
-    public static synchronized void updateCoach(byte team)
-    {
-        instance.robotsLastAnswer[team][Rules.league.teamSize] = System.currentTimeMillis();
     }
 }

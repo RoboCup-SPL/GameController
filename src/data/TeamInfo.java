@@ -19,7 +19,7 @@ public class TeamInfo implements Serializable {
      * How many players a team may have. Actually that many players in each team
      * need to be sent, even if playersPerTeam in GameControlData is less.
      */
-    public static final byte MAX_NUM_PLAYERS = 11;
+    public static final byte MAX_NUM_PLAYERS = 6;
 
     /**
      * The size in bytes this class has packed.
@@ -35,11 +35,7 @@ public class TeamInfo implements Serializable {
             + // penaltyShot
             2
             + // singleShots
-            1
-            + // coach's sequence number
-            SPLCoachMessage.SPL_COACH_MESSAGE_SIZE
-            + // coach's message
-            (MAX_NUM_PLAYERS + 1) * PlayerInfo.SIZE; // +1 for the coach
+            MAX_NUM_PLAYERS * PlayerInfo.SIZE;
 
     /**
      * The size in bytes this class has packed for version 7.
@@ -61,9 +57,6 @@ public class TeamInfo implements Serializable {
     public byte score;                                              // team's score
     public byte penaltyShot = 0;                                    // penalty shot counter
     public short singleShots = 0;                                   // bits represent penalty shot success
-    public byte coachSequence;                                      // sequence number of the last coach message
-    public byte[] coachMessage = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
-    public PlayerInfo coach = new PlayerInfo();
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
 
     /**
@@ -88,9 +81,6 @@ public class TeamInfo implements Serializable {
         buffer.put(score);
         buffer.put(penaltyShot);
         buffer.putShort(singleShots);
-        buffer.put(coachSequence);
-        buffer.put(coachMessage);
-        buffer.put(coach.toByteArray());
         for (int i = 0; i < MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray());
         }
@@ -130,9 +120,6 @@ public class TeamInfo implements Serializable {
         score = buffer.get();
         penaltyShot = buffer.get();
         singleShots = buffer.getShort();
-        coachSequence = buffer.get();
-        buffer.get(coachMessage);
-        coach.fromByteArray(buffer);
         for (int i = 0; i < player.length; i++) {
             player[i].fromByteArray(buffer);
         }
@@ -175,9 +162,6 @@ public class TeamInfo implements Serializable {
         out += "              score: " + score + "\n";
         out += "        penaltyShot: " + penaltyShot + "\n";
         out += "        singleShots: " + Integer.toBinaryString(singleShots) + "\n";
-        out += "      coachSequence: " + coachSequence + "\n";
-        out += "       coachMessage: " + new String(coachMessage) + "\n";
-        out += "        coachStatus: ---\n" + coach.toString() + "---\n";
 
         for (int i = 0; i < player.length; i++) {
             out += "Player #" + (i + 1) + "\n" + player[i].toString();

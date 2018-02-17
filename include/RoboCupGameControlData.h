@@ -1,15 +1,13 @@
 #ifndef ROBOCUPGAMECONTROLDATA_H
 #define ROBOCUPGAMECONTROLDATA_H
 
-#include "SPLCoachMessage.h"
-
 #define GAMECONTROLLER_DATA_PORT       3838
 #define GAMECONTROLLER_RETURN_PORT     3939
 
 #define GAMECONTROLLER_STRUCT_HEADER   "RGme"
-#define GAMECONTROLLER_STRUCT_VERSION  10
+#define GAMECONTROLLER_STRUCT_VERSION  11
 
-#define MAX_NUM_PLAYERS             11
+#define MAX_NUM_PLAYERS             6
 
 // SPL
 #define TEAM_BLUE                   0 // cyan, blue, violet
@@ -54,7 +52,6 @@
 #define PENALTY_SPL_LEAVING_THE_FIELD       6
 #define PENALTY_SPL_KICK_OFF_GOAL           7 // scored from inside center circle after kick-off
 #define PENALTY_SPL_REQUEST_FOR_PICKUP      8
-#define PENALTY_SPL_COACH_MOTION            9
 // HL Kid Size
 #define PENALTY_HL_KID_BALL_MANIPULATION    1
 #define PENALTY_HL_KID_PHYSICAL_CONTACT     2
@@ -88,9 +85,6 @@ struct TeamInfo
   uint8_t score;                // team's score
   uint8_t penaltyShot;          // penalty shot counter
   uint16_t singleShots;         // bits represent penalty shot success
-  uint8_t coachSequence;        // sequence number of the coach's message
-  uint8_t coachMessage[SPL_COACH_MESSAGE_SIZE]; // the coach's message to the team
-  RobotInfo coach;
   RobotInfo players[MAX_NUM_PLAYERS]; // the team's players
 };
 
