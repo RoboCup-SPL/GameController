@@ -47,14 +47,6 @@ public class PlayerInfo implements Serializable {
             + // penalty
             1;  // secsToUnpen
 
-    /**
-     * The size in bytes this class has packed in version 7.
-     */
-    public static final int SIZE7
-            = 2
-            + // penalty
-            2;  // secsToUnpen
-
     //this is streamed
     public byte penalty = PENALTY_NONE; // penalty state of the player
     public byte secsTillUnpenalised;    // estimate of time till unpenalised
@@ -69,20 +61,6 @@ public class PlayerInfo implements Serializable {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(penalty);
         buffer.put(secsTillUnpenalised);
-        return buffer.array();
-    }
-
-    /**
-     * Packing this Java class to the C-structure to be send, using version 7 of
-     * the protocol.
-     *
-     * @return Byte array representing the C-structure.
-     */
-    public byte[] toByteArray7() {
-        ByteBuffer buffer = ByteBuffer.allocate(SIZE7);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.putShort(penalty);
-        buffer.putShort(secsTillUnpenalised);
         return buffer.array();
     }
 

@@ -2,7 +2,6 @@ package teamcomm.gui;
 
 import common.Log;
 import data.SPLStandardMessage;
-import static java.awt.Component.TOP_ALIGNMENT;
 import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;

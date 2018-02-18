@@ -87,8 +87,6 @@ public class SPL extends Rules
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
         /** Defines if coach is available */
         lostTime = true;
-        /** Whether compatibility mode (version 7) is supported */
-        compatibilityToVersion7 = false;
         /** If true, the mixed team competition tournament is active */
         mixedTeamMode = false;
         /** If true, the game controller should drop broadcast-messages */

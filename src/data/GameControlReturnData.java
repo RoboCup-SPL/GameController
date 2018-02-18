@@ -91,18 +91,6 @@ public class GameControlReturnData
                     message = buffer.get();
                     return true;
 
-                case GAMECONTROLLER_RETURN_STRUCT_VERSION1:
-                    if (   Rules.league.compatibilityToVersion7
-                        && buffer.get() == 0
-                        && buffer.getShort() == 0)
-                    {
-                        team = (byte)buffer.getShort();
-                        player = (byte)buffer.getShort();
-                        message = (byte)buffer.getInt();
-                        return true;
-                    }
-                    break;
-
                 default:
                     break;
                 }

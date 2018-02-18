@@ -1,7 +1,5 @@
 package data;
 
-import common.Log;
-import controller.action.ActionBoard;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

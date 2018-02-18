@@ -87,32 +87,6 @@ public class GameControlData implements Serializable {
             + // secondaryTime
             2 * TeamInfo.SIZE;
 
-    /**
-     * The size in bytes this class has packed for protocol version 7.
-     */
-    public static final int SIZE7
-            = 4
-            + // header
-            4
-            + // version
-            1
-            + // numPlayers
-            1
-            + // gameState
-            1
-            + // firstHalf
-            1
-            + // kickOffTeam
-            1
-            + // secGameState
-            1
-            + // dropInTeam
-            2
-            + // dropInTime
-            4
-            + // secsRemaining
-            2 * TeamInfo.SIZE7;
-
     public boolean isTrueData;
 
     //this is streamed
@@ -199,38 +173,6 @@ public class GameControlData implements Serializable {
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {
             buffer.put(aTeam.toByteArray());
-        }
-
-        return buffer;
-    }
-
-    /**
-     * Returns the corresponding byte-stream of the state of this object in the
-     * format of protocol version 7.
-     *
-     * @return the corresponding byte-stream of the state of this object
-     */
-    public ByteBuffer toByteArray7() {
-        ByteBuffer buffer = ByteBuffer.allocate(SIZE7);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(GAMECONTROLLER_STRUCT_HEADER.getBytes(), 0, 4);
-        buffer.putInt(7); // version = 7
-        buffer.put(playersPerTeam);
-        buffer.put(gameState);
-        buffer.put(firstHalf);
-        buffer.put(kickOffTeam == DROPBALL ? 2 : team[kickOffTeam == team[0].teamNumber ? 0 : 1].teamColor);
-        buffer.put(secGameState);
-        buffer.put(dropInTeam == -1 ? -1 : team[dropInTeam == team[0].teamNumber ? 0 : 1].teamColor);
-        buffer.putShort(dropInTime);
-        buffer.putInt(secsRemaining);
-
-        // in version 7, the broadcasted team data was sorted by team color
-        if (team[0].teamColor == TEAM_BLUE) {
-            buffer.put(team[0].toByteArray7());
-            buffer.put(team[1].toByteArray7());
-        } else {
-            buffer.put(team[1].toByteArray7());
-            buffer.put(team[0].toByteArray7());
         }
 
         return buffer;

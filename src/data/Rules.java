@@ -110,8 +110,6 @@ public abstract class Rules
     public int[] pushesToEjection;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
-    /** Whether compatibility mode (version 7) is supported */
-    public boolean compatibilityToVersion7;
     /** If true, the mixed team competition tournament is active */
     public boolean mixedTeamMode;
     /** If true, the game controller should drop broadcast-messages */
