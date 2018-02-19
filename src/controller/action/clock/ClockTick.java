@@ -32,12 +32,8 @@ public class ClockTick extends GCAction
 	@Override
 	public void perform(AdvancedData data) {
 		if (data.gameState == GameControlData.STATE_READY
-				&& ((data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime
-						&& data.secGameState != GameControlData.STATE2_GOAL_FREE_KICK
-						&& data.secGameState != GameControlData.STATE2_PENALTY_FREE_KICK)
-						|| (data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.freeKickTime
-								&& (data.secGameState == GameControlData.STATE2_GOAL_FREE_KICK
-										|| data.secGameState == GameControlData.STATE2_PENALTY_FREE_KICK)))) {
+				&& ((data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime && !data.secFreeKick())
+						|| (data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.freeKickTime && data.secFreeKick()))) {
 			ActionBoard.set.perform(data);
 		} else if (data.gameState == GameControlData.STATE_FINISHED) {
 			Integer remainingPauseTime = data.getRemainingPauseTime();

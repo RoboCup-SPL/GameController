@@ -41,7 +41,7 @@ public class Finish extends GCAction
         data.addTimeInCurrentState();
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_FINISHED;
-        if(data.secGameState == GameControlData.STATE2_GOAL_FREE_KICK || data.secGameState == GameControlData.STATE2_PENALTY_FREE_KICK) {
+        if(data.secFreeKick()) {
             data.previousSecGameState = data.secGameState;
             data.secGameState = GameControlData.STATE2_NORMAL;
         }

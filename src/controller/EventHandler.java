@@ -16,7 +16,7 @@ import java.awt.EventQueue;
  * in the GUI`s thread. This is to avoid resource conflicts caused by multiple
  * threads without massive use of synchronized get- and set-methods.
  * 
- * This class is a sigleton!
+ * This class is a singleton!
  */
 public class EventHandler
 {

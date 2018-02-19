@@ -41,7 +41,7 @@ public class Play extends GCAction
         }
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_PLAYING;
-        if(data.secGameState == GameControlData.STATE2_GOAL_FREE_KICK || data.secGameState == GameControlData.STATE2_PENALTY_FREE_KICK) {
+        if(data.secFreeKick()) {
         	data.previousSecGameState = data.secGameState;
         	data.secGameState = GameControlData.STATE2_NORMAL;        	
         }
@@ -57,8 +57,7 @@ public class Play extends GCAction
     @Override
 	public boolean isLegal(AdvancedData data) {
 		return (data.gameState == GameControlData.STATE_READY
-				&& (data.secGameState == GameControlData.STATE2_GOAL_FREE_KICK
-						|| data.secGameState == GameControlData.STATE2_PENALTY_FREE_KICK))
+				&& data.secFreeKick())
 				|| (data.gameState == GameControlData.STATE_SET
 						&& (data.secGameState != GameControlData.STATE2_PENALTYSHOOT || bothTeamsHavePlayers(data)))
 				|| (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
