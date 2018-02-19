@@ -60,7 +60,7 @@ public class PenaltyShoot extends GCAction
           || ((data.firstHalf != GameControlData.C_TRUE)
             && (data.gameState == GameControlData.STATE_FINISHED)
             && !(Rules.league.overtime
-                && (data.gameType == GameControlData.GAME_PLAYOFF || data.gameType == GameControlData.GAME_MIXEDTEAM_PLAYOFF)
+                && (data.competitionPhase == GameControlData.GAMEPHASE_PLAYOFF)
                 && (data.secGameState == GameControlData.STATE2_NORMAL)
                 && (data.team[0].score == data.team[1].score)
                 && (data.team[0].score > 0)) )

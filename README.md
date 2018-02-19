@@ -282,6 +282,11 @@ is defined in the file RoboCupGameControlData.h. It differs from the version use
 in 2017 in the following ways:
 
 - Coach messages were deleted
+- `gameType` has been split into two 4-bit fields, i.e.
+  ```
+  uint8_t competitionPhase : 4;
+  uint8_t competitionType : 4;
+  ```
 
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour
@@ -307,6 +312,8 @@ There are still a number of issues left:
 - The qibuild file for libgamectrl is untested.
 
 - The alignment of button labels is bad if the buttons are small.
+
+- Too many colors and buttons - too little keys (not enough shortcuts for all operations)
 
 - On Windows, Swing windows are only displayed correctly scaled on HiDPI displays if
   Java 9 is used.

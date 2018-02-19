@@ -26,10 +26,11 @@
 #define TEAM_MAGENTA                1
 #define DROPBALL                    255
 
-#define GAME_ROUNDROBIN             0
-#define GAME_PLAYOFF                1
-#define GAME_MIXEDTEAM_ROUNDROBIN   2
-#define GAME_MIXEDTEAM_PLAYOFF      3
+#define GAMEPHASE_ROUNDROBIN        0
+#define GAMEPHASE_PLAYOFF           1
+
+#define GAMETYPE_NORMALTEAM         0
+#define GAMETYPE_MIXEDTEAM          1
 
 #define STATE_INITIAL               0
 #define STATE_READY                 1
@@ -96,7 +97,8 @@ struct RoboCupGameControlData
   uint16_t version;             // version of the data structure
   uint8_t packetNumber;         // number incremented with each packet sent (with wraparound)
   uint8_t playersPerTeam;       // the number of players on a team
-  uint8_t gameType;             // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_DROPIN)
+  uint8_t competitionPhase : 4; // phase of the game (GAMEPHASE_ROUNDROBIN, GAMEPHASE_PLAYOFF) 
+  uint8_t competitionType : 4;  // type of the game (GAMETYPE_NORMALTEAM, GAMETYPE_MIXEDTEAM) 
   uint8_t state;                // state of the game (STATE_READY, STATE_PLAYING, etc)
   uint8_t firstHalf;            // 1 = game in first half, 0 otherwise
   uint8_t kickingTeam;          // the team number of the next team to kick off, free kick, DROPBALL etc.

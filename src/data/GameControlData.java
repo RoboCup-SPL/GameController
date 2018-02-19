@@ -36,10 +36,13 @@ public class GameControlData implements Serializable {
     public static final byte TEAM_GRAY = 9;
     public static final byte DROPBALL = -128;
 
-    public static final byte GAME_ROUNDROBIN = 0;
-    public static final byte GAME_PLAYOFF = 1;
-    public static final byte GAME_MIXEDTEAM_ROUNDROBIN = 2;
-    public static final byte GAME_MIXEDTEAM_PLAYOFF = 3;
+    //max four bits!
+    public static final byte GAMEPHASE_ROUNDROBIN = 0;
+    public static final byte GAMEPHASE_PLAYOFF = 1;
+    
+    //max four bits!
+    public static final byte GAMETYPE_NORMALTEAM = 0;
+    public static final byte GAMETYPE_MIXEDTEAM = 1;
 
     public static final byte STATE_INITIAL = 0;
     public static final byte STATE_READY = 1;
@@ -70,7 +73,7 @@ public class GameControlData implements Serializable {
             1
             + // numPlayers
             1
-            + // gameType
+            + // four bit competitionPhase + four bit competitionType
             1
             + // gameState
             1
@@ -95,8 +98,9 @@ public class GameControlData implements Serializable {
     // GAMECONTROLLER_STRUCT_HEADER                             // header to identify the structure
     // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
     public byte packetNumber = 0;
-    public byte playersPerTeam = (byte) Rules.league.teamSize;   // The number of players on a team
-    public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_MIXEDTEAM_ROUNDROBIN, GAME_MIXEDTEAM_PLAYOFF)
+    public byte playersPerTeam = (byte) Rules.league.teamSize;  // The number of players on a team
+    public byte competitionPhase = GAMEPHASE_ROUNDROBIN;        // phase of the game (GAMEPHASE_ROUNDROBIN, GAMEPHASE_PLAYOFF)
+    public byte competitionType = GAMETYPE_NORMALTEAM;          // type of the game (GAMETYPE_NORMALTEAM, GAMETYPE_MIXEDTEAM)
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
     public byte kickingTeam;                                    // the next team to kick off
@@ -131,7 +135,7 @@ public class GameControlData implements Serializable {
         buffer.putShort(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
-        buffer.put(gameType);
+        buffer.put((byte) ((competitionPhase << 4) | competitionType));
         if (secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
                 && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
             buffer.put(STATE_SET);
@@ -164,7 +168,7 @@ public class GameControlData implements Serializable {
         buffer.putShort(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
-        buffer.put(gameType);
+        buffer.put((byte) ((competitionPhase << 4) | competitionType));
         buffer.put(gameState);
         buffer.put(firstHalf);
         buffer.put(kickingTeam);
@@ -197,7 +201,9 @@ public class GameControlData implements Serializable {
         }
         packetNumber = buffer.get();
         playersPerTeam = buffer.get();
-        gameType = buffer.get();
+        byte gameType = buffer.get();
+        competitionPhase = (byte) (gameType >> 4);
+        competitionType = (byte) (gameType & 0b1111);
         gameState = buffer.get();
         firstHalf = buffer.get();
         kickingTeam = buffer.get();
@@ -222,23 +228,30 @@ public class GameControlData implements Serializable {
         out += "            Version: " + GAMECONTROLLER_STRUCT_VERSION + "\n";
         out += "      Packet Number: " + (packetNumber & 0xFF) + "\n";
         out += "   Players per Team: " + playersPerTeam + "\n";
-        switch (gameType) {
-            case GAME_ROUNDROBIN:
+        switch(competitionPhase) {
+            case GAMEPHASE_ROUNDROBIN:
                 temp = "round robin";
                 break;
-            case GAME_PLAYOFF:
+            case GAMEPHASE_PLAYOFF:
                 temp = "playoff";
                 break;
-            case GAME_MIXEDTEAM_ROUNDROBIN:
-                temp = "mixed team round robin";
+            default:
+                temp = "undefined(" + competitionPhase + ")";
+                break;            
+        }
+        out += "   competitionPhase: " + temp + "\n";
+        switch(competitionType) {
+            case GAMETYPE_NORMALTEAM:
+                temp = "normal team";
                 break;
-            case GAME_MIXEDTEAM_PLAYOFF:
-                temp = "mixed team playoff";
+            case GAMETYPE_MIXEDTEAM:
+                temp = "mixed team";
                 break;
             default:
-                temp = "undefinied(" + gameType + ")";
+                temp = "undefined(" + competitionType + ")";
+                break;            
         }
-        out += "           gameType: " + temp + "\n";
+        out += "    competitionType: " + temp + "\n";
         switch (gameState) {
             case STATE_INITIAL:
                 temp = "initial";

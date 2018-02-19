@@ -107,8 +107,7 @@ public class Sender extends Thread {
                 || (data.gameState == GameControlData.STATE_FINISHED && this.data.gameState != GameControlData.STATE_FINISHED)) {
             final StringBuilder logfileName;
             final String[] teamNames = Teams.getNames(false);
-            if (data.gameType == GameControlData.GAME_MIXEDTEAM_ROUNDROBIN
-                    || data.gameType == GameControlData.GAME_MIXEDTEAM_PLAYOFF) {
+            if (data.competitionType == GameControlData.GAMETYPE_MIXEDTEAM) {
                 logfileName = new StringBuilder("MixedTeam_");
                 if (data.firstHalf == GameControlData.C_TRUE) {
                     logfileName.append("1st");
