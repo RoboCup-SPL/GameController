@@ -32,7 +32,7 @@ public class DropBall extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        data.kickOffTeam = GameControlData.DROPBALL;
+        data.kickingTeam = GameControlData.DROPBALL;
         Log.setNextMessage("Dropped Ball");
         ActionBoard.ready.perform(data);
     }

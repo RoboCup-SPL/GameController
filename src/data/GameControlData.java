@@ -51,6 +51,8 @@ public class GameControlData implements Serializable {
     public static final byte STATE2_PENALTYSHOOT = 1;
     public static final byte STATE2_OVERTIME = 2;
     public static final byte STATE2_TIMEOUT = 3;
+    public static final byte STATE2_GOAL_FREE_KICK = 4;
+    public static final byte STATE2_PENALTY_FREE_KICK = 5;
 
     public static final byte C_FALSE = 0;
     public static final byte C_TRUE = 1;
@@ -74,7 +76,7 @@ public class GameControlData implements Serializable {
             1
             + // firstHalf
             1
-            + // kickOffTeam
+            + // kickingTeam
             1
             + // secGameState
             1
@@ -97,7 +99,7 @@ public class GameControlData implements Serializable {
     public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_MIXEDTEAM_ROUNDROBIN, GAME_MIXEDTEAM_PLAYOFF)
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
-    public byte kickOffTeam;                                    // the next team to kick off
+    public byte kickingTeam;                                    // the next team to kick off
     public byte secGameState = STATE2_NORMAL;                   // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     public byte dropInTeam;                                     // team that caused last drop in
     protected short dropInTime = -1;                            // number of seconds passed since the last drop in. -1 before first dropin
@@ -137,7 +139,7 @@ public class GameControlData implements Serializable {
             buffer.put(gameState);
         }
         buffer.put(firstHalf);
-        buffer.put(kickOffTeam);
+        buffer.put(kickingTeam);
         buffer.put(secGameState);
         buffer.put(dropInTeam);
         buffer.putShort(dropInTime);
@@ -165,7 +167,7 @@ public class GameControlData implements Serializable {
         buffer.put(gameType);
         buffer.put(gameState);
         buffer.put(firstHalf);
-        buffer.put(kickOffTeam);
+        buffer.put(kickingTeam);
         buffer.put(secGameState);
         buffer.put(dropInTeam);
         buffer.putShort(dropInTime);
@@ -198,7 +200,7 @@ public class GameControlData implements Serializable {
         gameType = buffer.get();
         gameState = buffer.get();
         firstHalf = buffer.get();
-        kickOffTeam = buffer.get();
+        kickingTeam = buffer.get();
         secGameState = buffer.get();
         dropInTeam = buffer.get();
         dropInTime = buffer.getShort();
@@ -268,7 +270,7 @@ public class GameControlData implements Serializable {
                 temp = "undefinied(" + firstHalf + ")";
         }
         out += "          firstHalf: " + temp + "\n";
-        out += "        kickOffTeam: " + kickOffTeam + "\n";
+        out += "        kickingTeam: " + kickingTeam + "\n";
         switch (secGameState) {
             case STATE2_NORMAL:
                 temp = "normal";
@@ -282,6 +284,12 @@ public class GameControlData implements Serializable {
             case STATE2_TIMEOUT:
                 temp = "timeout";
                 break;
+            case STATE2_GOAL_FREE_KICK:
+            	temp = "goal free kick";
+            	break;
+            case STATE2_PENALTY_FREE_KICK:
+            	temp = "penalty free kick";
+            	break;
             default:
                 temp = "undefinied(" + secGameState + ")";
         }

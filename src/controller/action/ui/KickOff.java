@@ -39,10 +39,10 @@ public class KickOff extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.kickOffTeam == data.team[side].teamNumber) {
+        if (data.kickingTeam == data.team[side].teamNumber) {
             return;
         }
-        data.kickOffTeam = data.team[side].teamNumber;
+        data.kickingTeam = data.team[side].teamNumber;
         if ((Rules.league.kickoffChoice)
                 && (data.secGameState == GameControlData.STATE2_NORMAL)
                 && (data.firstHalf == GameControlData.C_TRUE)
@@ -62,7 +62,7 @@ public class KickOff extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.kickOffTeam == data.team[side].teamNumber)
+        return (data.kickingTeam == data.team[side].teamNumber)
                 || ((Rules.league.kickoffChoice)
                     && (data.secGameState == GameControlData.STATE2_NORMAL)
                     && (data.firstHalf == GameControlData.C_TRUE)

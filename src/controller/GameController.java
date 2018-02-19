@@ -65,6 +65,13 @@ public class GameController {
     public static void main(String[] args) {
         // Do not just System.exit(0) on Macs when selecting GameController/Quit
         System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
+        
+        try {
+			UIManager  //nice look and feel
+			    .setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Exception e) {
+			System.err.println("Couldn't set look and feel: " + e.getLocalizedMessage());
+		}
 
         //commands
         String interfaceName = "";
@@ -215,7 +222,7 @@ public class GameController {
         }
         data.team[0].teamColor = input.outTeamColor[0];
         data.team[1].teamColor = input.outTeamColor[1];
-        data.kickOffTeam = (byte) input.outTeam[0];
+        data.kickingTeam = (byte) input.outTeam[0];
         data.colorChangeAuto = input.outAutoColorChange;
         if (Rules.league.mixedTeamMode) {
             data.gameType = input.outFulltime ? GameControlData.GAME_MIXEDTEAM_PLAYOFF : GameControlData.GAME_MIXEDTEAM_ROUNDROBIN;

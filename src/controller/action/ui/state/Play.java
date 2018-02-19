@@ -41,6 +41,10 @@ public class Play extends GCAction
         }
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_PLAYING;
+        if(data.secGameState == GameControlData.STATE2_GOAL_FREE_KICK || data.secGameState == GameControlData.STATE2_PENALTY_FREE_KICK) {
+        	data.previousSecGameState = data.secGameState;
+        	data.secGameState = GameControlData.STATE2_NORMAL;        	
+        }
         Log.state(data, "Playing");
     }
     
@@ -51,14 +55,14 @@ public class Play extends GCAction
      * @param data      The current data to check with.
      */
     @Override
-    public boolean isLegal(AdvancedData data)
-    {
-        return (data.gameState == GameControlData.STATE_SET 
-                && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
-                    || bothTeamsHavePlayers(data)))
-            || (data.gameState == GameControlData.STATE_PLAYING)
-            || data.testmode;
-    }
+	public boolean isLegal(AdvancedData data) {
+		return (data.gameState == GameControlData.STATE_READY
+				&& (data.secGameState == GameControlData.STATE2_GOAL_FREE_KICK
+						|| data.secGameState == GameControlData.STATE2_PENALTY_FREE_KICK))
+				|| (data.gameState == GameControlData.STATE_SET
+						&& (data.secGameState != GameControlData.STATE2_PENALTYSHOOT || bothTeamsHavePlayers(data)))
+				|| (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
+	}
     
     /**
      * Checks whether both teams have at least one player that is not penalized.

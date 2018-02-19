@@ -47,7 +47,7 @@ public class Goal extends GCAction
         data.team[side].score += set;
         if (set == 1) {
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
-                data.kickOffTeam = data.team[1 - side].teamNumber;
+                data.kickingTeam = data.team[1 - side].teamNumber;
                 data.kickOffReason = AdvancedData.KICKOFF_GOAL;
                 Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
                 if(data.team[side].score >= data.team[1-side].score + 10) {
@@ -80,7 +80,7 @@ public class Goal extends GCAction
         return ((set == 1)
               && (data.gameState == GameControlData.STATE_PLAYING)
               && ( (data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
-                || (data.kickOffTeam == data.team[side].teamNumber)) )
+                || (data.kickingTeam == data.team[side].teamNumber)) )
             || data.testmode;
     }
 }

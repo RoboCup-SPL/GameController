@@ -44,6 +44,8 @@ public class Parser
         "Manually Penalised",
         "Dropped Ball",
         "Global Game Stuck",
+        "Goal Free Kick for",
+        "Penalty Free Kick for",
         "Goal for",
         "Goal decrease for Team",
         "Out by",

@@ -37,6 +37,8 @@ public class HL extends Rules
         kickoffChoice = true;
         /** Time in seconds the ball is blocked after kickoff. */
         kickoffTime = 10;
+        /** Time in seconds the ball is blocked after a free kick. */
+        freeKickTime = 30;
         /** Time in seconds before a global game stuck can be called. */
         minDurationBeforeStuck = 30;
         /** The number of seconds switching to Playing is delayed. */

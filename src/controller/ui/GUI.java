@@ -10,6 +10,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -120,7 +121,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String BACKGROUND_MID = "field.png";
     private static final String BACKGROUND_CLOCK_SMALL = "time_ground_small.png";
     private static final String BACKGROUND_CLOCK = "time_ground.png";
-    private static final String KICKOFF = "Kickoff";
+    private static final String KICKING = "Kicking";
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PUSHES = "Pushes";
     private static final String SHOT = "Shot";
@@ -131,8 +132,10 @@ public class GUI extends JFrame implements GCGUI
     private static final String HIGH_LATENCY = "wlan_status_yellow.png";
     private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
     private static final String TIMEOUT = "Timeout";
+    private static final String STUCK = "Global Game Stuck";
     private static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
-    private static final String STUCK = "Global <br/> Game <br/> Stuck";
+    private static final String GOAL_FREE_KICK = "Goal Free Kick";
+    private static final String PENALTY_FREE_KICK = "Penalty Free Kick";
     private static final String OUT = "Out";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
@@ -215,6 +218,8 @@ public class GUI extends JFrame implements GCGUI
     private ImageIcon[][] lanIcon;
     private JProgressBar[][] robotTime;
     private JToggleButton refereeTimeout;
+    private JButton[] goalFreeKick;
+    private JButton[] penaltyFreeKick;
     private JToggleButton[] timeOut;
     private JButton[] stuck;
     private JButton[] out;
@@ -262,8 +267,7 @@ public class GUI extends JFrame implements GCGUI
         final Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         setLocation((int) center.getX() - WINDOW_WIDTH / 2, (int) center.getY() - WINDOW_HEIGHT / 2);
         
-        addWindowListener(new WindowAdapter()
-        {
+        addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 Clock.getInstance().interrupt();
@@ -306,6 +310,10 @@ public class GUI extends JFrame implements GCGUI
         kickOff = new JRadioButton[3];
         kickOffGroup = new ButtonGroup();
         pushes = new JLabel[2];
+        timeOut = new JToggleButton[2];
+        if(Rules.league instanceof SPL) {
+        	stuck = new JButton[2];
+        }
         for (int i=0; i<2; i++) {
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
             name[i].setHorizontalAlignment(JLabel.CENTER);
@@ -316,7 +324,7 @@ public class GUI extends JFrame implements GCGUI
             }
             goalInc[i] = new Button("+");
             goalDec[i] = new Button("-");
-            kickOff[i] = new JRadioButton(KICKOFF);
+            kickOff[i] = new JRadioButton(KICKING);
             kickOff[i].setOpaque(false);
             kickOff[i].setHorizontalAlignment(JLabel.CENTER);
             kickOffGroup.add(kickOff[i]);
@@ -324,6 +332,10 @@ public class GUI extends JFrame implements GCGUI
             goals[i].setHorizontalAlignment(JLabel.CENTER);
             pushes[i] = new JLabel("0");
             pushes[i].setHorizontalAlignment(JLabel.CENTER);
+            timeOut[i] = new ToggleButton(TIMEOUT);
+            if(Rules.league instanceof SPL) {
+            	stuck[i] = new Button(STUCK);
+            }
         }
         kickOff[2] = new JRadioButton();
         kickOffGroup.add(kickOff[2]);
@@ -357,16 +369,20 @@ public class GUI extends JFrame implements GCGUI
             }
         }
         //  team
-        timeOut = new JToggleButton[2];
-        out = new JButton[2];
-        for (int i=0; i<2; i++) {
-            timeOut[i] = new ToggleButton(TIMEOUT);
-            out[i] = new JButton(OUT);
-        }
+        out = new JButton[2];        
         if (Rules.league instanceof SPL) {
-            stuck = new Button[2];
-            for (int i=0; i<2; i++) {
-                stuck[i] = new Button();
+        	goalFreeKick = new JButton[2];
+            penaltyFreeKick = new JButton[2];
+            for (int i=0; i<2; i++) {                
+                goalFreeKick[i] = new Button(GOAL_FREE_KICK);
+                penaltyFreeKick[i] = new Button(PENALTY_FREE_KICK);
+                out[i] = new JButton(OUT);
+            }
+        } else {
+        	timeOut = new JToggleButton[2];
+        	for (int i=0; i<2; i++) {
+                timeOut[i] = new ToggleButton(TIMEOUT);
+                out[i] = new JButton(OUT);
             }
         }
         
@@ -482,10 +498,6 @@ public class GUI extends JFrame implements GCGUI
         
         layout.add(0, 0, .3, .04, name[0]);
         layout.add(.7, 0, .3, .04, name[1]);
-        layout.add(.01, .05, .08, .07, goalInc[0]);
-        layout.add(.91, .05, .08, .07, goalInc[1]);
-        layout.add(.01, .13, .08, .06, goalDec[0]);
-        layout.add(.91, .13, .08, .06, goalDec[1]);
         layout.add(.17, .05, .12, .04, kickOff[0]);
         layout.add(.71, .05, .12, .04, kickOff[1]);
         layout.add(.21, .09, .08, .07, goals[0]);
@@ -495,17 +507,29 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
         if (Rules.league instanceof SPL) {
-            layout.add(.01, .77, .09, .09, timeOut[0]);
-            layout.add(.9, .77, .09, .09, timeOut[1]);
-            layout.add(.11, .77, .08, .09, stuck[0]);
-            layout.add(.81, .77, .08, .09, stuck[1]);
+        	layout.add(.01, .05, .08, .065, timeOut[0]);
+            layout.add(.91, .05, .08, .065, timeOut[1]);
+            layout.add(.01, .13, .08, .065, stuck[0]);
+            layout.add(.91, .13, .08, .065, stuck[1]);
+            layout.add(.01, .77, .09, .09, goalFreeKick[0]);
+            layout.add(.9, .77, .09, .09, goalFreeKick[1]);
+            layout.add(.105, .77, .09, .09, penaltyFreeKick[0]);
+            layout.add(.805, .77, .09, .09, penaltyFreeKick[1]);
             layout.add(.20, .77, .09, .09, out[0]);
             layout.add(.71, .77, .09, .09, out[1]);
+            layout.add(.1, .05, .08, .065, goalInc[0]);
+            layout.add(.82, .05, .08, .065, goalInc[1]);
+            layout.add(.1, .13, .08, .065, goalDec[0]);
+            layout.add(.82, .13, .08, .065, goalDec[1]);
         } else {
             layout.add(.01, .77, .135, .09, timeOut[0]);
             layout.add(.855, .77, .135, .09, timeOut[1]);
             layout.add(.155, .77, .135, .09, out[0]);
             layout.add(.71, .77, .135, .09, out[1]);
+            layout.add(.01, .05, .08, .07, goalInc[0]);
+            layout.add(.91, .05, .08, .07, goalInc[1]);
+            layout.add(.01, .13, .08, .06, goalDec[0]);
+            layout.add(.91, .13, .08, .06, goalDec[1]);
         }
         layout.add(.31, .0, .08, .11, clockReset);
         layout.add(.4, .012, .195, .10, clock);
@@ -585,10 +609,12 @@ public class GUI extends JFrame implements GCGUI
             for (int j=0; j<robot[i].length; j++) {
                 robot[i][j].addActionListener(ActionBoard.robot[i][j]);
             }
-            timeOut[i].addActionListener(ActionBoard.timeOut[i]);
             out[i].addActionListener(ActionBoard.out[i]);
+            timeOut[i].addActionListener(ActionBoard.timeOut[i]);
             if (Rules.league instanceof SPL) {
                 stuck[i].addActionListener(ActionBoard.stuck[i]);
+                goalFreeKick[i].addActionListener(ActionBoard.goalFreeKick[i]);
+                penaltyFreeKick[i].addActionListener(ActionBoard.penaltyFreeKick[i]);
             }
         }
         refereeTimeout.addActionListener(ActionBoard.refereeTimeout);
@@ -765,16 +791,17 @@ public class GUI extends JFrame implements GCGUI
         updateGoal(data);
         updateKickoff(data);
         updatePushes(data);
-        updateTimeOut(data);
         updateRefereeTimeout(data);
-        updateOut(data);
-        
+        updateOut(data); 
+        updateTimeOut(data);
         if (Rules.league instanceof SPL) {
             updateGlobalStuck(data);
+            updateFreeKick(data);
             updatePenaltiesSPL(data);
         } else if (Rules.league instanceof HL) {
             updatePenaltiesHL(data);
             updateDropBall(data);
+
         }
         updateRobots(data);
         updateUndo(data);
@@ -932,16 +959,16 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updateKickoff(AdvancedData data)
     {
-        if (data.kickOffTeam == GameControlData.DROPBALL) {
+        if (data.kickingTeam == GameControlData.DROPBALL) {
             kickOff[2].setSelected(true);
         } else {
-            kickOff[data.team[0].teamNumber == data.kickOffTeam ? 0 : 1].setSelected(true);
+            kickOff[data.team[0].teamNumber == data.kickingTeam ? 0 : 1].setSelected(true);
         }
         for (int i=0; i<2; i++) {
             kickOff[i].setEnabled(ActionBoard.kickOff[i].isLegal(data));
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
                 && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
-                kickOff[i].setText(KICKOFF);
+                kickOff[i].setText(KICKING);
             } else {
                 kickOff[i].setText(KICKOFF_PENALTY_SHOOTOUT);
             }
@@ -1031,7 +1058,7 @@ public class GUI extends JFrame implements GCGUI
                     // just the current info:
                     if (data.penaltyShootOutPlayers[i][0] == j
                             && data.penaltyShootOutPlayers[i][0] == data.penaltyShootOutPlayers[i][1]) {
-                        boolean isTaker = data.team[i].teamNumber == data.kickOffTeam;
+                        boolean isTaker = data.team[i].teamNumber == data.kickingTeam;
                         robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker ? " Taker" : " Keeper"));
                         robot[i][j].setBackground(
                                 isTaker ? COLOR_PENALTY_SHOOTOUT_TAKER : COLOR_PENALTY_SHOOTOUT_KEEPER);
@@ -1046,7 +1073,7 @@ public class GUI extends JFrame implements GCGUI
                         boolean isTaker = data.penaltyShootOutPlayers[i][0] == j;
                         robotLabel[i][j].setText(robotLabel[i][j].getText() + (isTaker ? " Taker" : " Keeper"));
 
-                        if (data.team[i].teamNumber == data.kickOffTeam == isTaker) {
+                        if (data.team[i].teamNumber == data.kickingTeam == isTaker) {
                             robot[i][j].setBackground(
                                     isTaker ? COLOR_PENALTY_SHOOTOUT_TAKER : COLOR_PENALTY_SHOOTOUT_KEEPER);
                             if (IS_OSX) {
@@ -1093,7 +1120,7 @@ public class GUI extends JFrame implements GCGUI
             }
             timeOut[i].setEnabled(ActionBoard.timeOut[i].isLegal(data));
         }
-    }
+}
     
     private void updateRefereeTimeout(AdvancedData data) {
         refereeTimeout.setSelected(data.refereeTimeout);
@@ -1139,6 +1166,19 @@ public class GUI extends JFrame implements GCGUI
     {
         for (int i=0; i<2; i++) {
             out[i].setEnabled(ActionBoard.out[i].isLegal(data));
+        }
+    }
+    
+    /**
+     * Updates the out.
+     * 
+     * @param data     The current data (model) the GUI should view.
+     */
+    private void updateFreeKick(AdvancedData data)
+    {
+        for (int i=0; i<2; i++) {
+            goalFreeKick[i].setEnabled(ActionBoard.goalFreeKick[i].isLegal(data));
+            penaltyFreeKick[i].setEnabled(ActionBoard.penaltyFreeKick[i].isLegal(data));
         }
     }
 
@@ -1262,20 +1302,22 @@ public class GUI extends JFrame implements GCGUI
         timeoutFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIMEOUT_FONT_SIZE*(size)));
         stateFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STATE_FONT_SIZE*(size)));
 
-        for (int i=0; i<=1; i++) {
+        for (int i=0; i<2; i++) {
             name[i].setFont(titleFont);
-            goalInc[i].setFont(standardFont);
-            goalDec[i].setFont(standardFont);
+            goalInc[i].setFont(timeSubFont);
+            goalDec[i].setFont(timeSubFont);
             kickOff[i].setFont(standardFont);
             goals[i].setFont(goalsFont);
-            pushes[i].setFont(standardFont);
+            pushes[i].setFont(standardFont);            
             for (int j=0; j<robot[i].length; j++) {
                 robotLabel[i][j].setFont(titleFont);
             }
-            timeOut[i].setFont(timeoutFont);
-            out[i].setFont(timeoutFont);
+            timeOut[i].setFont(standardFont);
+            out[i].setFont(standardFont);
             if (Rules.league instanceof SPL) {
-                stuck[i].setFont(timeoutFont);
+            	stuck[i].setFont(timeoutFont);
+                goalFreeKick[i].setFont(standardFont);
+                penaltyFreeKick[i].setFont(standardFont);
             }
         }
         clock.setFont(timeFont);

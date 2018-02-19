@@ -172,7 +172,7 @@ public class GUI extends JFrame implements ListSelectionListener
     }
     
     /**
-     * Analize all logs which are selected (checked) in the list to create
+     * Analyze all logs which are selected (checked) in the list to create
      * the statistic output file.
      */
     private void analyze()

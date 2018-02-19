@@ -37,6 +37,8 @@ public class SPL extends Rules
         kickoffChoice = false;
         /** Time in seconds the ball is blocked after kickoff. */
         kickoffTime = 10;
+        /** Time in seconds the ball is blocked after a free kick. */
+        freeKickTime = 30;
         /** Time in seconds before a global game stuck can be called. */
         minDurationBeforeStuck = 15;
         /** The number of seconds switching to Playing is delayed. */

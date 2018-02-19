@@ -372,9 +372,9 @@ public class View3DGSV extends View3D {
                 final float iconSize = textRendererSizes[RENDERER_STATE] * 2 / 3;
                 try {
                     final float x;
-                    if (data.kickOffTeam == data.team[1].teamNumber) {
+                    if (data.kickingTeam == data.team[1].teamNumber) {
                         x = (float) ((window.getWidth() - textRenderers[RENDERER_STATE].getBounds(state).getWidth()) / 2) - window.getWidth() * 20 / 1920 - iconSize;
-                    } else if (data.kickOffTeam == data.team[0].teamNumber) {
+                    } else if (data.kickingTeam == data.team[0].teamNumber) {
                         x = (float) ((window.getWidth() + textRenderers[RENDERER_STATE].getBounds(state).getWidth()) / 2) + window.getWidth() * 20 / 1920;
                     } else {
                         x = -iconSize * 2;

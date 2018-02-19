@@ -281,13 +281,13 @@ public class AdvancedData extends GameControlData implements Cloneable {
                 ? (previousSecGameState == STATE2_NORMAL ? Rules.league.halfTime
                         : previousSecGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
                                 : Rules.league.penaltyShotTime)
-                : secGameState == STATE2_NORMAL ? Rules.league.halfTime
+                : (secGameState == STATE2_NORMAL || secGameState == STATE2_GOAL_FREE_KICK || secGameState == STATE2_PENALTY_FREE_KICK) ? Rules.league.halfTime
                         : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
                                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
                                 ? Rules.league.penaltyShotTimeSuddenDeath
                                 : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL// during timeouts
-                || (gameState == STATE_READY || gameState == STATE_SET)
+                || ((gameState == STATE_READY || gameState == STATE_SET) && secGameState != STATE2_GOAL_FREE_KICK && secGameState != STATE2_PENALTY_FREE_KICK)
                 && ((gameType == GAME_PLAYOFF || gameType == GAME_MIXEDTEAM_PLAYOFF) && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
                         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
@@ -404,23 +404,29 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * @return The secondary time in seconds or null if there currently is none.
      */
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime) {
-        if (timeKickOffBlockedOvertime == 0 // preparing data packet
-                && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
-                && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
-            return null;
-        }
+		if (timeKickOffBlockedOvertime == 0 // preparing data packet
+				&& secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
+				&& (getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying
+						|| previousSecGameState == GameControlData.STATE2_GOAL_FREE_KICK
+						|| previousSecGameState == GameControlData.STATE2_PENALTY_FREE_KICK)) {
+			return null;
+		}
         int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
-        if (kickOffTeam == DROPBALL) {
+        if (kickingTeam == DROPBALL) {
             timeKickOffBlocked = 0;
         }
         if (gameState == STATE_INITIAL && (timeOutActive[0] || timeOutActive[1])) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
         } else if (gameState == STATE_INITIAL && (refereeTimeout)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
-        } else if (gameState == STATE_READY) {
+        } else if (gameState == STATE_READY && secGameState != STATE2_GOAL_FREE_KICK && secGameState != STATE2_PENALTY_FREE_KICK) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
-        } else if (gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
-                && timeKickOffBlocked >= -timeKickOffBlockedOvertime) {
+        } else if (gameState == STATE_READY && (secGameState == STATE2_GOAL_FREE_KICK || secGameState == STATE2_PENALTY_FREE_KICK)) {
+        	return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.freeKickTime);
+		} else if (gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
+				&& timeKickOffBlocked >= -timeKickOffBlockedOvertime
+				&& previousSecGameState != GameControlData.STATE2_GOAL_FREE_KICK
+				&& previousSecGameState != GameControlData.STATE2_PENALTY_FREE_KICK) {
             if (timeKickOffBlocked > 0) {
                 return timeKickOffBlocked;
             } else {

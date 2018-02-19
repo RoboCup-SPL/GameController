@@ -60,6 +60,8 @@ public abstract class Rules
     public boolean kickoffChoice;
     /** Time in seconds the ball is blocked after kickoff. */
     public int kickoffTime;
+    /** Time in seconds the ball is blocked after a free kick. */
+    public int freeKickTime;
     /** Time in seconds before a global game stuck can be called. */
     public int minDurationBeforeStuck;
     /** The number of seconds switching to Playing is delayed. */
@@ -100,7 +102,7 @@ public abstract class Rules
     public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */
     public int timeOutTime;
-    /** Time in seconds of a referee timeout */
+    /** Time in seconds of a referee timeout. */
     public int refereeTimeout;
     /** Defines if the option for a referee timeout is available. */ 
     public boolean isRefereeTimeoutAvailable;

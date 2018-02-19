@@ -44,16 +44,16 @@ public class Set extends GCAction {
         if (data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.timeBeforeCurrentGameState = 0;
             if (data.gameState != GameControlData.STATE_INITIAL) {
-                data.kickOffTeam = data.team[data.kickOffTeam == data.team[0].teamNumber ? 1 : 0].teamNumber;
+                data.kickingTeam = data.team[data.kickingTeam == data.team[0].teamNumber ? 1 : 0].teamNumber;
                 FirstHalf.changeSide(data);
             }
             if (data.gameState != GameControlData.STATE_PLAYING) {
-                data.team[data.team[0].teamNumber == data.kickOffTeam ? 0 : 1].penaltyShot++;
+                data.team[data.team[0].teamNumber == data.kickingTeam ? 0 : 1].penaltyShot++;
             }
 
             // restore selected player:
             for (int side = 0; side < 2; side++) {
-                int number = data.penaltyShootOutPlayers[side][data.team[side].teamNumber == data.kickOffTeam ? 0 : 1];
+                int number = data.penaltyShootOutPlayers[side][data.team[side].teamNumber == data.kickingTeam ? 0 : 1];
 
                 for (int playerID = 0; playerID < Rules.league.teamSize; playerID++) {
                     if (playerID != number) {

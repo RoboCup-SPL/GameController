@@ -1,7 +1,6 @@
 package controller.action.ui;
 
 import common.Log;
-import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
@@ -10,24 +9,22 @@ import data.Rules;
 
 
 /**
- * @author Michel Bartsch
+ * @author Mario Grobler
  * 
- * This action means that a global game stuck has occured.
+ * This action means that a team gets a goal free kick
  */
-public class GlobalStuck extends GCAction
+public class GoalFreeKick extends GCAction
 {
     /** On which side (0:left, 1:right) */
-    private int side;
-    
+    private int side;    
     
     /**
-     * Creates a new GlobalStuck action.
+     * Creates a new Out action.
      * Look at the ActionBoard before using this.
      * 
      * @param side      On which side (0:left, 1:right)
      */
-    public GlobalStuck(int side)
-    {
+    public GoalFreeKick(int side) {
         super(ActionType.UI);
         this.side = side;
     }
@@ -38,12 +35,13 @@ public class GlobalStuck extends GCAction
      * @param data      The current data to work on.
      */
     @Override
-    public void perform(AdvancedData data)
-    {
-        data.kickingTeam = data.team[1 - side].teamNumber;
-        data.kickOffReason = AdvancedData.KICKOFF_GAMESTUCK;
-        Log.setNextMessage("Global Game Stuck, Kickoff "+Rules.league.teamColorName[data.team[data.kickingTeam == data.team[0].teamNumber ? 0 : 1].teamColor]);
-        ActionBoard.ready.perform(data);
+    public void perform(AdvancedData data) {
+    	data.addTimeInCurrentState();
+    	data.whenCurrentGameStateBegan = data.getTime();
+        data.gameState = GameControlData.STATE_READY;
+    	data.secGameState = GameControlData.STATE2_GOAL_FREE_KICK;
+    	data.kickingTeam = data.team[side].teamNumber;
+        Log.state(data, "Goal Free Kick for "+Rules.league.teamColorName[data.team[side].teamColor]);
     }
     
     /**
@@ -53,8 +51,7 @@ public class GlobalStuck extends GCAction
      * @param data      The current data to check with.
      */
     @Override
-    public boolean isLegal(AdvancedData data)
-    {
-        return (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
+    public boolean isLegal(AdvancedData data) {
+        return (data.gameState == GameControlData.STATE_PLAYING && data.secGameState != GameControlData.STATE2_PENALTYSHOOT) || (data.testmode);
     }
 }
