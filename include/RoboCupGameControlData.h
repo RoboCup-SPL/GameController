@@ -41,6 +41,8 @@
 #define STATE2_PENALTYSHOOT         1
 #define STATE2_OVERTIME             2
 #define STATE2_TIMEOUT              3
+#define STATE2_GOAL_FREE_KICK       4
+#define STATE2_PENALTY_FREE_KICK    5
 
 #define PENALTY_NONE                        0
 // SPL

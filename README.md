@@ -162,7 +162,6 @@ only SPL
     G    - kickoff goal 
     O    - illegal ball contact
     U    - request for pickup
-    C    - coach motion
     S    - substitute
 
 only Humanoid-League
@@ -275,28 +274,14 @@ the Initial state. An active GameController will overwrite these settings.
 
 
 
-## 6. Coach Messages
-
-The coach broadcasts messages as defined in SPLCoachMessage.h to the UDP port
-SPL_COACH_MESSAGE_PORT through the wireless network. Players are not permitted
-to listen to this port. The GameController will integrate the coach messages
-into the RoboCupGameControlData packet and forward them to the players according
-to the SPL rules.
-
-
-
-## 7. Misc
+## 6. Misc
 
 The format of the packets the GameController broadcasts at port
 GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
 is defined in the file RoboCupGameControlData.h. It differs from the version used
-in 2016 in the following ways:
+in 2017 in the following ways:
 
-- Coach messages now have a data packet size of 253 bytes instead of 81. 
-
-- The game type GAME_DROPIN was removed. Instead the two game types 
-  GAME_MIXEDTEAM_PLAYOFF and GAME_MIXEDTEAM_ROUNDROBIN were added.
-
+- Coach messages were deleted
 
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour
@@ -315,7 +300,7 @@ for receiving the true game state, the request is ignored and its network
 address is written into the GameController's error log.
 
 
-## 8. Known Issues
+## 7. Known Issues
 
 There are still a number of issues left:
 

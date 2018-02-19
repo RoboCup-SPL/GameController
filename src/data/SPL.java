@@ -87,7 +87,7 @@ public class SPL extends Rules
         timeOutPerHalf = false;
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
-        /** Defines if coach is available */
+        /** Allowed to compensate the lost time? */
         lostTime = true;
         /** If true, the mixed team competition tournament is active */
         mixedTeamMode = false;
