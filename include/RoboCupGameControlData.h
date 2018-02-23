@@ -85,7 +85,7 @@ struct RobotInfo
 struct TeamInfo
 {
   uint8_t teamNumber;           // unique team number
-  uint8_t teamColour;           // colour of the team
+  uint8_t teamColor;            // color of the team
   uint8_t score;                // team's score
   uint8_t penaltyShot;          // penalty shot counter
   uint16_t singleShots;         // bits represent penalty shot success

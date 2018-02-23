@@ -287,7 +287,7 @@ in 2017 in the following ways:
   uint8_t competitionPhase : 4;
   uint8_t competitionType : 4;
   ```
-
+- `teamColour` → `teamColor`
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour
 became necessary so the robots have to listen for the whistle blown by the head
