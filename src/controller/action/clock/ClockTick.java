@@ -32,8 +32,7 @@ public class ClockTick extends GCAction
 	@Override
 	public void perform(AdvancedData data) {
 		if (data.gameState == GameControlData.STATE_READY
-				&& ((data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime && !data.secFreeKick())
-						|| (data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.freeKickTime && data.secFreeKick()))) {
+				&& ((data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime))) {
 			ActionBoard.set.perform(data);
 		} else if (data.gameState == GameControlData.STATE_FINISHED) {
 			Integer remainingPauseTime = data.getRemainingPauseTime();
@@ -45,6 +44,8 @@ public class ClockTick extends GCAction
 					ActionBoard.penaltyShoot.perform(data);
 				}
 			}
+		} else if(data.isFreeKick() && data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.freeKickTime) {
+			ActionBoard.play.perform(data);
 		}
 		data.updatePenalties();
 	}

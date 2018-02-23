@@ -90,7 +90,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * TimeOut counters for each team, 0:left side, 1:right side.
      */
     public boolean[] timeOutTaken = {false, false};
-
+    
     /**
      * If true, left side has the kickoff.
      */
@@ -130,6 +130,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * Time offset resulting from starting the clock when it should be stopped.
      */
     public long manRemainingGameTimeOffset;
+    
+    /**
+     * Used to backup the gamestate to ensure that the GameController does not run crazy on free kick - playing changes
+     */
+    public byte previousGameState;
 
     /**
      * Used to backup the secondary game state during a timeout.
@@ -281,17 +286,17 @@ public class AdvancedData extends GameControlData implements Cloneable {
                 ? (previousSecGameState == STATE2_NORMAL ? Rules.league.halfTime
                         : previousSecGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
                                 : Rules.league.penaltyShotTime)
-                : (secGameState == STATE2_NORMAL || secFreeKick()) ? Rules.league.halfTime
+                : (secGameState == STATE2_NORMAL) ? Rules.league.halfTime
                         : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
                                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
                                 ? Rules.league.penaltyShotTimeSuddenDeath
                                 : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL// during timeouts
-                || ((gameState == STATE_READY || gameState == STATE_SET) && !secFreeKick())
+                || ((gameState == STATE_READY || gameState == STATE_SET))
                 && (competitionPhase == GAMEPHASE_PLAYOFF && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
                 || gameState == STATE_FINISHED
                         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                        : real || (competitionPhase != GAMEPHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING
+                        : real || (competitionPhase != GAMEPHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING || !isFreeKick()
                         || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying
                         ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
                         : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
@@ -406,7 +411,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime) {
 		if (timeKickOffBlockedOvertime == 0 // preparing data packet
 				&& secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
-				&& (getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying || prevSecFreeKick())) {
+				&& (getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying)) {
 			return null;
 		}
         int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
@@ -417,18 +422,19 @@ public class AdvancedData extends GameControlData implements Cloneable {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
         } else if (gameState == STATE_INITIAL && (refereeTimeout)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
-        } else if (gameState == STATE_READY && !secFreeKick()) {
+        } else if (gameState == STATE_READY) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
-        } else if (gameState == STATE_READY && secFreeKick()) {
-        	return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.freeKickTime);
-		} else if (gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
-				&& timeKickOffBlocked >= -timeKickOffBlockedOvertime
-				&& !prevSecFreeKick()) {
+        } else if (gameState == STATE_READY) {
+            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.freeKickTime);
+        } else if (gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
+                && timeKickOffBlocked >= -timeKickOffBlockedOvertime && !wasFreeKick()) {
             if (timeKickOffBlocked > 0) {
                 return timeKickOffBlocked;
             } else {
                 return null;
             }
+        } else if (isFreeKick()) {
+        	return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.freeKickTime);
         } else {
             return getRemainingPauseTime();
         }
@@ -467,17 +473,16 @@ public class AdvancedData extends GameControlData implements Cloneable {
     }
     
     /**
-     * @return <code> secGameState == STATE2_GOAL_FREE_KICK || secGameState == STATE2_PENALTY_FREE_KICK; </code>
+     * @return <code> return gameState == STATE_GOAL_FREE_KICK || gameState == STATE_PENALTY_FREE_KICK; </code>
      */
-    public boolean secFreeKick() {
-        return secGameState == STATE2_GOAL_FREE_KICK || secGameState == STATE2_PENALTY_FREE_KICK;
+    public boolean isFreeKick() {
+        return gameState == STATE_GOAL_FREE_KICK || gameState == STATE_PENALTY_FREE_KICK;
     }
     
     /**
-     * @return <code> previousSecGameState == STATE2_GOAL_FREE_KICK || previousSecGameState == STATE2_PENALTY_FREE_KICK; </code>
+     * return previousGameState == STATE_GOAL_FREE_KICK || previousGameState == STATE_PENALTY_FREE_KICK;
      */
-    public boolean prevSecFreeKick() {
-        return previousSecGameState == STATE2_GOAL_FREE_KICK || previousSecGameState == STATE2_PENALTY_FREE_KICK;
+    public boolean wasFreeKick() {
+        return previousGameState == STATE_GOAL_FREE_KICK || previousGameState == STATE_PENALTY_FREE_KICK;
     }
-
 }

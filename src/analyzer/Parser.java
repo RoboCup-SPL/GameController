@@ -46,6 +46,7 @@ public class Parser
         "Global Game Stuck",
         "Goal Free Kick for",
         "Penalty Free Kick for",
+        "Free Kick Complete",
         "Goal for",
         "Goal decrease for Team",
         "Out by",

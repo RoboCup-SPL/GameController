@@ -218,8 +218,8 @@ public class GUI extends JFrame implements GCGUI
     private ImageIcon[][] lanIcon;
     private JProgressBar[][] robotTime;
     private JToggleButton refereeTimeout;
-    private JButton[] goalFreeKick;
-    private JButton[] penaltyFreeKick;
+    private JToggleButton[] goalFreeKick;
+    private JToggleButton[] penaltyFreeKick;
     private JToggleButton[] timeOut;
     private JButton[] stuck;
     private JButton[] out;
@@ -293,6 +293,7 @@ public class GUI extends JFrame implements GCGUI
         
         
         //Components
+        stateGroup = new ButtonGroup();
         side = new ImagePanel[2];
         for (int i=0; i<2; i++) {
             side[i] = new ImagePanel(backgroundSide[i][i].getImage());
@@ -371,11 +372,13 @@ public class GUI extends JFrame implements GCGUI
         //  team
         out = new JButton[2];        
         if (Rules.league instanceof SPL) {
-        	goalFreeKick = new JButton[2];
-            penaltyFreeKick = new JButton[2];
+        	goalFreeKick = new JToggleButton[2];
+            penaltyFreeKick = new JToggleButton[2];
             for (int i=0; i<2; i++) {                
-                goalFreeKick[i] = new Button(GOAL_FREE_KICK);
-                penaltyFreeKick[i] = new Button(PENALTY_FREE_KICK);
+                goalFreeKick[i] = new ToggleButton(GOAL_FREE_KICK);
+                penaltyFreeKick[i] = new ToggleButton(PENALTY_FREE_KICK);
+                stateGroup.add(goalFreeKick[i]);
+                stateGroup.add(penaltyFreeKick[i]);
                 out[i] = new JButton(OUT);
             }
         } else {
@@ -448,7 +451,7 @@ public class GUI extends JFrame implements GCGUI
         set = new ToggleButton(STATE_SET);
         play = new ToggleButton(STATE_PLAY);
         finish = new ToggleButton(STATE_FINISH);
-        stateGroup = new ButtonGroup();
+        
         stateGroup.add(initial);
         stateGroup.add(ready);
         stateGroup.add(set);
@@ -1177,8 +1180,11 @@ public class GUI extends JFrame implements GCGUI
     private void updateFreeKick(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
+        	goalFreeKick[i].setSelected(data.gameState == GameControlData.STATE_GOAL_FREE_KICK && data.kickingTeam == i);
             goalFreeKick[i].setEnabled(ActionBoard.goalFreeKick[i].isLegal(data));
-            penaltyFreeKick[i].setEnabled(ActionBoard.penaltyFreeKick[i].isLegal(data));
+            
+            penaltyFreeKick[i].setSelected(data.gameState == GameControlData.STATE_PENALTY_FREE_KICK && data.kickingTeam == i);
+            penaltyFreeKick[i].setEnabled(ActionBoard.penaltyFreeKick[i].isLegal(data));            
         }
     }
 

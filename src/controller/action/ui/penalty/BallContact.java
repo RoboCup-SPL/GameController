@@ -42,7 +42,7 @@ public class BallContact extends Penalty
     public boolean isLegal(AdvancedData data)
     {
         return (data.gameState == GameControlData.STATE_PLAYING) 
-        		|| (data.secFreeKick())
+        		|| (data.isFreeKick())
         		|| data.testmode;
     }
 }

@@ -38,8 +38,8 @@ public class PenaltyFreeKick extends GCAction
     public void perform(AdvancedData data) {
     	data.addTimeInCurrentState();
     	data.whenCurrentGameStateBegan = data.getTime();
-        data.gameState = GameControlData.STATE_READY;
-    	data.secGameState = GameControlData.STATE2_PENALTY_FREE_KICK;
+    	data.previousGameState = data.gameState;
+        data.gameState = GameControlData.STATE_PENALTY_FREE_KICK;
     	data.kickingTeam = data.team[side].teamNumber;
         Log.state(data, "Penalty Free Kick for "+Rules.league.teamColorName[data.team[side].teamColor]);
     }

@@ -315,5 +315,7 @@ There are still a number of issues left:
 
 - Too many colors and buttons - too little keys (not enough shortcuts for all operations)
 
+- When undoing "Free Kick Complete", the "Playing" button is selected instead of the free kick button (functionality still seems to be okay)
+
 - On Windows, Swing windows are only displayed correctly scaled on HiDPI displays if
   Java 9 is used.

@@ -33,10 +33,6 @@ public class Set extends GCAction {
         if (data.gameState == GameControlData.STATE_SET) {
             return;
         }
-        if (data.secFreeKick()) {
-           data.gameState = GameControlData.STATE_SET;
-           return;
-        }
         if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
@@ -80,6 +76,7 @@ public class Set extends GCAction {
             }
         	
         }
+        data.previousGameState = data.gameState;
         data.gameState = GameControlData.STATE_SET;
         Log.state(data, "Set");
     }

@@ -31,8 +31,7 @@ public class Play extends GCAction
      * @param data      The current data to work on.
      */
     @Override
-    public void perform(AdvancedData data)
-    {
+    public void perform(AdvancedData data) {
         if (data.gameState == GameControlData.STATE_PLAYING) {
             return;
         }
@@ -40,12 +39,14 @@ public class Play extends GCAction
             data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = data.getTime();
+        data.previousGameState = data.gameState;
         data.gameState = GameControlData.STATE_PLAYING;
-        if(data.secFreeKick()) {
-        	data.previousSecGameState = data.secGameState;
-        	data.secGameState = GameControlData.STATE2_NORMAL;        	
+
+        if(data.wasFreeKick()) {
+        	Log.state(data, "Free Kick Complete");
+        } else {
+        	Log.state(data, "Playing");
         }
-        Log.state(data, "Playing");
     }
     
     /**
@@ -56,8 +57,7 @@ public class Play extends GCAction
      */
     @Override
 	public boolean isLegal(AdvancedData data) {
-		return (data.gameState == GameControlData.STATE_READY
-				&& data.secFreeKick())
+		return (data.isFreeKick())
 				|| (data.gameState == GameControlData.STATE_SET
 						&& (data.secGameState != GameControlData.STATE2_PENALTYSHOOT || bothTeamsHavePlayers(data)))
 				|| (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;

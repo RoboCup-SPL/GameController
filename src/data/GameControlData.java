@@ -50,13 +50,13 @@ public class GameControlData implements Serializable {
     public static final byte STATE_SET = 2;
     public static final byte STATE_PLAYING = 3;
     public static final byte STATE_FINISHED = 4;
+    public static final byte STATE_GOAL_FREE_KICK = 5;
+    public static final byte STATE_PENALTY_FREE_KICK = 6;
 
     public static final byte STATE2_NORMAL = 0;
     public static final byte STATE2_PENALTYSHOOT = 1;
     public static final byte STATE2_OVERTIME = 2;
     public static final byte STATE2_TIMEOUT = 3;
-    public static final byte STATE2_GOAL_FREE_KICK = 4;
-    public static final byte STATE2_PENALTY_FREE_KICK = 5;
 
     public static final byte C_FALSE = 0;
     public static final byte C_TRUE = 1;
@@ -269,6 +269,12 @@ public class GameControlData implements Serializable {
             case STATE_FINISHED:
                 temp = "finish";
                 break;
+            case STATE_GOAL_FREE_KICK:
+            	temp = "goal free kick";
+            	break;
+            case STATE_PENALTY_FREE_KICK:
+            	temp = "penalty free kick";
+            	break;
             default:
                 temp = "undefinied(" + gameState + ")";
         }
@@ -298,12 +304,6 @@ public class GameControlData implements Serializable {
             case STATE2_TIMEOUT:
                 temp = "timeout";
                 break;
-            case STATE2_GOAL_FREE_KICK:
-            	temp = "goal free kick";
-            	break;
-            case STATE2_PENALTY_FREE_KICK:
-            	temp = "penalty free kick";
-            	break;
             default:
                 temp = "undefinied(" + secGameState + ")";
         }

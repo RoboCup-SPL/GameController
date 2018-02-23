@@ -33,11 +33,11 @@ public class SecondHalf extends GCAction
     {
         if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_FALSE;
-            data.previousSecGameState = GameControlData.STATE2_NORMAL;
             data.secGameState = GameControlData.STATE2_NORMAL;
             FirstHalf.changeSide(data);
             data.kickingTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.kickOffReason = AdvancedData.KICKOFF_HALF;
+            data.previousGameState = data.gameState;
             data.gameState = GameControlData.STATE_INITIAL;
             // Don't set data.whenCurrentGameStateBegan, because it's used to count the pause
             Log.state(data, "2nd Half");
