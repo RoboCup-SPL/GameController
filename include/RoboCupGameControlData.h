@@ -37,13 +37,13 @@
 #define STATE_SET                   2
 #define STATE_PLAYING               3
 #define STATE_FINISHED              4
+#define STATE_GOAL_FREE_KICK        5
+#define STATE_PENALTY_FREE_KICK     6
 
 #define STATE2_NORMAL               0
 #define STATE2_PENALTYSHOOT         1
 #define STATE2_OVERTIME             2
 #define STATE2_TIMEOUT              3
-#define STATE2_GOAL_FREE_KICK       4
-#define STATE2_PENALTY_FREE_KICK    5
 
 #define PENALTY_NONE                        0
 // SPL
