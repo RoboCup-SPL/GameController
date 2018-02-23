@@ -117,7 +117,7 @@ that is replaced is already penalized, its substitute inherits the penalty. If
 it is not, the substitute can immediately enter the field in the HL, but gets a
 "request for pickup" penalty before it can enter the field in the SPL.
 
-When pressing the big "+" (goal), "Timeout", or "Global Game Stuck", the other
+When pressing the big "+" (goal), "Timeout", "Global Game Stuck", "Goal Free Kick", or "Penalty Free Kick", the other
 team gets the next kick-off.
 
 SPL: When the referee decides that too much game time has been lost, use the
