@@ -31,7 +31,7 @@
 
 #define GAMETYPE_NORMALTEAM         0
 #define GAMETYPE_MIXEDTEAM          1
-#define GAMETYPE_GENERAL_PENALTY_KICK 2;
+#define GAMETYPE_GENERAL_PENALTY_KICK 2
 
 #define STATE_INITIAL               0
 #define STATE_READY                 1
