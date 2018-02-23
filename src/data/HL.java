@@ -87,9 +87,9 @@ public class HL extends Rules
         isRefereeTimeoutAvailable = false;
         /** Allowed to compensate for lost time? */
         lostTime = false;
-        /** If true, the mixed team competition tournament is active */
-        mixedTeamMode = false;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = false;
+        /** The type of the competition (GAMETYPE_NORMAL, GAMETYPE_MIXEDTEAM, GAMETYPE_GENERAL_PENALTY_KICK) */
+        competitionType = GameControlData.GAMETYPE_NORMAL;
     }
 }

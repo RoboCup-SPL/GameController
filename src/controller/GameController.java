@@ -225,7 +225,7 @@ public class GameController {
         data.kickingTeam = (byte) input.outTeam[0];
         data.colorChangeAuto = input.outAutoColorChange;
         data.competitionPhase = input.outFulltime ? GameControlData.GAMEPHASE_PLAYOFF : GameControlData.GAMEPHASE_ROUNDROBIN;
-        data.competitionType = Rules.league.mixedTeamMode ? GameControlData.GAMETYPE_MIXEDTEAM : GameControlData.GAMETYPE_NORMALTEAM;
+        data.competitionType = Rules.league.competitionType;
 
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
@@ -272,7 +272,7 @@ public class GameController {
         }
         Log.toFile("League = " + Rules.league.leagueName);
         Log.toFile("Competition phase = " + (data.competitionPhase == GameControlData.GAMEPHASE_PLAYOFF ? "playoff" : "round robin"));
-        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.GAMETYPE_MIXEDTEAM ? "mixed team" : "normal team"));
+        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.GAMETYPE_MIXEDTEAM ? "mixed team" : (data.competitionPhase == GameControlData.GAMETYPE_NORMAL ? "normal team" : "general penalty kick challenge")));
         Log.toFile("Auto color change = " + data.colorChangeAuto);
         Log.toFile("Using broadcast address " + (localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast()));
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));

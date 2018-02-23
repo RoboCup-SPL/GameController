@@ -19,7 +19,9 @@ public class HLAdult extends HL
         robotsPlaying = 1;
         /** If the game starts with penalty-shoots. */
         startWithPenalty = true;
-       /** Time in seconds one penalty shoot is long. */
+        /** Time in seconds one penalty shoot is long. */
         penaltyShotTime = (int)(2.5*60);
+        /** The type of the competition (GAMETYPE_NORMAL, GAMETYPE_MIXEDTEAM, GAMETYPE_GENERAL_PENALTY_KICK) */
+        competitionType = GameControlData.GAMETYPE_NORMAL;
     }
 }

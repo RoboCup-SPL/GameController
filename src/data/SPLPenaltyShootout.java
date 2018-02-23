@@ -15,5 +15,7 @@ public class SPLPenaltyShootout extends SPL
         leagueDirectory = "spl_penaltyshootout";
         /** If the game starts with penalty-shots. */
         startWithPenalty = true;
+        /** The type of the competition (GAMETYPE_NORMAL, GAMETYPE_MIXEDTEAM, GAMETYPE_GENERAL_PENALTY_KICK) */
+        competitionType = GameControlData.GAMETYPE_GENERAL_PENALTY_KICK;
     }
 }

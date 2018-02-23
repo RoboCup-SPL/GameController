@@ -43,6 +43,7 @@ public class Inactive extends Penalty
     {
         return (data.gameState == GameControlData.STATE_READY)
             || (data.gameState == GameControlData.STATE_PLAYING)
+            || (data.secFreeKick())
             || (data.testmode);
     }
 }

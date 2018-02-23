@@ -89,9 +89,9 @@ public class SPL extends Rules
         pushesToEjection = new int[] {4, 6, 8, 10, 12};
         /** Allowed to compensate the lost time? */
         lostTime = true;
-        /** If true, the mixed team competition tournament is active */
-        mixedTeamMode = false;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = true;
+        /** The type of the competition (GAMETYPE_NORMAL, GAMETYPE_MIXEDTEAM, GAMETYPE_GENERAL_PENALTY_KICK) */
+        competitionType = GameControlData.GAMETYPE_NORMAL;
     }
 }

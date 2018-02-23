@@ -17,7 +17,7 @@ public class SPLMixedTeam extends SPL
         teamSize = 6;
         /** How many robots of each team may play at one time. */
         robotsPlaying = teamSize;
-        /** If true, the mixed team competition tournament is active */
-        mixedTeamMode = true;
+        /** The type of the competition (GAMETYPE_NORMAL, GAMETYPE_MIXEDTEAM, GAMETYPE_GENERAL_PENALTY_KICK) */
+        competitionType = GameControlData.GAMETYPE_MIXEDTEAM;
     }
 }

@@ -41,8 +41,9 @@ public class GameControlData implements Serializable {
     public static final byte GAMEPHASE_PLAYOFF = 1;
     
     //max four bits!
-    public static final byte GAMETYPE_NORMALTEAM = 0;
+    public static final byte GAMETYPE_NORMAL = 0;
     public static final byte GAMETYPE_MIXEDTEAM = 1;
+    public static final byte GAMETYPE_GENERAL_PENALTY_KICK = 2;  //general penalty kick challenge
 
     public static final byte STATE_INITIAL = 0;
     public static final byte STATE_READY = 1;
@@ -64,7 +65,7 @@ public class GameControlData implements Serializable {
      * The size in bytes this class has packed.
      */
     public static final int SIZE
-            = 4
+          = 4
             + // header
             2
             + // version
@@ -100,7 +101,7 @@ public class GameControlData implements Serializable {
     public byte packetNumber = 0;
     public byte playersPerTeam = (byte) Rules.league.teamSize;  // The number of players on a team
     public byte competitionPhase = GAMEPHASE_ROUNDROBIN;        // phase of the game (GAMEPHASE_ROUNDROBIN, GAMEPHASE_PLAYOFF)
-    public byte competitionType = GAMETYPE_NORMALTEAM;          // type of the game (GAMETYPE_NORMALTEAM, GAMETYPE_MIXEDTEAM)
+    public byte competitionType = GAMETYPE_NORMAL;              // type of the game (GAMETYPE_NORMAL, GAMETYPE_MIXEDTEAM, GAMETYPE_GENERAL_PENALTY_KICK)
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
     public byte kickingTeam;                                    // the next team to kick off
@@ -241,7 +242,7 @@ public class GameControlData implements Serializable {
         }
         out += "   competitionPhase: " + temp + "\n";
         switch(competitionType) {
-            case GAMETYPE_NORMALTEAM:
+            case GAMETYPE_NORMAL:
                 temp = "normal team";
                 break;
             case GAMETYPE_MIXEDTEAM:
