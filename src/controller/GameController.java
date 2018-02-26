@@ -65,13 +65,6 @@ public class GameController {
     public static void main(String[] args) {
         // Do not just System.exit(0) on Macs when selecting GameController/Quit
         System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
-        
-        try {
-			UIManager  //nice look and feel
-			    .setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (Exception e) {
-			System.err.println("Couldn't set look and feel: " + e.getLocalizedMessage());
-		}
 
         //commands
         String interfaceName = "";
