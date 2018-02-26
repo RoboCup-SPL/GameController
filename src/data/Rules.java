@@ -92,8 +92,6 @@ public abstract class Rules
     public int penaltyIncreaseTime; 
     /** Whether the penalty count is reset on halftime */
     public boolean resetPenaltyCountOnHalftime;
-    /** Whether the ejected robots are reset on halftime */
-    public boolean resetEjectedRobotsOnHalftime;
     /** Whether penalties can be removed before the penalty time has passed. */
     public boolean allowEarlyPenaltyRemoval;
     /** Penalty that players get when they substitute another player. */
@@ -108,8 +106,6 @@ public abstract class Rules
     public boolean isRefereeTimeoutAvailable;
     /** One time-out per half? */
     public boolean timeOutPerHalf;
-    /** On how many pushings is a robot ejected. */
-    public int[] pushesToEjection;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
     /** If true, the game controller should drop broadcast-messages */

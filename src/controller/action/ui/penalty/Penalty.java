@@ -36,7 +36,7 @@ public abstract class Penalty extends GCAction
     }
 
     /**
-     * Performs an ejection if the robot exceeds limit on repeated penalties
+     * Increases the penalty counter of a robot and its team.
      *
      * @param data      The current data to work on.
      * @param player    The already penalised player.

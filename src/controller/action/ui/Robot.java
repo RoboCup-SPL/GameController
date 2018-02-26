@@ -119,8 +119,7 @@ public class Robot extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return !data.ejected[side][number]
-                && ((!(EventHandler.getInstance().lastUIEvent instanceof Penalty) || EventHandler.getInstance().lastUIEvent instanceof MotionInSet)
+        return ((!(EventHandler.getInstance().lastUIEvent instanceof Penalty) || EventHandler.getInstance().lastUIEvent instanceof MotionInSet)
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
                 && (Rules.league.allowEarlyPenaltyRemoval || data.getRemainingPenaltyTime(side, number) == 0)
                 && (data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE

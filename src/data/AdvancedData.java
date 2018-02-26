@@ -66,16 +66,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public int[][] robotPenaltyCount = new int[2][Rules.league.teamSize];
 
     /**
-     * Which players were already ejected?
-     */
-    public boolean[][] ejected = new boolean[2][Rules.league.teamSize];
-
-    /**
-     * Pushing counters for each team, 0:left side, 1:right side.
-     */
-    public int[] pushes = {0, 0};
-
-    /**
      * If true, the referee set a timeout
      */
     public boolean refereeTimeout = false;
@@ -340,13 +330,9 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public void resetPenalties() {
         for (int i = 0; i < team.length; ++i) {
-            pushes[i] = 0;
             for (int j = 0; j < Rules.league.teamSize; j++) {
                 if (team[i].player[j].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
                     team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
-                    if (Rules.league.resetEjectedRobotsOnHalftime) {
-                        ejected[i][j] = false;
-                    }
                 }
                 if (Rules.league.resetPenaltyCountOnHalftime) {
                     robotPenaltyCount[i][j] = 0;

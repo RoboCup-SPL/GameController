@@ -69,8 +69,6 @@ public class HL extends Rules
         penaltyIncreaseTime = 0;
         /** Whether the penalty count is reset on halftime */
         resetPenaltyCountOnHalftime = true;
-        /** Whether the ejected robots are reset on halftime */
-        resetEjectedRobotsOnHalftime = true;
         /** Whether penalties can be removed before the penalty time has passed. */
         allowEarlyPenaltyRemoval = true;
         /** Penalty that players get when they substitute another player. */
@@ -81,8 +79,6 @@ public class HL extends Rules
         timeOutTime = 2*60;
         /** One time-out per half? */
         timeOutPerHalf = true;
-        /** On how many pushings is a robot ejected. */
-        pushesToEjection = new int[] {};
         /** Defines if the option for a referee timeout is available */
         isRefereeTimeoutAvailable = false;
         /** Allowed to compensate for lost time? */

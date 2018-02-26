@@ -69,8 +69,6 @@ public class SPL extends Rules
         penaltyIncreaseTime = 5;
         /** Whether the penalty count is reset on halftime */
         resetPenaltyCountOnHalftime = true;
-        /** Whether the ejected robots are reset on halftime */
-        resetEjectedRobotsOnHalftime = true;
         /** Whether penalties can be removed before the penalty time has passed. */
         allowEarlyPenaltyRemoval = false;
         /** Penalty that players get when they substitute another player. */
@@ -85,8 +83,6 @@ public class SPL extends Rules
         isRefereeTimeoutAvailable = true;
         /** One time-out per half? */
         timeOutPerHalf = false;
-        /** On how many pushings is a robot ejected. */
-        pushesToEjection = new int[] {4, 6, 8, 10, 12};
         /** Allowed to compensate the lost time? */
         lostTime = true;
         /** If true, the game controller should drop broadcast-messages */
