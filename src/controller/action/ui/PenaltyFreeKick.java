@@ -52,6 +52,6 @@ public class PenaltyFreeKick extends GCAction
      */
     @Override
     public boolean isLegal(AdvancedData data) {
-        return (data.gameState == GameControlData.STATE_PLAYING && data.secGameState != GameControlData.STATE2_PENALTYSHOOT) || (data.testmode);
+        return (data.gameState == GameControlData.STATE_PLAYING && data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) || (data.testmode);
     }
 }

@@ -32,9 +32,9 @@ public class FirstHalfOvertime extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.firstHalf != GameControlData.C_TRUE || data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
-            data.secGameState = GameControlData.STATE2_OVERTIME;
+            data.gamePhase = GameControlData.GAME_PHASE_OVERTIME;
             FirstHalf.changeSide(data);
             data.kickingTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.gameState = GameControlData.STATE_INITIAL;
@@ -52,12 +52,12 @@ public class FirstHalfOvertime extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ((data.firstHalf == GameControlData.C_TRUE)
-                && (data.secGameState == GameControlData.STATE2_OVERTIME))
+                && (data.gamePhase == GameControlData.GAME_PHASE_OVERTIME))
                 || ((Rules.league.overtime)
-                    && (data.competitionPhase == GameControlData.GAMEPHASE_PLAYOFF)
-                    && (data.secGameState == GameControlData.STATE2_NORMAL)
+                    && (data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF)
+                    && (data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                     && (data.gameState == GameControlData.STATE_FINISHED)
-                    && (data.firstHalf  != GameControlData.C_TRUE)
+                    && (data.firstHalf != GameControlData.C_TRUE)
                     && (data.team[0].score == data.team[1].score)
                     && (data.team[0].score > 0))
                 || (data.testmode);

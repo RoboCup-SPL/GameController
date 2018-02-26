@@ -127,9 +127,9 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public byte previousGameState;
 
     /**
-     * Used to backup the secondary game state during a timeout.
+     * Used to backup the game phase during a timeout.
      */
-    public byte previousSecGameState = STATE2_NORMAL;
+    public byte previousGamePhase = GAME_PHASE_NORMAL;
 
     public static final byte KICKOFF_HALF = 0;
     public static final byte KICKOFF_TIMEOUT = 1;
@@ -154,7 +154,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public AdvancedData() {
         if (Rules.league.startWithPenalty) {
-            secGameState = STATE2_PENALTYSHOOT;
+            gamePhase = GAME_PHASE_PENALTYSHOOT;
         }
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < team[i].player.length; j++) {
@@ -266,26 +266,25 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * is what the primary clock will show.
      *
      * @param real If true, the real time will be returned. If false, the first
-     * number of seconds in the playing state in play-off games will not be
-     * updated.
+     * number of seconds in the playing state games will not be updated.
      * @return The remaining number of seconds.
      */
     public int getRemainingGameTime(boolean real) {
-        int duration = secGameState == STATE2_TIMEOUT
-                ? (previousSecGameState == STATE2_NORMAL ? Rules.league.halfTime
-                        : previousSecGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
+        int duration = gamePhase == GAME_PHASE_TIMEOUT
+                ? (previousGamePhase == GAME_PHASE_NORMAL ? Rules.league.halfTime
+                        : previousGamePhase == GAME_PHASE_OVERTIME ? Rules.league.overtimeTime
                                 : Rules.league.penaltyShotTime)
-                : (secGameState == STATE2_NORMAL) ? Rules.league.halfTime
-                        : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
+                : (gamePhase == GAME_PHASE_NORMAL) ? Rules.league.halfTime
+                        : gamePhase == GAME_PHASE_OVERTIME ? Rules.league.overtimeTime
                                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > Rules.league.numberOfPenaltyShots
                                 ? Rules.league.penaltyShotTimeSuddenDeath
                                 : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL// during timeouts
-                || ((gameState == STATE_READY || gameState == STATE_SET))
-                && (competitionPhase == GAMEPHASE_PLAYOFF && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0)
+                || ((gameState == STATE_READY || gameState == STATE_SET)
+                        && (competitionPhase == COMPETITION_PHASE_PLAYOFF && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0))
                 || gameState == STATE_FINISHED
                         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                        : real || (competitionPhase != GAMEPHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || secGameState != STATE2_NORMAL || gameState != STATE_PLAYING || !isFreeKick()
+                        : real || (competitionPhase != COMPETITION_PHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || gamePhase != GAME_PHASE_NORMAL || gameState != STATE_PLAYING || !isFreeKick()
                         || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying
                         ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
                         : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
@@ -299,12 +298,12 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * there currently is no pause.
      */
     public Integer getRemainingPauseTime() {
-        if (secGameState == STATE2_NORMAL
+        if (gamePhase == GAME_PHASE_NORMAL
                 && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf == C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pauseTime);
-        } else if (Rules.league.pausePenaltyShootOutTime != 0 && competitionPhase == GAMEPHASE_PLAYOFF && team[0].score == team[1].score
-                && (gameState == STATE_INITIAL && secGameState == STATE2_PENALTYSHOOT && !timeOutActive[0] && !timeOutActive[1]
+        } else if (Rules.league.pausePenaltyShootOutTime != 0 && competitionPhase == COMPETITION_PHASE_PLAYOFF && team[0].score == team[1].score
+                && (gameState == STATE_INITIAL && gamePhase == GAME_PHASE_PENALTYSHOOT && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf != C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pausePenaltyShootOutTime);
         } else {
@@ -395,7 +394,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime) {
 		if (timeKickOffBlockedOvertime == 0 // preparing data packet
-				&& secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
+				&& gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
 				&& (getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying)) {
 			return null;
 		}
@@ -411,7 +410,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
         } else if (gameState == STATE_READY) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.freeKickTime);
-        } else if (gameState == STATE_PLAYING && secGameState != STATE2_PENALTYSHOOT
+        } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
                 && timeKickOffBlocked >= -timeKickOffBlockedOvertime && !wasFreeKick()) {
             if (timeKickOffBlocked > 0) {
                 return timeKickOffBlocked;
@@ -426,8 +425,9 @@ public class AdvancedData extends GameControlData implements Cloneable {
     }
 
     public void updatePenalties() {
-        if (secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
-                && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying) {
+        if (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
+                && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying
+                && Rules.league instanceof SPL) {
             for (TeamInfo t : team) {
                 for (PlayerInfo p : t.player) {
                     if (p.penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET) {

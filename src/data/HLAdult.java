@@ -21,7 +21,7 @@ public class HLAdult extends HL
         startWithPenalty = true;
         /** Time in seconds one penalty shoot is long. */
         penaltyShotTime = (int)(2.5*60);
-        /** The type of the competition (GAMETYPE_NORMAL, GAMETYPE_MIXEDTEAM, GAMETYPE_GENERAL_PENALTY_KICK) */
-        competitionType = GameControlData.GAMETYPE_NORMAL;
+        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
+        competitionType = GameControlData.COMPETITION_TYPE_NORMAL;
     }
 }

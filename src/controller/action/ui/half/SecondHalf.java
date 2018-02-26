@@ -31,9 +31,9 @@ public class SecondHalf extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.firstHalf != GameControlData.C_FALSE || data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_FALSE;
-            data.secGameState = GameControlData.STATE2_NORMAL;
+            data.gamePhase = GameControlData.GAME_PHASE_NORMAL;
             FirstHalf.changeSide(data);
             data.kickingTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.kickOffReason = AdvancedData.KICKOFF_HALF;
@@ -54,8 +54,8 @@ public class SecondHalf extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return (((data.firstHalf != GameControlData.C_TRUE)
-                        && (data.secGameState == GameControlData.STATE2_NORMAL))
-                   || ((data.secGameState == GameControlData.STATE2_NORMAL)
+                        && (data.gamePhase == GameControlData.GAME_PHASE_NORMAL))
+                   || ((data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                         && (data.gameState == GameControlData.STATE_FINISHED)))
                 || data.testmode;
     }

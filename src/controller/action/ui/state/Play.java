@@ -35,7 +35,7 @@ public class Play extends GCAction
         if (data.gameState == GameControlData.STATE_PLAYING) {
             return;
         }
-        if (data.competitionPhase != GameControlData.GAMEPHASE_PLAYOFF && data.timeBeforeCurrentGameState != 0) {
+        if (data.competitionPhase != GameControlData.COMPETITION_PHASE_PLAYOFF && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = data.getTime();
@@ -59,7 +59,7 @@ public class Play extends GCAction
 	public boolean isLegal(AdvancedData data) {
 		return (data.isFreeKick())
 				|| (data.gameState == GameControlData.STATE_SET
-						&& (data.secGameState != GameControlData.STATE2_PENALTYSHOOT || bothTeamsHavePlayers(data)))
+						&& (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT || bothTeamsHavePlayers(data)))
 				|| (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
 	}
     

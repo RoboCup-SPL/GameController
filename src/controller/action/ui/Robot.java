@@ -53,7 +53,7 @@ public class Robot extends GCAction
     public void perform(AdvancedData data)
     {
         PlayerInfo player = data.team[side].player[number];
-        if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && data.secGameState != AdvancedData.STATE2_PENALTYSHOOT) {
+        if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT) {
             ArrayList<PenaltyQueueData> playerInfoList = data.penaltyQueueForSubPlayers.get(side);
             if (playerInfoList.isEmpty()) {
                 player.penalty = Rules.league.substitutePenalty;
@@ -73,7 +73,7 @@ public class Robot extends GCAction
                         && !(EventHandler.getInstance().lastUIEvent instanceof MotionInSet))) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         } 
-        else if (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT
+        else if (data.gamePhase == AdvancedData.GAME_PHASE_PENALTYSHOOT
             && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE ||
                 data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
             && (data.gameState == AdvancedData.STATE_SET ||
@@ -123,7 +123,7 @@ public class Robot extends GCAction
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
                 && (Rules.league.allowEarlyPenaltyRemoval || data.getRemainingPenaltyTime(side, number) == 0)
                 && (data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
-                    || (data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying && data.secGameState != AdvancedData.STATE2_PENALTYSHOOT ))
+                    || (data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT ))
                 || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_SERVICE
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
@@ -142,7 +142,7 @@ public class Robot extends GCAction
                 || data.testmode
                 
                 // new player selection in penalty shootout:
-                || (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT
+                || (data.gamePhase == AdvancedData.GAME_PHASE_PENALTYSHOOT
                 	&& (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE || 
                 		data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
                     && (data.gameState == AdvancedData.STATE_SET ||

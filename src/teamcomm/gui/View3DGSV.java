@@ -45,7 +45,7 @@ import teamcomm.gui.drawings.TextureLoader;
  */
 public class View3DGSV extends View3D {
 
-    private static final int RENDERER_SECSTATE = 0;
+    private static final int RENDERER_GAME_PHASE = 0;
     private static final int RENDERER_STATE = 1;
     private static final int RENDERER_TIME = 2;
     private static final int RENDERER_SCORE = 3;
@@ -232,7 +232,7 @@ public class View3DGSV extends View3D {
         super.reshape(glad, x, y, width, height);
 
         textRendererSizes[RENDERER_STATE] = 60 * window.getWidth() / 1920;
-        textRendererSizes[RENDERER_SECSTATE] = 80 * window.getWidth() / 1920;
+        textRendererSizes[RENDERER_GAME_PHASE] = 80 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_TIME] = 120 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_SCORE] = window.getWidth() / 6;
         for (int i = 0; i < textRenderers.length; i++) {
@@ -299,10 +299,10 @@ public class View3DGSV extends View3D {
             }
             switchTo3D(gl);
 
-            // Secondary state
+            // Game phase
             String state;
-            switch (data.secGameState) {
-                case GameControlData.STATE2_NORMAL:
+            switch (data.gamePhase) {
+                case GameControlData.GAME_PHASE_NORMAL:
                     if (data.firstHalf == GameControlData.C_TRUE) {
                         if (data.gameState == GameControlData.STATE_FINISHED) {
                             state = "Half Time";
@@ -317,25 +317,25 @@ public class View3DGSV extends View3D {
                         }
                     }
                     break;
-                case GameControlData.STATE2_OVERTIME:
+                case GameControlData.GAME_PHASE_OVERTIME:
                     state = "Overtime";
                     break;
-                case GameControlData.STATE2_PENALTYSHOOT:
+                case GameControlData.GAME_PHASE_PENALTYSHOOT:
                     state = "Penalty Shootout";
                     break;
-                case GameControlData.STATE2_TIMEOUT:
+                case GameControlData.GAME_PHASE_TIMEOUT:
                     state = "Time Out";
                     break;
                 default:
                     state = "";
             }
-            textRenderers[RENDERER_SECSTATE].beginRendering(window.getWidth(), window.getHeight());
-            drawTextCenter(textRenderers[RENDERER_SECSTATE], state, window.getHeight() - textRendererSizes[RENDERER_SECSTATE], Color.black);
-            textRenderers[RENDERER_SECSTATE].endRendering();
+            textRenderers[RENDERER_GAME_PHASE].beginRendering(window.getWidth(), window.getHeight());
+            drawTextCenter(textRenderers[RENDERER_GAME_PHASE], state, window.getHeight() - textRendererSizes[RENDERER_GAME_PHASE], Color.black);
+            textRenderers[RENDERER_GAME_PHASE].endRendering();
 
             // Time
             textRenderers[RENDERER_TIME].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_TIME], formatTime((int) data.secsRemaining), (int) Math.round((window.getWidth() - textRenderers[RENDERER_TIME].getBounds("00:00").getWidth()) / 2 - (data.secsRemaining < 0 ? textRenderers[RENDERER_TIME].getCharWidth('-') : 0)), window.getHeight() - textRendererSizes[RENDERER_SECSTATE] - textRendererSizes[RENDERER_TIME], Color.black);
+            drawText(textRenderers[RENDERER_TIME], formatTime((int) data.secsRemaining), (int) Math.round((window.getWidth() - textRenderers[RENDERER_TIME].getBounds("00:00").getWidth()) / 2 - (data.secsRemaining < 0 ? textRenderers[RENDERER_TIME].getCharWidth('-') : 0)), window.getHeight() - textRendererSizes[RENDERER_GAME_PHASE] - textRendererSizes[RENDERER_TIME], Color.black);
             textRenderers[RENDERER_TIME].endRendering();
 
             // State
@@ -359,11 +359,11 @@ public class View3DGSV extends View3D {
                     state = "";
             }
             textRenderers[RENDERER_STATE].beginRendering(window.getWidth(), window.getHeight());
-            drawTextCenter(textRenderers[RENDERER_STATE], state, window.getHeight() - textRendererSizes[RENDERER_SECSTATE] - textRendererSizes[RENDERER_TIME] - window.getHeight() * 15 / 1080 - textRendererSizes[RENDERER_STATE], Color.black);
+            drawTextCenter(textRenderers[RENDERER_STATE], state, window.getHeight() - textRendererSizes[RENDERER_GAME_PHASE] - textRendererSizes[RENDERER_TIME] - window.getHeight() * 15 / 1080 - textRendererSizes[RENDERER_STATE], Color.black);
 
             // Secondary time
             if (data.secondaryTime > 0) {
-                drawTextCenter(textRenderers[RENDERER_STATE], formatTime(data.secondaryTime), window.getHeight() - textRendererSizes[RENDERER_SECSTATE] - textRendererSizes[RENDERER_TIME] - window.getHeight() * 15 / 1080 - textRendererSizes[RENDERER_STATE] * 2, Color.black);
+                drawTextCenter(textRenderers[RENDERER_STATE], formatTime(data.secondaryTime), window.getHeight() - textRendererSizes[RENDERER_GAME_PHASE] - textRendererSizes[RENDERER_TIME] - window.getHeight() * 15 / 1080 - textRendererSizes[RENDERER_STATE] * 2, Color.black);
             }
             textRenderers[RENDERER_STATE].endRendering();
 
@@ -379,7 +379,7 @@ public class View3DGSV extends View3D {
                     } else {
                         x = -iconSize * 2;
                     }
-                    Image.drawImage2D(gl, TextureLoader.getInstance().loadTexture(gl, new File("scene/Textures/ball_icon.png")), x, textRendererSizes[RENDERER_SECSTATE] + textRendererSizes[RENDERER_TIME] + window.getHeight() * 15 / 1080 + textRendererSizes[RENDERER_STATE] * 2 / 3 - iconSize / 2, iconSize, iconSize);
+                    Image.drawImage2D(gl, TextureLoader.getInstance().loadTexture(gl, new File("scene/Textures/ball_icon.png")), x, textRendererSizes[RENDERER_GAME_PHASE] + textRendererSizes[RENDERER_TIME] + window.getHeight() * 15 / 1080 + textRendererSizes[RENDERER_STATE] * 2 / 3 - iconSize / 2, iconSize, iconSize);
                 } catch (final IOException ex) {
                 }
                 switchTo3D(gl);

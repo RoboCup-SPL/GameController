@@ -24,37 +24,37 @@ public class GameControllerInfo extends Static {
             gl.glTranslatef(0, 4, .5f);
             camera.turnTowardsCamera(gl);
 
-            // Display secondary state
-            final String secState;
-            switch (data.secGameState) {
-                case GameControlData.STATE2_NORMAL:
+            // Display game phase
+            final String gamePhase;
+            switch (data.gamePhase) {
+                case GameControlData.GAME_PHASE_NORMAL:
                     if (data.firstHalf == GameControlData.C_TRUE) {
                         if (data.gameState == GameControlData.STATE_FINISHED) {
-                            secState = "Half Time";
+                            gamePhase = "Half Time";
                         } else {
-                            secState = "First Half";
+                            gamePhase = "First Half";
                         }
                     } else {
                         if (data.gameState == GameControlData.STATE_INITIAL) {
-                            secState = "Half Time";
+                            gamePhase = "Half Time";
                         } else {
-                            secState = "Second Half";
+                            gamePhase = "Second Half";
                         }
                     }
                     break;
-                case GameControlData.STATE2_OVERTIME:
-                    secState = "Overtime";
+                case GameControlData.GAME_PHASE_OVERTIME:
+                    gamePhase = "Overtime";
                     break;
-                case GameControlData.STATE2_PENALTYSHOOT:
-                    secState = "Penalty Shootout";
+                case GameControlData.GAME_PHASE_PENALTYSHOOT:
+                    gamePhase = "Penalty Shootout";
                     break;
-                case GameControlData.STATE2_TIMEOUT:
-                    secState = "Time Out";
+                case GameControlData.GAME_PHASE_TIMEOUT:
+                    gamePhase = "Time Out";
                     break;
                 default:
-                    secState = "";
+                    gamePhase = "";
             }
-            Text.drawText(secState, 0, 0.9f, 0.3f);
+            Text.drawText(gamePhase, 0, 0.9f, 0.3f);
 
             int minutes = (data.secsRemaining < 0 ? (-data.secsRemaining) : data.secsRemaining) / 60;
             int seconds = (data.secsRemaining < 0 ? (-data.secsRemaining) : data.secsRemaining) % 60;

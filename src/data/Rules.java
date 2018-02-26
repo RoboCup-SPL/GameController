@@ -108,6 +108,6 @@ public abstract class Rules
     public boolean lostTime;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
-    /** The type of the competition (GAMETYPE_NORMAL, GAMETYPE_MIXEDTEAM, GAMETYPE_GENERAL_PENALTY_KICK) */
+    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
     public byte competitionType;
 }

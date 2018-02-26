@@ -36,12 +36,12 @@ public class Set extends GCAction {
         if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
-        if ((data.competitionPhase != GameControlData.GAMEPHASE_PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
+        if ((data.competitionPhase != GameControlData.COMPETITION_PHASE_PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = data.getTime();
 
-        if (data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT) {
             data.timeBeforeCurrentGameState = 0;
             if (data.gameState != GameControlData.STATE_INITIAL) {
                 data.kickingTeam = data.team[data.kickingTeam == data.team[0].teamNumber ? 1 : 0].teamNumber;
@@ -91,7 +91,7 @@ public class Set extends GCAction {
     public boolean isLegal(AdvancedData data) {
         return (data.gameState == GameControlData.STATE_READY)
                 || (data.gameState == GameControlData.STATE_SET)
-                || ((data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
+                || ((data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)
                 && ((data.gameState != GameControlData.STATE_PLAYING)
                 || (Rules.league.penaltyShotRetries))
                 && !data.timeOutActive[0]

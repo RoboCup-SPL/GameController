@@ -868,17 +868,17 @@ public class GUI extends JFrame implements GCGUI
             secondHalfOvertime.setEnabled(ActionBoard.secondHalfOvertime.isLegal(data));
         }
         penaltyShoot.setEnabled(ActionBoard.penaltyShoot.isLegal(data));
-        firstHalf.setSelected((data.secGameState == GameControlData.STATE2_NORMAL)
+        firstHalf.setSelected((data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                             && (data.firstHalf == GameControlData.C_TRUE));
-        secondHalf.setSelected((data.secGameState == GameControlData.STATE2_NORMAL)
+        secondHalf.setSelected((data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                             && (data.firstHalf != GameControlData.C_TRUE));
         if (Rules.league.overtime) {
-           firstHalfOvertime.setSelected((data.secGameState == GameControlData.STATE2_OVERTIME)
+           firstHalfOvertime.setSelected((data.gamePhase == GameControlData.GAME_PHASE_OVERTIME)
                             && (data.firstHalf == GameControlData.C_TRUE));
-           secondHalfOvertime.setSelected((data.secGameState == GameControlData.STATE2_OVERTIME)
+           secondHalfOvertime.setSelected((data.gamePhase == GameControlData.GAME_PHASE_OVERTIME)
                             && (data.firstHalf != GameControlData.C_TRUE)); 
         }
-        penaltyShoot.setSelected(data.secGameState == GameControlData.STATE2_PENALTYSHOOT || data.previousSecGameState == GameControlData.STATE2_PENALTYSHOOT);
+        penaltyShoot.setSelected(data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT || data.previousGamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT);
     }
     
     /**
@@ -960,8 +960,8 @@ public class GUI extends JFrame implements GCGUI
         }
         for (int i=0; i<2; i++) {
             kickOff[i].setEnabled(ActionBoard.kickOff[i].isLegal(data));
-            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
-                && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
+                && data.previousGamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
                 kickOff[i].setText(KICKING);
             } else {
                 kickOff[i].setText(KICKOFF_PENALTY_SHOOTOUT);
@@ -1020,7 +1020,7 @@ public class GUI extends JFrame implements GCGUI
                 
                 // Adds an information if player is selected for penalty
                 // shootout:
-                if (data.secGameState == AdvancedData.STATE2_PENALTYSHOOT) {
+                if (data.gamePhase == AdvancedData.GAME_PHASE_PENALTYSHOOT) {
                     // if the same robot is taker and keeper in a team, show
                     // just the current info:
                     if (data.penaltyShootOutPlayers[i][0] == j

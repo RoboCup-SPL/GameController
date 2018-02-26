@@ -44,7 +44,7 @@ public class KickOff extends GCAction
         }
         data.kickingTeam = data.team[side].teamNumber;
         if ((Rules.league.kickoffChoice)
-                && (data.secGameState == GameControlData.STATE2_NORMAL)
+                && (data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                 && (data.firstHalf == GameControlData.C_TRUE)
                 && (data.gameState == GameControlData.STATE_INITIAL)) {
             data.leftSideKickoff = (side == 0);
@@ -64,7 +64,7 @@ public class KickOff extends GCAction
     {
         return (data.kickingTeam == data.team[side].teamNumber)
                 || ((Rules.league.kickoffChoice)
-                    && (data.secGameState == GameControlData.STATE2_NORMAL)
+                    && (data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                     && (data.firstHalf == GameControlData.C_TRUE)
                     && (data.gameState == GameControlData.STATE_INITIAL))
                 || data.testmode;

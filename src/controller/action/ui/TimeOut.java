@@ -39,11 +39,11 @@ public class TimeOut extends GCAction
     public void perform(AdvancedData data)
     {
         if (!data.timeOutActive[side]) {
-            data.previousSecGameState = data.secGameState;
-            data.secGameState = GameControlData.STATE2_TIMEOUT;
+            data.previousGamePhase = data.gamePhase;
+            data.gamePhase = GameControlData.GAME_PHASE_TIMEOUT;
             data.timeOutActive[side] = true;
             data.timeOutTaken[side] = true;
-            if (data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.previousGamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
                 data.kickingTeam = data.team[1 - side].teamNumber;
             } else if (data.gameState == GameControlData.STATE_SET) {
                 data.team[data.kickingTeam == data.team[0].teamNumber ? 0 : 1].penaltyShot--;
@@ -52,12 +52,12 @@ public class TimeOut extends GCAction
             data.gameState = -1; // something impossible to force execution of next call
             ActionBoard.initial.perform(data);
         } else {
-            data.secGameState = data.previousSecGameState;
-            data.previousSecGameState = GameControlData.STATE2_TIMEOUT;
+            data.gamePhase = data.previousGamePhase;
+            data.previousGamePhase = GameControlData.GAME_PHASE_TIMEOUT;
             data.timeOutActive[side] = false;
             data.kickOffReason = AdvancedData.KICKOFF_TIMEOUT;
             Log.setNextMessage("End of Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
-            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
                 ActionBoard.ready.perform(data);
             }
         }
@@ -78,9 +78,9 @@ public class TimeOut extends GCAction
                   data.gameState == GameControlData.STATE_SET)
                 && !data.timeOutTaken[side]
                 && !data.timeOutActive[side == 0 ? 1 : 0]
-                && !(data.secGameState == GameControlData.STATE2_TIMEOUT)
+                && !(data.gamePhase == GameControlData.GAME_PHASE_TIMEOUT)
                 && !data.isFreeKick()
-                && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT
+                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
                     || data.gameState == GameControlData.STATE_INITIAL))
             || data.testmode;
     }
