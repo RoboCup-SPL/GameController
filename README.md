@@ -32,7 +32,7 @@ Building the source code requires the JDK 1.7 or newer.
 
 ### Executing the Jar
 
-Double-click GameController.jar or run 
+Double-click GameController.jar or run
 
 Usage: `java -jar GameController.jar {options}`
 
@@ -105,7 +105,7 @@ penalties, it continues to flash until the button is pressed. Only buttons of
 robots that were requested for pickup stop flashing after ten seconds and simply
 stay yellow until they are pressed, as a reminder that the robot can return as
 soon as it is ready. Robots with a "Motion in Set" penalty stay on the field and
-will be automatically unpenalized 15 seconds after pressing the button "Play". 
+will be automatically unpenalized 15 seconds after pressing the button "Play".
 
 Before unpenalizing a robot that was taken off the field, please make sure that
 it was put back on the field by the assistant referees. For that reason, robots
@@ -159,7 +159,7 @@ only SPL
     L    - leaving the field
     I    - fallen / inactive / local game stuck
     D    - illegal defender
-    G    - kickoff goal 
+    G    - kickoff goal
     O    - illegal ball contact
     U    - request for pickup
     S    - substitute
@@ -221,8 +221,8 @@ For more info see [TCM](TCM.md).
 
 ## 5. libgamectrl (SPL)
 
-libgamectrl automatically provides the GameController packets in ALMemory. 
-It also implements the return channel of the GameController. It handles the 
+libgamectrl automatically provides the GameController packets in ALMemory.
+It also implements the return channel of the GameController. It handles the
 buttons and LEDs according to the rules (with a few additions).
 
 
@@ -264,12 +264,12 @@ You can receive the current GameController packet with:
 
 ### Deviations from the Rules
 
-The first time the chest button is pressed it is ignored, because many teams 
+The first time the chest button is pressed it is ignored, because many teams
 will use it to let the robot get up.
 
-In the Initial state, it is also possible to switch between "normal", 
-"penalty taker" (green LED), and "penalty goalkeeper" (yellow LED) by pressing 
-the right foot bumper. The state is shown by the right foot LED, and only in 
+In the Initial state, it is also possible to switch between "normal",
+"penalty taker" (green LED), and "penalty goalkeeper" (yellow LED) by pressing
+the right foot bumper. The state is shown by the right foot LED, and only in
 the Initial state. An active GameController will overwrite these settings.
 
 

@@ -73,7 +73,7 @@ public class TeamInfo implements Serializable {
 
         return buffer.array();
     }
-    
+
     /**
      * Unpacking the C-structure to the Java class.
      *
@@ -90,31 +90,31 @@ public class TeamInfo implements Serializable {
             player[i].fromByteArray(buffer);
         }
     }
-    
+
     public String getTeamColorName() {
         switch (teamColor) {
-	        case GameControlData.TEAM_BLUE:
-	            return "blue";
-	        case GameControlData.TEAM_RED:
-	        	return "red";
-	        case GameControlData.TEAM_YELLOW:
-	        	return "yellow";
-	        case GameControlData.TEAM_BLACK:
-	        	return "black";
-	        case GameControlData.TEAM_WHITE:
-	        	return "white";
-	        case GameControlData.TEAM_GREEN:
-	        	return "green";
-	        case GameControlData.TEAM_ORANGE:
-	        	return "orange";
-	        case GameControlData.TEAM_PURPLE:
-	        	return "purple";
-	        case GameControlData.TEAM_BROWN:
-	        	return "brown";
-	        case GameControlData.TEAM_GRAY:
-	        	return "gray";
-	        default:
-	            return "undefinied(" + teamColor + ")";
+            case GameControlData.TEAM_BLUE:
+                return "blue";
+            case GameControlData.TEAM_RED:
+                return "red";
+            case GameControlData.TEAM_YELLOW:
+                return "yellow";
+            case GameControlData.TEAM_BLACK:
+                return "black";
+            case GameControlData.TEAM_WHITE:
+                return "white";
+            case GameControlData.TEAM_GREEN:
+                return "green";
+            case GameControlData.TEAM_ORANGE:
+                return "orange";
+            case GameControlData.TEAM_PURPLE:
+                return "purple";
+            case GameControlData.TEAM_BROWN:
+                return "brown";
+            case GameControlData.TEAM_GRAY:
+                return "gray";
+            default:
+                return "undefined(" + teamColor + ")";
         }
     }
 

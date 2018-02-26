@@ -11,19 +11,19 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that a global game stuck has occured.
  */
 public class GlobalStuck extends GCAction
 {
     /** On which side (0:left, 1:right) */
     private int side;
-    
-    
+
+
     /**
      * Creates a new GlobalStuck action.
      * Look at the ActionBoard before using this.
-     * 
+     *
      * @param side      On which side (0:left, 1:right)
      */
     public GlobalStuck(int side)
@@ -34,7 +34,7 @@ public class GlobalStuck extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -45,11 +45,11 @@ public class GlobalStuck extends GCAction
         Log.setNextMessage("Global Game Stuck, Kickoff "+Rules.league.teamColorName[data.team[data.kickingTeam == data.team[0].teamNumber ? 0 : 1].teamColor]);
         ActionBoard.ready.perform(data);
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

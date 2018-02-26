@@ -22,7 +22,7 @@ public class Clock
 
     /** The thread of this clock. */
     private Thread thread;
-    
+
     /**
      * Returns the instance of the singleton. If the Clock wasn't initialized once before, a new instance will
      * be created and returned (lazy instantiation)
@@ -45,7 +45,7 @@ public class Clock
         while (!thread.isInterrupted())
         {
             ActionBoard.clock.actionPerformed(null);
-            
+
             try {
                 Thread.sleep(HEARTBEAT);
             } catch (InterruptedException e) {

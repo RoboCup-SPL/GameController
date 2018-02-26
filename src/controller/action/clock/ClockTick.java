@@ -10,7 +10,7 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that some time has been passed.
  */
 public class ClockTick extends GCAction
@@ -26,7 +26,7 @@ public class ClockTick extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
 	@Override
@@ -53,7 +53,7 @@ public class ClockTick extends GCAction
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override
@@ -61,7 +61,7 @@ public class ClockTick extends GCAction
     {
         return true;
     }
-    
+
     public boolean isClockRunning(AdvancedData data)
     {
         boolean halfNotStarted = data.timeBeforeCurrentGameState == 0 && data.gameState != GameControlData.STATE_PLAYING;

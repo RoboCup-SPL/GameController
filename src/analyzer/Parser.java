@@ -13,7 +13,7 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This class contains all methods meant to parse logs.
  */
 public class Parser
@@ -25,7 +25,7 @@ public class Parser
     private static final String OUT_SEP = ",";
     /* The output´s date format (date-time) */
     public static final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-    
+
     /* All the actions that would cause the teams to change colors */
     private static final String[] colorChangeActions = {
         "1st Half",
@@ -33,7 +33,7 @@ public class Parser
         "2nd Half",
         "2nd Half Extra Time"
     };
-    
+
     /*
      * All the actions to extract from the logs into statistics.
      * If there are actions which are not prefix-free, the longer
@@ -74,13 +74,13 @@ public class Parser
         "Ready",
         "Set",
     };
-    
-    
+
+
      /**
      * Parsing a log to get some information and place the undone-prefix,
      * so this is needed before parsing for statistics. The information
      * will be written into the LogInfo instance.
-     * 
+     *
      * @param log   The log to parse.
      */
     public static void info(LogInfo log)
@@ -121,8 +121,8 @@ public class Parser
                 } else {
                     int undos = Integer.valueOf(splitted[1]);
                     for (int j=0; j<undos; j++) {
-                        if (log.lines.get(i-2-j).endsWith("Ready") 
-                                && i-2-j > 0 
+                        if (log.lines.get(i-2-j).endsWith("Ready")
+                                && i-2-j > 0
                                 && (log.lines.get(i-2-j-1).contains("Goal for")
                                         || log.lines.get(i-2-j-1).contains("Global Game Stuck"))) {
                             ++undos;
@@ -156,11 +156,11 @@ public class Parser
             log.duration = (int)((endTime.getTime()-kickoffTime.getTime())/1000);
         }
     }
-    
+
     /**
      * Parsing a log to write all statistics from it into a file. The file
      * is set in the main class.
-     * 
+     *
      * @param log   The log to parse.
      */
     public static void statistic(LogInfo log)
@@ -192,9 +192,9 @@ public class Parser
                 return;
             }
             raw = line.substring(divPos);
-            
+
             time = timeFormat.format(rawTime);
-            
+
             if (!log.keepColors) {
                 for (String ca : colorChangeActions) {
                     if (raw.startsWith(ca)) {
@@ -205,7 +205,7 @@ public class Parser
                     }
                 }
             }
-            
+
             boolean actionMatch = false;
             for (String a : actions) {
                 if (raw.startsWith(a)) {
@@ -217,7 +217,7 @@ public class Parser
             if (!actionMatch) {
                 continue;
             }
-            
+
             if (raw.contains(log.color[0])) {
                 team = teams[0];
             } else if (raw.contains(log.color[1])) {
@@ -225,7 +225,7 @@ public class Parser
             } else {
                 team = "";
             }
-            
+
             player = "";
             String pattern = "("+log.color[0]+"|"+log.color[1]+")\\s*(\\d+)\\s*$";
             Matcher matcher = Pattern.compile(pattern).matcher(raw);

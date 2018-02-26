@@ -34,7 +34,7 @@ import javax.swing.event.ListSelectionListener;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This window is shown to select log-files for analyzing.
  */
 public class GUI extends JFrame implements ListSelectionListener
@@ -55,7 +55,7 @@ public class GUI extends JFrame implements ListSelectionListener
     public final static String HTML_LF = "<br>";
     public final static String HTML_RED = "<font color='red'>";
     public final static String HTML_END = "</font>";
-    
+
     /* This gui´s components. */
     private DefaultListModel<CheckListItem> list;
     private JList<CheckListItem> listDisplay;
@@ -78,7 +78,7 @@ public class GUI extends JFrame implements ListSelectionListener
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
-        
+
         list = new DefaultListModel<CheckListItem>();
         listDisplay = new JList<CheckListItem>(list);
         listDisplay.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -132,13 +132,13 @@ public class GUI extends JFrame implements ListSelectionListener
         layout.add(.52, .03, .45, .8, info);
         layout.add(.52, .87, .175, .1, clean);
         layout.add(.735, .87, .235, .1, analyze);
-        
+
         updateList();
         selection.addListSelectionListener(this);
-        
+
         setVisible(true);
     }
-    
+
     /**
      * Updates the list of logs, should be used after loading logs.
      */
@@ -150,7 +150,7 @@ public class GUI extends JFrame implements ListSelectionListener
             list.addElement(new CheckListItem(log+"", log.isRealLog()));
         }
     }
-    
+
     /**
      * Moves all logs which are not seleted (unchecked) in the list to
      * another directory.
@@ -170,7 +170,7 @@ public class GUI extends JFrame implements ListSelectionListener
         LogAnalyzer.load();
         updateList();
     }
-    
+
     /**
      * Analyze all logs which are selected (checked) in the list to create
      * the statistic output file.
@@ -215,7 +215,7 @@ public class GUI extends JFrame implements ListSelectionListener
             info.setText("");
         }
     }
-    
+
     /**
      * Instances of this class represent a line in the list of logs with a
      * checkbox to select them.
@@ -226,10 +226,10 @@ public class GUI extends JFrame implements ListSelectionListener
         public boolean selected;
         /* String shown to represent the log */
         public String label;
-        
+
         /**
         * Creates a new CheckListItem.
-        * 
+        *
         * @param label  A String representing the log behind this item.
         * @param selected   If true, this item will be selected (checkbox
         *                   true) from the beginning.
@@ -240,7 +240,7 @@ public class GUI extends JFrame implements ListSelectionListener
             this.selected = selected;
         }
     }
-    
+
     /**
      * This class is used to render a list item with checkbox.
      */

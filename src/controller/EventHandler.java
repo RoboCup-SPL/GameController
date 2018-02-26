@@ -10,19 +10,19 @@ import java.awt.EventQueue;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * If the actionPerformed method of an action is called, it executes the register
  * method of this class. Later the action`s perform method will be called
  * in the GUI`s thread. This is to avoid resource conflicts caused by multiple
  * threads without massive use of synchronized get- and set-methods.
- * 
+ *
  * This class is a singleton!
  */
 public class EventHandler
 {
     /** The instance of the singleton. */
     private static EventHandler instance;
-    
+
     /** This GUI`s update method will be called. */
     private GCGUI gui;
     /** The sender has a send method to update the data to send */
@@ -47,10 +47,10 @@ public class EventHandler
      * Creates a new EventHandler.
      */
     private EventHandler() {}
-    
+
     /**
      * To get the singleton instance for public attribute access.
-     * 
+     *
      * @return The singleton`s instance.
      */
     public synchronized static EventHandler getInstance()
@@ -60,22 +60,22 @@ public class EventHandler
         }
         return instance;
     }
-    
+
     /**
      * Sets the GUI.
-     * 
+     *
      * @param gui   The GUI to be updated when the  changes.
      */
     public void setGUI(GCGUI gui)
     {
         this.gui = gui;
     }
-    
+
     /**
      * Very important method called automatically by every action in it`s
      * actionPerformed method to later call it`s perform method in the
      * GUI-Thread.
-     * 
+     *
      * @param event     The action calling.
      */
     public void register(final GCAction event)
@@ -100,11 +100,11 @@ public class EventHandler
             });
         }
     }
-    
+
     /**
      * After the perform method this updates some attributes, calls the GUI`s
      * update method and changes the data to be send.
-     * 
+     *
      * @param event     The action that has been called.
      */
     private void update(GCAction event)

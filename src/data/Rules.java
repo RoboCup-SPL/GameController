@@ -5,11 +5,11 @@ import java.awt.Color;
 
 /**
  * This class holds attributes defining rules.
- * 
+ *
  * @author Michel Bartsch
  */
 public abstract class Rules
-{   
+{
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
@@ -19,7 +19,7 @@ public abstract class Rules
         new HLTeen(),
         new HLAdult()
     };
-    
+
     /**
      * Returns the Rules object for the given class.
      */
@@ -31,7 +31,7 @@ public abstract class Rules
         }
         return null;
     }
-    
+
     /** The rules of the league playing. */
     public static Rules league = LEAGUES[0];
     /** The league´s name this rules are for. */
@@ -87,7 +87,7 @@ public abstract class Rules
     /** Time in seconds for each kind of penalty. */
     public int[] penaltyTime;
     /** Time in seconds to increment penalties. */
-    public int penaltyIncreaseTime; 
+    public int penaltyIncreaseTime;
     /** Whether the penalty count is reset on halftime */
     public boolean resetPenaltyCountOnHalftime;
     /** Whether penalties can be removed before the penalty time has passed. */
@@ -100,7 +100,7 @@ public abstract class Rules
     public int timeOutTime;
     /** Time in seconds of a referee timeout. */
     public int refereeTimeout;
-    /** Defines if the option for a referee timeout is available. */ 
+    /** Defines if the option for a referee timeout is available. */
     public boolean isRefereeTimeoutAvailable;
     /** One time-out per half? */
     public boolean timeOutPerHalf;

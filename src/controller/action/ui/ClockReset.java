@@ -8,7 +8,7 @@ import data.AdvancedData;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the clock is to be resetted.
  */
 public class ClockReset extends GCAction
@@ -24,7 +24,7 @@ public class ClockReset extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -36,11 +36,11 @@ public class ClockReset extends GCAction
         data.manRemainingGameTimeOffset = 0;
         Log.state(data, "Time reset");
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

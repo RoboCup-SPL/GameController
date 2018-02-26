@@ -48,7 +48,7 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This class actually holds static every instance of an action to get these
  * actions where ever you want to execute or identify them.
  * It may be usefull to have instances of actions that are not listed here,
@@ -110,8 +110,8 @@ public class ActionBoard
 
     public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
-    
-    
+
+
     /**
      * This must be called before using actions from this class. It creates
      * all the actions instances.
@@ -119,7 +119,7 @@ public class ActionBoard
     public static void init()
     {
         clock = new ClockTick();
-        
+
         quit = new Quit();
         testmode = new Testmode();
         undo = new Undo[MAX_NUM_UNDOS_AT_ONCE];
@@ -127,9 +127,9 @@ public class ActionBoard
             undo[i] = new Undo(i);
         }
         cancelUndo = new CancelUndo();
-        
+
         robot = new Robot[2][Rules.league.teamSize];
-        
+
         for (int i=0; i<2; i++) {
             goalDec[i] = new Goal(i, -1);
             goalInc[i] = new Goal(i, 1);
@@ -175,7 +175,7 @@ public class ActionBoard
         serviceHL = new ServiceHL();
         substitute = new Substitute();
         dropBall = new DropBall();
-        
+
         for (int i=0; i<2; i++) {
             for (int j=0; j<Rules.league.teamSize; j++) {
                 manualPen[i][j] = new Manual(i, j, false);

@@ -80,7 +80,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * TimeOut counters for each team, 0:left side, 1:right side.
      */
     public boolean[] timeOutTaken = {false, false};
-    
+
     /**
      * If true, left side has the kickoff.
      */

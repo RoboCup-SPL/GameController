@@ -11,7 +11,7 @@ import javax.swing.JComponent;
 /**
  *
  * @author Michel Bartsch
- * 
+ *
  * This LayoutManager places components without any dependencies between each
  * other. Scaling the layouted container will make every component scaled
  * proportional.
@@ -26,13 +26,13 @@ public class TotalScaleLayout implements LayoutManager
     Dimension minimumSize;
     /** List of all components to layout on the container */
     LinkedList<TotalScaleComponent> comps = new LinkedList<TotalScaleComponent>();
-    
-    
+
+
     /**
      * Creates a new TotalScaleLayout.
-     * 
+     *
      * @param parent     The container to layout.
-     * 
+     *
      */
     public TotalScaleLayout(Container parent)
     {
@@ -40,25 +40,25 @@ public class TotalScaleLayout implements LayoutManager
         preferredSize = parent.getPreferredSize();
         minimumSize = parent.getMinimumSize();
     }
-    
-    
+
+
     /**
      * This will add a Component to the container to be layout. Use this instead
      * of the add-method of the container itself.
-     * 
+     *
      * @param x        Left-edge position on the container between 0 and 1.
      * @param y        Top-edge position on the container between 0 and 1.
      * @param width    Width on the container between 0 and 1.
      * @param height   Height on the container between 0 and 1.
      * @param comp     Component to be added.
-     * 
+     *
      */
     public void add(double x, double y, double width, double height, JComponent comp)
     {
         parent.add(comp);
         comps.add(new TotalScaleComponent(x, y, width, height, comp));
     }
-    
+
     /**
      * Not supported because of own add-method.
      */
@@ -67,7 +67,7 @@ public class TotalScaleLayout implements LayoutManager
 
     /**
      * Gets called to remove Component.
-     * 
+     *
      * @param comp      Component to remove.
      */
     @Override
@@ -85,9 +85,9 @@ public class TotalScaleLayout implements LayoutManager
      * Because all of the Components`s sizes are adapted to the containers size
      * this will allways return the size of the container when the layout was
      * created.
-     * 
+     *
      * @param parent      Container this layout belongs to.
-     * 
+     *
      * @return            This layouts preferred size.
      */
     @Override
@@ -100,9 +100,9 @@ public class TotalScaleLayout implements LayoutManager
      * Because all of the Components`s sizes are adapted to the containers size
      * this will allways return the size of the container when the layout was
      * created.
-     * 
+     *
      * @param parent      Container this layout belongs to.
-     * 
+     *
      * @return            This layouts minimum size.
      */
     @Override
@@ -114,7 +114,7 @@ public class TotalScaleLayout implements LayoutManager
     /**
      * This gets called automatically to adapt position and size of all
      * components.
-     * 
+     *
      * @param parent      Container to layout.
      */
     @Override
@@ -129,7 +129,7 @@ public class TotalScaleLayout implements LayoutManager
                     (int)(comp.height*parentBounds.height));
         }
     }
-    
+
     /**
     * This class simply wraps some attributes like a struct.
     */
@@ -145,16 +145,16 @@ public class TotalScaleLayout implements LayoutManager
         double height;
         /* Component to be layouted on the container. */
         Component comp;
-        
+
         /**
         * Creates a new TotalScaleComponent.
-        * 
+        *
         * @param x        Left-edge position on the container between 0 and 1.
         * @param y        Top-edge position on the container between 0 and 1.
         * @param width    Width on the container between 0 and 1.
         * @param height   Height on the container between 0 and 1.
         * @param comp     Component to be layouted on the container.
-        * 
+        *
         */
         TotalScaleComponent(double x, double y, double width, double height, Component comp)
         {

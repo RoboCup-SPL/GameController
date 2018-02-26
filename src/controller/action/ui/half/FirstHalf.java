@@ -10,7 +10,7 @@ import data.TeamInfo;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the half is to be set to the first half.
  */
 public class FirstHalf extends GCAction
@@ -26,7 +26,7 @@ public class FirstHalf extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override

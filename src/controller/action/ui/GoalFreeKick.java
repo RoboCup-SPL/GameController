@@ -10,18 +10,18 @@ import data.Rules;
 
 /**
  * @author Mario Grobler
- * 
+ *
  * This action means that a team gets a goal free kick
  */
 public class GoalFreeKick extends GCAction
 {
     /** On which side (0:left, 1:right) */
-    private int side;    
-    
+    private int side;
+
     /**
      * Creates a new Out action.
      * Look at the ActionBoard before using this.
-     * 
+     *
      * @param side      On which side (0:left, 1:right)
      */
     public GoalFreeKick(int side) {
@@ -31,7 +31,7 @@ public class GoalFreeKick extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -43,7 +43,7 @@ public class GoalFreeKick extends GCAction
     	data.kickingTeam = data.team[side].teamNumber;
         Log.state(data, "Goal Free Kick for "+Rules.league.teamColorName[data.team[side].teamColor]);
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.

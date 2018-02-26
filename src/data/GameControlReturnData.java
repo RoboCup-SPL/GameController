@@ -8,7 +8,7 @@ import java.nio.ByteOrder;
  * This class is what robots send to the GameCOntroller.
  * It just represents this data, reads and writes between C-structure and
  * Java, nothing more.
- * 
+ *
  * @author Michel Bartsch
  */
 public class GameControlReturnData
@@ -23,8 +23,8 @@ public class GameControlReturnData
     public static final byte GAMECONTROLLER_RETURN_MSG_MAN_PENALISE = 0;
     public static final byte GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE = 1;
     public static final byte GAMECONTROLLER_RETURN_MSG_ALIVE = 2;
-    
-    
+
+
     /** The size in bytes this class has packed. */
     public static final int SIZE =
             4 + // header
@@ -47,8 +47,8 @@ public class GameControlReturnData
     public byte team;      // unique team number
     public byte player;    // player number
     public byte message;     // what the player says
-    
-    
+
+
     /**
      * Packing this Java class to the C-structure to be send.
      * @return Byte array representing the C-structure.
