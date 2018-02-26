@@ -79,7 +79,6 @@ public class TimeOut extends GCAction
                 && !data.timeOutTaken[side]
                 && !data.timeOutActive[side == 0 ? 1 : 0]
                 && !(data.gamePhase == GameControlData.GAME_PHASE_TIMEOUT)
-                && !data.isFreeKick()
                 && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
                     || data.gameState == GameControlData.STATE_INITIAL))
             || data.testmode;

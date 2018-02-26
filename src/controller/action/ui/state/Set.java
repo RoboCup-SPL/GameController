@@ -76,7 +76,6 @@ public class Set extends GCAction {
             }
         	
         }
-        data.previousGameState = data.gameState;
         data.gameState = GameControlData.STATE_SET;
         Log.state(data, "Set");
     }

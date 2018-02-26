@@ -27,26 +27,25 @@ public class Play extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
     public void perform(AdvancedData data) {
         if (data.gameState == GameControlData.STATE_PLAYING) {
+            if (data.setPlay != GameControlData.SET_PLAY_NONE) {
+                data.setPlay = GameControlData.SET_PLAY_NONE;
+                Log.state(data, "Set Play Complete");
+            }
             return;
         }
         if (data.competitionPhase != GameControlData.COMPETITION_PHASE_PLAYOFF && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = data.getTime();
-        data.previousGameState = data.gameState;
         data.gameState = GameControlData.STATE_PLAYING;
 
-        if(data.wasFreeKick()) {
-        	Log.state(data, "Free Kick Complete");
-        } else {
-        	Log.state(data, "Playing");
-        }
+        Log.state(data, "Playing");
     }
     
     /**
@@ -56,13 +55,12 @@ public class Play extends GCAction
      * @param data      The current data to check with.
      */
     @Override
-	public boolean isLegal(AdvancedData data) {
-		return (data.isFreeKick())
-				|| (data.gameState == GameControlData.STATE_SET
-						&& (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT || bothTeamsHavePlayers(data)))
-				|| (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
-	}
-    
+    public boolean isLegal(AdvancedData data) {
+        return (data.gameState == GameControlData.STATE_SET
+                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT || bothTeamsHavePlayers(data)))
+                || (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
+    }
+
     /**
      * Checks whether both teams have at least one player that is not penalized.
      * This is a precondition for a penalty shot.

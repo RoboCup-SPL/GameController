@@ -12,7 +12,7 @@ import controller.action.ui.GoalFreeKick;
 import controller.action.ui.IncGameClock;
 import controller.action.ui.KickOff;
 import controller.action.ui.Out;
-import controller.action.ui.PenaltyFreeKick;
+import controller.action.ui.PushingFreeKick;
 import controller.action.ui.Quit;
 import controller.action.ui.RefereeTimeout;
 import controller.action.ui.Robot;
@@ -56,25 +56,25 @@ import data.Rules;
  * Because of multi-thredding you should not take actions from here to write
  * into their attributes. However, you should allways avoid writing in
  * action`s attributes except in their constructor.
- * 
+ *
  * You can read a detailed description of each action in it`s class.
  */
 public class ActionBoard
-{   
+{
     public static ClockTick clock;
-    
+
     public static Quit quit;
     public static Testmode testmode;
     public static Undo[] undo;
     public static CancelUndo cancelUndo;
     public static final int MAX_NUM_UNDOS_AT_ONCE = 8;
-    
+
     public static Goal[] goalDec = new Goal[2];
     public static Goal[] goalInc = new Goal[2];
     public static KickOff[] kickOff = new KickOff[2];
     public static Robot[][] robot;
     public static GoalFreeKick[] goalFreeKick = new GoalFreeKick[2];
-    public static PenaltyFreeKick[] penaltyFreeKick = new PenaltyFreeKick[2];
+    public static PushingFreeKick[] pushingFreeKick = new PushingFreeKick[2];
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static Out[] out = new Out[2];
@@ -141,9 +141,9 @@ public class ActionBoard
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
             goalFreeKick[i] = new GoalFreeKick(i);
-            penaltyFreeKick[i] = new PenaltyFreeKick(i);
+            pushingFreeKick[i] = new PushingFreeKick(i);
         }
-        
+
         clockReset = new ClockReset();
         clockPause = new ClockPause();
         incGameClock = new IncGameClock();

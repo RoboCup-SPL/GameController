@@ -38,12 +38,8 @@ public class Finish extends GCAction
         if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
-        if(data.isFreeKick()) {
-            data.previousGameState = data.gameState;
-        }
         data.addTimeInCurrentState();
         data.whenCurrentGameStateBegan = data.getTime();
-        data.previousGameState = data.gameState;
         data.gameState = GameControlData.STATE_FINISHED;
         Log.state(data, "Finished");
     }

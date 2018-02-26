@@ -41,8 +41,8 @@ public class Defender extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-		return (data.gameState == GameControlData.STATE_PLAYING)
-				|| data.isFreeKick()
-				|| data.testmode;
+        return (data.gameState == GameControlData.STATE_READY)
+            || (data.gameState == GameControlData.STATE_PLAYING)
+            || data.testmode;
     }
 }

@@ -133,7 +133,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String STUCK = "Global Game Stuck";
     private static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
     private static final String GOAL_FREE_KICK = "Goal Free Kick";
-    private static final String PENALTY_FREE_KICK = "Penalty Free Kick";
+    private static final String PUSHING_FREE_KICK = "Pushing Free Kick";
     private static final String OUT = "Out";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
@@ -216,7 +216,7 @@ public class GUI extends JFrame implements GCGUI
     private JProgressBar[][] robotTime;
     private JToggleButton refereeTimeout;
     private JToggleButton[] goalFreeKick;
-    private JToggleButton[] penaltyFreeKick;
+    private JToggleButton[] pushingFreeKick;
     private JToggleButton[] timeOut;
     private JButton[] stuck;
     private JButton[] out;
@@ -367,12 +367,12 @@ public class GUI extends JFrame implements GCGUI
         out = new JButton[2];        
         if (Rules.league instanceof SPL) {
         	goalFreeKick = new JToggleButton[2];
-            penaltyFreeKick = new JToggleButton[2];
+            pushingFreeKick = new JToggleButton[2];
             for (int i=0; i<2; i++) {                
                 goalFreeKick[i] = new ToggleButton(GOAL_FREE_KICK);
-                penaltyFreeKick[i] = new ToggleButton(PENALTY_FREE_KICK);
+                pushingFreeKick[i] = new ToggleButton(PUSHING_FREE_KICK);
                 stateGroup.add(goalFreeKick[i]);
-                stateGroup.add(penaltyFreeKick[i]);
+                stateGroup.add(pushingFreeKick[i]);
                 out[i] = new JButton(OUT);
             }
         } else {
@@ -508,8 +508,8 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.91, .13, .08, .065, stuck[1]);
             layout.add(.01, .77, .09, .09, goalFreeKick[0]);
             layout.add(.9, .77, .09, .09, goalFreeKick[1]);
-            layout.add(.105, .77, .09, .09, penaltyFreeKick[0]);
-            layout.add(.805, .77, .09, .09, penaltyFreeKick[1]);
+            layout.add(.105, .77, .09, .09, pushingFreeKick[0]);
+            layout.add(.805, .77, .09, .09, pushingFreeKick[1]);
             layout.add(.20, .77, .09, .09, out[0]);
             layout.add(.71, .77, .09, .09, out[1]);
             layout.add(.1, .05, .08, .065, goalInc[0]);
@@ -609,7 +609,7 @@ public class GUI extends JFrame implements GCGUI
             if (Rules.league instanceof SPL) {
                 stuck[i].addActionListener(ActionBoard.stuck[i]);
                 goalFreeKick[i].addActionListener(ActionBoard.goalFreeKick[i]);
-                penaltyFreeKick[i].addActionListener(ActionBoard.penaltyFreeKick[i]);
+                pushingFreeKick[i].addActionListener(ActionBoard.pushingFreeKick[i]);
             }
         }
         refereeTimeout.addActionListener(ActionBoard.refereeTimeout);
@@ -1144,11 +1144,11 @@ public class GUI extends JFrame implements GCGUI
     private void updateFreeKick(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-        	goalFreeKick[i].setSelected(data.gameState == GameControlData.STATE_GOAL_FREE_KICK && data.kickingTeam == i);
+            goalFreeKick[i].setSelected(data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK && data.kickingTeam == data.team[i].teamNumber);
             goalFreeKick[i].setEnabled(ActionBoard.goalFreeKick[i].isLegal(data));
-            
-            penaltyFreeKick[i].setSelected(data.gameState == GameControlData.STATE_PENALTY_FREE_KICK && data.kickingTeam == i);
-            penaltyFreeKick[i].setEnabled(ActionBoard.penaltyFreeKick[i].isLegal(data));            
+
+            pushingFreeKick[i].setSelected(data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK && data.kickingTeam == data.team[i].teamNumber);
+            pushingFreeKick[i].setEnabled(ActionBoard.pushingFreeKick[i].isLegal(data));
         }
     }
 
@@ -1284,9 +1284,9 @@ public class GUI extends JFrame implements GCGUI
             timeOut[i].setFont(standardFont);
             out[i].setFont(standardFont);
             if (Rules.league instanceof SPL) {
-            	stuck[i].setFont(timeoutFont);
+                stuck[i].setFont(timeoutFont);
                 goalFreeKick[i].setFont(standardFont);
-                penaltyFreeKick[i].setFont(standardFont);
+                pushingFreeKick[i].setFont(standardFont);
             }
         }
         clock.setFont(timeFont);

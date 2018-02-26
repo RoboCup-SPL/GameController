@@ -40,6 +40,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public long whenCurrentGameStateBegan;
 
     /**
+     * When was the current set play activated? (ms)
+     */
+    public long whenCurrentSetPlayBegan;
+
+    /**
      * How long ago started the current game state? (ms) Only set when written
      * to log!
      */
@@ -120,11 +125,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * Time offset resulting from starting the clock when it should be stopped.
      */
     public long manRemainingGameTimeOffset;
-    
-    /**
-     * Used to backup the gamestate to ensure that the GameController does not run crazy on free kick - playing changes
-     */
-    public byte previousGameState;
 
     /**
      * Used to backup the game phase during a timeout.
@@ -284,7 +284,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
                         && (competitionPhase == COMPETITION_PHASE_PLAYOFF && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0))
                 || gameState == STATE_FINISHED
                         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                        : real || (competitionPhase != COMPETITION_PHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || gamePhase != GAME_PHASE_NORMAL || gameState != STATE_PLAYING || !isFreeKick()
+                        : real || (competitionPhase != COMPETITION_PHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || gamePhase != GAME_PHASE_NORMAL || gameState != STATE_PLAYING
                         || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying
                         ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
                         : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
@@ -408,17 +408,16 @@ public class AdvancedData extends GameControlData implements Cloneable {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
         } else if (gameState == STATE_READY) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
-        } else if (gameState == STATE_READY) {
-            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.freeKickTime);
         } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
-                && timeKickOffBlocked >= -timeKickOffBlockedOvertime && !wasFreeKick()) {
+                && timeKickOffBlocked >= -timeKickOffBlockedOvertime) {
             if (timeKickOffBlocked > 0) {
                 return timeKickOffBlocked;
             } else {
                 return null;
             }
-        } else if (isFreeKick()) {
-        	return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.freeKickTime);
+        } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
+                && (setPlay == SET_PLAY_GOAL_FREE_KICK || setPlay == SET_PLAY_PUSHING_FREE_KICK)) {
+            return getRemainingSeconds(whenCurrentSetPlayBegan, Rules.league.freeKickTime);
         } else {
             return getRemainingPauseTime();
         }
@@ -455,19 +454,5 @@ public class AdvancedData extends GameControlData implements Cloneable {
 
     public void addToPenaltyQueue(int side, long whenPenalized, byte penalty, int penaltyCount) {
         penaltyQueueForSubPlayers.get(side).add(new PenaltyQueueData(whenPenalized, penalty, penaltyCount));
-    }
-    
-    /**
-     * @return <code> return gameState == STATE_GOAL_FREE_KICK || gameState == STATE_PENALTY_FREE_KICK; </code>
-     */
-    public boolean isFreeKick() {
-        return gameState == STATE_GOAL_FREE_KICK || gameState == STATE_PENALTY_FREE_KICK;
-    }
-    
-    /**
-     * return previousGameState == STATE_GOAL_FREE_KICK || previousGameState == STATE_PENALTY_FREE_KICK;
-     */
-    public boolean wasFreeKick() {
-        return previousGameState == STATE_GOAL_FREE_KICK || previousGameState == STATE_PENALTY_FREE_KICK;
     }
 }

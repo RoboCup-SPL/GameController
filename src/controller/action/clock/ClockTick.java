@@ -29,27 +29,29 @@ public class ClockTick extends GCAction
      *
      * @param data      The current data to work on.
      */
-	@Override
-	public void perform(AdvancedData data) {
-		if (data.gameState == GameControlData.STATE_READY
-				&& ((data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime))) {
-			ActionBoard.set.perform(data);
-		} else if (data.gameState == GameControlData.STATE_FINISHED) {
-			Integer remainingPauseTime = data.getRemainingPauseTime();
-			if (remainingPauseTime != null) {
-				if (data.firstHalf == GameControlData.C_TRUE && remainingPauseTime <= Rules.league.pauseTime / 2) {
-					ActionBoard.secondHalf.perform(data);
-				} else if (data.firstHalf != GameControlData.C_TRUE
-						&& remainingPauseTime <= Rules.league.pausePenaltyShootOutTime / 2) {
-					ActionBoard.penaltyShoot.perform(data);
-				}
-			}
-		} else if(data.isFreeKick() && data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.freeKickTime) {
-			ActionBoard.play.perform(data);
-		}
-		data.updatePenalties();
-	}
-    
+    @Override
+    public void perform(AdvancedData data) {
+        if (data.gameState == GameControlData.STATE_READY
+                && (data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime)) {
+            ActionBoard.set.perform(data);
+        } else if (data.gameState == GameControlData.STATE_PLAYING
+                && (data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK || data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK)
+                && (data.getSecondsSince(data.whenCurrentSetPlayBegan) >= Rules.league.freeKickTime)) {
+            ActionBoard.play.perform(data);
+        } else if (data.gameState == GameControlData.STATE_FINISHED) {
+            Integer remainingPauseTime = data.getRemainingPauseTime();
+            if (remainingPauseTime != null) {
+                if (data.firstHalf == GameControlData.C_TRUE && remainingPauseTime <= Rules.league.pauseTime / 2) {
+                    ActionBoard.secondHalf.perform(data);
+                } else if (data.firstHalf != GameControlData.C_TRUE
+                        && remainingPauseTime <= Rules.league.pausePenaltyShootOutTime / 2) {
+                    ActionBoard.penaltyShoot.perform(data);
+                }
+            }
+        }
+        data.updatePenalties();
+    }
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.

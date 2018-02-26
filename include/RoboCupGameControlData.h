@@ -44,6 +44,10 @@
 #define STATE_PLAYING                       3
 #define STATE_FINISHED                      4
 
+#define SET_PLAY_NONE                       0
+#define SET_PLAY_GOAL_FREE_KICK             1
+#define SET_PLAY_PUSHING_FREE_KICK          2
+
 #define PENALTY_NONE                        0
 // SPL
 #define PENALTY_SPL_ILLEGAL_BALL_CONTACT    1 // ball holding / playing with hands
@@ -100,6 +104,7 @@ struct RoboCupGameControlData
   uint8_t competitionType;      // type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM, COMPETITION_TYPE_GENERAL_PENALTY_KICK)
   uint8_t gamePhase;            // phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
   uint8_t state;                // state of the game (STATE_READY, STATE_PLAYING, etc)
+  uint8_t setPlay;              // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_FREE_KICK, etc)
   uint8_t firstHalf;            // 1 = game in first half, 0 otherwise
   uint8_t kickingTeam;          // the team number of the next team to kick off, free kick, DROPBALL etc.
   uint8_t dropInTeam;           // number of team that caused last drop in

@@ -38,7 +38,6 @@ public class Initial extends GCAction
             data.resetPenaltyTimes();
         }
         data.whenCurrentGameStateBegan = data.getTime();
-        data.previousGameState = data.gameState;
         data.gameState = GameControlData.STATE_INITIAL;
         Log.state(data, "Initial");
     }

@@ -117,8 +117,9 @@ that is replaced is already penalized, its substitute inherits the penalty. If
 it is not, the substitute can immediately enter the field in the HL, but gets a
 "request for pickup" penalty before it can enter the field in the SPL.
 
-When pressing the big "+" (goal), "Timeout", "Global Game Stuck", "Goal Free Kick", or "Penalty Free Kick", the other
-team gets the next kick-off.
+When pressing the big "+" (goal), "Timeout", or "Global Game Stuck", the other
+team gets the next kick-off. When pressing "Goal Free Kick" or "Penalty Free Kick",
+the same team gets the next kick-off.
 
 SPL: When the referee decides that too much game time has been lost, use the
 thin "+" next to the clock to increase the game time in one-minute steps. This
@@ -281,13 +282,18 @@ GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
 is defined in the file RoboCupGameControlData.h. It differs from the version used
 in 2017 in the following ways:
 
-- Coach messages were deleted
-- `gameType` has been split into two 4-bit fields, i.e.
+- Coach fields have been deleted.
+- `teamColor` replaces `teamColour`.
+- `gameType` has been split into two fields, i.e.
   ```
-  uint8_t competitionPhase : 4;
-  uint8_t competitionType : 4;
+  uint8_t competitionPhase;
+  uint8_t competitionType;
   ```
-- `teamColour` → `teamColor`  
+  and appropriate macros have been defined.
+- `gamePhase` replaces `secondaryState`.
+- `setPlay` has been added to indicate the currently active set play and appropriate macros
+  have been defined.
+- `kickingTeam` replaces `kickOffTeam` since it is also used in set plays.
 
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour
