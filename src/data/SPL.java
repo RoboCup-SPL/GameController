@@ -59,7 +59,7 @@ public class SPL extends Rules
         suddenDeath = true;
         /** Time in seconds one penalty shoot is long in sudden-death. */
         penaltyShotTimeSuddenDeath = 30;
-        /** Number of penalty-shoots for each team. */
+        /** Number of penalty-shots for each team. */
         numberOfPenaltyShots = 3;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
         penaltyTime = new int[] {-1, 45, 45, 0, 45, 45, 45, 45, 45, 2 * halfTime};
