@@ -59,10 +59,8 @@ public class HL extends Rules
         suddenDeath = false;
         /** Time in seconds one penalty shoot is long in sudden-death. */
         penaltyShotTimeSuddenDeath = 2*60; // does not matter
-        /** Number of penalty-shoots for each team when a half has 10minutes. */
-        numberOfPenaltyShotsShort = 5;
-        /** Number of penalty-shoots for each team after full 10minutes playing. */
-        numberOfPenaltyShotsLong = 5;
+        /** Number of penalty-shoots for each team. */
+        numberOfPenaltyShots = 5;
         /** Time in seconds for each kind of penalty. */
         penaltyTime = new int[] {-1, 30, 30, 30, 30, 30, 60};
         /** Time in seconds to increment penalties. */

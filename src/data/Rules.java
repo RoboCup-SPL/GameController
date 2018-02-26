@@ -82,10 +82,8 @@ public abstract class Rules
     public boolean suddenDeath;
     /** Time in seconds one penalty shoot is long in sudden-death. */
     public int penaltyShotTimeSuddenDeath;
-    /** Number of penalty-shots for each team when a half has 10minutes. */
-    public int numberOfPenaltyShotsShort;
-    /** Number of penalty-shots for each team after full 10minutes playing. */
-    public int numberOfPenaltyShotsLong;
+    /** Number of penalty-shots for each team. */
+    public int numberOfPenaltyShots;
     /** Time in seconds for each kind of penalty. */
     public int[] penaltyTime;
     /** Time in seconds to increment penalties. */
