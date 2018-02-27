@@ -371,8 +371,6 @@ public class GUI extends JFrame implements GCGUI
             for (int i=0; i<2; i++) {                
                 goalFreeKick[i] = new ToggleButton(GOAL_FREE_KICK);
                 pushingFreeKick[i] = new ToggleButton(PUSHING_FREE_KICK);
-                stateGroup.add(goalFreeKick[i]);
-                stateGroup.add(pushingFreeKick[i]);
                 out[i] = new JButton(OUT);
             }
         } else {

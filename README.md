@@ -17,7 +17,7 @@ The sources mentioned in some sections of this document are available at
 ### Acknowledgement
 
 The development was partially supported by the RoboCup Federation within the
-calls for Support for Projects for League Developments for 2013, 2015, and 2017.
+calls for Support for Projects for League Developments for 2013, 2015, 2017, and 2018.
 
 
 ## 1. Building from Source
@@ -118,7 +118,7 @@ it is not, the substitute can immediately enter the field in the HL, but gets a
 "request for pickup" penalty before it can enter the field in the SPL.
 
 When pressing the big "+" (goal), "Timeout", or "Global Game Stuck", the other
-team gets the next kick-off. When pressing "Goal Free Kick" or "Penalty Free Kick",
+team gets the next kick-off. When pressing "Goal Free Kick" or "Pushing Free Kick",
 the same team gets the next kick-off.
 
 SPL: When the referee decides that too much game time has been lost, use the
@@ -321,8 +321,6 @@ There are still a number of issues left:
 - The alignment of button labels is bad if the buttons are small.
 
 - Too many colors and buttons - too little keys (not enough shortcuts for all operations)
-
-- When undoing "Free Kick Complete", the "Playing" button is selected instead of the free kick button (functionality still seems to be okay)
 
 - On Windows, Swing windows are only displayed correctly scaled on HiDPI displays if
   Java 9 is used.
