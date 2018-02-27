@@ -146,8 +146,7 @@ public class TrueDataSender extends Thread {
             if (!whitelist.isEmpty() && data != null) {
                 final byte[] arr;
                 synchronized (dataMutex) {
-                    data.updateTimes();
-                    data.secsRemaining = (short) data.getRemainingGameTime(true);
+                    data.updateTimes(true);
                     data.packetNumber = packetNumber++;
                     teamcomm.net.logging.Logger.getInstance().log(data);
                     arr = data.getTrueDataAsByteArray().array();

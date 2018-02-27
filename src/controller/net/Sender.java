@@ -144,7 +144,7 @@ public class Sender extends Thread {
         while (!isInterrupted()) {
             final AdvancedData data = this.data;
             if (data != null) {
-                data.updateTimes();
+                data.updateTimes(false);
                 data.packetNumber = packetNumber;
                 teamcomm.net.logging.Logger.getInstance().log(data);
                 byte[] arr = data.toByteArray().array();

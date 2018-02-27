@@ -233,11 +233,15 @@ public class AdvancedData extends GameControlData implements Cloneable {
 
     /**
      * Update all durations in the GameControlData packet.
+     *
+     * @param real If true, secsRemaining and secondaryTime will contain the real times
+     * instead of the ones that are sent to the robots (to hide the fact that the playing
+     * state might have started).
      */
-    public void updateTimes() {
-        secsRemaining = (short) getRemainingGameTime(false);
+    public void updateTimes(boolean real) {
+        secsRemaining = (short) getRemainingGameTime(real);
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
-        Integer subT = getSecondaryTime(0);
+        Integer subT = getSecondaryTime(real);
 
         if (subT == null) {
             secondaryTime = 0;
@@ -387,21 +391,18 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * Determines the secondary time. Although this is a GUI feature, the
      * secondary time will also be encoded in the network packet.
      *
-     * @param timeKickOffBlockedOvertime In case the kickOffBlocked time is
-     * delivered, this parameter specified how long negative values will be
-     * returned before the time is switched off.
+     * @param real If true, the real time will be returned. If false, the first
+     * number of seconds in the playing state there will be no secondary time
+     * (otherwise the start of the game could be inferred by the decreasing secondary
+     * time until the ball is free).
      * @return The secondary time in seconds or null if there currently is none.
      */
-    public Integer getSecondaryTime(int timeKickOffBlockedOvertime) {
-		if (timeKickOffBlockedOvertime == 0 // preparing data packet
-				&& gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
-				&& (getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying)) {
-			return null;
-		}
-        int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
-        if (kickingTeam == DROPBALL) {
-            timeKickOffBlocked = 0;
+    public Integer getSecondaryTime(boolean real) {
+        if (!real && gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
+                && (getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying)) {
+            return null;
         }
+        int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
         if (gameState == STATE_INITIAL && (timeOutActive[0] || timeOutActive[1])) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.timeOutTime);
         } else if (gameState == STATE_INITIAL && (refereeTimeout)) {
@@ -409,15 +410,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
         } else if (gameState == STATE_READY) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
         } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
-                && timeKickOffBlocked >= -timeKickOffBlockedOvertime) {
-            if (timeKickOffBlocked > 0) {
-                return timeKickOffBlocked;
-            } else {
-                return null;
-            }
-        } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
                 && (setPlay == SET_PLAY_GOAL_FREE_KICK || setPlay == SET_PLAY_PUSHING_FREE_KICK)) {
             return getRemainingSeconds(whenCurrentSetPlayBegan, Rules.league.freeKickTime);
+        } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
+                && timeKickOffBlocked >= 0 && kickingTeam != DROPBALL) {
+            return timeKickOffBlocked;
         } else {
             return getRemainingPauseTime();
         }

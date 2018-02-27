@@ -399,6 +399,7 @@ public class GUI extends JFrame implements GCGUI
         clockPause.setOpaque(false);
         clockPause.setBorder(null);
         clockSub = new JLabel("0:00");
+        clockSub.setForeground(Color.BLACK);
         clockSub.setHorizontalAlignment(JLabel.CENTER);
         incGameClock = new ImageButton(clockImgPlus.getImage());
         incGameClock.setOpaque(false);
@@ -820,19 +821,11 @@ public class GUI extends JFrame implements GCGUI
     private void updateClock(AdvancedData data)
     {
         clock.setText(formatTime(data.getRemainingGameTime(true)));
-        Integer secondaryTime = data.getSecondaryTime(KICKOFF_BLOCKED_HIGHLIGHT_SECONDS - 1);
+        Integer secondaryTime = data.getSecondaryTime(true);
         if (secondaryTime != null) {
-            if (data.gameState == GameControlData.STATE_PLAYING) {
-                clockSub.setText(formatTime(Math.max(0, secondaryTime)));
-                clockSub.setForeground(secondaryTime <= 0
-                        && clockSub.getForeground() != COLOR_HIGHLIGHT ? COLOR_HIGHLIGHT : Color.BLACK);
-            } else {
-                clockSub.setText(formatTime(secondaryTime));
-                clockSub.setForeground(Color.BLACK);
-            }
+            clockSub.setText(formatTime(secondaryTime));
         } else {
             clockSub.setText("");
-            clockSub.setForeground(Color.BLACK);
         }
         
         ImageIcon tmp;
