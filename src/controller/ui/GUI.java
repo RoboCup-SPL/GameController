@@ -177,7 +177,6 @@ public class GUI extends JFrame implements GCGUI
     private static final int UNPEN_HIGHLIGHT_SECONDS = 10;
     private static final int TIMEOUT_HIGHLIGHT_SECONDS = 10;
     private static final int FINISH_HIGHLIGHT_SECONDS = 10;
-    private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
 
     private static final Color COLOR_PENALTY_SHOOTOUT_TAKER = new Color(0xBBFFBB);
     private static final Color COLOR_PENALTY_SHOOTOUT_KEEPER = new Color(0xFF5555);
@@ -309,7 +308,7 @@ public class GUI extends JFrame implements GCGUI
         kickOffGroup = new ButtonGroup();
         timeOut = new JToggleButton[2];
         if(Rules.league instanceof SPL) {
-        	stuck = new JButton[2];
+            stuck = new JButton[2];
         }
         for (int i=0; i<2; i++) {
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
@@ -329,7 +328,7 @@ public class GUI extends JFrame implements GCGUI
             goals[i].setHorizontalAlignment(JLabel.CENTER);
             timeOut[i] = new ToggleButton(TIMEOUT);
             if(Rules.league instanceof SPL) {
-            	stuck[i] = new Button(STUCK);
+                stuck[i] = new Button(STUCK);
             }
         }
         kickOff[2] = new JRadioButton();
@@ -366,7 +365,7 @@ public class GUI extends JFrame implements GCGUI
         //  team
         out = new JButton[2];        
         if (Rules.league instanceof SPL) {
-        	goalFreeKick = new JToggleButton[2];
+            goalFreeKick = new JToggleButton[2];
             pushingFreeKick = new JToggleButton[2];
             for (int i=0; i<2; i++) {                
                 goalFreeKick[i] = new ToggleButton(GOAL_FREE_KICK);
@@ -374,8 +373,8 @@ public class GUI extends JFrame implements GCGUI
                 out[i] = new JButton(OUT);
             }
         } else {
-        	timeOut = new JToggleButton[2];
-        	for (int i=0; i<2; i++) {
+            timeOut = new JToggleButton[2];
+            for (int i=0; i<2; i++) {
                 timeOut[i] = new ToggleButton(TIMEOUT);
                 out[i] = new JButton(OUT);
             }
@@ -501,7 +500,7 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
         if (Rules.league instanceof SPL) {
-        	layout.add(.01, .05, .08, .065, timeOut[0]);
+            layout.add(.01, .05, .08, .065, timeOut[0]);
             layout.add(.91, .05, .08, .065, timeOut[1]);
             layout.add(.01, .13, .08, .065, stuck[0]);
             layout.add(.91, .13, .08, .065, stuck[1]);
@@ -1093,15 +1092,7 @@ public class GUI extends JFrame implements GCGUI
     private void updateGlobalStuck(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            if (data.gameState == GameControlData.STATE_PLAYING
-                    && data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0)
-            {
-                stuck[i].setEnabled(false);
-                stuck[i].setText("<font color=#808080>"+STUCK);
-            } else {
-                stuck[i].setEnabled(ActionBoard.stuck[i].isLegal(data));
-                stuck[i].setText((ActionBoard.stuck[i].isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")+STUCK);
-            }
+            stuck[i].setEnabled(ActionBoard.stuck[i].isLegal(data));
         }
     }
     
