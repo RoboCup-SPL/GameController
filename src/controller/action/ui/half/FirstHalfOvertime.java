@@ -38,6 +38,7 @@ public class FirstHalfOvertime extends GCAction
             FirstHalf.changeSide(data);
             data.kickingTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.gameState = GameControlData.STATE_INITIAL;
+            data.setPlay = GameControlData.SET_PLAY_NONE;
             Log.state(data, "1st Half Extra Time");
         }
     }

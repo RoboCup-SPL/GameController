@@ -43,6 +43,7 @@ public class Ready extends GCAction
         }
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_READY;
+        data.setPlay = GameControlData.SET_PLAY_NONE;
         Log.state(data, "Ready");
     }
     

@@ -50,6 +50,7 @@ public class TimeOut extends GCAction
             }
             Log.setNextMessage("Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
             data.gameState = -1; // something impossible to force execution of next call
+            data.setPlay = GameControlData.SET_PLAY_NONE;
             ActionBoard.initial.perform(data);
         } else {
             data.gamePhase = data.previousGamePhase;

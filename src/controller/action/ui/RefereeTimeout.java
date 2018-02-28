@@ -32,6 +32,7 @@ public class RefereeTimeout extends GCAction
             }
 
             data.gameState = -1; //something impossible to force execution of next call
+            data.setPlay = GameControlData.SET_PLAY_NONE;
             ActionBoard.initial.perform(data);
         } else {
             data.gamePhase = data.previousGamePhase;

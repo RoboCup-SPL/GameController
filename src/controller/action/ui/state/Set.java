@@ -77,6 +77,7 @@ public class Set extends GCAction {
         	
         }
         data.gameState = GameControlData.STATE_SET;
+        data.setPlay = GameControlData.SET_PLAY_NONE;
         Log.state(data, "Set");
     }
 
