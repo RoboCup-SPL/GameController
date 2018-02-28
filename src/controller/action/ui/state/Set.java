@@ -33,9 +33,6 @@ public class Set extends GCAction {
         if (data.gameState == GameControlData.STATE_SET) {
             return;
         }
-        if (Rules.league.returnRobotsInGameStoppages) {
-            data.resetPenaltyTimes();
-        }
         if ((data.competitionPhase != GameControlData.COMPETITION_PHASE_PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }

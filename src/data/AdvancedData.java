@@ -366,9 +366,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
         }
         assert penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE || penaltyTime != -1;
         return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
-                : gameState == STATE_READY && Rules.league.returnRobotsInGameStoppages && whenPenalized[side][number] >= whenCurrentGameStateBegan
-                        ? Rules.league.readyTime - getSecondsSince(whenCurrentGameStateBegan)
-                        : Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
+                : Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
     }
 
     /**
