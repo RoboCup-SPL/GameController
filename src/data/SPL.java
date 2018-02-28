@@ -40,7 +40,7 @@ public class SPL extends Rules
         /** Time in seconds the ball is blocked after a free kick. */
         freeKickTime = 30;
         /** Time in seconds before a global game stuck can be called. */
-        minDurationBeforeStuck = 15;
+        minDurationBeforeStuck = 30;
         /** The number of seconds switching to Playing is delayed. */
         delayedSwitchToPlaying = 15;
         /** If there is an overtime before penalty-shoot in a play-off game. */
