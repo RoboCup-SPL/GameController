@@ -64,7 +64,7 @@ public class SPL extends Rules
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
         penaltyTime = new int[] {-1, 45, 45, 0, 45, 45, 45, 45, 45};
         /** Time in seconds to increment penalties. */
-        penaltyIncreaseTime = 5;
+        penaltyIncreaseTime = 10;
         /** Whether the penalty count is reset on halftime */
         resetPenaltyCountOnHalftime = false;
         /** Whether penalties can be removed before the penalty time has passed. */
