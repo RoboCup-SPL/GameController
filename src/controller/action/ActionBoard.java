@@ -33,6 +33,7 @@ import controller.action.ui.penalty.KickOffGoal;
 import controller.action.ui.penalty.BallContact;
 import controller.action.ui.penalty.Inactive;
 import controller.action.ui.penalty.Leaving;
+import controller.action.ui.penalty.LocalGameStuck;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.Pushing;
@@ -107,6 +108,7 @@ public class ActionBoard
     public static ServiceHL serviceHL;
     public static Substitute substitute;
     public static DropBall dropBall;
+    public static LocalGameStuck localGameStuck;
 
     public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
@@ -175,6 +177,7 @@ public class ActionBoard
         serviceHL = new ServiceHL();
         substitute = new Substitute();
         dropBall = new DropBall();
+        localGameStuck = new LocalGameStuck();
 
         for (int i=0; i<2; i++) {
             for (int j=0; j<Rules.league.teamSize; j++) {

@@ -57,6 +57,7 @@ public class Parser
         "Player Pushing",
         "Illegal Motion in Set",
         "Inactive Player",
+        "Local Game Stuck",
         "Illegal Defender",
         "Leaving the Field",
         "Kickoff Goal",

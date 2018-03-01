@@ -28,6 +28,7 @@ public class PlayerInfo implements Serializable {
     public static final byte PENALTY_SPL_LEAVING_THE_FIELD = 6;
     public static final byte PENALTY_SPL_KICK_OFF_GOAL = 7;
     public static final byte PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
+    public static final byte PENALTY_SPL_LOCAL_GAME_STUCK = 9;
 
     public static final byte PENALTY_HL_BALL_MANIPULATION = 1;
     public static final byte PENALTY_HL_PHYSICAL_CONTACT = 2;
@@ -79,55 +80,57 @@ public class PlayerInfo implements Serializable {
         if (Rules.league instanceof SPL) {
             switch (penalty) {
                 case PENALTY_NONE:
-                	return "none";
+                    return "none";
                 case PENALTY_SPL_ILLEGAL_BALL_CONTACT:
-                	return "illegal ball contact";
+                    return "illegal ball contact";
                 case PENALTY_SPL_PLAYER_PUSHING:
-                	return "pushing";
+                    return "pushing";
                 case PENALTY_SPL_ILLEGAL_MOTION_IN_SET:
-                	return "illegal motion in set";
+                    return "illegal motion in set";
                 case PENALTY_SPL_INACTIVE_PLAYER:
-                	return "inactive";
+                    return "inactive";
                 case PENALTY_SPL_ILLEGAL_DEFENDER:
-                	return "illegal defender";
+                    return "illegal defender";
                 case PENALTY_SPL_LEAVING_THE_FIELD:
-                	return "leaving the field";
+                    return "leaving the field";
                 case PENALTY_SPL_KICK_OFF_GOAL:
-                	return "kickoff goal";
+                    return "kickoff goal";
                 case PENALTY_SPL_REQUEST_FOR_PICKUP:
-                	return "request for pickup";
+                    return "request for pickup";
+                case PENALTY_SPL_LOCAL_GAME_STUCK:
+                    return "local game stuck";
                 case PENALTY_SUBSTITUTE:
-                	return "substitute";
+                    return "substitute";
                 case PENALTY_MANUAL:
-                	return "manual";
+                    return "manual";
                 default:
-                	return "undefined(" + penalty + ")";
+                    return "undefined(" + penalty + ")";
             }
         } else {
             switch (penalty) {
                 case PENALTY_NONE:
                 case PENALTY_HL_BALL_MANIPULATION:
-                	return "none";
+                    return "none";
                 case PENALTY_HL_PHYSICAL_CONTACT:
-                	return "pushing";
+                    return "pushing";
                 case PENALTY_HL_ILLEGAL_ATTACK:
-                	return "illegal attack";
+                    return "illegal attack";
                 case PENALTY_HL_ILLEGAL_DEFENSE:
-                	return "illegal defender";
+                    return "illegal defender";
                 case PENALTY_HL_PICKUP_OR_INCAPABLE:
-                	return "pickup/incapable";
+                    return "pickup/incapable";
                 case PENALTY_HL_SERVICE:
-                	return "service";
+                    return "service";
                 case PENALTY_MANUAL:
-                	return "manual";
+                    return "manual";
                 case PENALTY_SUBSTITUTE:
-                	return "substitute";
+                    return "substitute";
                 default:
                     return "undefined(" + penalty + ")";
             }
         }
     }
-    
+
     @Override
     public String toString() {
         String out = "";
