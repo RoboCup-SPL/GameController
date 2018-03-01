@@ -71,6 +71,14 @@ public class FirstHalf extends GCAction
         data.team[0] = data.team[1];
         data.team[1] = team;
 
+        // swap number of penalties per team
+        if (!Rules.league.resetPenaltyCountOnHalftime)
+        {
+          int tmp = data.penaltyCount[0];
+          data.penaltyCount[0] = data.penaltyCount[1];
+          data.penaltyCount[1] = tmp;
+        }
+
         // swap penalty shootout sides:
         int[] tmp = data.penaltyShootOutPlayers[0];
         data.penaltyShootOutPlayers[0] = data.penaltyShootOutPlayers[1];

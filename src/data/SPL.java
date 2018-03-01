@@ -66,7 +66,7 @@ public class SPL extends Rules
         /** Time in seconds to increment penalties. */
         penaltyIncreaseTime = 5;
         /** Whether the penalty count is reset on halftime */
-        resetPenaltyCountOnHalftime = true;
+        resetPenaltyCountOnHalftime = false;
         /** Whether penalties can be removed before the penalty time has passed. */
         allowEarlyPenaltyRemoval = false;
         /** Penalty that players get when they substitute another player. */
