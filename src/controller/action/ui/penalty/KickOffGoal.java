@@ -41,6 +41,8 @@ public class KickOffGoal extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
+        return ((data.gameState == GameControlData.STATE_PLAYING)
+                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
+            || data.testmode;
     }
 }
