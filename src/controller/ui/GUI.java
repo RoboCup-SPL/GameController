@@ -504,8 +504,8 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.71, .05, .12, .04, kickOff[1]);
         layout.add(.21, .09, .08, .07, goals[0]);
         layout.add(.71, .09, .08, .07, goals[1]);
-        layout.add(.21, .16, .08, .04, penalties[0]);
-        layout.add(.71, .16, .08, .04, penalties[1]);
+        layout.add(.17, .16, .12, .04, penalties[0]);
+        layout.add(.71, .16, .12, .04, penalties[1]);
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
         if (Rules.league instanceof SPL) {
