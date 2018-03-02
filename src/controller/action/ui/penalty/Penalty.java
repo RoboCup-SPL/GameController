@@ -42,12 +42,12 @@ public abstract class Penalty extends GCAction
      * @param player    The already penalised player.
      * @param side      The side the player is playing on (0:left, 1:right).
      * @param number    The player`s number, beginning with 0!
+     * @param states    The states in which penalties increase.
      */
     protected void handleRepeatedPenalty(final AdvancedData data, final PlayerInfo player,
             final int side, final int number, final int... states) {
-        data.robotPenaltyCount[side][number] = 0;
+        data.robotPenaltyCount[side][number] = data.penaltyCount[side];
         if (containsState(states, data.gameState)) {
-            data.robotPenaltyCount[side][number] = data.penaltyCount[side];
             data.penaltyCount[side]++;
         }
     }
