@@ -376,6 +376,8 @@ public class GUI extends JFrame implements GCGUI
                 goalFreeKick[i] = new ToggleButton(GOAL_FREE_KICK);
                 pushingFreeKick[i] = new ToggleButton(PUSHING_FREE_KICK);
                 out[i] = new JButton(OUT);
+                stateGroup.add(goalFreeKick[i]);
+                stateGroup.add(pushingFreeKick[i]);
             }
         } else {
             timeOut = new JToggleButton[2];
@@ -921,7 +923,9 @@ public class GUI extends JFrame implements GCGUI
                 set.setSelected(true);
                 break;
             case GameControlData.STATE_PLAYING:
-                play.setSelected(true);
+                if (data.setPlay == GameControlData.SET_PLAY_NONE) {
+                    play.setSelected(true);
+                }
                 break;
             case GameControlData.STATE_FINISHED:
                 finish.setSelected(true);

@@ -158,7 +158,7 @@ only SPL
 
     P    - pushing
     L    - leaving the field
-    I    - fallen / inactive / local game stuck
+    I    - fallen / inactive
     D    - illegal defender
     G    - kickoff goal
     O    - illegal ball contact
