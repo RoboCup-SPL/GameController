@@ -49,9 +49,8 @@ import data.Teams;
 public class GUI extends JFrame implements GCGUI
 {
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
-    private static final boolean IS_APPLE_JAVA = IS_OSX && System.getProperty("java.version").compareTo("1.7") < 0;
-    private static final Insets insets = IS_APPLE_JAVA ? new Insets (2, -30, 2, -30) : null;
-    private static final String BUTTON_MASK = IS_APPLE_JAVA
+    private static final Insets insets = IS_OSX ? new Insets (2, -30, 2, -30) : null;
+    private static final String BUTTON_MASK = IS_OSX
             ? "<html><div style=\"padding: 0px 12px\"><center>%s</center></div></html>"
             : "<html><center>%s</center></html>";
     
@@ -670,9 +669,6 @@ public class GUI extends JFrame implements GCGUI
         if (fullscreen) {
             setUndecorated(true);
             GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
-            if (IS_APPLE_JAVA) {
-                setVisible(false); // without this, keyboard input is missing on OS X
-            }
         }
         
         setVisible(true);
