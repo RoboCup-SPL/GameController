@@ -105,23 +105,20 @@ public class Sender extends Thread {
                 || (data.gameState == GameControlData.STATE_READY && this.data.gameState == GameControlData.STATE_INITIAL)
                 || (data.gameState == GameControlData.STATE_INITIAL && this.data.gameState != GameControlData.STATE_INITIAL)
                 || (data.gameState == GameControlData.STATE_FINISHED && this.data.gameState != GameControlData.STATE_FINISHED)) {
-            final StringBuilder logfileName;
+            final StringBuilder logfileName = new StringBuilder();
             final String[] teamNames = Teams.getNames(false);
-            if (data.competitionType == GameControlData.COMPETITION_TYPE_MIXEDTEAM) {
-                logfileName = new StringBuilder("MixedTeam_");
-                if (data.firstHalf == GameControlData.C_TRUE) {
-                    logfileName.append("1st");
-                } else {
-                    logfileName.append("2nd");
-                }
-                logfileName.append("Half");
+            if (data.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK) {
+                logfileName.append("GeneralPenaltyKickChallenge_");
+            } else if (data.competitionType == GameControlData.COMPETITION_TYPE_MIXEDTEAM) {
+                logfileName.append("MixedTeam_");
+            }
+            if (data.firstHalf == GameControlData.C_TRUE) {
+                logfileName.append(data.team[0].teamNumber < teamNames.length && teamNames[data.team[0].teamNumber] != null ? teamNames[data.team[0].teamNumber] : "Unknown").append("_").append(data.team[1].teamNumber < teamNames.length && teamNames[data.team[1].teamNumber] != null ? teamNames[data.team[1].teamNumber] : "Unknown");
             } else {
-                if (data.firstHalf == GameControlData.C_TRUE) {
-                    logfileName = new StringBuilder(data.team[0].teamNumber < teamNames.length && teamNames[data.team[0].teamNumber] != null ? teamNames[data.team[0].teamNumber] : "Unknown").append("_").append(data.team[1].teamNumber < teamNames.length && teamNames[data.team[1].teamNumber] != null ? teamNames[data.team[1].teamNumber] : "Unknown").append("_1st");
-                } else {
-                    logfileName = new StringBuilder(data.team[1].teamNumber < teamNames.length && teamNames[data.team[1].teamNumber] != null ? teamNames[data.team[1].teamNumber] : "Unknown").append("_").append(data.team[0].teamNumber < teamNames.length && teamNames[data.team[0].teamNumber] != null ? teamNames[data.team[0].teamNumber] : "Unknown").append("_2nd");
-                }
-                logfileName.append("Half");
+                logfileName.append(data.team[1].teamNumber < teamNames.length && teamNames[data.team[1].teamNumber] != null ? teamNames[data.team[1].teamNumber] : "Unknown").append("_").append(data.team[0].teamNumber < teamNames.length && teamNames[data.team[0].teamNumber] != null ? teamNames[data.team[0].teamNumber] : "Unknown");
+            }
+            if (data.competitionType != GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK) {
+                logfileName.append(data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
             }
             if (data.gameState == GameControlData.STATE_READY && (this.data == null || this.data.gameState == GameControlData.STATE_INITIAL)) {
                 teamcomm.net.logging.Logger.getInstance().createLogfile(logfileName.toString());
