@@ -360,13 +360,27 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public int getRemainingPenaltyTime(int side, int number) {
         int penalty = team[side].player[number].penalty;
+        int penaltyTime = getPenaltyDuration(side, number);
+        return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
+                : Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
+    }
+
+    /**
+     * Calculates the total duration of the current penalty of a robot.
+     *
+     * @param side 0 or 1 depending on whether the robot's team is shown left or
+     * right.
+     * @param number The robot's number starting with 0.
+     * @return The total duration in seconds of the current penalty of a robot.
+     */
+    public int getPenaltyDuration(int side, int number) {
+        int penalty = team[side].player[number].penalty;
         int penaltyTime = -1;
         if (penalty != PlayerInfo.PENALTY_MANUAL && penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
             penaltyTime = Rules.league.penaltyTime[penalty] + Rules.league.penaltyIncreaseTime * robotPenaltyCount[side][number];
         }
         assert penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE || penaltyTime != -1;
-        return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
-                : Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
+        return penaltyTime;
     }
 
     /**

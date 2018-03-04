@@ -1028,9 +1028,8 @@ public class GUI extends JFrame implements GCGUI
                         robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
                         highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                     }
-                    int penTime = (seconds + data.getSecondsSince(data.whenPenalized[i][j]));
                     if (seconds != 0) {
-                        robotTime[i][j].setValue(1000 * seconds / penTime);
+                        robotTime[i][j].setValue(1000 * seconds / data.getPenaltyDuration(i, j));
                     }
                     robotTime[i][j].setVisible(seconds != 0);
                 } else {
