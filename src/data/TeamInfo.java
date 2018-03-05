@@ -39,7 +39,7 @@ public class TeamInfo implements Serializable {
 
     //this is streamed
     public byte teamNumber;                                         // unique team number
-    public byte teamColor;                                          // colour of the team
+    public byte teamColor;                                          // color of the team
     public byte score;                                              // team's score
     public byte penaltyShot = 0;                                    // penalty shot counter
     public short singleShots = 0;                                   // bits represent penalty shot success
