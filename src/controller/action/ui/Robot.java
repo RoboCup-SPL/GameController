@@ -11,16 +11,14 @@ import controller.action.ui.penalty.MotionInSet;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.ServiceHL;
-import controller.action.ui.penalty.Substitute;
 import data.AdvancedData;
-import data.AdvancedData.PenaltyQueueData;
 import data.PlayerInfo;
 import data.Rules;
 import data.SPL;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that a player has been selected.
  */
 public class Robot extends GCAction
@@ -29,11 +27,11 @@ public class Robot extends GCAction
     private int side;
     /** The players`s number, beginning with 0! */
     private int number;
-    
+
     /**
      * Creates a new Robot action.
      * Look at the ActionBoard before using this.
-     * 
+     *
      * @param side      On which side (0:left, 1:right)
      * @param number    The players`s number, beginning with 0!
      */
@@ -46,110 +44,125 @@ public class Robot extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
     public void perform(AdvancedData data)
     {
-        PlayerInfo player = data.team[side].player[number];
-        if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT) {
-            ArrayList<PenaltyQueueData> playerInfoList = data.penaltyQueueForSubPlayers.get(side);
-            if (playerInfoList.isEmpty()) {
-                player.penalty = Rules.league.substitutePenalty;
-                if (data.gameState == AdvancedData.STATE_READY || data.gameState == AdvancedData.STATE_SET) {
-                    data.whenPenalized[side][number] = 0;
-                } else {
-                    data.whenPenalized[side][number] = data.getTime();
-                }
-            } else {
-                PenaltyQueueData playerInfo = playerInfoList.get(0);
-                player.penalty = playerInfo.penalty;
-                data.robotPenaltyCount[side][number] = playerInfo.penaltyCount;
-                data.whenPenalized[side][number] = playerInfo.whenPenalized;
-                playerInfoList.remove(0);
-            }
-            Log.state(data, "Entering Player " + Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
-        }
-        else if (EventHandler.getInstance().lastUIEvent instanceof MotionInSet && player.penalty == PlayerInfo.PENALTY_NONE
-                || (EventHandler.getInstance().lastUIEvent instanceof Penalty 
-                        && !(EventHandler.getInstance().lastUIEvent instanceof MotionInSet))) {
+        final boolean lastUIEventWasPenalty = EventHandler.getInstance().lastUIEvent instanceof Penalty;
+        final boolean lastUIEventWasMotionInSet = EventHandler.getInstance().lastUIEvent instanceof MotionInSet;
+        final boolean lastUIEventWasRobot = EventHandler.getInstance().lastUIEvent instanceof Robot;
+        final Robot lastUIEventAsRobot = lastUIEventWasRobot ? (Robot)EventHandler.getInstance().lastUIEvent : null;
+        final PlayerInfo player = data.team[side].player[number];
+        boolean wantLastUIEvent = false;
+        if (lastUIEventWasPenalty && (!lastUIEventWasMotionInSet || player.penalty == PlayerInfo.PENALTY_NONE)) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
-        } 
-        else if (data.gamePhase == AdvancedData.GAME_PHASE_PENALTYSHOOT
-            && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE ||
-                data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
-            && (data.gameState == AdvancedData.STATE_SET ||
-                data.gameState == AdvancedData.STATE_INITIAL)) {
+        } else if (data.gamePhase == AdvancedData.GAME_PHASE_PENALTYSHOOT
+                && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
+                    || data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
+                && (data.gameState == AdvancedData.STATE_SET
+                    || data.gameState == AdvancedData.STATE_INITIAL)) {
 
             // make all other players to substitute:
             for (int playerID = 0; playerID < Rules.league.teamSize; playerID++) {
-                if (playerID != number && playerID != Rules.league.teamSize) {
-                    PlayerInfo playerToSub = data.team[side].player[playerID];
-    
-                    if (playerToSub.penalty != PlayerInfo.PENALTY_NONE) {
-                        data.addToPenaltyQueue(side, data.whenPenalized[side][playerID], playerToSub.penalty,
-                                data.robotPenaltyCount[side][playerID]);
-                    }
-    
-                    playerToSub.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
+                if (playerID != number) {
+                    data.team[side].player[playerID].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
                     data.robotPenaltyCount[side][playerID] = 0;
                     data.whenPenalized[side][playerID] = data.getTime();
                 }
             }
-    
+
             // unpenalise selected player:
             player.penalty = PlayerInfo.PENALTY_NONE;
             data.penaltyShootOutPlayers[side][data.team[side].teamNumber == data.kickingTeam ? 0 : 1] = number;
-    
-            Log.state(data, "Selected Player" + Rules.league.teamColorName[data.team[side].teamColor] + " "
+
+            Log.state(data, "Selected Player " + Rules.league.teamColorName[data.team[side].teamColor] + " "
                     + (number + 1) + " as " + (data.team[side].teamNumber == data.kickingTeam ? "taker" : "keeper"));
-        }
-        else if (player.penalty != PlayerInfo.PENALTY_NONE) {
+        } else if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT) {
+            wantLastUIEvent = EventHandler.getInstance().lastUIEvent != this;
+        } else if (lastUIEventWasRobot
+                && lastUIEventAsRobot.side == side
+                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
+                && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT) {
+            final int substituteNumber = lastUIEventAsRobot.number;
+            if (player.penalty == PlayerInfo.PENALTY_NONE) {
+                data.team[side].player[substituteNumber].penalty = Rules.league.substitutePenalty;
+                data.robotPenaltyCount[side][substituteNumber] = 0;
+                if (data.gameState == AdvancedData.STATE_READY || data.gameState == AdvancedData.STATE_SET) {
+                    data.whenPenalized[side][substituteNumber] = 0;
+                } else {
+                    data.whenPenalized[side][substituteNumber] = data.getTime();
+                }
+            } else {
+                data.team[side].player[substituteNumber].penalty = player.penalty;
+                data.robotPenaltyCount[side][substituteNumber] = data.robotPenaltyCount[side][number];
+                data.whenPenalized[side][substituteNumber] = data.whenPenalized[side][number];
+            }
+            player.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
+            data.robotPenaltyCount[side][number] = 0;
+            data.whenPenalized[side][number] = data.getTime();
+            Log.state(data, "Substituted " + Rules.league.teamColorName[data.team[side].teamColor] + " " + (number + 1) + " " + " by " + (substituteNumber + 1));
+        } else if (player.penalty != PlayerInfo.PENALTY_NONE) {
             player.penalty = PlayerInfo.PENALTY_NONE;
             Log.state(data, ("Unpenalised ")+
                     Rules.league.teamColorName[data.team[side].teamColor]
                     + " " + (number+1));
-        } 
+        }
+        EventHandler.getInstance().noLastUIEvent = !wantLastUIEvent;
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ((!(EventHandler.getInstance().lastUIEvent instanceof Penalty) || EventHandler.getInstance().lastUIEvent instanceof MotionInSet)
-                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
-                && (Rules.league.allowEarlyPenaltyRemoval || data.getRemainingPenaltyTime(side, number) == 0)
-                && (data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
-                    || (data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT ))
+        final boolean lastUIEventWasPenalty = EventHandler.getInstance().lastUIEvent instanceof Penalty;
+        final boolean lastUIEventWasMotionInSet = EventHandler.getInstance().lastUIEvent instanceof MotionInSet;
+        // This can only be true if the robot currently has the substitute penalty because otherwise lastUIEvent is not set, see above.
+        final boolean lastUIEventWasRobot = EventHandler.getInstance().lastUIEvent instanceof Robot;
+        final Robot lastUIEventAsRobot = lastUIEventWasRobot ? (Robot)EventHandler.getInstance().lastUIEvent : null;
+        final boolean isRobotSubstitute = data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE;
+        return
+                // penalize a robot
+                data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
+                && lastUIEventWasPenalty
+                // change penalty to pickup in HL
                 || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_SERVICE
-                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
+                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE
+                && !isRobotSubstitute
+                // change penalty to service in HL
                 || EventHandler.getInstance().lastUIEvent instanceof ServiceHL
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_SERVICE
-                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
+                && !isRobotSubstitute
+                // change penalty to pickup in SPL
                 || (EventHandler.getInstance().lastUIEvent instanceof PickUp && Rules.league instanceof SPL)
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP
-                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
-                || EventHandler.getInstance().lastUIEvent instanceof Substitute
-                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SUBSTITUTE
-                && (!(Rules.league instanceof SPL) || number != 0))
-                || data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
-                    && (EventHandler.getInstance().lastUIEvent instanceof Penalty)
-                    && !(EventHandler.getInstance().lastUIEvent instanceof Substitute)
-                || data.testmode
-                
+                && !isRobotSubstitute
                 // new player selection in penalty shootout:
                 || (data.gamePhase == AdvancedData.GAME_PHASE_PENALTYSHOOT
-                	&& (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE || 
-                		data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
-                    && (data.gameState == AdvancedData.STATE_SET ||
-                        data.gameState == AdvancedData.STATE_INITIAL));
+                    && (data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
+                        || data.team[side].player[number].penalty == PlayerInfo.PENALTY_SUBSTITUTE)
+                    && (data.gameState == AdvancedData.STATE_SET
+                        || data.gameState == AdvancedData.STATE_INITIAL))
+                // unpenalize a robot / select a robot that should enter (i.e. that is currently substituted)
+                || (!lastUIEventWasPenalty || lastUIEventWasMotionInSet)
+                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
+                && (Rules.league.allowEarlyPenaltyRemoval || data.getRemainingPenaltyTime(side, number) == 0)
+                && (!isRobotSubstitute
+                    || data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT)
+                // click on the robot that should be substituted (after having clicked on the robot that should enter)
+                || lastUIEventWasRobot
+                && lastUIEventAsRobot.side == side
+                && !isRobotSubstitute
+                && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
+                && (!(Rules.league instanceof SPL) || number != 0)
+
+                || data.testmode;
     }
-   }
+ }

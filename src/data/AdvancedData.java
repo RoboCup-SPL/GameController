@@ -139,11 +139,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public byte kickOffReason = KICKOFF_HALF;
 
     /**
-     * Keeps the penalties for the players if there are substituted
-     */
-    public ArrayList<ArrayList<PenaltyQueueData>> penaltyQueueForSubPlayers = new ArrayList<ArrayList<PenaltyQueueData>>();
-
-    /**
      * Saves the selected penalty taker and keeper of both teams. First index is
      * team-number, second index is taker (0) or keeper (1)
      */
@@ -162,7 +157,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
                     team[i].player[j].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
                 }
             }
-            penaltyQueueForSubPlayers.add(new ArrayList<PenaltyQueueData>());
         }
     }
 
@@ -345,9 +339,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
             }
         }
         resetPenaltyTimes();
-        for (int i = 0; i < 2; i++) {
-            penaltyQueueForSubPlayers.get(i).clear();
-        }
     }
 
     /**
@@ -444,24 +435,5 @@ public class AdvancedData extends GameControlData implements Cloneable {
                 }
             }
         }
-    }
-
-    public class PenaltyQueueData implements Serializable {
-
-        private static final long serialVersionUID = 7536004813202642582L;
-
-        public long whenPenalized;
-        public byte penalty;
-        public int penaltyCount;
-
-        public PenaltyQueueData(long whenPenalized, byte penalty, int penaltyCount) {
-            this.whenPenalized = whenPenalized;
-            this.penalty = penalty;
-            this.penaltyCount = penaltyCount;
-        }
-    }
-
-    public void addToPenaltyQueue(int side, long whenPenalized, byte penalty, int penaltyCount) {
-        penaltyQueueForSubPlayers.get(side).add(new PenaltyQueueData(whenPenalized, penalty, penaltyCount));
     }
 }

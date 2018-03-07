@@ -12,7 +12,6 @@ import controller.action.ui.GoalFreeKick;
 import controller.action.ui.IncGameClock;
 import controller.action.ui.KickOff;
 import controller.action.ui.Out;
-import controller.action.ui.PushingFreeKick;
 import controller.action.ui.Quit;
 import controller.action.ui.RefereeTimeout;
 import controller.action.ui.Robot;
@@ -28,6 +27,7 @@ import controller.action.ui.penalty.Attack;
 import controller.action.ui.penalty.BallManipulation;
 import controller.action.ui.penalty.Defender;
 import controller.action.ui.penalty.Defense;
+import controller.action.ui.penalty.Foul;
 import controller.action.ui.penalty.MotionInSet;
 import controller.action.ui.penalty.KickOffGoal;
 import controller.action.ui.penalty.BallContact;
@@ -38,7 +38,6 @@ import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.Pushing;
 import controller.action.ui.penalty.ServiceHL;
-import controller.action.ui.penalty.Substitute;
 import controller.action.ui.state.Finish;
 import controller.action.ui.state.Initial;
 import controller.action.ui.state.Play;
@@ -75,7 +74,6 @@ public class ActionBoard
     public static KickOff[] kickOff = new KickOff[2];
     public static Robot[][] robot;
     public static GoalFreeKick[] goalFreeKick = new GoalFreeKick[2];
-    public static PushingFreeKick[] pushingFreeKick = new PushingFreeKick[2];
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static Out[] out = new Out[2];
@@ -106,9 +104,9 @@ public class ActionBoard
     public static Defense defense;
     public static PickUpHL pickUpHL;
     public static ServiceHL serviceHL;
-    public static Substitute substitute;
     public static DropBall dropBall;
     public static LocalGameStuck localGameStuck;
+    public static Foul foul;
 
     public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
@@ -143,7 +141,6 @@ public class ActionBoard
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
             goalFreeKick[i] = new GoalFreeKick(i);
-            pushingFreeKick[i] = new PushingFreeKick(i);
         }
 
         clockReset = new ClockReset();
@@ -175,9 +172,9 @@ public class ActionBoard
         defense = new Defense();
         pickUpHL = new PickUpHL();
         serviceHL = new ServiceHL();
-        substitute = new Substitute();
         dropBall = new DropBall();
         localGameStuck = new LocalGameStuck();
+        foul = new Foul();
 
         for (int i=0; i<2; i++) {
             for (int j=0; j<Rules.league.teamSize; j++) {

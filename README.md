@@ -163,7 +163,7 @@ only SPL
     G    - kickoff goal
     O    - illegal ball contact
     U    - request for pickup
-    S    - substitute
+    F    - foul
 
 only Humanoid-League
 

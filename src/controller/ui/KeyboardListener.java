@@ -112,7 +112,7 @@ public class KeyboardListener implements KeyEventDispatcher
                         case KeyEvent.VK_G: event = ActionBoard.kickOffGoal; break;
                         case KeyEvent.VK_O: event = ActionBoard.ballContact; break;
                         case KeyEvent.VK_U: event = ActionBoard.pickUp; break;
-                        case KeyEvent.VK_S: event = ActionBoard.substitute; break;
+                        case KeyEvent.VK_F: event = ActionBoard.foul; break;
                     }
                 } else if (Rules.league instanceof HL) {
                     switch (key) {
@@ -124,7 +124,6 @@ public class KeyboardListener implements KeyEventDispatcher
                         case KeyEvent.VK_M: event = ActionBoard.ballManipulation; break;
                         case KeyEvent.VK_I: event = ActionBoard.pickUpHL; break;
                         case KeyEvent.VK_A: event = ActionBoard.attack; break;
-                        case KeyEvent.VK_S: event = ActionBoard.substitute; break;
                     }
                 }
         }

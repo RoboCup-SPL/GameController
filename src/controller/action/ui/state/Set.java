@@ -54,14 +54,7 @@ public class Set extends GCAction {
 
                 for (int playerID = 0; playerID < Rules.league.teamSize; playerID++) {
                     if (playerID != number) {
-                        PlayerInfo playerToSub = data.team[side].player[playerID];
-
-                        if (playerToSub.penalty != PlayerInfo.PENALTY_NONE) {
-                            data.addToPenaltyQueue(side, data.whenPenalized[side][playerID], playerToSub.penalty,
-                                    data.robotPenaltyCount[side][playerID]);
-                        }
-
-                        playerToSub.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
+                        data.team[side].player[playerID].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
                         data.robotPenaltyCount[side][playerID] = 0;
                         data.whenPenalized[side][playerID] = data.getTime();
                     }
