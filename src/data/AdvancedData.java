@@ -260,6 +260,21 @@ public class AdvancedData extends GameControlData implements Cloneable {
     }
 
     /**
+     * Shifts the start times of penalties by the duration of the state
+     * (or the already elapsed penalty time, whichever is shorter) into the future.
+     * This is used to implement the rule that the penalty countdown pauses in Set.
+     */
+    public void addTimeInCurrentStateToPenalties() {
+        for (int side = 0; side < team.length; side++) {
+            for (int number = 0; number < team[side].player.length; number++) {
+                if (team[side].player[number].penalty != PlayerInfo.PENALTY_NONE) {
+                    whenPenalized[side][number] += getTime() - Math.max(whenCurrentGameStateBegan, whenPenalized[side][number]);
+                }
+            }
+        }
+    }
+
+    /**
      * Calculates the remaining game time in the current phase of the game. This
      * is what the primary clock will show.
      *
@@ -356,9 +371,9 @@ public class AdvancedData extends GameControlData implements Cloneable {
         int penalty = team[side].player[number].penalty;
         int penaltyTime = getPenaltyDuration(side, number);
         long start = whenPenalized[side][number];
-        if ((!real && gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
+        if (gameState == STATE_SET || (!real && gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
                 && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying)) {
-            start += getTime() - whenCurrentGameStateBegan;
+            start += getTime() - Math.max(whenCurrentGameStateBegan, whenPenalized[side][number]);
         }
         return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
                 : Math.max(0, getRemainingSeconds(start, penaltyTime));

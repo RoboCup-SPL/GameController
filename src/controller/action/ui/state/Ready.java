@@ -40,6 +40,8 @@ public class Ready extends GCAction
         }
         if (data.gameState == GameControlData.STATE_PLAYING) {
             data.addTimeInCurrentState();
+        } else if (data.gameState == GameControlData.STATE_SET) {
+            data.addTimeInCurrentStateToPenalties();
         }
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_READY;

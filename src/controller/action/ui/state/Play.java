@@ -6,6 +6,7 @@ import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
+import data.Rules;
 import data.TeamInfo;
 
 
@@ -48,6 +49,10 @@ public class Play extends GCAction
         if (data.competitionPhase != GameControlData.COMPETITION_PHASE_PLAYOFF && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
+        if (data.gameState == GameControlData.STATE_SET) {
+            data.addTimeInCurrentStateToPenalties();
+        }
+
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_PLAYING;
 
