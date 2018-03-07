@@ -1008,7 +1008,7 @@ public class GUI extends JFrame implements GCGUI
         for (int i=0; i<robot.length; i++) {
             for (int j=0; j<robot[i].length; j++) {
                 if (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
-                    int seconds = data.getRemainingPenaltyTime(i, j);
+                    int seconds = data.getRemainingPenaltyTime(i, j, true);
                     boolean pickup = ((Rules.league instanceof SPL &&
                                 data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
                            || (Rules.league instanceof HL &&

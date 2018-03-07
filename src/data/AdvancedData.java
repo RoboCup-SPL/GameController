@@ -246,7 +246,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
             for (int number = 0; number < team[side].player.length; ++number) {
                 PlayerInfo player = team[side].player[number];
                 player.secsTillUnpenalised = player.penalty == PlayerInfo.PENALTY_NONE
-                        ? 0 : (byte) getRemainingPenaltyTime(side, number);
+                        ? 0 : (byte) getRemainingPenaltyTime(side, number, real);
             }
         }
     }
@@ -347,13 +347,21 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * @param side 0 or 1 depending on whether the robot's team is shown left or
      * right.
      * @param number The robot's number starting with 0.
+     * @param real If true, the real time will be returned. If false, the first
+     * number of seconds in the playing state the time that it was during set
+     * will be returned.
      * @return The number of seconds the robot has to stay penalized.
      */
-    public int getRemainingPenaltyTime(int side, int number) {
+    public int getRemainingPenaltyTime(int side, int number, boolean real) {
         int penalty = team[side].player[number].penalty;
         int penaltyTime = getPenaltyDuration(side, number);
+        long start = whenPenalized[side][number];
+        if ((!real && gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
+                && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying)) {
+            start += getTime() - whenCurrentGameStateBegan;
+        }
         return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
-                : Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
+                : Math.max(0, getRemainingSeconds(start, penaltyTime));
     }
 
     /**
