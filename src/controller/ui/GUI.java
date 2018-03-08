@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 
 import common.Log;
 import common.TotalScaleLayout;
@@ -59,11 +60,6 @@ public class GUI extends JFrame implements GCGUI
     {
         private static final long serialVersionUID = -1533689100759569853L;
 
-        public Button()
-        {
-            setMargin(insets);
-        }
-        
         public Button(String text)
         {
             setMargin(insets);
@@ -323,6 +319,7 @@ public class GUI extends JFrame implements GCGUI
             }
             goalInc[i] = new Button("+");
             goalDec[i] = new Button("-");
+            goalDec[i].setVerticalAlignment(SwingConstants.BOTTOM);
             kickOff[i] = new JRadioButton(KICKING);
             kickOff[i].setOpaque(false);
             kickOff[i].setHorizontalAlignment(JLabel.CENTER);
@@ -516,7 +513,7 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.01, .77, .09, .09, goalFreeKick[0]);
             layout.add(.9, .77, .09, .09, goalFreeKick[1]);
             layout.add(.105, .77, .09, .09, pushingFreeKick[0]);
-            layout.add(.805, .77, .09, .09, pushingFreeKick[1]);
+            layout.add(.805, .77, .091, .09, pushingFreeKick[1]);
             layout.add(.20, .77, .09, .09, out[0]);
             layout.add(.71, .77, .09, .09, out[1]);
             layout.add(.1, .05, .08, .065, goalInc[0]);

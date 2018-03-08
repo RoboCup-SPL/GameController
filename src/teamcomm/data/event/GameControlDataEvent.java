@@ -10,6 +10,7 @@ import java.util.EventObject;
  */
 public class GameControlDataEvent extends EventObject {
 
+    private static final long serialVersionUID = -2485519981679815554L;
     /**
      * The data that was received from the GameController.
      */

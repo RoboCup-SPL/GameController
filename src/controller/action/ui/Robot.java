@@ -1,13 +1,11 @@
 package controller.action.ui;
 
-import java.util.ArrayList;
-
 import common.Log;
 import controller.EventHandler;
 import controller.action.ActionType;
 import controller.action.GCAction;
-import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.MotionInSet;
+import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.ServiceHL;

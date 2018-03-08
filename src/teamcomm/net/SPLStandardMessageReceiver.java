@@ -46,13 +46,13 @@ public class SPLStandardMessageReceiver extends Thread {
             channel.configureBlocking(false);
             channel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
             channel.bind(new InetSocketAddress("0.0.0.0", getTeamport(team)));
-            try {
+            try (final MulticastSocket ms = new MulticastSocket()) {
                 // Join multicast group on all network interfaces (for compatibility with SimRobot)
                 final Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
                 final byte[] localaddr = InetAddress.getLocalHost().getAddress();
                 localaddr[0] = (byte) 239;
 
-                final NetworkInterface defNI = new MulticastSocket().getNetworkInterface();
+                final NetworkInterface defNI = ms.getNetworkInterface();
                 channel.setOption(StandardSocketOptions.IP_MULTICAST_IF, defNI);
                 channel.join(InetAddress.getByName("239.0.0.1"), defNI);
                 channel.join(InetAddress.getByAddress(localaddr), defNI);
@@ -65,7 +65,6 @@ public class SPLStandardMessageReceiver extends Thread {
             } catch (IOException ex) {
                 // Ignore, because this is only for testing and does not work everywhere
             }
-
             // Register channel with selector
             channel.register(selector, SelectionKey.OP_READ, team);
         }
@@ -135,6 +134,7 @@ public class SPLStandardMessageReceiver extends Thread {
     }
 
     protected void handleMessage(final SPLStandardMessagePackage p) {
+        
     }
 
     @Override

@@ -5,7 +5,6 @@ import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
-import controller.action.ActionBoard;
 
 /**
  * This action means that the foul penalty (pushing + free kick) has been selected.

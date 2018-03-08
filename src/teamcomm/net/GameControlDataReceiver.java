@@ -88,7 +88,9 @@ public class GameControlDataReceiver extends Thread {
      */
     private void requestTrueData(final InetAddress gameControllerAddress) throws IOException {
         final byte[] request = TrueDataRequest.createRequest().toByteArray();
-        new DatagramSocket().send(new DatagramPacket(request, request.length, gameControllerAddress, TrueDataRequest.GAMECONTROLLER_TRUEDATAREQUEST_PORT));
+        final DatagramSocket ds = new DatagramSocket();
+        ds.send(new DatagramPacket(request, request.length, gameControllerAddress, TrueDataRequest.GAMECONTROLLER_TRUEDATAREQUEST_PORT));
+        ds.close();
     }
 
     @Override
