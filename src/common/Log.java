@@ -62,7 +62,7 @@ public class Log
 
         // Write version number if application is GameController
         try {
-            toFile((String)Class.forName("controller.Main").getField("version").get(null));
+            toFile((String)Class.forName("controller.GameController").getField("version").get(null));
         } catch (ClassNotFoundException ex) {
         } catch (NoSuchFieldException ex) {
         } catch (SecurityException ex) {
