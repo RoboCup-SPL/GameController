@@ -90,7 +90,6 @@ public class Parser
         Date kickoffTime = null;
         Date endTime = null;
         int i = 0;
-        log.version = controller.GameController.version;
         for (String line : log.lines) {
             i++;
             int divPos = line.indexOf(": ");
@@ -107,7 +106,10 @@ public class Parser
                 log.parseErrors += "error in line "+i+": Cannot parse timestamp" + GUI.HTML_LF;
             }
             String action = line.substring(divPos+2);
-            if (action.startsWith("League = ")) {
+            
+            if (i == 1) {
+                log.version = action;
+            } else if (action.startsWith("League = ")) {
                 String league = action.substring(9);
                 for (int j=0; j<Rules.LEAGUES.length; j++) {
                     if (Rules.LEAGUES[j].leagueName.equals(league)) {
