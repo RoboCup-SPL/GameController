@@ -349,7 +349,7 @@ public class GUI extends JFrame implements GCGUI
             robots[i].setOpaque(false);
             
             for (int j=0; j<robot[i].length; j++) {
-                robot[i][j] = new JToggleButton();
+                robot[i][j] = new ToggleButton();
                 robotLabel[i][j] = new JLabel();
                 robotLabel[i][j].setHorizontalAlignment(JLabel.CENTER);
                 lanIcon[i][j] = lanUnknown;
