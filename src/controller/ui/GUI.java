@@ -228,6 +228,7 @@ public class GUI extends JFrame implements GCGUI
     private ImagePanel clockContainer;
     private JLabel clock;
     private JLabel clockSub;
+    private JLabel freeKick;
     private ImageButton incGameClock;
     private ImageButton clockPause;
     private JToggleButton firstHalf;
@@ -372,6 +373,7 @@ public class GUI extends JFrame implements GCGUI
             for (int i=0; i<2; i++) {                
                 goalFreeKick[i] = new ToggleButton(GOAL_FREE_KICK);
                 pushingFreeKick[i] = new ToggleButton(PUSHING_FREE_KICK);
+                pushingFreeKick[i].setVisible(false);
                 out[i] = new JButton(OUT);
                 stateGroup.add(goalFreeKick[i]);
                 stateGroup.add(pushingFreeKick[i]);
@@ -407,6 +409,8 @@ public class GUI extends JFrame implements GCGUI
         incGameClock = new ImageButton(clockImgPlus.getImage());
         incGameClock.setOpaque(false);
         incGameClock.setBorder(null);
+        freeKick = new JLabel("");
+        freeKick.setHorizontalAlignment(JLabel.CENTER);
         if (!Rules.league.overtime) {
             firstHalf = new ToggleButton(FIRST_HALF);
             firstHalf.setSelected(true);
@@ -510,12 +514,12 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.91, .05, .08, .065, timeOut[1]);
             layout.add(.01, .13, .08, .065, stuck[0]);
             layout.add(.91, .13, .08, .065, stuck[1]);
-            layout.add(.01, .77, .09, .09, goalFreeKick[0]);
-            layout.add(.9, .77, .09, .09, goalFreeKick[1]);
+            layout.add(.01, .77, .1375, .09, goalFreeKick[0]);
+            layout.add(.8525, .77, .1375, .09, goalFreeKick[1]);
             layout.add(.105, .77, .09, .09, pushingFreeKick[0]);
             layout.add(.805, .77, .091, .09, pushingFreeKick[1]);
-            layout.add(.20, .77, .09, .09, out[0]);
-            layout.add(.71, .77, .09, .09, out[1]);
+            layout.add(.1525, .77, .1375, .09, out[0]);
+            layout.add(.71, .77, .1375, .09, out[1]);
             layout.add(.1, .05, .08, .065, goalInc[0]);
             layout.add(.82, .05, .08, .065, goalInc[1]);
             layout.add(.1, .13, .08, .065, goalDec[0]);
@@ -534,6 +538,7 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.4, .012, .195, .10, clock);
         layout.add(.61, .0, .08, .11, clockPause);
         layout.add(.4, .11, .2, .07, clockSub);
+        layout.add(.4, .15, .2, .07, freeKick);
         if (Rules.league.lostTime) {
             layout.add(.590, .0, .03, .11, incGameClock);
             layout.add(.4, .0, .195, .11, clockContainer);
@@ -543,47 +548,47 @@ public class GUI extends JFrame implements GCGUI
         }
         if (!Rules.league.overtime) {
             if (Rules.league.isRefereeTimeoutAvailable) {
-                layout.add(.31, .19, .09, .06, firstHalf);
-                layout.add(.407, .19, .09, .06, secondHalf);
-                layout.add(.503, .19, .09, .06, penaltyShoot);
-                layout.add(.60, .19, .09, .06, refereeTimeout);
+                layout.add(.31, .2, .09, .06, firstHalf);
+                layout.add(.407, .2, .09, .06, secondHalf);
+                layout.add(.503, .2, .09, .06, penaltyShoot);
+                layout.add(.60, .2, .09, .06, refereeTimeout);
             } else {
-                layout.add(.31, .19, .12, .06, firstHalf);
-                layout.add(.44, .19, .12, .06, secondHalf);
-                layout.add(.57, .19, .12, .06, penaltyShoot);
+                layout.add(.31, .2, .12, .06, firstHalf);
+                layout.add(.44, .2, .12, .06, secondHalf);
+                layout.add(.57, .2, .12, .06, penaltyShoot);
             }
         } else {
             if (Rules.league.isRefereeTimeoutAvailable) {
-                layout.add(.31, .19, .06, .06, firstHalf);
-                layout.add(.375, .19, .06, .06, secondHalf);
-                layout.add(.439, .19, .06, .06, firstHalfOvertime);
-                layout.add(.501, .19, .06, .06, secondHalfOvertime);
-                layout.add(.565, .19, .06, .06, penaltyShoot);
-                layout.add(.63, .19, .06, .06, refereeTimeout);
+                layout.add(.31, .2, .06, .06, firstHalf);
+                layout.add(.375, .2, .06, .06, secondHalf);
+                layout.add(.439, .2, .06, .06, firstHalfOvertime);
+                layout.add(.501, .2, .06, .06, secondHalfOvertime);
+                layout.add(.565, .2, .06, .06, penaltyShoot);
+                layout.add(.63, .2, .06, .06, refereeTimeout);
             } else {
-                layout.add(.31, .19, .07, .06, firstHalf);
-                layout.add(.3875, .19, .07, .06, secondHalf);
-                layout.add(.465, .19, .07, .06, firstHalfOvertime);
-                layout.add(.5425, .19, .07, .06, secondHalfOvertime);
-                layout.add(.62, .19, .07, .06, penaltyShoot);
+                layout.add(.31, .2, .07, .06, firstHalf);
+                layout.add(.3875, .2, .07, .06, secondHalf);
+                layout.add(.465, .2, .07, .06, firstHalfOvertime);
+                layout.add(.5425, .2, .07, .06, secondHalfOvertime);
+                layout.add(.62, .2, .07, .06, penaltyShoot);
             }
         }
-        layout.add(.31, .26, .07, .08, initial);
-        layout.add(.3875, .26, .07, .08, ready);
-        layout.add(.465, .26, .07, .08, set);
-        layout.add(.5425, .26, .07, .08, play);
-        layout.add(.62, .26, .07, .08, finish);
+        layout.add(.31, .27, .07, .08, initial);
+        layout.add(.3875, .27, .07, .08, ready);
+        layout.add(.465, .27, .07, .08, set);
+        layout.add(.5425, .27, .07, .08, play);
+        layout.add(.62, .27, .07, .08, finish);
         if (Rules.league instanceof SPL) {
-            layout.add(.31, .37, .185, .08, pen[0]);
-            layout.add(.505, .37, .185, .08, pen[1]);
-            layout.add(.31, .47, .185, .08, pen[2]);
-            layout.add(.505, .47, .185, .08, pen[3]);
-            layout.add(.31, .57, .185, .08, pen[4]);
-            layout.add(.505, .57, .185, .08, pen[5]);
-            layout.add(.31, .67, .185, .08, pen[6]);
-            layout.add(.505, .67, .185, .08, pen[7]);
-            layout.add(.31, .77, .185, .08, pen[8]);
-            layout.add(.505, .77, .185, .08, pen[9]);
+            layout.add(.31, .38, .185, .08, pen[0]);
+            layout.add(.505, .38, .185, .08, pen[1]);
+            layout.add(.31, .48, .185, .08, pen[2]);
+            layout.add(.505, .48, .185, .08, pen[3]);
+            layout.add(.31, .58, .185, .08, pen[4]);
+            layout.add(.505, .58, .185, .08, pen[5]);
+            layout.add(.31, .68, .185, .08, pen[6]);
+            layout.add(.505, .68, .185, .08, pen[7]);
+            layout.add(.31, .78, .185, .08, pen[8]);
+            layout.add(.505, .78, .185, .08, pen[9]);
         } else if (Rules.league instanceof HL) {
             layout.add(.31,  .38, .185, .08, pen[0]);
             layout.add(.505, .38, .185, .08, pen[1]);
@@ -838,10 +843,16 @@ public class GUI extends JFrame implements GCGUI
         clock.setText(formatTime(data.getRemainingGameTime(true)));
         Integer secondaryTime = data.getSecondaryTime(true);
         if (secondaryTime != null) {
-            clockSub.setText(formatTime(secondaryTime));
+        	clockSub.setText(formatTime(secondaryTime));
         } else {
             clockSub.setText("");
         }
+
+    	if (data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK) {
+    		freeKick.setText("Pushing Free Kick");
+    	} else {
+    		freeKick.setText("");
+    	}
         
         ImageIcon tmp;
         if (ActionBoard.clock.isClockRunning(data)) {
@@ -1151,7 +1162,7 @@ public class GUI extends JFrame implements GCGUI
     }
     
     /**
-     * Updates the out.
+     * Updates the free kick.
      * 
      * @param data     The current data (model) the GUI should view.
      */
@@ -1308,6 +1319,7 @@ public class GUI extends JFrame implements GCGUI
         }
         clock.setFont(timeFont);
         clockSub.setFont(timeSubFont);
+        freeKick.setFont(standardFont);
         
         firstHalf.setFont(timeoutFont);
         secondHalf.setFont(timeoutFont);
