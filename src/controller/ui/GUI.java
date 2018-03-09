@@ -516,8 +516,6 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.91, .13, .08, .065, stuck[1]);
             layout.add(.01, .77, .1375, .09, goalFreeKick[0]);
             layout.add(.8525, .77, .1375, .09, goalFreeKick[1]);
-            layout.add(.105, .77, .09, .09, pushingFreeKick[0]);
-            layout.add(.805, .77, .091, .09, pushingFreeKick[1]);
             layout.add(.1525, .77, .1375, .09, out[0]);
             layout.add(.71, .77, .1375, .09, out[1]);
             layout.add(.1, .05, .08, .065, goalInc[0]);
@@ -1314,7 +1312,6 @@ public class GUI extends JFrame implements GCGUI
             if (Rules.league instanceof SPL) {
                 stuck[i].setFont(timeoutFont);
                 goalFreeKick[i].setFont(standardFont);
-                pushingFreeKick[i].setFont(standardFont);
             }
         }
         clock.setFont(timeFont);
