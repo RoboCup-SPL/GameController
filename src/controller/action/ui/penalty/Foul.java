@@ -44,7 +44,7 @@ public class Foul extends Pushing
     {
         return super.isLegal(data) && ((data.gameState == GameControlData.STATE_PLAYING)
                     && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
-                    && (data.setPlay == GameControlData.SET_PLAY_NONE))
-                || data.testmode;
+                    && (data.setPlay == GameControlData.SET_PLAY_NONE)
+                    || data.testmode);
     }
 }
