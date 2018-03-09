@@ -244,7 +244,7 @@ In your NAOqi module, execute the following code at the beginning (only once):
 
     AL::ALMemoryProxy *memory = new AL::ALMemoryProxy(pBroker);
     memory->insertData("GameCtrl/teamNumber", <your team number>);
-    memory->insertData("GameCtrl/teamColor", <your default team color>);
+    memory->insertData("GameCtrl/teamColour", <your default team color>);
     memory->insertData("GameCtrl/playerNumber", <your robot's player number>);
 
 The team number must be non-zero. Setting the team number will reset libgamectrl
@@ -283,7 +283,6 @@ is defined in the file RoboCupGameControlData.h. It differs from the version use
 in 2017 in the following ways:
 
 - Coach fields have been deleted.
-- `teamColor` replaces `teamColour`. This name also changed in the memory key in libgamectrl, see above.
 - `gameType` has been split into two fields, i.e.
   ```
   uint8_t competitionPhase;

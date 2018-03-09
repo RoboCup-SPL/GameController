@@ -92,13 +92,13 @@ private:
   const float* buttons[numOfButtons]; /**< Pointers to where ALMemory stores the current button states. */
   const int* playerNumber; /** Points to where ALMemory stores the player number. */
   const int* teamNumberPtr; /** Points to where ALMemory stores the team number. The number be set to 0 after it was read. */
-  const int* defaultTeamColor; /** Points to where ALMemory stores the default team color. */
+  const int* defaultTeamColour; /** Points to where ALMemory stores the default team color. */
   int teamNumber; /**< The team number. */
   RoboCupGameControlData gameCtrlData; /**< The local copy of the GameController packet. */
   uint8_t previousState; /**< The game state during the previous cycle. Used to detect when LEDs have to be updated. */
   uint8_t previousGamePhase; /**< The game phase during the previous cycle. Used to detect when LEDs have to be updated. */
   uint8_t previousKickingTeam; /**< The kicking team during the previous cycle. Used to detect when LEDs have to be updated. */
-  uint8_t previousTeamColor; /**< The team color during the previous cycle. Used to detect when LEDs have to be updated. */
+  uint8_t previousTeamColour; /**< The team colour during the previous cycle. Used to detect when LEDs have to be updated. */
   uint8_t previousPenalty; /**< The penalty set during the previous cycle. Used to detect when LEDs have to be updated. */
   bool previousChestButtonPressed; /**< Whether the chest button was pressed during the previous cycle. */
   bool previousLeftFootButtonPressed; /**< Whether the left foot bumper was pressed during the previous cycle. */
@@ -118,7 +118,7 @@ private:
     previousState = (uint8_t) -1;
     previousGamePhase = (uint8_t) -1;
     previousKickingTeam = (uint8_t) -1;
-    previousTeamColor = (uint8_t) -1;
+    previousTeamColour = (uint8_t) -1;
     previousPenalty = (uint8_t) -1;
     previousChestButtonPressed = false;
     previousLeftFootButtonPressed = false;
@@ -148,10 +148,10 @@ private:
       if(gameCtrlData.state != previousState ||
          gameCtrlData.gamePhase != previousGamePhase ||
          gameCtrlData.kickingTeam != previousKickingTeam ||
-         team.teamColor != previousTeamColor ||
+         team.teamColour != previousTeamColour ||
          team.players[*playerNumber - 1].penalty != previousPenalty)
       {
-        switch(team.teamColor)
+        switch(team.teamColour)
         {
           case TEAM_BLUE:
             setLED(leftFootRed, 0.f, 0.f, 1.f);
@@ -224,7 +224,7 @@ private:
         previousState = gameCtrlData.state;
         previousGamePhase = gameCtrlData.gamePhase;
         previousKickingTeam = gameCtrlData.kickingTeam;
-        previousTeamColor = team.teamColor;
+        previousTeamColour = team.teamColour;
         previousPenalty = team.players[*playerNumber - 1].penalty;
       }
 
@@ -281,14 +281,14 @@ private:
       if(gameCtrlData.teams[0].teamNumber != teamNumber &&
          gameCtrlData.teams[1].teamNumber != teamNumber)
       {
-        uint8_t teamColor = (uint8_t) *defaultTeamColor;
-        if(teamColor != TEAM_BLUE && teamColor != TEAM_RED && teamColor != TEAM_YELLOW &&
-           teamColor != TEAM_WHITE && teamColor != TEAM_GREEN && teamColor != TEAM_ORANGE &&
-           teamColor != TEAM_PURPLE && teamColor != TEAM_BROWN && teamColor != TEAM_GRAY)
-          teamColor = TEAM_BLACK;
+        uint8_t teamColour = (uint8_t) *defaultTeamColour;
+        if(teamColour != TEAM_BLUE && teamColour != TEAM_RED && teamColour != TEAM_YELLOW &&
+           teamColour != TEAM_WHITE && teamColour != TEAM_GREEN && teamColour != TEAM_ORANGE &&
+           teamColour != TEAM_PURPLE && teamColour != TEAM_BROWN && teamColour != TEAM_GRAY)
+          teamColour = TEAM_BLACK;
         gameCtrlData.teams[0].teamNumber = (uint8_t) teamNumber;
-        gameCtrlData.teams[0].teamColor = teamColor;
-        gameCtrlData.teams[1].teamColor = teamColor ^ 1; // we don't know better
+        gameCtrlData.teams[0].teamColour = teamColour;
+        gameCtrlData.teams[1].teamColour = teamColour ^ 1; // we don't know better
         if(!gameCtrlData.playersPerTeam)
           gameCtrlData.playersPerTeam = (uint8_t) *playerNumber; // we don't know better
         publish();
@@ -333,7 +333,7 @@ private:
           {
             if(leftFootButtonPressed)
             {
-              team.teamColor = (team.teamColor + 1) % 10; // cycle between TEAM_BLUE .. TEAM_GRAY
+              team.teamColour = (team.teamColour + 1) % 10; // cycle between TEAM_BLUE .. TEAM_GRAY
               publish();
             }
             previousLeftFootButtonPressed = leftFootButtonPressed;
@@ -509,12 +509,12 @@ public:
 
       // If no color was set, set it to black (no LED).
       // This actually has a race condition.
-      if(memory->getDataList("GameCtrl/teamColor").empty())
-        memory->insertData("GameCtrl/teamColor", TEAM_BLACK);
+      if(memory->getDataList("GameCtrl/teamColour").empty())
+        memory->insertData("GameCtrl/teamColour", TEAM_BLACK);
 
       playerNumber = (int*) memory->getDataPtr("GameCtrl/playerNumber");
       teamNumberPtr = (int*) memory->getDataPtr("GameCtrl/teamNumber");
-      defaultTeamColor = (int*) memory->getDataPtr("GameCtrl/teamColor");
+      defaultTeamColour = (int*) memory->getDataPtr("GameCtrl/teamColour");
 
       // register "onPreProcess" and "onPostProcess" callbacks
       theInstance = this;
