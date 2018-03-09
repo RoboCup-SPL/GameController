@@ -101,7 +101,7 @@ public class Robot extends GCAction
             player.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
             data.robotPenaltyCount[side][number] = 0;
             data.whenPenalized[side][number] = data.getTime();
-            Log.state(data, "Substituted " + Rules.league.teamColorName[data.team[side].teamColor] + " " + (number + 1) + " " + " by " + (substituteNumber + 1));
+            Log.state(data, "Substituted " + Rules.league.teamColorName[data.team[side].teamColor] + " " + (number + 1) + " by " + (substituteNumber + 1));
         } else if (player.penalty != PlayerInfo.PENALTY_NONE) {
             player.penalty = PlayerInfo.PENALTY_NONE;
             Log.state(data, ("Unpenalised ")+

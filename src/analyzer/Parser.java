@@ -51,7 +51,6 @@ public class Parser
         "Goal for",
         "Goal decrease for Team",
         "Out by",
-        "Substituted by Player",
         "Referee Timeout",
         "Timeout",
         "Illegal Ball Contact",
@@ -68,8 +67,7 @@ public class Parser
         "Illegal Defense",
         "Request for Service",
         "Additional Request for Service",
-        "Leaving Player",
-        "Entering Player",
+        "Substituted",
         "Finished",
         "Initial",
         "Playing",
@@ -125,10 +123,15 @@ public class Parser
                 } else {
                     int undos = Integer.valueOf(splitted[1]);
                     for (int j=0; j<undos; j++) {
-                        if (log.lines.get(i-2-j).endsWith("Ready")
-                                && i-2-j > 0
-                                && (log.lines.get(i-2-j-1).contains("Goal for")
-                                        || log.lines.get(i-2-j-1).contains("Global Game Stuck"))) {
+                        // This has to do with Log.setNextMessage (which leads to two messages for one state in the log file).
+                        if (i-2-j > 0
+                                && (log.lines.get(i-2-j).endsWith("Ready")
+                                    && (log.lines.get(i-2-j-1).contains("Goal for")
+                                        || log.lines.get(i-2-j-1).contains("End of Timeout")
+                                        || log.lines.get(i-2-j-1).contains("End of Referee Timeout")
+                                        || log.lines.get(i-2-j-1).contains("Global Game Stuck")))
+                                || log.lines.get(i-2-j).endsWith("Initial")
+                                && log.lines.get(i-2-j-1).contains("Timeout")) {
                             ++undos;
                         }
                         log.lines.set(i-2-j, UNDONE_PREFIX+log.lines.get(i-2-j));
@@ -231,10 +234,11 @@ public class Parser
             }
 
             player = "";
-            String pattern = "("+log.color[0]+"|"+log.color[1]+")\\s*(\\d+)\\s*$";
+            // The optional by in the end is for substitution (the player that leaves is the first number).
+            String pattern = "("+log.color[0]+"|"+log.color[1]+")\\s*(\\d+)\\s*(by.*)?$";
             Matcher matcher = Pattern.compile(pattern).matcher(raw);
             if (matcher.find()) {
-                if (matcher.groupCount() == 2) {
+                if (matcher.groupCount() >= 2) {
                     player = matcher.group(2);
                 }
             }
