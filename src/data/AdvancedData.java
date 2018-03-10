@@ -49,6 +49,12 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public long timeSinceCurrentGameStateBegan;
 
     /**
+     * How long ago started the current set play? (ms) Only set when written
+     * to log and there is an active set play!
+     */
+    public long timeSinceCurrentSetPlayBegan;
+
+    /**
      * When was the last drop-in? (ms, 0 = never)
      */
     public long whenDropIn;

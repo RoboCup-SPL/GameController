@@ -34,14 +34,15 @@ public class Play extends GCAction
     public void perform(AdvancedData data) {
         if (data.gameState == GameControlData.STATE_PLAYING) {
             if (data.setPlay != GameControlData.SET_PLAY_NONE) {
-                if (data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK) {
+                final byte setPlay = data.setPlay;
+                data.setPlay = GameControlData.SET_PLAY_NONE;
+                if (setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK) {
                     Log.state(data, "Goal Free Kick Complete");
-                } else if (data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK) {
+                } else if (setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK) {
                     Log.state(data, "Pushing Free Kick Complete");
                 } else {
                     assert false;
                 }
-                data.setPlay = GameControlData.SET_PLAY_NONE;
             }
             return;
         }

@@ -113,7 +113,8 @@ public class Log
     {
         AdvancedData state = (AdvancedData) data.clone();
         if (!instance.states.isEmpty()) {
-          state.timeSinceCurrentGameStateBegan = state.getTime() - instance.states.getLast().whenCurrentGameStateBegan;
+            state.timeSinceCurrentGameStateBegan = state.getTime() - instance.states.getLast().whenCurrentGameStateBegan;
+            state.timeSinceCurrentSetPlayBegan = state.getTime() - instance.states.getLast().whenCurrentSetPlayBegan;
         }
         if (instance.message == null) {
             state.message = message;
@@ -144,22 +145,49 @@ public class Log
             states = instance.states.size()-1;
         }
         long timeSinceCurrentGameStateBegan = 0;
+        long nextTimeSinceCurrentGameStateBegan = 0;
+        long timeSinceCurrentSetPlayBegan = 0;
 
         boolean gameStateChanged = false;
+        byte nextGameState = data.gameState;
         for (int i=0; i<states; i++) {
-            gameStateChanged |= instance.states.getLast().gameState != data.gameState;
-            timeSinceCurrentGameStateBegan = instance.states.getLast().timeSinceCurrentGameStateBegan;
+            final AdvancedData lastState = instance.states.getLast();
+            if (lastState.gameState != nextGameState) {
+                gameStateChanged = true;
+                nextGameState = lastState.gameState;
+                timeSinceCurrentGameStateBegan = nextTimeSinceCurrentGameStateBegan;
+            }
+            if (lastState.setPlay == AdvancedData.SET_PLAY_NONE) {
+                timeSinceCurrentSetPlayBegan = lastState.timeSinceCurrentSetPlayBegan;
+            }
+            nextTimeSinceCurrentGameStateBegan = lastState.timeSinceCurrentGameStateBegan;
             instance.states.removeLast();
         }
-        gameStateChanged |= instance.states.getLast().gameState != data.gameState;
+        final AdvancedData lastState = instance.states.getLast();
+        if (lastState.gameState != nextGameState) {
+            gameStateChanged = true;
+            timeSinceCurrentGameStateBegan = nextTimeSinceCurrentGameStateBegan;
+        }
         if (gameStateChanged) {
             long timeOffset = data.getTime() - timeSinceCurrentGameStateBegan
-                    - instance.states.getLast().whenCurrentGameStateBegan;
+                    - lastState.whenCurrentGameStateBegan;
             for (AdvancedData state : instance.states) {
                 state.whenCurrentGameStateBegan += timeOffset;
+                for (int i = 0; i < state.whenPenalized.length; i++) {
+                    for (int j = 0; j < data.whenPenalized[i].length; j++) {
+                        state.whenPenalized[i][j] += timeOffset;
+                    }
+                }
             }
         }
-        AdvancedData state = (AdvancedData) instance.states.getLast().clone();
+        if (lastState.setPlay != AdvancedData.SET_PLAY_NONE && timeSinceCurrentSetPlayBegan != 0) {
+            long timeOffset = data.getTime() - timeSinceCurrentSetPlayBegan
+                    - lastState.whenCurrentSetPlayBegan;
+            for (AdvancedData state : instance.states) {
+                state.whenCurrentSetPlayBegan += timeOffset;
+            }
+        }
+        AdvancedData state = (AdvancedData) lastState.clone();
 
         // Write state to EventHandler if application is GameController
         try {
