@@ -594,7 +594,6 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.505, .48, .185, .08, pen[3]);
             layout.add(.31,  .58, .185, .08, pen[4]);
             layout.add(.505, .58, .185, .08, pen[5]);
-            layout.add(.31,  .68, .185, .08, pen[6]);
             layout.add(.31,  .78, .38,  .08, dropBall);
         }
         layout.add(.08, .88, .84, .11, log);
