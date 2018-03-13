@@ -271,7 +271,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public void addTimeInCurrentStateToPenalties() {
         for (int side = 0; side < team.length; side++) {
             for (int number = 0; number < team[side].player.length; number++) {
-                if (team[side].player[number].penalty != PlayerInfo.PENALTY_NONE) {
+                if (team[side].player[number].penalty != PlayerInfo.PENALTY_NONE && whenPenalized[side][number] != 0) {
                     whenPenalized[side][number] += getTime() - Math.max(whenCurrentGameStateBegan, whenPenalized[side][number]);
                 }
             }
@@ -375,8 +375,9 @@ public class AdvancedData extends GameControlData implements Cloneable {
         int penalty = team[side].player[number].penalty;
         int penaltyTime = getPenaltyDuration(side, number);
         long start = whenPenalized[side][number];
-        if (gameState == STATE_SET || (!real && gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
-                && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying)) {
+        if (start != 0 && (gameState == STATE_SET || (!real && gamePhase == GAME_PHASE_NORMAL
+                    && gameState == STATE_PLAYING
+                    && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying))) {
             start += getTime() - Math.max(whenCurrentGameStateBegan, whenPenalized[side][number]);
         }
         return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0

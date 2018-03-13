@@ -175,7 +175,9 @@ public class Log
                 state.whenCurrentGameStateBegan += timeOffset;
                 for (int i = 0; i < state.whenPenalized.length; i++) {
                     for (int j = 0; j < data.whenPenalized[i].length; j++) {
-                        state.whenPenalized[i][j] += timeOffset;
+                        if (state.whenPenalized[i][j] != 0) {
+                            state.whenPenalized[i][j] += timeOffset;
+                        }
                     }
                 }
             }
