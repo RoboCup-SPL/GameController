@@ -228,7 +228,7 @@ public class GUI extends JFrame implements GCGUI
     private ImagePanel clockContainer;
     private JLabel clock;
     private JLabel clockSub;
-    private JLabel freeKick;
+    private JLabel clockDescription;
     private ImageButton incGameClock;
     private ImageButton clockPause;
     private JToggleButton firstHalf;
@@ -409,8 +409,8 @@ public class GUI extends JFrame implements GCGUI
         incGameClock = new ImageButton(clockImgPlus.getImage());
         incGameClock.setOpaque(false);
         incGameClock.setBorder(null);
-        freeKick = new JLabel("");
-        freeKick.setHorizontalAlignment(JLabel.CENTER);
+        clockDescription = new JLabel("");
+        clockDescription.setHorizontalAlignment(JLabel.CENTER);
         if (!Rules.league.overtime) {
             firstHalf = new ToggleButton(FIRST_HALF);
             firstHalf.setSelected(true);
@@ -536,7 +536,7 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.4, .012, .195, .10, clock);
         layout.add(.61, .0, .08, .11, clockPause);
         layout.add(.4, .11, .2, .07, clockSub);
-        layout.add(.4, .15, .2, .07, freeKick);
+        layout.add(.4, .15, .2, .07, clockDescription);
         if (Rules.league.lostTime) {
             layout.add(.590, .0, .03, .11, incGameClock);
             layout.add(.4, .0, .195, .11, clockContainer);
@@ -844,11 +844,16 @@ public class GUI extends JFrame implements GCGUI
         } else {
             clockSub.setText("");
         }
-
-    	if (data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK) {
-    		freeKick.setText("Pushing Free Kick");
-    	} else {
-    		freeKick.setText("");
+    	
+    	switch(data.setPlay) {
+	    	case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
+	    		clockDescription.setText("Pushing Free Kick");
+	    		break;
+	    	case GameControlData.SET_PLAY_GOAL_FREE_KICK:
+	    		clockDescription.setText("Goal Free Kick");
+	    		break;
+	    	default:
+	    		clockDescription.setText("");
     	}
         
         ImageIcon tmp;
@@ -1315,7 +1320,7 @@ public class GUI extends JFrame implements GCGUI
         }
         clock.setFont(timeFont);
         clockSub.setFont(timeSubFont);
-        freeKick.setFont(standardFont);
+        clockDescription.setFont(standardFont);
         
         firstHalf.setFont(timeoutFont);
         secondHalf.setFont(timeoutFont);
