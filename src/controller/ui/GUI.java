@@ -212,8 +212,7 @@ public class GUI extends JFrame implements GCGUI
     private ImageIcon[][] lanIcon;
     private JProgressBar[][] robotTime;
     private JToggleButton refereeTimeout;
-    private JToggleButton[] goalFreeKick;
-    private JToggleButton[] pushingFreeKick;
+    private JButton[] goalFreeKick;
     private JToggleButton[] timeOut;
     private JButton[] stuck;
     private JButton[] out;
@@ -368,21 +367,16 @@ public class GUI extends JFrame implements GCGUI
         //  team
         out = new JButton[2];        
         if (Rules.league instanceof SPL) {
-            goalFreeKick = new JToggleButton[2];
-            pushingFreeKick = new JToggleButton[2];
+            goalFreeKick = new JButton[2];
             for (int i=0; i<2; i++) {                
-                goalFreeKick[i] = new ToggleButton(GOAL_FREE_KICK);
-                pushingFreeKick[i] = new ToggleButton(PUSHING_FREE_KICK);
-                pushingFreeKick[i].setVisible(false);
-                out[i] = new JButton(OUT);
-                stateGroup.add(goalFreeKick[i]);
-                stateGroup.add(pushingFreeKick[i]);
+                goalFreeKick[i] = new Button(GOAL_FREE_KICK);
+                out[i] = new Button(OUT);
             }
         } else {
             timeOut = new JToggleButton[2];
             for (int i=0; i<2; i++) {
                 timeOut[i] = new ToggleButton(TIMEOUT);
-                out[i] = new JButton(OUT);
+                out[i] = new Button(OUT);
             }
         }
         
@@ -840,13 +834,13 @@ public class GUI extends JFrame implements GCGUI
         clock.setText(formatTime(data.getRemainingGameTime(true)));
         Integer secondaryTime = data.getSecondaryTime(true);
         if (secondaryTime != null) {
-        	clockSub.setText(formatTime(secondaryTime));
+            clockSub.setText(formatTime(secondaryTime));
         } else {
             clockSub.setText("");
         }
         
     	updateClockDescription(data);
-        
+
         ImageIcon tmp;
         if (ActionBoard.clock.isClockRunning(data)) {
             tmp = clockImgPause;
@@ -862,14 +856,14 @@ public class GUI extends JFrame implements GCGUI
     }
     
     private void updateClockDescription(AdvancedData data) {    	
-    	if(data.gameState == GameControlData.STATE_READY) {
+    	if (data.gameState == GameControlData.STATE_READY) {
     		clockDescription.setText(STATE_READY);
     	} else {
     		clockDescription.setText("");
     	}
 		
-		if(clockDescription.getText().isEmpty()) {
-	    	switch(data.setPlay) {
+		if (clockDescription.getText().isEmpty()) {
+	    	switch (data.setPlay) {
 		    	case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
 		    		clockDescription.setText(PUSHING_FREE_KICK);
 		    		break;
@@ -881,8 +875,8 @@ public class GUI extends JFrame implements GCGUI
 	    	}
 		}
 	
-		if(clockDescription.getText().isEmpty()) {
-	    	switch(data.gamePhase) {
+		if (clockDescription.getText().isEmpty()) {
+	    	switch (data.gamePhase) {
 		    	case GameControlData.GAME_PHASE_TIMEOUT:
 		    		clockDescription.setText(TIMEOUT);
 		    		break;
@@ -967,6 +961,8 @@ public class GUI extends JFrame implements GCGUI
             case GameControlData.STATE_PLAYING:
                 if (data.setPlay == GameControlData.SET_PLAY_NONE) {
                     play.setSelected(true);
+                } else {
+                    stateGroup.clearSelection();
                 }
                 break;
             case GameControlData.STATE_FINISHED:
@@ -1200,11 +1196,7 @@ public class GUI extends JFrame implements GCGUI
     private void updateFreeKick(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            goalFreeKick[i].setSelected(data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK && data.kickingTeam == data.team[i].teamNumber);
             goalFreeKick[i].setEnabled(ActionBoard.goalFreeKick[i].isLegal(data));
-
-            pushingFreeKick[i].setSelected(data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK && data.kickingTeam == data.team[i].teamNumber);
-            pushingFreeKick[i].setEnabled(false);
         }
     }
 
