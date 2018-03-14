@@ -844,17 +844,8 @@ public class GUI extends JFrame implements GCGUI
         } else {
             clockSub.setText("");
         }
-    	
-    	switch(data.setPlay) {
-	    	case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
-	    		clockDescription.setText("Pushing Free Kick");
-	    		break;
-	    	case GameControlData.SET_PLAY_GOAL_FREE_KICK:
-	    		clockDescription.setText("Goal Free Kick");
-	    		break;
-	    	default:
-	    		clockDescription.setText("");
-    	}
+        
+    	updateClockDescription(data);
         
         ImageIcon tmp;
         if (ActionBoard.clock.isClockRunning(data)) {
@@ -868,6 +859,40 @@ public class GUI extends JFrame implements GCGUI
         if (Rules.league.lostTime) {
             incGameClock.setVisible(ActionBoard.incGameClock.isLegal(data));
         }
+    }
+    
+    private void updateClockDescription(AdvancedData data) {    	
+    	if(data.gameState == GameControlData.STATE_READY) {
+    		clockDescription.setText(STATE_READY);
+    	} else {
+    		clockDescription.setText("");
+    	}
+		
+		if(clockDescription.getText().isEmpty()) {
+	    	switch(data.setPlay) {
+		    	case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
+		    		clockDescription.setText(PUSHING_FREE_KICK);
+		    		break;
+		    	case GameControlData.SET_PLAY_GOAL_FREE_KICK:
+		    		clockDescription.setText(GOAL_FREE_KICK);
+		    		break;
+		    	default:
+		    		clockDescription.setText("");
+	    	}
+		}
+	
+		if(clockDescription.getText().isEmpty()) {
+	    	switch(data.gamePhase) {
+		    	case GameControlData.GAME_PHASE_TIMEOUT:
+		    		clockDescription.setText(TIMEOUT);
+		    		break;
+		    	case GameControlData.GAME_PHASE_PENALTYSHOOT:
+		    		clockDescription.setText(PENALTY_SHOOT);
+		    		break;
+		    	default:
+		    		clockDescription.setText("");
+	    	}
+		}
     }
     
     /**
@@ -1127,6 +1152,10 @@ public class GUI extends JFrame implements GCGUI
     private void updateRefereeTimeout(AdvancedData data) {
         refereeTimeout.setSelected(data.refereeTimeout);
         refereeTimeout.setEnabled(ActionBoard.refereeTimeout.isLegal(data));
+        
+        if(data.refereeTimeout) {
+        	clockDescription.setText("Referee Timeout");
+        }
     }
     
     /**
