@@ -125,9 +125,12 @@ public class GUI extends JFrame implements GCGUI
     private static final String OFFLINE = "wlan_status_red.png";
     private static final String HIGH_LATENCY = "wlan_status_yellow.png";
     private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
+    private static final String HALF_TIME = "Half Time";
+    private static final String BALL_IN_PLAY = "Ball in Play";
     private static final String TIMEOUT = "Timeout";
     private static final String STUCK = "Global Game Stuck";
     private static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
+    private static final String REFEREE_TIMEOUT_WITHOUT_BREAK = "Referee Timeout";
     private static final String GOAL_FREE_KICK = "Goal Free Kick";
     private static final String PUSHING_FREE_KICK = "Pushing Free Kick";
     private static final String OUT = "Out";
@@ -839,7 +842,7 @@ public class GUI extends JFrame implements GCGUI
             clockSub.setText("");
         }
         
-    	updateClockDescription(data);
+        updateClockDescription(data);
 
         ImageIcon tmp;
         if (ActionBoard.clock.isClockRunning(data)) {
@@ -855,38 +858,40 @@ public class GUI extends JFrame implements GCGUI
         }
     }
     
-    private void updateClockDescription(AdvancedData data) {    	
-    	if (data.gameState == GameControlData.STATE_READY) {
-    		clockDescription.setText(STATE_READY);
-    	} else {
-    		clockDescription.setText("");
-    	}
-		
-		if (clockDescription.getText().isEmpty()) {
-	    	switch (data.setPlay) {
-		    	case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
-		    		clockDescription.setText(PUSHING_FREE_KICK);
-		    		break;
-		    	case GameControlData.SET_PLAY_GOAL_FREE_KICK:
-		    		clockDescription.setText(GOAL_FREE_KICK);
-		    		break;
-		    	default:
-		    		clockDescription.setText("");
-	    	}
-		}
-	
-		if (clockDescription.getText().isEmpty()) {
-	    	switch (data.gamePhase) {
-		    	case GameControlData.GAME_PHASE_TIMEOUT:
-		    		clockDescription.setText(TIMEOUT);
-		    		break;
-		    	case GameControlData.GAME_PHASE_PENALTYSHOOT:
-		    		clockDescription.setText(PENALTY_SHOOT);
-		    		break;
-		    	default:
-		    		clockDescription.setText("");
-	    	}
-		}
+    private void updateClockDescription(AdvancedData data) {
+        int timeKickOffBlocked = data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
+        if (data.gameState == AdvancedData.STATE_INITIAL && (data.timeOutActive[0] || data.timeOutActive[1])) {
+            clockDescription.setText(TIMEOUT);
+        } else if (data.gameState == AdvancedData.STATE_INITIAL && (data.refereeTimeout)) {
+            clockDescription.setText(REFEREE_TIMEOUT_WITHOUT_BREAK);
+        } else if (data.gameState == AdvancedData.STATE_READY) {
+            clockDescription.setText(STATE_READY);
+        } else if (data.gameState == AdvancedData.STATE_PLAYING && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
+                && data.setPlay != AdvancedData.SET_PLAY_NONE) {
+            switch (data.setPlay) {
+                case AdvancedData.SET_PLAY_GOAL_FREE_KICK:
+                    clockDescription.setText(GOAL_FREE_KICK);
+                    break;
+                case AdvancedData.SET_PLAY_PUSHING_FREE_KICK:
+                    clockDescription.setText(PUSHING_FREE_KICK);
+                    break;
+                default:
+                    assert false;
+            }
+        } else if (data.gameState == AdvancedData.STATE_PLAYING && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
+                && timeKickOffBlocked >= 0 && data.kickingTeam != AdvancedData.DROPBALL) {
+            clockDescription.setText(BALL_IN_PLAY);
+        } else if (data.gamePhase == AdvancedData.GAME_PHASE_NORMAL
+                && (data.gameState == AdvancedData.STATE_INITIAL && data.firstHalf != AdvancedData.C_TRUE && !data.timeOutActive[0] && !data.timeOutActive[1]
+                || data.gameState == AdvancedData.STATE_FINISHED && data.firstHalf == AdvancedData.C_TRUE)) {
+            clockDescription.setText(HALF_TIME);
+        } else if (Rules.league.pausePenaltyShootOutTime != 0 && data.competitionPhase == AdvancedData.COMPETITION_PHASE_PLAYOFF && data.team[0].score == data.team[1].score
+                && (data.gameState == AdvancedData.STATE_INITIAL && data.gamePhase == AdvancedData.GAME_PHASE_PENALTYSHOOT && !data.timeOutActive[0] && !data.timeOutActive[1]
+                || data.gameState == AdvancedData.STATE_FINISHED && data.firstHalf != AdvancedData.C_TRUE)) {
+            clockDescription.setText(PENALTY_SHOOT);
+        } else {
+            clockDescription.setText("");
+        }
     }
     
     /**
@@ -1148,10 +1153,6 @@ public class GUI extends JFrame implements GCGUI
     private void updateRefereeTimeout(AdvancedData data) {
         refereeTimeout.setSelected(data.refereeTimeout);
         refereeTimeout.setEnabled(ActionBoard.refereeTimeout.isLegal(data));
-        
-        if(data.refereeTimeout) {
-        	clockDescription.setText("Referee Timeout");
-        }
     }
     
     /**
