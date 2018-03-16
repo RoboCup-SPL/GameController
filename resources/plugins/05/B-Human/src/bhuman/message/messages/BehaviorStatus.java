@@ -37,4 +37,9 @@ public class BehaviorStatus extends StreamedObject<BehaviorStatus> implements Me
      */
     public Activity activity;
 
+    /**
+     * The play that the robot executes.
+     */
+    public int play;
+
 }
