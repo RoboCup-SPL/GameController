@@ -350,7 +350,19 @@ public class View3DGSV extends View3D {
                     state = "Set";
                     break;
                 case GameControlData.STATE_PLAYING:
-                    state = "Playing";
+                    switch (data.setPlay) {
+                        case GameControlData.SET_PLAY_NONE:
+                            state = "Playing";
+                            break;
+                        case GameControlData.SET_PLAY_GOAL_FREE_KICK:
+                            state = "Goal Free Kick";
+                            break;
+                        case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
+                            state = "Pushing Free Kick";
+                            break;
+                        default:
+                            state = "";
+                    }
                     break;
                 case GameControlData.STATE_FINISHED:
                     state = "Finished";
@@ -367,7 +379,7 @@ public class View3DGSV extends View3D {
             }
             textRenderers[RENDERER_STATE].endRendering();
 
-            if (data.gameState == GameControlData.STATE_READY || data.gameState == GameControlData.STATE_SET) {
+            if (data.gameState == GameControlData.STATE_READY || data.gameState == GameControlData.STATE_SET || (data.gameState == GameControlData.STATE_PLAYING && data.setPlay != GameControlData.SET_PLAY_NONE)) {
                 switchTo2D(gl);
                 final float iconSize = textRendererSizes[RENDERER_STATE] * 2 / 3;
                 try {
