@@ -3,11 +3,6 @@
 This is the GameController developed by team B-Human for the RoboCup SPL and
 Humanoid League.
 
-If there are any questions, please contact
-[fthielke@uni-bremen.de](fthielke@uni-bremen.de). Please make sure that your
-questions are not already answered in this README or the README file of the
-[TCM](TCM.md).
-
 Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
 
 The sources mentioned in some sections of this document are available at
