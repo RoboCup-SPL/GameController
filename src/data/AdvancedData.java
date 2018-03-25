@@ -270,7 +270,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public void addTimeInCurrentStateToPenalties() {
         for (int side = 0; side < team.length; side++) {
-            for (int number = 0; number < team[side].player.length; number++) {
+            for (int number = 0; number < whenPenalized[side].length; number++) {
                 if (team[side].player[number].penalty != PlayerInfo.PENALTY_NONE && whenPenalized[side][number] != 0) {
                     whenPenalized[side][number] += getTime() - Math.max(whenCurrentGameStateBegan, whenPenalized[side][number]);
                 }

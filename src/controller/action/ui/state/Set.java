@@ -64,7 +64,7 @@ public class Set extends GCAction {
                 if (number != -1)
                     data.team[side].player[number].penalty = PlayerInfo.PENALTY_NONE;
             }
-        	
+
         }
         data.gameState = GameControlData.STATE_SET;
         data.setPlay = GameControlData.SET_PLAY_NONE;
