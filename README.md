@@ -1,7 +1,9 @@
 # RoboCup SPL and Humanoid League GameController
 
 This is the GameController developed by team B-Human for the RoboCup SPL and
-Humanoid League.
+Humanoid League. Please note that the Humanoid League currently uses a
+[fork](https://github.com/RoboCup-Humanoid-TC/GameController).
+
 
 Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
 
