@@ -374,14 +374,17 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public int getRemainingPenaltyTime(int side, int number, boolean real) {
         int penalty = team[side].player[number].penalty;
         int penaltyTime = getPenaltyDuration(side, number);
+        if (penaltyTime == -1) {
+            return 0;
+        }
+        assert penalty != PlayerInfo.PENALTY_MANUAL && penalty != PlayerInfo.PENALTY_SUBSTITUTE;
         long start = whenPenalized[side][number];
         if (start != 0 && (gameState == STATE_SET || (!real && gamePhase == GAME_PHASE_NORMAL
                     && gameState == STATE_PLAYING
                     && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying))) {
             start += getTime() - Math.max(whenCurrentGameStateBegan, whenPenalized[side][number]);
         }
-        return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
-                : Math.max(0, getRemainingSeconds(start, penaltyTime));
+        return Math.max(0, getRemainingSeconds(start, penaltyTime));
     }
 
     /**
