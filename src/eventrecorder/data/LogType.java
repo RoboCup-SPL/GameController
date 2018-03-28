@@ -7,5 +7,5 @@ package eventrecorder.data;
  */
 
 public enum LogType {
-    GameState, PlayerState, Manually;
+    GameState, SetPlayState, PlayerState, Manually;
 }

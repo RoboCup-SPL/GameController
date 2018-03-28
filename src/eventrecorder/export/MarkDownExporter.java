@@ -20,7 +20,7 @@ public class MarkDownExporter {
             
             if(entry.type == LogType.Manually){
                 result += "- "+entry.time+": "+entry.text+"  \n";
-            } else if(entry.type == LogType.PlayerState){
+            } else if(entry.type == LogType.PlayerState || entry.type == LogType.SetPlayState){
                 result += "- *"+entry.time+": "+entry.text+"*  \n";
             } else if(entry.type == LogType.GameState){
                 result += "\n**"+entry.text+" ("+entry.time+")**  \n\n";

@@ -41,8 +41,11 @@ public class EventRecorder {
     private static GameControlData lastData = null;
     private static TeamInfo[] lastTeamData = null;
     private static byte lastGameState = -1;
-    
+    private static byte lastSetPlay = -1;
+    private static byte lastKickingTeam = -1;
+
     private static boolean[] logPenalty = new boolean[16];
+    private static boolean logFreeKicks = false;
     
     public TeamInfo[] getLastTeamData() {
     	return lastTeamData;
@@ -101,7 +104,6 @@ public class EventRecorder {
                 if(data.gameState == GameControlData.STATE_INITIAL){
                     gameStateString += " ( "+ (data.firstHalf == GameControlData.C_TRUE? "First Half":"Second Half")+" )";
                 }
-                
 
                 // Insert before empty logEntries:
             	int insertPlace = EventRecorder.model.logEntries.size();
@@ -110,6 +112,24 @@ public class EventRecorder {
             		--insertPlace;
             	
                 history.execute(new EntryCreateAction(new LogEntry(gameStateString,SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.GameState), insertPlace, false));
+            }
+
+            //Log Free Kicks
+            if(logFreeKicks && (lastSetPlay != data.setPlay || lastKickingTeam != data.kickingTeam)) {
+                lastSetPlay = data.setPlay;
+                lastKickingTeam = data.kickingTeam;
+                if(data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK || data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK) {
+                    String setPlayString = data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK ? "Goal Free Kick for team: " : "Pushing Free Kick for team: ";
+                    setPlayString += Byte.toString(data.kickingTeam);
+
+                    // Insert before empty logEntries:
+                    int insertPlace = EventRecorder.model.logEntries.size();
+
+                    while(insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text))
+                        --insertPlace;
+
+                    history.execute(new EntryCreateAction(new LogEntry(setPlayString, SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.SetPlayState ), insertPlace, false));
+                }
             }
 
             // Check for changed penalties:
@@ -177,4 +197,8 @@ public class EventRecorder {
 	public static void setLogPenalty(int i, boolean log) {
 		logPenalty[i] = log;
 	}
+
+	public static void setLogFreeKicks(boolean log) {
+        logFreeKicks = log;
+    }
 }

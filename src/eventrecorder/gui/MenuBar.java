@@ -118,6 +118,19 @@ public class MenuBar extends JMenuBar {
         }
         
         loggingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+
+        final JCheckBox checkBox = new JCheckBox("Free Kicks");
+
+        checkBox.setSelected(false);
+        checkBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EventRecorder.setLogFreeKicks(checkBox.isSelected());
+            }
+        });
+        loggingPanel.add(checkBox);
+
+        loggingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
         
         logging.add(loggingPanel);
         add(logging);
