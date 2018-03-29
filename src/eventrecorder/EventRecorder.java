@@ -45,7 +45,7 @@ public class EventRecorder {
     private static byte lastKickingTeam = -1;
 
     private static boolean[] logPenalty = new boolean[16];
-    private static boolean logFreeKicks = false;
+    private static boolean logFreeKicks = true;
     
     public TeamInfo[] getLastTeamData() {
     	return lastTeamData;

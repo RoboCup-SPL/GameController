@@ -121,7 +121,7 @@ public class MenuBar extends JMenuBar {
 
         final JCheckBox checkBox = new JCheckBox("Free Kicks");
 
-        checkBox.setSelected(false);
+        checkBox.setSelected(true);
         checkBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
