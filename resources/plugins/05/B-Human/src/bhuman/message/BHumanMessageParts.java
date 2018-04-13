@@ -371,9 +371,6 @@ public class BHumanMessageParts {
         public short ballLastPerceptX;
         public short ballLastPerceptY;
         public float[] ballCovariance = new float[3];
-        public Timestamp ballTimeWhenTouched;
-        public short ballRobotPositionWhenTouchedX;
-        public short ballRobotPositionWhenTouchedY;
         public float robotPoseDeviation;
         public float[] robotPoseCovariance = new float[6];
         @Primitive("uchar")
