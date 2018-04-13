@@ -19,7 +19,7 @@ public class RobotState {
 
         INACTIVE(10000),
         OFFLINE(2000),
-        HIGH_LATENCY(500),
+        HIGH_LATENCY(1000),
         ONLINE(0);
 
         public final int threshold;

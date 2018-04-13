@@ -210,7 +210,7 @@ public class TeamCommunicationMonitor {
                             + "\n  (-s | --silent)                 start in silent mode"
                             + "\n  (--gsv)                         start as GameStateVisualizer"
                             + "\n  (-w | --windowed)               GSV: force windowed mode"
-                            + "\n  (-p | --forceplugins)           GVS: force usage of plugins");
+                            + "\n  (-p | --forceplugins)           GSV: force usage of plugins");
                     System.exit(0);
                 case ARG_LEAGUE_SHORT:
                 case ARG_LEAGUE:
