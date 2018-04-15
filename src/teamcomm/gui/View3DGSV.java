@@ -30,10 +30,13 @@ import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.SwingUtilities;
+import teamcomm.PluginLoader;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
+import teamcomm.data.event.TeamEvent;
 import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.Image;
 import teamcomm.gui.drawings.TextureLoader;
@@ -475,5 +478,27 @@ public class View3DGSV extends View3D {
      */
     private String formatTime(final int seconds) {
         return (seconds < 0 ? "-" : "") + String.format("%02d:%02d", Math.abs(seconds) / 60, Math.abs(seconds) % 60);
+    }
+
+    @Override
+    public void teamChanged(final TeamEvent e) {
+        if (e.side != GameState.TEAM_OTHER) {
+            if (teamNumbers[e.side] != (e.teamNumber == 0 ? PluginLoader.TEAMNUMBER_COMMON : e.teamNumber)) {
+                teamNumbers[e.side] = e.teamNumber == 0 ? PluginLoader.TEAMNUMBER_COMMON : e.teamNumber;
+
+                synchronized (drawings) {
+                    drawings.clear();
+                    drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
+                    if (teamNumbers[0] != PluginLoader.TEAMNUMBER_COMMON) {
+                        drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[0]));
+                    }
+                    if (teamNumbers[1] != PluginLoader.TEAMNUMBER_COMMON) {
+                        drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
+                    }
+                    Collections.sort(drawings, drawingComparator);
+                }
+            }
+        }
+        super.teamChanged(e);
     }
 }

@@ -124,7 +124,7 @@ public class PluginLoader {
      * @return drawings
      */
     public Collection<Drawing> getDrawings(final int teamNumber) {
-        final Collection<Drawing> ds = pluginsDisabled ? null : drawings.get(teamNumber);
+        final Collection<Drawing> ds = pluginsDisabled && teamNumber != TEAMNUMBER_COMMON ? null : drawings.get(teamNumber);
 
         return ds != null ? ds : new ArrayList<Drawing>(0);
     }
