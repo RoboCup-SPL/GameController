@@ -87,12 +87,7 @@ public class Robot extends GCAction
             if (player.penalty == PlayerInfo.PENALTY_NONE && data.gameState != AdvancedData.STATE_INITIAL) {
                 data.team[side].player[substituteNumber].penalty = Rules.league.substitutePenalty;
                 data.robotPenaltyCount[side][substituteNumber] = 0;
-                if (data.gameState == AdvancedData.STATE_READY
-                        || data.gameState == AdvancedData.STATE_SET) {
-                    data.whenPenalized[side][substituteNumber] = 0;
-                } else {
-                    data.whenPenalized[side][substituteNumber] = data.getTime();
-                }
+                data.whenPenalized[side][substituteNumber] = data.getTime();
             } else {
                 data.team[side].player[substituteNumber].penalty = player.penalty;
                 data.robotPenaltyCount[side][substituteNumber] = data.robotPenaltyCount[side][number];
