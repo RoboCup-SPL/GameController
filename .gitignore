@@ -1,6 +1,8 @@
 build/
 nbproject/
 .settings/
+.idea
+*.iml
 *~
 error.txt
 /resources/plugins/05/resources/bhumanpath.cfg
