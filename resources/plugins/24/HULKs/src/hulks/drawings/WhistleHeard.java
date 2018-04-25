@@ -27,7 +27,6 @@ public class WhistleHeard extends PerPlayer {
                 && rs.getLastMessage() instanceof HulksMessage) {
             final HulksMessage msg = (HulksMessage) rs.getLastMessage();
             if (msg.message.bhulks != null && msg.message.bhulks.confidenceOfLastWhistleDetection != HulksMessageParts.BHULKsStandardMessagePart.HearingConfidence.iAmDeaf && msg.message.bhulks.lastTimeWhistleDetected.getTimeSince(msg.message.bhulks.timestamp) >= -200) {
-                Log.error("WHISTLE!");
                 gl.glPushMatrix();
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1);
                 camera.turnTowardsCamera(gl);

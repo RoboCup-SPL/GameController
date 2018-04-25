@@ -211,6 +211,20 @@ public class HulksMessageParts {
         // all ntp-message this robot sends to his teammates in response to their requests
         public List<BNTPMessage> ntpMessages;
 
+        private enum BHULKsSizes {
+            OWN_TEAM_INFO(11);
+
+            private final int size_;
+
+            BHULKsSizes(final int size) {
+                size_ = size;
+            }
+
+            public int getSize() {
+                return size_;
+            }
+        }
+
         @Override
         public int getStreamedSize(final ByteBuffer stream) {
             int size = 4 // timestamp
@@ -221,6 +235,7 @@ public class HulksMessageParts {
                     + 2 // timeWhenReachBallQueen
                     + 4 // ballTimeWhenLastSeen
                     + 2 // whistle stuff
+                    + BHULKsSizes.OWN_TEAM_INFO.getSize() // gameControlData
                     + 4; // roleAssignments, currentlyPerfomingRole, passTarget
 
             if (stream.remaining() < size) {
@@ -264,25 +279,18 @@ public class HulksMessageParts {
             confidenceOfLastWhistleDetection = HearingConfidence.values()[whistleDetectionContainer >> 14];
             lastTimeWhistleDetected = new Timestamp(timestamp - (long) (whistleDetectionContainer & 0x3FFF));
 
+            // GameControlData is omitted
+            stream.position(stream.position() + BHULKsSizes.OWN_TEAM_INFO.getSize());
+
             final long roleContainer = Unsigned.toUnsigned(stream.getInt());
             long runner = 0x7 << ((BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - 1) * 3);
             for (int i = 0; i < BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; ++i, runner >>= 3) {
-                int roleId = (int) ((roleContainer & runner) >> ((BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - i - 1) * 3));
-                if (roleId >= Role.values().length) {
-                    Log.error("Received invalid team player role: " + roleId);
-                    roleId = Role.values().length - 1;
-                }
-                roleAssignments[i] = Role.values()[roleId];
+                roleAssignments[i] = Role.values()[(int) ((roleContainer & runner) >> ((BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - i - 1) * 3))];
             }
 
             final short numObsCurrPerforRolePassTargContainer = Unsigned.toUnsigned(stream.get());
             passTarget = (byte) (numObsCurrPerforRolePassTargContainer >> 4);
-            int roleId = (int) (((numObsCurrPerforRolePassTargContainer & 8) >> 1) | (roleContainer >> (BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS * 3)));
-            if (roleId >= Role.values().length) {
-                Log.error("Received invalid player role: " + roleId);
-                roleId = Role.values().length - 1;
-            }
-            currentlyPerfomingRole = Role.values()[roleId];
+            currentlyPerfomingRole = Role.values()[(int) (((numObsCurrPerforRolePassTargContainer & 8) >> 1) | (roleContainer >> (BHULKS_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS * 3)))];
 
             final int numOfObstacles = numObsCurrPerforRolePassTargContainer & 0x7;
             obstacles = new ArrayList<>(numOfObstacles);
