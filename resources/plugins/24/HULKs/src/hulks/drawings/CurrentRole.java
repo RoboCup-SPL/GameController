@@ -33,7 +33,7 @@ public class CurrentRole extends PerPlayer {
                     return;
                 }
                 gl.glPushMatrix();
-                gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1);
+                gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1.f);
                 camera.turnTowardsCamera(gl);
                 try {
                     final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/" + imageName).getAbsoluteFile();
