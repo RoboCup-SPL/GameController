@@ -1,8 +1,7 @@
 package hulks.drawings;
 
-import common.Log;
+import hulks.message.BHULKsStandardMessage;
 import hulks.message.HulksMessage;
-import hulks.message.HulksMessageParts;
 import com.jogamp.opengl.GL2;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +25,7 @@ public class WhistleHeard extends PerPlayer {
                 && rs.getLastMessage().valid
                 && rs.getLastMessage() instanceof HulksMessage) {
             final HulksMessage msg = (HulksMessage) rs.getLastMessage();
-            if (msg.message.bhulks != null && msg.message.bhulks.confidenceOfLastWhistleDetection != HulksMessageParts.BHULKsStandardMessagePart.HearingConfidence.iAmDeaf && msg.message.bhulks.lastTimeWhistleDetected.getTimeSince(msg.message.bhulks.timestamp) >= -200) {
+            if (msg.message.bhulks != null && msg.message.bhulks.confidenceOfLastWhistleDetection != BHULKsStandardMessage.HearingConfidence.iAmDeaf && msg.message.bhulks.lastTimeWhistleDetected.getTimeSince(msg.message.bhulks.timestamp) >= -200) {
                 gl.glPushMatrix();
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1);
                 camera.turnTowardsCamera(gl);

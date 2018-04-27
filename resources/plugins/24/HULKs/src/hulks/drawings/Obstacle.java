@@ -1,7 +1,7 @@
 package hulks.drawings;
 
+import hulks.message.BHULKsStandardMessage;
 import hulks.message.HulksMessage;
-import hulks.message.HulksMessageParts;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
@@ -34,7 +34,7 @@ public class Obstacle extends PerPlayer {
                 gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 
                 // Draw obstacles
-                for (final HulksMessageParts.BHULKsStandardMessagePart.Obstacle obstacle : msg.message.bhulks.obstacles) {
+                for (final BHULKsStandardMessage.Obstacle obstacle : msg.message.bhulks.obstacles) {
                     // Set color
                     switch (obstacle.type) {
                         case goalpost:
