@@ -9,6 +9,7 @@ import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.Image;
 import teamcomm.gui.drawings.PerPlayer;
+import teamcomm.gui.drawings.Text;
 import teamcomm.gui.drawings.TextureLoader;
 
 import javax.swing.*;
@@ -30,13 +31,18 @@ public class BallSearch extends PerPlayer {
             final HulksMessage msg = (HulksMessage) rs.getLastMessage();
             if (msg.message.bhulks != null && msg.message.hulks != null && msg.message.hulks.isValid()) {
                 if (msg.message.bhulks.currentlyPerfomingRole == BHULKsStandardMessage.Role.King) {
+                    int playerNumber=1;
                     for (final Eigen.Vector2f searchPose : msg.message.hulks.getPositionSuggestions()) {
+                        if (searchPose.x == -0.5f && searchPose.y == 0.f) {
+                            continue; // TODO: Remove after GO 2018
+                        }
                         gl.glPushMatrix();
                         gl.glTranslatef(searchPose.x, searchPose.y, 0.1f);
                         camera.turnTowardsCamera(gl);
                         try {
                             final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/" + "search.png").getAbsoluteFile();
                             Image.drawImage(gl, TextureLoader.getInstance().loadTexture(gl, f), 0, 0, 0.2f);
+                            Text.drawText(""+(playerNumber++), 0.1f, 0.1f, 0.15f, new float[]{0,0,0});
                         } catch (IOException ex) {
                             JOptionPane.showMessageDialog(null,
                                     "Error loading texture: " + ex.getMessage(),

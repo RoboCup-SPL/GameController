@@ -27,7 +27,7 @@ public class PlayerTarget extends PerPlayer {
                 final float walkingToX = msg.message.hulks.getWalkingPosition().x;
                 final float walkingToY = msg.message.hulks.getWalkingPosition().y;
 
-                gl.glColor3f(0, 0, 1);
+                gl.glColor3f(1, 1, 1);
                 gl.glNormal3f(0, 0, 1);
 
                 gl.glBegin(GL2.GL_LINES);
