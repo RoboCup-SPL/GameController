@@ -1,12 +1,17 @@
 package hulks.message;
 
 import common.Log;
+import data.SPLStandardMessage;
 import hulks.message.data.Eigen;
 import hulks.message.data.NativeReaders;
 
 import java.nio.ByteBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class HULKsStandardMessage {
 
@@ -67,46 +72,78 @@ public class HULKsStandardMessage {
         return joinStates;
     }
 
-    public HULKsStandardMessage read(ByteBuffer stream) {
-        if (stream.remaining() < NativeReaders.charReader.getStreamedSize()) {
-            Log.error("Missing HULKs message.");
+    private static String getCurrentTime() {
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+        df.setTimeZone(tz);
+        return df.format(new Date());
+    }
+
+    public HULKsStandardMessage read(final SPLStandardMessage origin, ByteBuffer stream) {
+        final String currentTimeString = getCurrentTime();
+        if (stream.remaining() < NativeReaders.ucharReader.getStreamedSize()) {
+            Log.error(String.format(
+                    "[%s][%s] Invalid HULKs message without version.",
+                    origin.playerNum, currentTimeString
+            ));
             return this;
         }
-        version = NativeReaders.charReader.read(stream);
+        version = NativeReaders.ucharReader.read(stream);
         if (version != CURRENT_VERSION) {
-            Log.error("Invalid HULKs message without version.");
+            Log.error(String.format(
+                    "[%s][%s] Invalid HULKs message version '%s'.",
+                    origin.playerNum, currentTimeString, version
+            ));
             return this;
         }
         if (stream.remaining() < NativeReaders.boolReader.getStreamedSize()) {
-            Log.error("Incomplete HULKs message (no isPoseValid)");
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no isPoseValid).",
+                    origin.playerNum, currentTimeString
+            ));
             return this;
         }
         isPoseValid = NativeReaders.boolReader.read(stream);
         walkingPosition = new Eigen.Vector2f();
         if (stream.remaining() < walkingPosition.getStreamedSize()) {
-            Log.error("Incomplete HULKs message (no walkingPosition)");
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no walkingPosition).",
+                    origin.playerNum, currentTimeString
+            ));
             return this;
         }
         walkingPosition.read(stream);
         if (stream.remaining() < NativeReaders.floatReader.getStreamedSize()) {
-            Log.error("Incomplete HULKs message (no walkingOrientation)");
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no walkingOrientation).",
+                    origin.playerNum, currentTimeString
+            ));
             return this;
         }
         walkingOrientation = NativeReaders.floatReader.read(stream);
         ballVelocity = new Eigen.Vector2f();
         if (stream.remaining() < ballVelocity.getStreamedSize()) {
-            Log.error("Incomplete HULKs message (no ballVelocity)");
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no ballVelocity).",
+                    origin.playerNum, currentTimeString
+            ));
             return this;
         }
         ballVelocity.read(stream);
         currentSearchPosition = new Eigen.Vector2f();
         if (stream.remaining() < currentSearchPosition.getStreamedSize()) {
-            Log.error("Incomplete HULKs message (no currentSearchPosition)");
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no currentSearchPosition).",
+                    origin.playerNum, currentTimeString
+            ));
             return this;
         }
         currentSearchPosition.read(stream);
         if (stream.remaining() < NativeReaders.ucharReader.getStreamedSize()) {
-            Log.error("Incomplete HULKs message (no currentSearchPosition)");
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no currentSearchPosition).",
+                    origin.playerNum, currentTimeString
+            ));
             return this;
         }
         numberOfSuggestedPositions = NativeReaders.ucharReader.read(stream);
@@ -114,7 +151,10 @@ public class HULKsStandardMessage {
         for (int i = 0; i < numberOfSuggestedPositions; i++) {
             final Eigen.Vector2f position = new Eigen.Vector2f();
             if (stream.remaining() < position.getStreamedSize()) {
-                Log.error(String.format("Incomplete HULKs message (no positionSuggestion (%s/%s))", i, numberOfSuggestedPositions));
+                Log.error(String.format(
+                        "[%s][%s] Incomplete HULKs message (no positionSuggestion (%s/%s)).",
+                        origin.playerNum, currentTimeString, i, numberOfSuggestedPositions
+                ));
                 return this;
             }
             position.read(stream);
@@ -123,7 +163,10 @@ public class HULKsStandardMessage {
         joinStates = new ArrayList<>(26); // 26 Joints
         for (int i = 0; i < 26; i++) {
             if (stream.remaining() < NativeReaders.charReader.getStreamedSize()) {
-                Log.error(String.format("Incomplete HULKs message (no jointState (%s/%s))", i, 26));
+                Log.error(String.format(
+                        "[%s][%s] Incomplete HULKs message (no jointState (%s/%s)).",
+                        origin.playerNum, currentTimeString, i, 26
+                ));
                 return this;
             }
             joinStates.add(Integer.valueOf(NativeReaders.charReader.read(stream)));

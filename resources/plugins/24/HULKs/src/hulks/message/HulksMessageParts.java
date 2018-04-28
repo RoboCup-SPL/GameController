@@ -48,10 +48,7 @@ public class HulksMessageParts {
                 Log.error("Wrong BHULKs message struct version: was " + version + ", expected " + BHULKS_STANDARD_MESSAGE_STRUCT_VERSION);
             }
             hulk = new HULKsStandardMessage();
-            hulk.read(data);
-            if (!hulk.isValid()) {
-                Log.error("Received invalid HULKs message.");
-            }
+            hulk.read(origin, data);
         } else {
             Log.error("Could not find BHULKs message struct header");
         }
