@@ -162,14 +162,14 @@ public class HULKsStandardMessage {
         }
         joinStates = new ArrayList<>(26); // 26 Joints
         for (int i = 0; i < 26; i++) {
-            if (stream.remaining() < NativeReaders.charReader.getStreamedSize()) {
+            if (stream.remaining() < NativeReaders.ucharReader.getStreamedSize()) {
                 Log.error(String.format(
                         "[%s][%s] Incomplete HULKs message (no jointState (%s/%s)).",
                         origin.playerNum, currentTimeString, i, 26
                 ));
                 return this;
             }
-            joinStates.add(Integer.valueOf(NativeReaders.charReader.read(stream)));
+            joinStates.add(Integer.valueOf(NativeReaders.ucharReader.read(stream)));
         }
         valid = true;
         return this;

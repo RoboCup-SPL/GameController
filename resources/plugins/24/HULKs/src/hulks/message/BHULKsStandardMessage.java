@@ -1,5 +1,6 @@
 package hulks.message;
 
+import common.Log;
 import hulks.message.data.Angle;
 import hulks.message.data.ComplexStreamReader;
 import hulks.message.data.SimpleStreamReader;
@@ -53,7 +54,10 @@ public class BHULKsStandardMessage implements ComplexStreamReader<BHULKsStandard
             teammate,
             fallenSomeRobot,
             fallenOpponent,
-            fallenTeammate;
+            fallenTeammate,
+            ball,
+            freeKick,
+            invalid;
         }
 
         // the obstacle center in robot (self) centered coordinates
@@ -83,7 +87,12 @@ public class BHULKsStandardMessage implements ComplexStreamReader<BHULKsStandard
             center[0] = (float) (short) (center0Struct << 2);
             center[1] = (float) (short) (center1Struct << 2);
 
-            type = Obstacle.ObstacleType.values()[((center0Struct & 0xC000) >> 12) | ((center1Struct & 0xC000) >> 14)];
+            int obstacleTypeIndex = ((center0Struct & 0xC000) >> 12) | ((center1Struct & 0xC000) >> 14);
+            if (obstacleTypeIndex > ObstacleType.values().length) {
+                Log.error(String.format("Received invalid obstacle type in BHULKs message: '%s'", obstacleTypeIndex));
+                obstacleTypeIndex = ObstacleType.values().length - 1;
+            }
+            type = Obstacle.ObstacleType.values()[obstacleTypeIndex];
 
             timestampLastSeen = new Timestamp(baseTimestamp - (Unsigned.toUnsigned(stream.get()) << 6));
 
