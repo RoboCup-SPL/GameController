@@ -25,7 +25,7 @@ public class Leaving extends Penalty
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         player.penalty = PlayerInfo.PENALTY_SPL_LEAVING_THE_FIELD;
-        handleRepeatedPenalty(data, player, side, number, AdvancedData.STATE_PLAYING);
+        handleRepeatedPenalty(data, side, number);
         data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Leaving the Field "+
                 Rules.league.teamColorName[data.team[side].teamColor]
