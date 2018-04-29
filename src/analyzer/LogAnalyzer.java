@@ -2,6 +2,7 @@ package analyzer;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -44,6 +45,7 @@ public class LogAnalyzer
         logs = new LinkedList<LogInfo>();
         File dir = new File(PATH);
         File[] files = dir.listFiles();
+        Arrays.sort(files);
         for (File file: files) {
             if (file.isFile() && file.getName().startsWith("log_")) {
                 logs.add(new LogInfo(file));
