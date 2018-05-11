@@ -1,7 +1,6 @@
 package controller.action;
 
 import controller.action.clock.ClockTick;
-import controller.action.net.Manual;
 import controller.action.ui.CancelUndo;
 import controller.action.ui.ClockPause;
 import controller.action.ui.ClockReset;
@@ -108,8 +107,6 @@ public class ActionBoard
     public static LocalGameStuck localGameStuck;
     public static Foul foul;
 
-    public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
-    public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
 
 
     /**
@@ -175,12 +172,5 @@ public class ActionBoard
         dropBall = new DropBall();
         localGameStuck = new LocalGameStuck();
         foul = new Foul();
-
-        for (int i=0; i<2; i++) {
-            for (int j=0; j<Rules.league.teamSize; j++) {
-                manualPen[i][j] = new Manual(i, j, false);
-                manualUnpen[i][j] = new Manual(i, j, true);
-            }
-        }
     }
 }

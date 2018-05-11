@@ -300,24 +300,17 @@ private:
         bool chestButtonPressed = *buttons[chest] != 0.f;
         if(chestButtonPressed != previousChestButtonPressed && now - whenChestButtonStateChanged >= BUTTON_DELAY)
         {
-          if(chestButtonPressed && whenChestButtonStateChanged) // ignore first press, e.g. for getting up
+          if(chestButtonPressed && whenChestButtonStateChanged && now - whenPacketWasReceived >= GAMECONTROLLER_TIMEOUT) // ignore first press, e.g. for getting up
           {
             RobotInfo& player = team.players[*playerNumber - 1];
             if(player.penalty == PENALTY_NONE)
             {
               player.penalty = PENALTY_MANUAL;
-              if(now - whenPacketWasReceived < GAMECONTROLLER_TIMEOUT &&
-                 send(GAMECONTROLLER_RETURN_MSG_MAN_PENALISE))
-                whenPacketWasSent = now;
             }
             else
             {
               player.penalty = PENALTY_NONE;
-              if(now - whenPacketWasReceived < GAMECONTROLLER_TIMEOUT &&
-                 send(GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE))
-                whenPacketWasSent = now;
-              else
-                gameCtrlData.state = STATE_PLAYING;
+              gameCtrlData.state = STATE_PLAYING;
             }
             publish();
           }
@@ -368,8 +361,7 @@ private:
 
   /**
    * Sends the return packet to the GameController.
-   * @param message The message contained in the packet (GAMECONTROLLER_RETURN_MSG_MAN_PENALISE,
-   *                GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE or GAMECONTROLLER_RETURN_MSG_ALIVE).
+   * @param message The message contained in the packet (GAMECONTROLLER_RETURN_MSG_ALIVE).
    */
   bool send(uint8_t message)
   {

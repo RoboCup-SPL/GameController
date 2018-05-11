@@ -1,9 +1,7 @@
 package controller.net;
 
 import controller.EventHandler;
-import controller.action.ActionBoard;
 import data.GameControlReturnData;
-import data.PlayerInfo;
 import data.Rules;
 
 /**
@@ -20,9 +18,6 @@ public class RobotWatcher
 
     /** A timestamp when the last reply from each robot was received. */
     private long [][] robotsLastAnswer = new long[2][Rules.league.teamSize];
-    /** Last message reeived from each robot.
-     *  Look at GameControlReturnData for information about messages */
-    private int [][] robotsLastMessage = new int[2][Rules.league.teamSize];
     /** The calculated information about the online-status. */
     private RobotOnlineStatus [][] status = new RobotOnlineStatus[2][Rules.league.teamSize];
 
@@ -37,15 +32,13 @@ public class RobotWatcher
     {
         for (int i  = 0; i < 2; i++) {
             for (int j = 0; j < Rules.league.teamSize; j++) {
-                robotsLastMessage[i][j] = PlayerInfo.PENALTY_NONE;
                 status[i][j] = RobotOnlineStatus.UNKNOWN;
             }
         }
     }
     
     /**
-     * Recieves robot´s answers to update corresponding timestamps and fire
-     * actions caused manual on the robot.
+     * Recieves robot´s answers to update corresponding timestamps.
      * 
      * @param gameControlReturnData     The robot`s answer.
      */
@@ -64,16 +57,6 @@ public class RobotWatcher
             return;
         }
         instance.robotsLastAnswer[team][number-1] = System.currentTimeMillis();
-        if (instance.robotsLastMessage[team][number-1] != gameControlReturnData.message) {
-            instance.robotsLastMessage[team][number-1] = gameControlReturnData.message;
-            if ((gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_PENALISE)
-                    && (EventHandler.getInstance().data.team[team].player[number-1].penalty == PlayerInfo.PENALTY_NONE)) {
-                ActionBoard.manualPen[team][number-1].actionPerformed(null);
-            } else if ((gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE)
-                    && (EventHandler.getInstance().data.team[team].player[number-1].penalty != PlayerInfo.PENALTY_NONE)) {
-                ActionBoard.manualUnpen[team][number-1].actionPerformed(null);
-            }
-        }
     }
 
     /**

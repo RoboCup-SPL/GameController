@@ -290,6 +290,8 @@ in 2017 in the following ways:
 - `setPlay` has been added to indicate the currently active set play and appropriate macros
   have been defined.
 - `kickingTeam` replaces `kickOffTeam` since it is also used in set plays.
+- The ability of a robot to notify the GameController about being manually (un-)penalized
+  has been removed.
 
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour

@@ -16,12 +16,10 @@ public class GameControlReturnData
     /** The header to identify the structure. */
     public static final String GAMECONTROLLER_RETURN_STRUCT_HEADER = "RGrt";
     /** The version of the data structure. */
-    public static final byte GAMECONTROLLER_RETURN_STRUCT_VERSION = 2;
+    public static final byte GAMECONTROLLER_RETURN_STRUCT_VERSION = 3;
 
     /** What a player may say. */
-    public static final byte GAMECONTROLLER_RETURN_MSG_MAN_PENALISE = 0;
-    public static final byte GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE = 1;
-    public static final byte GAMECONTROLLER_RETURN_MSG_ALIVE = 2;
+    public static final byte GAMECONTROLLER_RETURN_MSG_ALIVE = 0;
 
 
     /** The size in bytes this class has packed. */
