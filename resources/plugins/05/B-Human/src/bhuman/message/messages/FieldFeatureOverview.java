@@ -21,7 +21,6 @@ public class FieldFeatureOverview implements SimpleStreamReader<FieldFeatureOver
         MidCircle,
         MidCorner,
         OuterCorner,
-        GoalFeature,
         GoalFrame
     }
 
