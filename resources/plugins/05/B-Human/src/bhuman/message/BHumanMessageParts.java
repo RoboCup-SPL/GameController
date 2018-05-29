@@ -26,7 +26,7 @@ public class BHumanMessageParts {
     private static final short BHULKS_STANDARD_MESSAGE_STRUCT_VERSION = 9;
 
     private static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
-    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 4;
+    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 5;
 
     private static final String BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER = "BHUA";
     private static final short BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION = 0;
@@ -376,5 +376,6 @@ public class BHumanMessageParts {
         @Primitive("uchar")
         public short robotPoseValidity;
 
+        public short captainTeammateRolesTimestamp;  //< Not a timestamp because it contains a robot number in the higher 3 bits.
     }
 }
