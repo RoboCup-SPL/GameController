@@ -37,7 +37,6 @@ public class BHumanDetailFrame extends RobotDetailFrame {
 
     private final Node rootNode = new Node("Robot");
     private final Node splNode = new Node("SPLStandardMessage");
-    private final Node bhulksNode = new Node("BHULKsStandardMessage");
     private final Node bhumanNode = new Node("BHumanStandardMessage");
     private final Node messagequeueNode = new Node("MessageQueue");
     private final DefaultTreeModel model = new DefaultTreeModel(rootNode);
@@ -91,9 +90,8 @@ public class BHumanDetailFrame extends RobotDetailFrame {
     @Override
     protected void init(final RobotState robot) {
         rootNode.insert(splNode, 0);
-        rootNode.insert(bhulksNode, 1);
-        rootNode.insert(bhumanNode, 2);
-        rootNode.insert(messagequeueNode, 3);
+        rootNode.insert(bhumanNode, 1);
+        rootNode.insert(messagequeueNode, 2);
         final JTree tree = new JTree(rootNode);
         tree.setModel(model);
         tree.setSelectionModel(null);
@@ -158,8 +156,7 @@ public class BHumanDetailFrame extends RobotDetailFrame {
         }
         final BHumanMessage bmsg = (BHumanMessage) msg;
 
-        baseTimestamp = bmsg.message.bhulks != null ? bmsg.message.bhulks.timestamp : 0;
-        updateNode(bhulksNode, "BHULKsStandardMessage", bmsg.message.bhulks);
+        baseTimestamp = bmsg.message.bhuman != null ? bmsg.message.bhuman.timestamp : 0;
         updateNode(bhumanNode, "BHumanStandardMessage", bmsg.message.bhuman);
 
         if (bmsg.message.queue == null) {

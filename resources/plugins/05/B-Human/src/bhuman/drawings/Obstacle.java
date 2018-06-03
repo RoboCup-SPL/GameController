@@ -25,7 +25,7 @@ public class Obstacle extends PerPlayer {
                 && rs.getLastMessage().valid
                 && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
-            if (msg.message.bhulks != null) {
+            if (msg.message.bhuman != null) {
                 final GLU glu = GLU.createGLU(gl);
                 final GLUquadric q = glu.gluNewQuadric();
 
@@ -34,7 +34,7 @@ public class Obstacle extends PerPlayer {
                 gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 
                 // Draw obstacles
-                for (final BHumanMessageParts.BHULKsStandardMessagePart.Obstacle obstacle : msg.message.bhulks.obstacles) {
+                for (final BHumanMessageParts.BHumanStandardMessagePart.Obstacle obstacle : msg.message.bhuman.obstacles) {
                     // Set color
                     switch (obstacle.type) {
                         case goalpost:
@@ -64,11 +64,11 @@ public class Obstacle extends PerPlayer {
                     // Draw line from obstacle to robot to determine which player saw that obstacle
                     gl.glBegin(GL2.GL_LINES);
                     gl.glVertex3f(0.f, 0.f, 0.f);
-                    gl.glVertex3f(obstacle.center[0] / 1000.f, obstacle.center[1] / 1000.f, 0.f);
+                    gl.glVertex3f(obstacle.center.x / 1000.f, obstacle.center.y / 1000.f, 0.f);
                     gl.glEnd();
 
                     // Translate to obstacle
-                    gl.glTranslatef(obstacle.center[0] / 1000.f, obstacle.center[1] / 1000.f, 0.f);
+                    gl.glTranslatef(obstacle.center.x / 1000.f, obstacle.center.y / 1000.f, 0.f);
                     gl.glBegin(GL2.GL_LINES);
                     gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
                     gl.glVertex2f(CROSS_RADIUS, CROSS_RADIUS);

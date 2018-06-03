@@ -25,10 +25,10 @@ public class PlayerTarget extends PerPlayer {
             if (msg.message.bhuman != null && msg.poseValid && rs.getPenalty() == PlayerInfo.PENALTY_NONE) {
                 final float poseX = msg.pose[0] / 1000.f;
                 final float poseY = msg.pose[1] / 1000.f;
-                final float walkingToX = msg.message.bhuman.walkingToX / 1000.f;
-                final float walkingToY = msg.message.bhuman.walkingToY / 1000.f;
-                final float shootingToX = msg.message.bhuman.shootingToX / 1000.f;
-                final float shootingToY = msg.message.bhuman.shootingToY / 1000.f;
+                final float walkingToX = msg.message.bhuman.walkingTo.x / 1000.f;
+                final float walkingToY = msg.message.bhuman.walkingTo.y / 1000.f;
+                final float shootingToX = msg.message.bhuman.shootingTo.x / 1000.f;
+                final float shootingToY = msg.message.bhuman.shootingTo.y / 1000.f;
 
                 gl.glColor3f(0, 0, 1);
                 gl.glNormal3f(0, 0, 1);

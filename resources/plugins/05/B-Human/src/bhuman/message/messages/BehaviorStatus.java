@@ -18,6 +18,7 @@ public class BehaviorStatus extends StreamedObject<BehaviorStatus> implements Me
         dribble,
         dribbleDuel,
         searchForBall,
+        searchForBallAtRecentPosition,
         goToBall,
         takingPosition,
         kick,
@@ -29,7 +30,7 @@ public class BehaviorStatus extends StreamedObject<BehaviorStatus> implements Me
         turn,
         walkNextToKeeper,
         kickoff,
-        waving,
+        demo
     }
 
     /**

@@ -46,16 +46,14 @@ public class BHumanMessage extends AdvancedMessage {
 
             if (message.bhuman != null) {
                 display.add("Magic: " + message.bhuman.magicNumber);
+                display.add("Role: " + message.bhuman.role);
+                display.add("TimeToReachBall: " + message.bhuman.timeWhenReachBall.getTimeSince(message.bhuman.timestamp) + "ms");
+                display.add("TimeToReachBallStriker: " + message.bhuman.timeWhenReachBallStriker.getTimeSince(message.bhuman.timestamp) + "ms");
+                display.add("TimeSinceLastJumped: " + (message.bhuman.timestamp - message.bhuman.timestampLastJumped.timestamp) + "ms");
+                display.add("HearingConfidence: " + message.bhuman.confidenceOfLastWhistleDetection);
                 display.add("");
             }
 
-            if (message.bhulks != null) {
-                display.add("Role: " + message.bhulks.currentlyPerfomingRole);
-                display.add("TimeToReachBall: " + message.bhulks.timeWhenReachBall.getTimeSince(message.bhulks.timestamp) + "ms");
-                display.add("TimeTillQueenReachesBall: " + message.bhulks.timeWhenReachBallQueen.getTimeSince(message.bhulks.timestamp) + "ms");
-                display.add("TimeSinceLastJumped: " + (message.bhulks.timestamp - message.bhulks.timestampLastJumped.timestamp) + "ms");
-                display.add("HearingConfidence: " + message.bhulks.confidenceOfLastWhistleDetection);
-            }
             if (status != null) {
                 display.add("Activity: " + status.activity);
             }
