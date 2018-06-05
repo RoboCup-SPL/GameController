@@ -96,7 +96,6 @@ public class BHumanMessageParts {
             striker,
             defender,
             supporter,
-            bishop,
             penaltyStriker,
             penaltyKeeper,
             none
