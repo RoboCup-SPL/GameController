@@ -10,8 +10,8 @@
 #define MAX_NUM_PLAYERS             6
 
 // SPL
-#define TEAM_BLUE                   0 // cyan, blue, violet
-#define TEAM_RED                    1 // magenta, pink (not red/orange)
+#define TEAM_BLUE                   0 // blue, cyan
+#define TEAM_RED                    1 // red, magenta, pink
 #define TEAM_YELLOW                 2 // yellow
 #define TEAM_BLACK                  3 // black, dark gray
 #define TEAM_WHITE                  4 // white
