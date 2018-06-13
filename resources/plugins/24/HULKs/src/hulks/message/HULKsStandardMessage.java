@@ -4,6 +4,8 @@ import common.Log;
 import data.SPLStandardMessage;
 import hulks.message.data.Eigen;
 import hulks.message.data.NativeReaders;
+import hulks.message.data.SearchPosition;
+import hulks.message.data.Timestamp;
 
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -15,7 +17,8 @@ import java.util.TimeZone;
 
 public class HULKsStandardMessage {
 
-    private static final int CURRENT_VERSION = 3;
+    private static final int CURRENT_VERSION = 4;
+    private static final int MAX_NUM_PLAYERS = 6;
 
     private boolean valid;
     private int version;
@@ -23,10 +26,13 @@ public class HULKsStandardMessage {
     private Eigen.Vector2f walkingPosition;
     private float walkingOrientation;
     private Eigen.Vector2f ballVelocity;
-    private Eigen.Vector2f currentSearchPosition;
-    private int numberOfSuggestedPositions;
-    private List<Eigen.Vector2f> positionSuggestions;
     private List<Integer> joinStates;
+    private Eigen.Vector2f currentSearchPosition;
+    private List<SearchPosition> searchPositionSuggestions;
+    private Timestamp timestampBallSearchMapUnreliable;
+    private boolean availableForSearch;
+    private int mostWisePlayerNumber;
+
 
     public HULKsStandardMessage() {
         this.valid = false;
@@ -60,16 +66,24 @@ public class HULKsStandardMessage {
         return currentSearchPosition;
     }
 
-    public int getNumberOfSuggestedPositions() {
-        return numberOfSuggestedPositions;
-    }
-
-    public List<Eigen.Vector2f> getPositionSuggestions() {
-        return positionSuggestions;
-    }
-
     public List<Integer> getJoinStates() {
         return joinStates;
+    }
+
+    public List<SearchPosition> getSearchPositionSuggestions() {
+        return searchPositionSuggestions;
+    }
+
+    public Timestamp getTimestampBallSearchMapUnreliable() {
+        return timestampBallSearchMapUnreliable;
+    }
+
+    public boolean isAvailableForSearch() {
+        return availableForSearch;
+    }
+
+    public int getMostWisePlayerNumber() {
+        return mostWisePlayerNumber;
     }
 
     private static String getCurrentTime() {
@@ -80,6 +94,7 @@ public class HULKsStandardMessage {
     }
 
     public HULKsStandardMessage read(final SPLStandardMessage origin, ByteBuffer stream) {
+        // Message Version
         final String currentTimeString = getCurrentTime();
         if (stream.remaining() < NativeReaders.ucharReader.getStreamedSize()) {
             Log.error(String.format(
@@ -96,6 +111,8 @@ public class HULKsStandardMessage {
             ));
             return this;
         }
+
+        // isPoseValid
         if (stream.remaining() < NativeReaders.boolReader.getStreamedSize()) {
             Log.error(String.format(
                     "[%s][%s] Incomplete HULKs message (no isPoseValid).",
@@ -104,6 +121,8 @@ public class HULKsStandardMessage {
             return this;
         }
         isPoseValid = NativeReaders.boolReader.read(stream);
+
+        // walkingPosition
         walkingPosition = new Eigen.Vector2f();
         if (stream.remaining() < walkingPosition.getStreamedSize()) {
             Log.error(String.format(
@@ -113,6 +132,8 @@ public class HULKsStandardMessage {
             return this;
         }
         walkingPosition.read(stream);
+
+        // walkingOrientation
         if (stream.remaining() < NativeReaders.floatReader.getStreamedSize()) {
             Log.error(String.format(
                     "[%s][%s] Incomplete HULKs message (no walkingOrientation).",
@@ -121,6 +142,8 @@ public class HULKsStandardMessage {
             return this;
         }
         walkingOrientation = NativeReaders.floatReader.read(stream);
+
+        // ballVelocity
         ballVelocity = new Eigen.Vector2f();
         if (stream.remaining() < ballVelocity.getStreamedSize()) {
             Log.error(String.format(
@@ -130,6 +153,8 @@ public class HULKsStandardMessage {
             return this;
         }
         ballVelocity.read(stream);
+
+        // currentSearchPosition
         currentSearchPosition = new Eigen.Vector2f();
         if (stream.remaining() < currentSearchPosition.getStreamedSize()) {
             Log.error(String.format(
@@ -139,27 +164,62 @@ public class HULKsStandardMessage {
             return this;
         }
         currentSearchPosition.read(stream);
+
+        // positionSuggestions
+        searchPositionSuggestions = new ArrayList<>(MAX_NUM_PLAYERS);
         if (stream.remaining() < NativeReaders.ucharReader.getStreamedSize()) {
             Log.error(String.format(
-                    "[%s][%s] Incomplete HULKs message (no currentSearchPosition).",
+                    "[%s][%s] Incomplete HULKs message (no searchPositionsValid).",
                     origin.playerNum, currentTimeString
             ));
             return this;
         }
-        numberOfSuggestedPositions = NativeReaders.ucharReader.read(stream);
-        positionSuggestions = new ArrayList<>(numberOfSuggestedPositions);
-        for (int i = 0; i < numberOfSuggestedPositions; i++) {
+        short searchPositionsValid = NativeReaders.ucharReader.read(stream);
+        for (int i = 0; i < MAX_NUM_PLAYERS; i++) {
             final Eigen.Vector2f position = new Eigen.Vector2f();
             if (stream.remaining() < position.getStreamedSize()) {
                 Log.error(String.format(
-                        "[%s][%s] Incomplete HULKs message (no positionSuggestion (%s/%s)).",
-                        origin.playerNum, currentTimeString, i, numberOfSuggestedPositions
+                        "[%s][%s] Incomplete HULKs message (no searchPosition (%s/%s)).",
+                        origin.playerNum, currentTimeString, i, MAX_NUM_PLAYERS
                 ));
-                return this;
             }
             position.read(stream);
-            positionSuggestions.add(position);
+            if (getBit(searchPositionsValid, i)) {
+                searchPositionSuggestions.add(new SearchPosition(i, position));
+            }
         }
+
+        // timestampBallSearchMapUnreliable
+        timestampBallSearchMapUnreliable = new Timestamp();
+        if (stream.remaining() < timestampBallSearchMapUnreliable.getStreamedSize()) {
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no timestampBallSearchMapUnreliable).",
+                    origin.playerNum, currentTimeString
+            ));
+        }
+        timestampBallSearchMapUnreliable.read(stream);
+
+        // availableForSearch
+        if (stream.remaining() < NativeReaders.boolReader.getStreamedSize()) {
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no availableForSearch).",
+                    origin.playerNum, currentTimeString
+            ));
+            return this;
+        }
+        availableForSearch = NativeReaders.boolReader.read(stream);
+
+        // mostWisePlayerNumber
+        if (stream.remaining() < NativeReaders.ucharReader.getStreamedSize()) {
+            Log.error(String.format(
+                    "[%s][%s] Incomplete HULKs message (no mostWisePlayerNumber).",
+                    origin.playerNum, currentTimeString
+            ));
+            return this;
+        }
+        mostWisePlayerNumber = NativeReaders.ucharReader.read(stream);
+
+        //jointStates
         joinStates = new ArrayList<>(26); // 26 Joints
         for (int i = 0; i < 26; i++) {
             if (stream.remaining() < NativeReaders.ucharReader.getStreamedSize()) {
@@ -171,7 +231,20 @@ public class HULKsStandardMessage {
             }
             joinStates.add(Integer.valueOf(NativeReaders.ucharReader.read(stream)));
         }
+
+        if (stream.remaining() > 0) {
+            Log.error(String.format(
+                    "[%s][%s] Message longer than expected. Remaining: %s.",
+                    origin.playerNum, currentTimeString, stream.remaining()
+            ));
+        }
+
         valid = true;
         return this;
     }
+
+    private static boolean getBit(short fromByte, int position) {
+        return ((fromByte >> position) & 1) == 1;
+    }
+
 }
