@@ -1,9 +1,7 @@
 package hulks.drawings;
 
 import com.jogamp.opengl.GL2;
-import common.Log;
 import hulks.message.HulksMessage;
-import hulks.message.HulksMessageParts;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.Image;
@@ -61,6 +59,8 @@ public class CurrentRole extends PerPlayer {
                 return "rook.png";
             case Bishop:
                 return "bishop.png";
+            case Pone:
+                return "pone.png";
         }
         return null;
     }

@@ -28,6 +28,7 @@ public class BHULKsStandardMessage implements ComplexStreamReader<BHULKsStandard
         Queen, //< Striker        -> running wherever she wants
         Knight, //< Supporter      -> jumping alongside the Queen and helping her out
         Bishop, //< Pass Station   -> diagonal movement in front of the Queen
+        Pone,
         beatenPieces; //< not perceived numbers -> robots staying outside the field carpet
     }
 

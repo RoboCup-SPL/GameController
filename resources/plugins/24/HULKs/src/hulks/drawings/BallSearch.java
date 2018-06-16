@@ -1,7 +1,6 @@
 package hulks.drawings;
 
 import com.jogamp.opengl.GL2;
-import hulks.message.BHULKsStandardMessage;
 import hulks.message.HulksMessage;
 import hulks.message.data.Eigen;
 import hulks.message.data.SearchPosition;
@@ -35,25 +34,23 @@ public class BallSearch extends PerPlayer {
                 && rs.getLastMessage() instanceof HulksMessage) {
             final HulksMessage msg = (HulksMessage) rs.getLastMessage();
             if (msg.message.bhulks != null && msg.message.hulks != null && msg.message.hulks.isValid()) {
-                if (msg.message.bhulks.currentlyPerfomingRole == BHULKsStandardMessage.Role.King) {
-                    state.update(msg);
-                    for (final SearchPosition searchPosition : state.getCurrentSearchPoses()) {
-                        Eigen.Vector2f position = searchPosition.getPosition();
-                        gl.glPushMatrix();
-                        gl.glTranslatef(position.x, position.y, 0.1f);
-                        camera.turnTowardsCamera(gl);
-                        try {
-                            final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/" + "search.png").getAbsoluteFile();
-                            Image.drawImage(gl, TextureLoader.getInstance().loadTexture(gl, f), 0, 0, 0.2f);
-                            Text.drawText("" + searchPosition.getPlayer(), 0.1f, 0.1f, 0.15f, new float[]{0, 0, 0});
-                        } catch (IOException ex) {
-                            JOptionPane.showMessageDialog(null,
-                                    "Error loading texture: " + ex.getMessage(),
-                                    ex.getClass().getSimpleName(),
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                        gl.glPopMatrix();
+                state.update(msg);
+                for (final SearchPosition searchPosition : state.getCurrentSearchPoses()) {
+                    Eigen.Vector2f position = searchPosition.getPosition();
+                    gl.glPushMatrix();
+                    gl.glTranslatef(position.x, position.y, 0.1f);
+                    camera.turnTowardsCamera(gl);
+                    try {
+                        final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/" + "search.png").getAbsoluteFile();
+                        Image.drawImage(gl, TextureLoader.getInstance().loadTexture(gl, f), 0, 0, 0.2f);
+                        Text.drawText("" + searchPosition.getPlayer(), 0.1f, 0.1f, 0.15f, new float[]{0, 0, 0});
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error loading texture: " + ex.getMessage(),
+                                ex.getClass().getSimpleName(),
+                                JOptionPane.ERROR_MESSAGE);
                     }
+                    gl.glPopMatrix();
                 }
             }
         }
