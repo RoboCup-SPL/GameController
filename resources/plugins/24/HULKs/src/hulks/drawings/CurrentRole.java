@@ -59,8 +59,8 @@ public class CurrentRole extends PerPlayer {
                 return "rook.png";
             case Bishop:
                 return "bishop.png";
-            case Pone:
-                return "pone.png";
+            case Pawn:
+                return "pawn.png";
         }
         return null;
     }
