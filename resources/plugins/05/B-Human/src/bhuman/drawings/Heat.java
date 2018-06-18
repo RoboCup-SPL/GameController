@@ -3,6 +3,7 @@ package bhuman.drawings;
 import bhuman.message.BHumanMessage;
 import bhuman.message.messages.RobotHealth;
 import com.jogamp.opengl.GL2;
+import data.PlayerInfo;
 import java.io.File;
 import java.io.IOException;
 import java.util.EnumMap;
@@ -41,7 +42,13 @@ public class Heat extends PerPlayer {
             final String image;
             if (msg.message.queue != null && (health = msg.message.queue.getCachedMessage(RobotHealth.class)) != null && (image = filenames.get(health.maxJointTemperatureStatus)) != null) {
                 gl.glPushMatrix();
-                gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1);
+
+                if (rs.getPenalty() != PlayerInfo.PENALTY_NONE) {
+                    gl.glTranslatef(-msg.playerNum, -3.5f, 1.f);
+                } else {
+                    gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1.f);
+                }
+
                 camera.turnTowardsCamera(gl);
                 try {
                     final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/" + image).getAbsoluteFile();
