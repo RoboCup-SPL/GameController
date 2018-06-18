@@ -78,7 +78,7 @@ public class View3DCanvas extends View3D {
         canvas.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(final MouseWheelEvent e) {
-                camera.addRadius(-e.getWheelRotation() * 0.05f);
+                camera.addRadius((float) (-e.getPreciseWheelRotation() * 0.05));
             }
         });
 
