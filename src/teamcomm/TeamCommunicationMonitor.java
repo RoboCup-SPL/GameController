@@ -4,6 +4,7 @@ import com.jogamp.opengl.GLProfile;
 import common.ApplicationLock;
 import data.Rules;
 import java.awt.HeadlessException;
+import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 import javax.swing.JOptionPane;
@@ -26,6 +27,7 @@ public class TeamCommunicationMonitor {
     private static boolean gsvMode = false;
     private static boolean forceWindowed = false;
     private static boolean forceEnablePlugins = false;
+    private static File replayedLogAtStartup = null;
 
     private static boolean shutdown = false;
     private static final Object commandMutex = new Object();
@@ -120,6 +122,11 @@ public class TeamCommunicationMonitor {
         gcDataReceiver.start();
         receiver.start();
 
+        // If a log file was specified on the command line, start replaying it
+        if (robotView != null && replayedLogAtStartup != null && !silentMode) {
+            robotView.replayLogFile(replayedLogAtStartup);
+        }
+
         // Wait for shutdown
         try {
             synchronized (commandMutex) {
@@ -193,6 +200,8 @@ public class TeamCommunicationMonitor {
     private static final String ARG_LEAGUE = "--league";
     private static final String ARG_SILENT_SHORT = "-s";
     private static final String ARG_SILENT = "--silent";
+    private static final String ARG_REPLAYLOG_SHORT = "-rl";
+    private static final String ARG_REPLAYLOG = "--replaylog";
     private static final String ARG_GSV = "--gsv";
     private static final String ARG_WINDOWED = "--windowed";
     private static final String ARG_WINDOWED_SHORT = "-w";
@@ -208,6 +217,7 @@ public class TeamCommunicationMonitor {
                             + "\n  (-h | --help)                   display help"
                             + "\n  (-l | --league) <league>        select league"
                             + "\n  (-s | --silent)                 start in silent mode"
+                            + "\n  (-rl | --replaylog) <path>      immediately replay the given log file"
                             + "\n  (--gsv)                         start as GameStateVisualizer"
                             + "\n  (-w | --windowed)               GSV: force windowed mode"
                             + "\n  (-p | --forceplugins)           GSV: force usage of plugins");
@@ -224,6 +234,10 @@ public class TeamCommunicationMonitor {
                 case ARG_SILENT_SHORT:
                 case ARG_SILENT:
                     silentMode = true;
+                    break;
+                case ARG_REPLAYLOG_SHORT:
+                case ARG_REPLAYLOG:
+                    replayedLogAtStartup = new File(args[++i]);
                     break;
                 case ARG_WINDOWED_SHORT:
                 case ARG_WINDOWED:

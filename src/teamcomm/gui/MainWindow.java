@@ -1,5 +1,6 @@
 package teamcomm.gui;
 
+import common.Log;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -68,6 +69,31 @@ public class MainWindow extends JFrame implements TeamEventListener {
             public void run() {
                 // Initialize
                 initialize();
+            }
+        });
+    }
+
+    /**
+     * Starts replaying the given log file. This is provided as an API for
+     * programmatically opening log files; opening a file via the menu bar is
+     * implemented separately in <code>createFileMenu</code>.
+     *
+     * @param file log file to replay.
+     */
+    public void replayLogFile(final File file) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    try {
+                        Config.getInstance().set("ReplayLogfileDir", file.getParentFile().getCanonicalPath());
+                    } catch (IOException ex) {
+                        Config.getInstance().set("ReplayLogfileDir", file.getParentFile().getAbsolutePath());
+                    }
+                    LogReplayer.getInstance().open(file);
+                } catch (IOException ex) {
+                    Log.error("Could not open log file for replay: " + file);
+                }
             }
         });
     }
