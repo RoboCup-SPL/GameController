@@ -48,4 +48,12 @@ public class Text {
         renderer.draw3D(text, centerX - (float) (bounds.getWidth() * size / FONT_SIZE) / 2, centerY - (float) (bounds.getHeight() * size / FONT_SIZE) / 2, 0, size / FONT_SIZE);
         renderer.end3DRendering();
     }
+
+    /**
+     * Resets the TextRenderer used for drawing text. This must be called
+     * whenever the main GL context changes.
+     */
+    public static void resetRenderer() {
+        renderer = null;
+    }
 }

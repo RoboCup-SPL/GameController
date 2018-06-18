@@ -24,6 +24,7 @@ import teamcomm.data.event.TeamEventListener;
 import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Static;
+import teamcomm.gui.drawings.Text;
 
 /**
  * Abstract class for the 3-dimensional field views.
@@ -67,7 +68,10 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
      */
     public void terminate() {
         GameState.getInstance().removeListener(this);
+        leftRobots.clear();
+        rightRobots.clear();
         animator.stop();
+        Text.resetRenderer();
     }
 
     /**
