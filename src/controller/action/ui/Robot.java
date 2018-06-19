@@ -147,7 +147,13 @@ public class Robot extends GCAction
                 // unpenalize a robot / select a robot that should enter (i.e. that is currently substituted)
                 || (!lastUIEventWasPenalty || lastUIEventWasMotionInSet)
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
-                && (Rules.league.allowEarlyPenaltyRemoval || data.getRemainingPenaltyTime(side, number, true) == 0)
+                && (Rules.league.allowEarlyPenaltyRemoval
+                    // special case: Illegal motion in Set can be removed manually because it happens that accidentally
+                    // too many robots are penalized and the buttons were pressed in an order that makes "Undo" unusable.
+                    || (Rules.league instanceof SPL && data.gameState == AdvancedData.STATE_SET
+                        && data.team[side].player[number].penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)
+                    // penalty time is over
+                    || data.getRemainingPenaltyTime(side, number, true) == 0)
                 && (!isRobotSubstitute
                     || data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT)
                 // click on the robot that should be substituted (after having clicked on the robot that should enter)

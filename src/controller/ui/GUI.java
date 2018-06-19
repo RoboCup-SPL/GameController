@@ -154,7 +154,6 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
     private static final String PEN_MOTION_IN_SET = "Motion in Set";
-    private static final String PEN_MOTION_IN_SET_SHORT = "Motion";
     private static final String PEN_INACTIVE = "Fallen / Inactive";
     private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
@@ -1057,9 +1056,6 @@ public class GUI extends JFrame implements GCGUI
                         if (pickup) {
                             robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_PICKUP+")");
                             highlight(robot[i][j], true);
-                        } else if (illegalMotion) {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_MOTION_IN_SET_SHORT+")");
-                            highlight(robot[i][j], true);
                         } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
                             robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
                             highlight(robot[i][j], false);
@@ -1070,7 +1066,7 @@ public class GUI extends JFrame implements GCGUI
                     }  else {
                         robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
                         robotTime[i][j].setValue(1000 * seconds / data.getPenaltyDuration(i, j));
-                        highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
+                        highlight(robot[i][j], (seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT) || illegalMotion);
                     }
                     robotTime[i][j].setVisible(seconds != 0);
                 } else {
