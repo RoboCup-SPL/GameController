@@ -127,7 +127,7 @@ struct RoboCupGameControlReturnData
   uint8_t version;
   uint8_t team;    // team number
   uint8_t player;  // player number starts with 1
-  uint8_t message; // one of the three messages defined above
+  uint8_t message; // always GAMECONTROLLER_RETURN_MSG_ALIVE
 
 #ifdef __cplusplus
   // constructor
