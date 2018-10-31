@@ -3,6 +3,7 @@ package teamcomm.net;
 import common.Log;
 import data.SPLStandardMessage;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import javax.swing.JOptionPane;
 import teamcomm.PluginLoader;
@@ -56,7 +57,7 @@ public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
         final Class<? extends SPLStandardMessage> c = PluginLoader.getInstance().getMessageClass(p.team);
 
         try {
-            message = c.newInstance();
+            message = c.getDeclaredConstructor().newInstance();
             message.fromByteArray(ByteBuffer.wrap(p.message));
             if (message.teamNumValid && message.teamNum != p.team) {
                 message.teamNumValid = false;
@@ -78,7 +79,7 @@ public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
             }
 
             GameState.getInstance().receiveMessage(p.host, p.team, m);
-        } catch (InstantiationException | IllegalAccessException ex) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
             Log.error("a problem occured while instantiating custom message class " + c.getSimpleName() + ": " + ex.getMessage());
         }
     }

@@ -1617,7 +1617,6 @@ public class RoSi2Element {
                         } else {
                             // Create and add element
                             final String name = getXmlAttribute(e, "name", false);
-                            @SuppressWarnings("unchecked")
                             final RoSi2Element elem = new RoSi2Element(inputFileStack.getFirst().path, tag, name, (Iterator<Attribute>) e.getAttributes(), namedElements);
                             if (name != null && !withinSceneElement) {
                                 namedElements.put(tag + '#' + name, elem);

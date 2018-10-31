@@ -135,12 +135,12 @@ public class View3DGSV extends View3D {
                                 break;
                             case KeyEvent.VK_UP:
                             case KeyEvent.VK_PLUS:
-                                camera.addRadius(-0.05f * ((ke.getModifiers() & KeyEvent.SHIFT_MASK) != 0 ? 2 : 1));
+                                camera.addRadius(-0.05f * ((ke.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0 ? 2 : 1));
                                 camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
                                 break;
                             case KeyEvent.VK_DOWN:
                             case KeyEvent.VK_MINUS:
-                                camera.addRadius(0.05f * ((ke.getModifiers() & KeyEvent.SHIFT_MASK) != 0 ? 2 : 1));
+                                camera.addRadius(0.05f * ((ke.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0 ? 2 : 1));
                                 camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
                                 break;
                         }
@@ -148,7 +148,7 @@ public class View3DGSV extends View3D {
 
                     @Override
                     public void keyReleased(final KeyEvent ke) {
-                        if ((ke.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
+                        if ((ke.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
                             if (!forceWindowed && (ke.getKeyCode() == KeyEvent.VK_LEFT || ke.getKeyCode() == KeyEvent.VK_RIGHT)) {
                                 final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
                                 if (devices.length > 1) {

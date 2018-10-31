@@ -226,7 +226,7 @@ public class PluginLoader {
                         // other message class exists for the team
                         if (!messageClasses.containsKey(teamNumber)) {
                             try {
-                                messageClasses.put(teamNumber, AdvancedMessage.class.cast(cls.newInstance()).getClass());
+                                messageClasses.put(teamNumber, AdvancedMessage.class.cast(cls.getDeclaredConstructor().newInstance()).getClass());
                             } catch (final Throwable e) {
                                 Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom message class " + cls.getName() + ": " + e.getMessage());
                             }
@@ -251,7 +251,7 @@ public class PluginLoader {
                             }
                         }
                         try {
-                            final Drawing d = (Drawing) cls.newInstance();
+                            final Drawing d = (Drawing) cls.getDeclaredConstructor().newInstance();
                             d.setTeamNumber(teamNumber);
                             drawingsForTeam.add(d);
                         } catch (final Throwable e) {
