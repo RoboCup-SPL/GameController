@@ -134,6 +134,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String GOAL_FREE_KICK = "Goal Free Kick";
     private static final String PUSHING_FREE_KICK = "Pushing Free Kick";
     private static final String OUT = "Out";
+    private static final String CORNER_KICK = "Corner Kick";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
     private static final String STATE_SET = "Set";
@@ -218,6 +219,7 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton[] timeOut;
     private JButton[] stuck;
     private JButton[] out;
+    private JButton[] cornerKick;
     private JPanel mid;
     private JToggleButton initial;
     private JToggleButton ready;
@@ -368,11 +370,13 @@ public class GUI extends JFrame implements GCGUI
         }
         //  team
         out = new JButton[2];        
+        cornerKick = new JButton[2];
         if (Rules.league instanceof SPL) {
             goalFreeKick = new JButton[2];
             for (int i=0; i<2; i++) {                
                 goalFreeKick[i] = new Button(GOAL_FREE_KICK);
                 out[i] = new Button(OUT);
+                cornerKick[i] = new Button(CORNER_KICK);
             }
         } else {
             timeOut = new JToggleButton[2];
@@ -510,10 +514,12 @@ public class GUI extends JFrame implements GCGUI
             layout.add(.91, .05, .08, .065, timeOut[1]);
             layout.add(.01, .13, .08, .065, stuck[0]);
             layout.add(.91, .13, .08, .065, stuck[1]);
-            layout.add(.01, .77, .1375, .09, goalFreeKick[0]);
-            layout.add(.8525, .77, .1375, .09, goalFreeKick[1]);
-            layout.add(.1525, .77, .1375, .09, out[0]);
-            layout.add(.71, .77, .1375, .09, out[1]);
+            layout.add(.01, .77, .09, .09, goalFreeKick[0]);
+            layout.add(.9, .77, .09, .09, goalFreeKick[1]);
+            layout.add(.105, .77, .09, .09, out[0]);
+            layout.add(.805, .77, .09, .09, out[1]);
+            layout.add(.2, .77, .09, .09, cornerKick[0]);
+            layout.add(.71, .77, .09, .09, cornerKick[1]);
             layout.add(.1, .05, .08, .065, goalInc[0]);
             layout.add(.82, .05, .08, .065, goalInc[1]);
             layout.add(.1, .13, .08, .065, goalDec[0]);
@@ -612,6 +618,7 @@ public class GUI extends JFrame implements GCGUI
             if (Rules.league instanceof SPL) {
                 stuck[i].addActionListener(ActionBoard.stuck[i]);
                 goalFreeKick[i].addActionListener(ActionBoard.goalFreeKick[i]);
+                cornerKick[i].addActionListener(ActionBoard.cornerKick[i]);
             }
         }
         refereeTimeout.addActionListener(ActionBoard.refereeTimeout);
@@ -803,6 +810,7 @@ public class GUI extends JFrame implements GCGUI
         if (Rules.league instanceof SPL) {
             updateGlobalStuck(data);
             updateFreeKick(data);
+            updateCornerKick(data);
             updatePenaltiesSPL(data);
         } else if (Rules.league instanceof HL) {
             updatePenaltiesHL(data);
@@ -874,6 +882,9 @@ public class GUI extends JFrame implements GCGUI
                 case AdvancedData.SET_PLAY_PUSHING_FREE_KICK:
                     clockDescription.setText(PUSHING_FREE_KICK);
                     break;
+                case AdvancedData.SET_PLAY_CORNER_KICK:
+                	clockDescription.setText(CORNER_KICK);
+                	break;
                 default:
                     assert false;
             }
@@ -1196,6 +1207,18 @@ public class GUI extends JFrame implements GCGUI
             goalFreeKick[i].setEnabled(ActionBoard.goalFreeKick[i].isLegal(data));
         }
     }
+    
+    /**
+     * Updates the corner kick.
+     * 
+     * @param data     The current data (model) the GUI should view.
+     */
+    private void updateCornerKick(AdvancedData data)
+    {
+        for (int i=0; i<2; i++) {
+            cornerKick[i].setEnabled(ActionBoard.cornerKick[i].isLegal(data));
+        }
+    }
 
     /**
      * Updates the SPL penalties.
@@ -1334,6 +1357,7 @@ public class GUI extends JFrame implements GCGUI
             if (Rules.league instanceof SPL) {
                 stuck[i].setFont(timeoutFont);
                 goalFreeKick[i].setFont(standardFont);
+                cornerKick[i].setFont(standardFont);
             }
         }
         clock.setFont(timeFont);

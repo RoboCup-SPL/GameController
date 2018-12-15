@@ -4,6 +4,7 @@ import controller.action.clock.ClockTick;
 import controller.action.ui.CancelUndo;
 import controller.action.ui.ClockPause;
 import controller.action.ui.ClockReset;
+import controller.action.ui.CornerKick;
 import controller.action.ui.DropBall;
 import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
@@ -76,6 +77,7 @@ public class ActionBoard
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static Out[] out = new Out[2];
+    public static CornerKick[] cornerKick = new CornerKick[2];
     public static ClockReset clockReset;
     public static ClockPause clockPause;
     public static IncGameClock incGameClock;
@@ -138,6 +140,7 @@ public class ActionBoard
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
             goalFreeKick[i] = new GoalFreeKick(i);
+            cornerKick[i] = new CornerKick(i);
         }
 
         clockReset = new ClockReset();

@@ -40,6 +40,8 @@ public class Play extends GCAction
                     Log.state(data, "Goal Free Kick Complete");
                 } else if (setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK) {
                     Log.state(data, "Pushing Free Kick Complete");
+                } else if (setPlay == GameControlData.SET_PLAY_CORNER_KICK) {
+                	Log.state(data, "Corner Kick Complete");
                 } else {
                     assert false;
                 }

@@ -83,6 +83,9 @@ public class GameControllerInfo extends Static {
                         case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
                             state = "Pushing Free Kick";
                             break;
+                        case GameControlData.SET_PLAY_CORNER_KICK:
+                        	state = "Corner Kick";
+                        	break;
                         default:
                             state = "";
                     }

@@ -118,8 +118,24 @@ public class EventRecorder {
             if(logFreeKicks && (lastSetPlay != data.setPlay || lastKickingTeam != data.kickingTeam)) {
                 lastSetPlay = data.setPlay;
                 lastKickingTeam = data.kickingTeam;
-                if(data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK || data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK) {
-                    String setPlayString = data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK ? "Goal Free Kick for team: " : "Pushing Free Kick for team: ";
+                if(data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK
+                		|| data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK
+                		|| data.setPlay == GameControlData.SET_PLAY_CORNER_KICK) {
+                    String setPlayString = "";
+                    switch (data.setPlay) {
+						case GameControlData.SET_PLAY_GOAL_FREE_KICK:
+							setPlayString = "Goal Free Kick for team: ";
+							break;
+						case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
+							setPlayString = "Pushing Free Kick for team: ";
+							break;
+						case GameControlData.SET_PLAY_CORNER_KICK:
+							setPlayString = "Corner Kick for team: ";
+							break;
+						default:
+							setPlayString = "";
+							break;
+					}
                     setPlayString += Byte.toString(data.kickingTeam);
 
                     // Insert before empty logEntries:

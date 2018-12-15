@@ -35,7 +35,9 @@ public class ClockTick extends GCAction
                 && (data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime)) {
             ActionBoard.set.perform(data);
         } else if (data.gameState == GameControlData.STATE_PLAYING
-                && (data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK || data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK)
+                && (data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK 
+                || data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK
+                || data.setPlay == GameControlData.SET_PLAY_CORNER_KICK)
                 && (data.getSecondsSince(data.whenCurrentSetPlayBegan) >= Rules.league.freeKickTime)) {
             ActionBoard.play.perform(data);
         } else if (data.gameState == GameControlData.STATE_FINISHED) {
