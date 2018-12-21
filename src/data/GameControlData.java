@@ -58,6 +58,7 @@ public class GameControlData implements Serializable {
     public static final byte SET_PLAY_GOAL_FREE_KICK = 1;
     public static final byte SET_PLAY_PUSHING_FREE_KICK = 2;
     public static final byte SET_PLAY_CORNER_KICK = 3;
+    public static final byte SET_PLAY_KICK_IN = 4;
 
     public static final byte C_FALSE = 0;
     public static final byte C_TRUE = 1;
@@ -312,7 +313,13 @@ public class GameControlData implements Serializable {
                 break;
             case SET_PLAY_PUSHING_FREE_KICK:
                 temp = "pushing free kick";
-                break;
+                break;   
+            case SET_PLAY_CORNER_KICK:
+                temp = "corner kick";
+                break; 
+            case SET_PLAY_KICK_IN:
+                temp = "kick in";
+                break;            
             default:
                 temp = "undefined(" + setPlay + ")";
         }

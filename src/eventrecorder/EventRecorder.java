@@ -120,7 +120,8 @@ public class EventRecorder {
                 lastKickingTeam = data.kickingTeam;
                 if(data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK
                 		|| data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK
-                		|| data.setPlay == GameControlData.SET_PLAY_CORNER_KICK) {
+                		|| data.setPlay == GameControlData.SET_PLAY_CORNER_KICK
+                		|| data.setPlay == GameControlData.SET_PLAY_KICK_IN) {
                     String setPlayString = "";
                     switch (data.setPlay) {
 						case GameControlData.SET_PLAY_GOAL_FREE_KICK:
@@ -131,6 +132,9 @@ public class EventRecorder {
 							break;
 						case GameControlData.SET_PLAY_CORNER_KICK:
 							setPlayString = "Corner Kick for team: ";
+							break;
+						case GameControlData.SET_PLAY_KICK_IN:
+							setPlayString = "Kick In for team: ";
 							break;
 						default:
 							setPlayString = "";

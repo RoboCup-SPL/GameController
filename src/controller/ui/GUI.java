@@ -132,8 +132,8 @@ public class GUI extends JFrame implements GCGUI
     private static final String REFEREE_TIMEOUT_WITHOUT_BREAK = "Referee Timeout";
     private static final String GOAL_FREE_KICK = "Goal Free Kick";
     private static final String PUSHING_FREE_KICK = "Pushing Free Kick";
-    private static final String OUT = "Out";
     private static final String CORNER_KICK = "Corner Kick";
+    private static final String KICK_IN = "Kick In";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
     private static final String STATE_SET = "Set";
@@ -210,7 +210,7 @@ public class GUI extends JFrame implements GCGUI
     private JButton[] goalFreeKick;
     private JToggleButton[] timeOut;
     private JButton[] stuck;
-    private JButton[] out;
+    private JButton[] kickIn;
     private JButton[] cornerKick;
     private JPanel mid;
     private JToggleButton initial;
@@ -357,12 +357,12 @@ public class GUI extends JFrame implements GCGUI
             }
         }
         //  team
-        out = new JButton[2];        
+        kickIn = new JButton[2];
         cornerKick = new JButton[2];
         goalFreeKick = new JButton[2];
         for (int i=0; i<2; i++) {                
             goalFreeKick[i] = new Button(GOAL_FREE_KICK);
-            out[i] = new Button(OUT);
+            kickIn[i] = new Button(KICK_IN);
             cornerKick[i] = new Button(CORNER_KICK);
         }
         
@@ -484,8 +484,8 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.91, .13, .08, .065, stuck[1]);
         layout.add(.01, .77, .09, .09, goalFreeKick[0]);
         layout.add(.9, .77, .09, .09, goalFreeKick[1]);
-        layout.add(.105, .77, .09, .09, out[0]);
-        layout.add(.805, .77, .09, .09, out[1]);
+        layout.add(.105, .77, .09, .09, kickIn[0]);
+        layout.add(.805, .77, .09, .09, kickIn[1]);
         layout.add(.2, .77, .09, .09, cornerKick[0]);
         layout.add(.71, .77, .09, .09, cornerKick[1]);
         layout.add(.1, .05, .08, .065, goalInc[0]);
@@ -561,11 +561,11 @@ public class GUI extends JFrame implements GCGUI
             for (int j=0; j<robot[i].length; j++) {
                 robot[i][j].addActionListener(ActionBoard.robot[i][j]);
             }
-            out[i].addActionListener(ActionBoard.out[i]);
             timeOut[i].addActionListener(ActionBoard.timeOut[i]);
             stuck[i].addActionListener(ActionBoard.stuck[i]);
             goalFreeKick[i].addActionListener(ActionBoard.goalFreeKick[i]);
             cornerKick[i].addActionListener(ActionBoard.cornerKick[i]);
+            kickIn[i].addActionListener(ActionBoard.kickIn[i]);
         }
         refereeTimeout.addActionListener(ActionBoard.refereeTimeout);
         initial.addActionListener(ActionBoard.initial);
@@ -729,7 +729,6 @@ public class GUI extends JFrame implements GCGUI
         updateKickoff(data);
         updateNumOfPenalties(data);
         updateRefereeTimeout(data);
-        updateOut(data); 
         updateTimeOut(data);
         /*
          * This needs to happen before updatePenaltiesSPL because otherwise
@@ -746,6 +745,7 @@ public class GUI extends JFrame implements GCGUI
         updateGlobalStuck(data);
         updateFreeKick(data);
         updateCornerKick(data);
+        updateKickIn(data);
         updatePenaltiesSPL(data);
         updateRobots(data);
         updateUndo(data);
@@ -814,6 +814,9 @@ public class GUI extends JFrame implements GCGUI
                     break;
                 case AdvancedData.SET_PLAY_CORNER_KICK:
                 	clockDescription.setText(CORNER_KICK);
+                	break;
+                case AdvancedData.SET_PLAY_KICK_IN:
+                	clockDescription.setText(KICK_IN);
                 	break;
                 default:
                     assert false;
@@ -1101,14 +1104,14 @@ public class GUI extends JFrame implements GCGUI
     }
     
     /**
-     * Updates the out.
+     * Updates the kick in.
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateOut(AdvancedData data)
+    private void updateKickIn(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            out[i].setEnabled(ActionBoard.out[i].isLegal(data));
+            kickIn[i].setEnabled(ActionBoard.kickIn[i].isLegal(data));
         }
     }
     
@@ -1246,7 +1249,7 @@ public class GUI extends JFrame implements GCGUI
                 robotLabel[i][j].setFont(titleFont);
             }
             timeOut[i].setFont(standardFont);
-            out[i].setFont(standardFont);
+			kickIn[i].setFont(standardFont);
             stuck[i].setFont(timeoutFont);
             goalFreeKick[i].setFont(standardFont);
             cornerKick[i].setFont(standardFont);

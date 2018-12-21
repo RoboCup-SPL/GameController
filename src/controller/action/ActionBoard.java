@@ -10,8 +10,8 @@ import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
 import controller.action.ui.GoalFreeKick;
 import controller.action.ui.IncGameClock;
+import controller.action.ui.KickIn;
 import controller.action.ui.KickOff;
-import controller.action.ui.Out;
 import controller.action.ui.Quit;
 import controller.action.ui.RefereeTimeout;
 import controller.action.ui.Robot;
@@ -71,7 +71,7 @@ public class ActionBoard
     public static GoalFreeKick[] goalFreeKick = new GoalFreeKick[2];
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
-    public static Out[] out = new Out[2];
+    public static KickIn[] kickIn = new KickIn[2];
     public static CornerKick[] cornerKick = new CornerKick[2];
     public static ClockReset clockReset;
     public static ClockPause clockPause;
@@ -128,7 +128,7 @@ public class ActionBoard
             }
             timeOut[i] = new TimeOut(i);
             stuck[i] = new GlobalStuck(i);
-            out[i] = new Out(i);
+            kickIn[i] = new KickIn(i);
             goalFreeKick[i] = new GoalFreeKick(i);
             cornerKick[i] = new CornerKick(i);
         }

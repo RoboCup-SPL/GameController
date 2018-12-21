@@ -370,6 +370,9 @@ public class View3DGSV extends View3D {
                         case GameControlData.SET_PLAY_CORNER_KICK:
                         	state = "Corner Kick";
                         	break;
+                        case GameControlData.SET_PLAY_KICK_IN:
+                        	state = "Kick In";
+                        	break;
                         default:
                             state = "";
                     }
