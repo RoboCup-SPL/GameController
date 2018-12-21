@@ -7,8 +7,6 @@ import controller.action.GCAction;
 import controller.action.ui.penalty.MotionInSet;
 import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.PickUp;
-import controller.action.ui.penalty.PickUpHL;
-import controller.action.ui.penalty.ServiceHL;
 import data.AdvancedData;
 import data.PlayerInfo;
 import data.Rules;
@@ -125,15 +123,6 @@ public class Robot extends GCAction
                 // penalize a robot
                 data.team[side].player[number].penalty == PlayerInfo.PENALTY_NONE
                 && lastUIEventWasPenalty
-                // change penalty to pickup in HL
-                || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
-                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_SERVICE
-                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE
-                && !isRobotSubstitute
-                // change penalty to service in HL
-                || EventHandler.getInstance().lastUIEvent instanceof ServiceHL
-                && data.team[side].player[number].penalty != PlayerInfo.PENALTY_HL_SERVICE
-                && !isRobotSubstitute
                 // change penalty to pickup in SPL
                 || (EventHandler.getInstance().lastUIEvent instanceof PickUp && Rules.league instanceof SPL)
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP

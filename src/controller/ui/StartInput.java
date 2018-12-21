@@ -27,7 +27,6 @@ import javax.swing.JRadioButton;
 
 import data.GameControlData;
 import data.Rules;
-import data.SPL;
 import data.SPLPenaltyShootout;
 import data.Teams;
 
@@ -60,8 +59,6 @@ public class StartInput extends JFrame implements Serializable
     private static final String BACKGROUND_EXT = ".png";
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
-    private static final String FULLTIME_LABEL_HL_NO = "Normal Game";
-    private static final String FULLTIME_LABEL_HL_YES = "Knock-Out Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
     private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
@@ -250,20 +247,11 @@ public class StartInput extends JFrame implements Serializable
                     }
                     nofulltime.setVisible(!(Rules.league instanceof SPLPenaltyShootout));
                     fulltime.setVisible(!(Rules.league instanceof SPLPenaltyShootout));
-                    if (Rules.league instanceof SPL) {
-                        nofulltime.setText(FULLTIME_LABEL_NO);
-                        fulltime.setText(FULLTIME_LABEL_YES);
-                        autoColorChange.setVisible(false);
-                        teamColorChange[0].setVisible(true);
-                        teamColorChange[1].setVisible(true);
-                    } else {
-                        nofulltime.setText(FULLTIME_LABEL_HL_NO);
-                        fulltime.setText(FULLTIME_LABEL_HL_YES);
-                        autoColorChange.setState(Rules.league.colorChangeAuto);
-                        autoColorChange.setVisible(true);
-                        teamColorChange[0].setVisible(false);
-                        teamColorChange[1].setVisible(false);
-                    }
+                    nofulltime.setText(FULLTIME_LABEL_NO);
+                    fulltime.setText(FULLTIME_LABEL_YES);
+                    autoColorChange.setVisible(false);
+                    teamColorChange[0].setVisible(true);
+                    teamColorChange[1].setVisible(true);
                     showAvailableTeams();
                     startEnabling();
                 }
@@ -297,11 +285,7 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = fulltime.isSelected() && fulltime.isVisible();
-                    if (Rules.league instanceof SPL) {
-                        outGameTypeTitle = outFulltime ? FULLTIME_LABEL_YES : FULLTIME_LABEL_NO;
-                    } else {
-                        outGameTypeTitle = outFulltime ? FULLTIME_LABEL_HL_YES : FULLTIME_LABEL_HL_NO;
-                    }
+                    outGameTypeTitle = outFulltime ? FULLTIME_LABEL_YES : FULLTIME_LABEL_NO;
                     outFullscreen = fullscreen.getState();
                     outAutoColorChange = autoColorChange.getState();
                     finished = true;

@@ -33,7 +33,6 @@ import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import data.AdvancedData;
 import data.GameControlData;
-import data.HL;
 import data.PlayerInfo;
 import data.Rules;
 import data.SPL;
@@ -160,16 +159,9 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
     private static final String PEN_KICK_OFF_GOAL = "Kickoff Goal";
     private static final String PEN_PICKUP = "Pick-Up";
-    private static final String PEN_MANIPULATION = "Ball Manipulation";
-    private static final String PEN_PHYSICAL = "Physical Contact";
-    private static final String PEN_DEFENSE = "Illegal Defense";
-    private static final String PEN_ATTACK = "Illegal Attack";
-    private static final String PEN_PICKUP_INCAPABLE = "Pickup/Incapable";
-    private static final String PEN_SERVICE = "Service";
     private static final String PEN_FOUL = "Foul";
     private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String PEN_LOCAL_GAME_STUCK = "Local Game Stuck";
-    private static final String DROP_BALL = "Dropped Ball";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
@@ -310,9 +302,7 @@ public class GUI extends JFrame implements GCGUI
         kickOffGroup = new ButtonGroup();
         penalties = new JLabel[2];
         timeOut = new JToggleButton[2];
-        if(Rules.league instanceof SPL) {
-            stuck = new JButton[2];
-        }
+        stuck = new JButton[2];
         for (int i=0; i<2; i++) {
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
             name[i].setHorizontalAlignment(JLabel.CENTER);
@@ -333,9 +323,7 @@ public class GUI extends JFrame implements GCGUI
             penalties[i] = new JLabel(PENALTIES+": 0");
             penalties[i].setHorizontalAlignment(JLabel.CENTER);
             timeOut[i] = new ToggleButton(TIMEOUT);
-            if(Rules.league instanceof SPL) {
-                stuck[i] = new Button(STUCK);
-            }
+            stuck[i] = new Button(STUCK);
         }
         kickOff[2] = new JRadioButton();
         kickOffGroup.add(kickOff[2]);
@@ -371,19 +359,11 @@ public class GUI extends JFrame implements GCGUI
         //  team
         out = new JButton[2];        
         cornerKick = new JButton[2];
-        if (Rules.league instanceof SPL) {
-            goalFreeKick = new JButton[2];
-            for (int i=0; i<2; i++) {                
-                goalFreeKick[i] = new Button(GOAL_FREE_KICK);
-                out[i] = new Button(OUT);
-                cornerKick[i] = new Button(CORNER_KICK);
-            }
-        } else {
-            timeOut = new JToggleButton[2];
-            for (int i=0; i<2; i++) {
-                timeOut[i] = new ToggleButton(TIMEOUT);
-                out[i] = new Button(OUT);
-            }
+        goalFreeKick = new JButton[2];
+        for (int i=0; i<2; i++) {                
+            goalFreeKick[i] = new Button(GOAL_FREE_KICK);
+            out[i] = new Button(OUT);
+            cornerKick[i] = new Button(CORNER_KICK);
         }
         
         //--mid--
@@ -458,29 +438,18 @@ public class GUI extends JFrame implements GCGUI
         stateGroup.add(play);
         stateGroup.add(finish);
         //  penalties
-        if (Rules.league instanceof SPL) {
-            pen = new JToggleButton[10];
-            
-            pen[0] = new ToggleButton(PEN_PUSHING);
-            pen[1] = new ToggleButton(PEN_FOUL);
-            pen[2] = new ToggleButton(PEN_INACTIVE);
-            pen[3] = new ToggleButton(PEN_LEAVING);
-            pen[4] = new ToggleButton(PEN_MOTION_IN_SET);
-            pen[5] = new ToggleButton(PEN_DEFENDER);
-            pen[6] = new ToggleButton(PEN_BALL_CONTACT);
-            pen[7] = new ToggleButton(PEN_KICK_OFF_GOAL);
-            pen[8] = new ToggleButton(PEN_LOCAL_GAME_STUCK);
-            pen[9] = new ToggleButton(PEN_PICKUP);
-        } else if (Rules.league instanceof HL) {
-            pen = new JToggleButton[6];
-            pen[0] = new ToggleButton(PEN_MANIPULATION);
-            pen[1] = new ToggleButton(PEN_PHYSICAL);
-            pen[2] = new ToggleButton(PEN_ATTACK);
-            pen[3] = new ToggleButton(PEN_DEFENSE);
-            pen[4] = new ToggleButton(PEN_PICKUP_INCAPABLE);
-            pen[5] = new ToggleButton(PEN_SERVICE);
-            dropBall = new Button(DROP_BALL);
-        }
+        pen = new JToggleButton[10];
+        
+        pen[0] = new ToggleButton(PEN_PUSHING);
+        pen[1] = new ToggleButton(PEN_FOUL);
+        pen[2] = new ToggleButton(PEN_INACTIVE);
+        pen[3] = new ToggleButton(PEN_LEAVING);
+        pen[4] = new ToggleButton(PEN_MOTION_IN_SET);
+        pen[5] = new ToggleButton(PEN_DEFENDER);
+        pen[6] = new ToggleButton(PEN_BALL_CONTACT);
+        pen[7] = new ToggleButton(PEN_KICK_OFF_GOAL);
+        pen[8] = new ToggleButton(PEN_LOCAL_GAME_STUCK);
+        pen[9] = new ToggleButton(PEN_PICKUP);
         //--bottom--
         //  log
         log = new JPanel();
@@ -509,31 +478,20 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.71, .16, .12, .04, penalties[1]);
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
-        if (Rules.league instanceof SPL) {
-            layout.add(.01, .05, .08, .065, timeOut[0]);
-            layout.add(.91, .05, .08, .065, timeOut[1]);
-            layout.add(.01, .13, .08, .065, stuck[0]);
-            layout.add(.91, .13, .08, .065, stuck[1]);
-            layout.add(.01, .77, .09, .09, goalFreeKick[0]);
-            layout.add(.9, .77, .09, .09, goalFreeKick[1]);
-            layout.add(.105, .77, .09, .09, out[0]);
-            layout.add(.805, .77, .09, .09, out[1]);
-            layout.add(.2, .77, .09, .09, cornerKick[0]);
-            layout.add(.71, .77, .09, .09, cornerKick[1]);
-            layout.add(.1, .05, .08, .065, goalInc[0]);
-            layout.add(.82, .05, .08, .065, goalInc[1]);
-            layout.add(.1, .13, .08, .065, goalDec[0]);
-            layout.add(.82, .13, .08, .065, goalDec[1]);
-        } else {
-            layout.add(.01, .77, .135, .09, timeOut[0]);
-            layout.add(.855, .77, .135, .09, timeOut[1]);
-            layout.add(.155, .77, .135, .09, out[0]);
-            layout.add(.71, .77, .135, .09, out[1]);
-            layout.add(.01, .05, .08, .07, goalInc[0]);
-            layout.add(.91, .05, .08, .07, goalInc[1]);
-            layout.add(.01, .13, .08, .06, goalDec[0]);
-            layout.add(.91, .13, .08, .06, goalDec[1]);
-        }
+        layout.add(.01, .05, .08, .065, timeOut[0]);
+        layout.add(.91, .05, .08, .065, timeOut[1]);
+        layout.add(.01, .13, .08, .065, stuck[0]);
+        layout.add(.91, .13, .08, .065, stuck[1]);
+        layout.add(.01, .77, .09, .09, goalFreeKick[0]);
+        layout.add(.9, .77, .09, .09, goalFreeKick[1]);
+        layout.add(.105, .77, .09, .09, out[0]);
+        layout.add(.805, .77, .09, .09, out[1]);
+        layout.add(.2, .77, .09, .09, cornerKick[0]);
+        layout.add(.71, .77, .09, .09, cornerKick[1]);
+        layout.add(.1, .05, .08, .065, goalInc[0]);
+        layout.add(.82, .05, .08, .065, goalInc[1]);
+        layout.add(.1, .13, .08, .065, goalDec[0]);
+        layout.add(.82, .13, .08, .065, goalDec[1]);
         layout.add(.31, .0, .08, .11, clockReset);
         layout.add(.4, .012, .195, .10, clock);
         layout.add(.61, .0, .08, .11, clockPause);
@@ -578,26 +536,16 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.465, .27, .07, .08, set);
         layout.add(.5425, .27, .07, .08, play);
         layout.add(.62, .27, .07, .08, finish);
-        if (Rules.league instanceof SPL) {
-            layout.add(.31, .38, .185, .08, pen[0]);
-            layout.add(.505, .38, .185, .08, pen[1]);
-            layout.add(.31, .48, .185, .08, pen[2]);
-            layout.add(.505, .48, .185, .08, pen[3]);
-            layout.add(.31, .58, .185, .08, pen[4]);
-            layout.add(.505, .58, .185, .08, pen[5]);
-            layout.add(.31, .68, .185, .08, pen[6]);
-            layout.add(.505, .68, .185, .08, pen[7]);
-            layout.add(.31, .78, .185, .08, pen[8]);
-            layout.add(.505, .78, .185, .08, pen[9]);
-        } else if (Rules.league instanceof HL) {
-            layout.add(.31,  .38, .185, .08, pen[0]);
-            layout.add(.505, .38, .185, .08, pen[1]);
-            layout.add(.31,  .48, .185, .08, pen[2]);
-            layout.add(.505, .48, .185, .08, pen[3]);
-            layout.add(.31,  .58, .185, .08, pen[4]);
-            layout.add(.505, .58, .185, .08, pen[5]);
-            layout.add(.31,  .78, .38,  .08, dropBall);
-        }
+        layout.add(.31, .38, .185, .08, pen[0]);
+        layout.add(.505, .38, .185, .08, pen[1]);
+        layout.add(.31, .48, .185, .08, pen[2]);
+        layout.add(.505, .48, .185, .08, pen[3]);
+        layout.add(.31, .58, .185, .08, pen[4]);
+        layout.add(.505, .58, .185, .08, pen[5]);
+        layout.add(.31, .68, .185, .08, pen[6]);
+        layout.add(.505, .68, .185, .08, pen[7]);
+        layout.add(.31, .78, .185, .08, pen[8]);
+        layout.add(.505, .78, .185, .08, pen[9]);
         layout.add(.08, .88, .84, .11, log);
         layout.add(.925, .88, .07, .11, cancelUndo);
         layout.add(0, 0, .3, .87, side[0]);
@@ -615,11 +563,9 @@ public class GUI extends JFrame implements GCGUI
             }
             out[i].addActionListener(ActionBoard.out[i]);
             timeOut[i].addActionListener(ActionBoard.timeOut[i]);
-            if (Rules.league instanceof SPL) {
-                stuck[i].addActionListener(ActionBoard.stuck[i]);
-                goalFreeKick[i].addActionListener(ActionBoard.goalFreeKick[i]);
-                cornerKick[i].addActionListener(ActionBoard.cornerKick[i]);
-            }
+            stuck[i].addActionListener(ActionBoard.stuck[i]);
+            goalFreeKick[i].addActionListener(ActionBoard.goalFreeKick[i]);
+            cornerKick[i].addActionListener(ActionBoard.cornerKick[i]);
         }
         refereeTimeout.addActionListener(ActionBoard.refereeTimeout);
         initial.addActionListener(ActionBoard.initial);
@@ -639,26 +585,16 @@ public class GUI extends JFrame implements GCGUI
             secondHalfOvertime.addActionListener(ActionBoard.secondHalfOvertime);
         }
         penaltyShoot.addActionListener(ActionBoard.penaltyShoot);
-        if (Rules.league instanceof SPL) {
-            pen[0].addActionListener(ActionBoard.pushing);
-            pen[1].addActionListener(ActionBoard.foul);
-            pen[2].addActionListener(ActionBoard.inactive);
-            pen[3].addActionListener(ActionBoard.leaving);
-            pen[4].addActionListener(ActionBoard.motionInSet);
-            pen[5].addActionListener(ActionBoard.defender);
-            pen[6].addActionListener(ActionBoard.ballContact);
-            pen[7].addActionListener(ActionBoard.kickOffGoal);
-            pen[8].addActionListener(ActionBoard.localGameStuck);
-            pen[9].addActionListener(ActionBoard.pickUp);
-        } else if (Rules.league instanceof HL) {
-            pen[0].addActionListener(ActionBoard.ballManipulation);
-            pen[1].addActionListener(ActionBoard.pushing);
-            pen[2].addActionListener(ActionBoard.attack);
-            pen[3].addActionListener(ActionBoard.defense);
-            pen[4].addActionListener(ActionBoard.pickUpHL);
-            pen[5].addActionListener(ActionBoard.serviceHL);
-            dropBall.addActionListener(ActionBoard.dropBall);
-        }
+        pen[0].addActionListener(ActionBoard.pushing);
+        pen[1].addActionListener(ActionBoard.foul);
+        pen[2].addActionListener(ActionBoard.inactive);
+        pen[3].addActionListener(ActionBoard.leaving);
+        pen[4].addActionListener(ActionBoard.motionInSet);
+        pen[5].addActionListener(ActionBoard.defender);
+        pen[6].addActionListener(ActionBoard.ballContact);
+        pen[7].addActionListener(ActionBoard.kickOffGoal);
+        pen[8].addActionListener(ActionBoard.localGameStuck);
+        pen[9].addActionListener(ActionBoard.pickUp);
         for (int i=0; i<undo.length; i++) {
             undo[i].addActionListener(ActionBoard.undo[i+1]);
         }
@@ -807,16 +743,10 @@ public class GUI extends JFrame implements GCGUI
                 robot[i][j].setSelected(ActionBoard.robot[i][j] == EventHandler.getInstance().lastUIEvent);
             }
         }
-        if (Rules.league instanceof SPL) {
-            updateGlobalStuck(data);
-            updateFreeKick(data);
-            updateCornerKick(data);
-            updatePenaltiesSPL(data);
-        } else if (Rules.league instanceof HL) {
-            updatePenaltiesHL(data);
-            updateDropBall(data);
-
-        }
+        updateGlobalStuck(data);
+        updateFreeKick(data);
+        updateCornerKick(data);
+        updatePenaltiesSPL(data);
         updateRobots(data);
         updateUndo(data);
         repaint();
@@ -1056,11 +986,7 @@ public class GUI extends JFrame implements GCGUI
                 if (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
                     int seconds = data.getRemainingPenaltyTime(i, j, true);
                     boolean pickup = ((Rules.league instanceof SPL &&
-                                data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
-                           || (Rules.league instanceof HL &&
-                               ( data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE
-                              || data.team[i].player[j].penalty == PlayerInfo.PENALTY_HL_SERVICE ))
-                            );
+                                data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP));
                     boolean illegalMotion = Rules.league instanceof SPL
                             && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET;
                     if (seconds == 0) {
@@ -1175,16 +1101,6 @@ public class GUI extends JFrame implements GCGUI
     }
     
     /**
-     * Updates the dropped-ball button.
-     * 
-     * @param data     The current data (model) the GUI should view.
-     */
-    private void updateDropBall(AdvancedData data)
-    {
-        dropBall.setEnabled(ActionBoard.dropBall.isLegal(data));
-    }
-    
-    /**
      * Updates the out.
      * 
      * @param data     The current data (model) the GUI should view.
@@ -1276,29 +1192,6 @@ public class GUI extends JFrame implements GCGUI
     }
     
     /**
-     * Updates the HL penalties.
-     * 
-     * @param data     The current data (model) the GUI should view.
-     */
-    private void updatePenaltiesHL(AdvancedData data)
-    {
-        pen[0].setEnabled(ActionBoard.ballManipulation.isLegal(data));
-        pen[1].setEnabled(ActionBoard.pushing.isLegal(data));
-        pen[2].setEnabled(ActionBoard.attack.isLegal(data));
-        pen[3].setEnabled(ActionBoard.defense.isLegal(data));
-        pen[4].setEnabled(ActionBoard.pickUpHL.isLegal(data));
-        pen[5].setEnabled(ActionBoard.serviceHL.isLegal(data));
-
-        GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
-        pen[0].setSelected(hightlightEvent == ActionBoard.ballManipulation);
-        pen[1].setSelected(hightlightEvent == ActionBoard.pushing);
-        pen[2].setSelected(hightlightEvent == ActionBoard.attack);
-        pen[3].setSelected(hightlightEvent == ActionBoard.defense);
-        pen[4].setSelected(hightlightEvent == ActionBoard.pickUpHL);
-        pen[5].setSelected(hightlightEvent == ActionBoard.serviceHL);
-    }
-    
-    /**
      * Updates the timeline/undo.
      * 
      * @param data     The current data (model) the GUI should view.
@@ -1354,11 +1247,9 @@ public class GUI extends JFrame implements GCGUI
             }
             timeOut[i].setFont(standardFont);
             out[i].setFont(standardFont);
-            if (Rules.league instanceof SPL) {
-                stuck[i].setFont(timeoutFont);
-                goalFreeKick[i].setFont(standardFont);
-                cornerKick[i].setFont(standardFont);
-            }
+            stuck[i].setFont(timeoutFont);
+            goalFreeKick[i].setFont(standardFont);
+            cornerKick[i].setFont(standardFont);
         }
         clock.setFont(timeFont);
         clockSub.setFont(timeSubFont);
