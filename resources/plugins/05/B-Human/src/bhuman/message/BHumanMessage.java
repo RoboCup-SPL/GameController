@@ -1,6 +1,5 @@
 package bhuman.message;
 
-import bhuman.message.messages.BehaviorStatus;
 import bhuman.message.messages.FieldFeatureOverview;
 import bhuman.message.messages.RobotHealth;
 import java.nio.ByteBuffer;
@@ -29,7 +28,6 @@ public class BHumanMessage extends AdvancedMessage {
         if (valid) {
             final DecimalFormat df = new DecimalFormat("#.00");
             final RobotHealth health = message.queue == null ? null : message.queue.getCachedMessage(RobotHealth.class);
-            final BehaviorStatus status = message.queue == null ? null : message.queue.getCachedMessage(BehaviorStatus.class);
 
             if (health != null) {
                 display.add(health.robotName);
@@ -46,7 +44,10 @@ public class BHumanMessage extends AdvancedMessage {
 
             if (message.bhuman != null) {
                 display.add("Magic: " + message.bhuman.magicNumber);
-                display.add("Role: " + message.bhuman.role);
+                display.add("IsGoalkeeper: " + message.bhuman.isGoalkeeper);
+                display.add("PlayBall: " + message.bhuman.playBall);
+                display.add("SupporterIndex: " + message.bhuman.supporterIndex);
+                display.add("Activity: " + message.bhuman.activity);
                 display.add("TimeToReachBall: " + message.bhuman.timeWhenReachBall.getTimeSince(message.bhuman.timestamp) + "ms");
                 display.add("TimeToReachBallStriker: " + message.bhuman.timeWhenReachBallStriker.getTimeSince(message.bhuman.timestamp) + "ms");
                 display.add("TimeSinceLastJumped: " + (message.bhuman.timestamp - message.bhuman.timestampLastJumped.timestamp) + "ms");
@@ -54,9 +55,6 @@ public class BHumanMessage extends AdvancedMessage {
                 display.add("");
             }
 
-            if (status != null) {
-                display.add("Activity: " + status.activity);
-            }
 
             if (message.queue != null) {
                 final FieldFeatureOverview fieldFeatures = message.queue.getMessage(FieldFeatureOverview.class);

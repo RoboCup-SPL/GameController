@@ -24,7 +24,7 @@ import util.Unsigned;
 public class BHumanMessageParts {
 
     private static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
-    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 6;
+    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 8;
 
     private static final String BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER = "BHUA";
     private static final short BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION = 0;
@@ -89,18 +89,6 @@ public class BHumanMessageParts {
 
         private static final int BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS = 6;
 
-        public static enum Role {
-            undefined,
-            keeper,
-            attackingKeeper,
-            striker,
-            defender,
-            supporter,
-            penaltyStriker,
-            penaltyKeeper,
-            none
-        }
-
         public static class BNTPMessage {
 
             public long requestOrigination;
@@ -150,16 +138,22 @@ public class BHumanMessageParts {
         public byte confidenceOfLastWhistleDetection;
         public Timestamp lastTimeWhistleDetected;
 
-        public Role role;
+        public short teamActivity;
         public Timestamp timeWhenReachBall;
         public Timestamp timeWhenReachBallStriker;
+        public boolean[] teammateRolesIsGoalkeeper = new boolean[BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
+        public boolean[] teammateRolesPlayBall = new boolean[BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
+        public int[] teammateRolesPlayerIndex = new int[BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
+        public int captain;
+        public Timestamp teammateRolesTimestamp;
+        public boolean isGoalkeeper;
+        public boolean playBall;
+        public int supporterIndex;
+
+        public short activity;
         public int passTarget;
         public Eigen.Vector2f walkingTo = new Eigen.Vector2f();
         public Eigen.Vector2f shootingTo = new Eigen.Vector2f();
-
-        public Role[] teammateRoles = new Role[BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
-        public int captain;
-        public Timestamp teammateRolesTimestamp;
 
         public List<Obstacle> obstacles;
 
@@ -182,7 +176,9 @@ public class BHumanMessageParts {
                     + 3 * 4 // ballCovariance
                     + 1 // confidenceOfLastWhistleDetection
                     + 2 // lastTimeWhistleDetected
-                    + 4 // role, passTarget, teammateRoles
+                    + 1 // teamActivity
+                    + 1 // activity
+                    + 5 // isGoalkeeper, playBall, supporterIndex, passTarget, teammateRolesIsGoalkeeper, teammateRolesPlayBall, teammateRolesPlayerIndex
                     + 2 // timeWhenReachBall
                     + 2 // timeWhenReachBallStriker
                     + 2 * 2 // walkingTo
@@ -241,15 +237,29 @@ public class BHumanMessageParts {
             confidenceOfLastWhistleDetection = stream.get();
             lastTimeWhistleDetected = new Timestamp(timestamp - (long) Unsigned.toUnsigned(stream.getShort()));
 
-            final int rolePassTargetTeammateRolesContainer = stream.getInt();
-            for (int i = 0; i < BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; ++i) {
-                teammateRoles[i] = Role.values()[(rolePassTargetTeammateRolesContainer >> ((BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - i - 1) * 4)) & 0xF];
-            }
-            passTarget = (rolePassTargetTeammateRolesContainer >> 24) & 0xF;
+            teamActivity = Unsigned.toUnsigned(stream.get());
+            activity = Unsigned.toUnsigned(stream.get());
+
+            final long rolePassTargetTeammateRolesContainer = ((long) Unsigned.toUnsigned(stream.get())) | (Unsigned.toUnsigned(stream.getInt()) << 8);
+            passTarget = (int) (rolePassTargetTeammateRolesContainer & 0xF);
             if (passTarget == 15) {
                 passTarget = -1;
             }
-            role = Role.values()[(rolePassTargetTeammateRolesContainer >> 28) & 0xF];
+            supporterIndex = (int) ((rolePassTargetTeammateRolesContainer >> 4) & 0x7);
+            if (supporterIndex == 7) {
+                supporterIndex = -1;
+            }
+            playBall = ((rolePassTargetTeammateRolesContainer >> 7) & 0x1) != 0;
+            isGoalkeeper = ((rolePassTargetTeammateRolesContainer >> 8) & 0x1) != 0;
+            for (int i = 0; i < BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; ++i) {
+                final byte teammateRole = (byte) ((rolePassTargetTeammateRolesContainer >> (9 + (BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - i - 1) * 5)) & 0x1F);
+                teammateRolesPlayerIndex[i] = teammateRole & 0x7;
+                if (teammateRolesPlayerIndex[i] == 7) {
+                    teammateRolesPlayerIndex[i] = -1;
+                }
+                teammateRolesPlayBall[i] = (teammateRole & 0x8) != 0;
+                teammateRolesIsGoalkeeper[i] = (teammateRole & 0x10) != 0;
+            }
             timeWhenReachBall = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3));
             timeWhenReachBallStriker = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3));
             walkingTo.x = (float) stream.getShort();
