@@ -40,7 +40,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
      */
     public static final int PANEL_HEIGHT = 105;
 
-    public static final double MPS_LEGAL_THRESHOLD = 3.25;
+    public static final double MPS_LEGAL_THRESHOLD = 1.1;
 
     private final RobotState robot;
     private final RobotDetailFrame detailFrame;
