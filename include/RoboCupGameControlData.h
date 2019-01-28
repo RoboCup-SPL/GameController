@@ -21,17 +21,11 @@
 #define TEAM_BROWN                  8 // brown
 #define TEAM_GRAY                   9 // lighter grey
 
-// HL
-#define TEAM_CYAN                   0
-#define TEAM_MAGENTA                1
-#define DROPBALL                    255
-
 #define COMPETITION_PHASE_ROUNDROBIN        0
 #define COMPETITION_PHASE_PLAYOFF           1
 
 #define COMPETITION_TYPE_NORMAL               0
 #define COMPETITION_TYPE_MIXEDTEAM            1
-#define COMPETITION_TYPE_GENERAL_PENALTY_KICK 2
 
 #define GAME_PHASE_NORMAL                   0
 #define GAME_PHASE_PENALTYSHOOT             1
@@ -47,9 +41,10 @@
 #define SET_PLAY_NONE                       0
 #define SET_PLAY_GOAL_FREE_KICK             1
 #define SET_PLAY_PUSHING_FREE_KICK          2
+#define SET_PLAY_CORNER_KICK                3
+#define SET_PLAY_KICK_IN                    4
 
 #define PENALTY_NONE                        0
-// SPL
 #define PENALTY_SPL_ILLEGAL_BALL_CONTACT    1 // ball holding / playing with hands
 #define PENALTY_SPL_PLAYER_PUSHING          2
 #define PENALTY_SPL_ILLEGAL_MOTION_IN_SET   3 // heard whistle too early?
@@ -59,22 +54,6 @@
 #define PENALTY_SPL_KICK_OFF_GOAL           7 // scored from inside center circle after kick-off
 #define PENALTY_SPL_REQUEST_FOR_PICKUP      8
 #define PENALTY_SPL_LOCAL_GAME_STUCK        9
-// HL Kid Size
-#define PENALTY_HL_KID_BALL_MANIPULATION    1
-#define PENALTY_HL_KID_PHYSICAL_CONTACT     2
-#define PENALTY_HL_KID_ILLEGAL_ATTACK       3
-#define PENALTY_HL_KID_ILLEGAL_DEFENSE      4
-#define PENALTY_HL_KID_REQUEST_FOR_PICKUP   5
-#define PENALTY_HL_KID_REQUEST_FOR_SERVICE  6
-#define PENALTY_HL_KID_REQUEST_FOR_PICKUP_2_SERVICE 7
-// HL Teen Size
-#define PENALTY_HL_TEEN_BALL_MANIPULATION   1
-#define PENALTY_HL_TEEN_PHYSICAL_CONTACT    2
-#define PENALTY_HL_TEEN_ILLEGAL_ATTACK      3
-#define PENALTY_HL_TEEN_ILLEGAL_DEFENSE     4
-#define PENALTY_HL_TEEN_REQUEST_FOR_PICKUP  5
-#define PENALTY_HL_TEEN_REQUEST_FOR_SERVICE 6
-#define PENALTY_HL_TEEN_REQUEST_FOR_PICKUP_2_SERVICE 7
 
 #define PENALTY_SUBSTITUTE                  14
 #define PENALTY_MANUAL                      15

@@ -19,7 +19,7 @@ public class SPLMixedTeam extends SPL
         robotsPlaying = teamSize;
         /** Number of penalty-shots for each team. */
         numberOfPenaltyShots = 4;
-        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
+        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM) */
         competitionType = GameControlData.COMPETITION_TYPE_MIXEDTEAM;
     }
 }

@@ -239,9 +239,7 @@ public class GameState implements GameControlDataEventListener {
         // Open a new logfile for the current GameController state if the
         // state changed from or to initial/finished
         final StringBuilder logfileName = new StringBuilder();
-        if (Rules.league.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK) {
-            logfileName.append("GeneralPenaltyKickChallenge_");
-        } else if (Rules.league.competitionType == GameControlData.COMPETITION_TYPE_MIXEDTEAM || (e.data.team[0].teamNumber >= 90 && e.data.team[0].teamNumber < 100 && e.data.team[1].teamNumber >= 90 && e.data.team[1].teamNumber < 100)) {
+        if (Rules.league.competitionType == GameControlData.COMPETITION_TYPE_MIXEDTEAM || (e.data.team[0].teamNumber >= 90 && e.data.team[0].teamNumber < 100 && e.data.team[1].teamNumber >= 90 && e.data.team[1].teamNumber < 100)) {
             logfileName.append("MixedTeam_");
         }
         if (e.data.firstHalf == GameControlData.C_TRUE) {
@@ -249,9 +247,7 @@ public class GameState implements GameControlDataEventListener {
         } else {
             logfileName.append(getTeamName((int) e.data.team[1].teamNumber, false, false)).append("_").append(getTeamName((int) e.data.team[0].teamNumber, false, false));
         }
-        if (Rules.league.competitionType != GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK) {
-            logfileName.append(e.data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
-        }
+        logfileName.append(e.data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
         if (e.data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {
             Logger.getInstance().createLogfile(logfileName.toString());
         } else if (e.data.gameState == GameControlData.STATE_INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_INITIAL)) {

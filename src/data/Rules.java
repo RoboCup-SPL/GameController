@@ -13,8 +13,7 @@ public abstract class Rules
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
-        new SPLMixedTeam(),
-        new SPLPenaltyShootout()
+        new SPLMixedTeam()
     };
 
     /**
@@ -105,6 +104,6 @@ public abstract class Rules
     public boolean lostTime;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
-    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
+    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM) */
     public byte competitionType;
 }

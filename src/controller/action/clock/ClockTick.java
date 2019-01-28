@@ -7,7 +7,6 @@ import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
 
-
 /**
  * @author Michel Bartsch
  *

@@ -41,7 +41,6 @@ public class GameControlData implements Serializable {
 
     public static final byte COMPETITION_TYPE_NORMAL = 0;
     public static final byte COMPETITION_TYPE_MIXEDTEAM = 1;
-    public static final byte COMPETITION_TYPE_GENERAL_PENALTY_KICK = 2;  //general penalty kick challenge
 
     public static final byte GAME_PHASE_NORMAL = 0;
     public static final byte GAME_PHASE_PENALTYSHOOT = 1;
@@ -107,7 +106,7 @@ public class GameControlData implements Serializable {
     public byte packetNumber = 0;
     public byte playersPerTeam = (byte) Rules.league.teamSize;   // The number of players on a team
     public byte competitionPhase = COMPETITION_PHASE_ROUNDROBIN; // phase of the game (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
-    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the game (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM, COMPETITION_TYPE_GENERAL_PENALTY_KICK)
+    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the game (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM)
     public byte gamePhase = GAME_PHASE_NORMAL;                   // Extra state information - (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
     public byte gameState = STATE_INITIAL;                       // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_FREE_KICK, etc)
@@ -258,9 +257,6 @@ public class GameControlData implements Serializable {
                 break;
             case COMPETITION_TYPE_MIXEDTEAM:
                 temp = "mixed team";
-                break;
-            case COMPETITION_TYPE_GENERAL_PENALTY_KICK:
-                temp = "general penalty kick challenge";
                 break;
             default:
                 temp = "undefined(" + competitionType + ")";

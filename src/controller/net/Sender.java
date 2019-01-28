@@ -107,9 +107,7 @@ public class Sender extends Thread {
                 || (data.gameState == GameControlData.STATE_FINISHED && this.data.gameState != GameControlData.STATE_FINISHED)) {
             final StringBuilder logfileName = new StringBuilder();
             final String[] teamNames = Teams.getNames(false);
-            if (data.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK) {
-                logfileName.append("GeneralPenaltyKickChallenge_");
-            } else if (data.competitionType == GameControlData.COMPETITION_TYPE_MIXEDTEAM) {
+            if (data.competitionType == GameControlData.COMPETITION_TYPE_MIXEDTEAM) {
                 logfileName.append("MixedTeam_");
             }
             if (data.firstHalf == GameControlData.C_TRUE) {
@@ -117,9 +115,7 @@ public class Sender extends Thread {
             } else {
                 logfileName.append(data.team[1].teamNumber < teamNames.length && teamNames[data.team[1].teamNumber] != null ? teamNames[data.team[1].teamNumber] : "Unknown").append("_").append(data.team[0].teamNumber < teamNames.length && teamNames[data.team[0].teamNumber] != null ? teamNames[data.team[0].teamNumber] : "Unknown");
             }
-            if (data.competitionType != GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK) {
-                logfileName.append(data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
-            }
+            logfileName.append(data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
             if (data.gameState == GameControlData.STATE_READY && (this.data == null || this.data.gameState == GameControlData.STATE_INITIAL)) {
                 teamcomm.net.logging.Logger.getInstance().createLogfile(logfileName.toString());
             } else if (data.gameState == GameControlData.STATE_INITIAL && (this.data == null || this.data.gameState != GameControlData.STATE_INITIAL)) {

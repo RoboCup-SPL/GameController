@@ -85,7 +85,7 @@ public class SPL extends Rules
         lostTime = true;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = true;
-        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
+        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM) */
         competitionType = GameControlData.COMPETITION_TYPE_NORMAL;
     }
 }
