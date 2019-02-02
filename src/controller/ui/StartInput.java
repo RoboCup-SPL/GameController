@@ -33,7 +33,7 @@ import data.Teams;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This is only to be on starting the program to get starting input.
  */
 public class StartInput extends JFrame implements Serializable
@@ -63,7 +63,7 @@ public class StartInput extends JFrame implements Serializable
     private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
     private static final String TEAM_COLOR_CHANGE = "Color";
-    
+
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
 
@@ -92,7 +92,7 @@ public class StartInput extends JFrame implements Serializable
     private Checkbox fullscreen;
     private Checkbox autoColorChange;
     private JButton start;
-    
+
     private String[][] colorNames = new String[2][];
 
     private HashMap<String, Image> images = new HashMap<String, Image>();
@@ -110,7 +110,7 @@ public class StartInput extends JFrame implements Serializable
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, STANDARD_SPACE));
-        
+
         String[] teams = getShortTeams();
         for (int i=0; i<2; i++) {
             teamContainer[i] = new ImagePanel(getImage(i, i == 0 ? "blue" : "red"));
@@ -213,7 +213,7 @@ public class StartInput extends JFrame implements Serializable
         fullscreen.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         fullscreen.setState(fullscreenMode);
         fullscreenPanel.add(fullscreen);
-        
+
         autoColorChange = new Checkbox(COLOR_CHANGE_LABEL);
         autoColorChange.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         autoColorChange.setState(Rules.league.colorChangeAuto);
@@ -290,7 +290,7 @@ public class StartInput extends JFrame implements Serializable
                     outAutoColorChange = autoColorChange.getState();
                     finished = true;
                 }});
-                
+
         league.getActionListeners()[league.getActionListeners().length - 1].actionPerformed(null);
 
         getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -298,7 +298,7 @@ public class StartInput extends JFrame implements Serializable
         setVisible(true);
     }
     /** Show in the combo box which teams are available for the selected league and competition*/
-    private void showAvailableTeams() 
+    private void showAvailableTeams()
     {
         outTeam[0] = 0;
         outTeam[1] = 0;
@@ -313,13 +313,13 @@ public class StartInput extends JFrame implements Serializable
             teamIconLabel[i].repaint();
         }
     }
-    
+
     /**
      * Calculates an array that contains only the existing Teams of the
      * current league.
-     * 
+     *
      * @return  Short teams array with numbers
-     */ 
+     */
     private String[] getShortTeams()
     {
         String[] fullTeams = Teams.getNames(true);
@@ -342,13 +342,13 @@ public class StartInput extends JFrame implements Serializable
 
         return out;
     }
-    
+
     /**
      * Sets the Team-Icon on the GUI.
-     * 
+     *
      * @param side      The side (0=left, 1=right)
      * @param team      The number of the Team
-     */ 
+     */
     private void setTeamIcon(int side, int team)
     {
         teamIcon[side] = new ImageIcon(Teams.getIcon(team));
@@ -374,7 +374,7 @@ public class StartInput extends JFrame implements Serializable
                 (int)(teamIcon[side].getImage().getHeight(null)*scaleFactor),
                 Image.SCALE_SMOOTH));
     }
-    
+
     /**
      * Enables the start button, if the conditions are ok.
      */
@@ -383,7 +383,7 @@ public class StartInput extends JFrame implements Serializable
         start.setEnabled(outTeam[0] != outTeam[1] &&
                 (fulltime.isSelected() || nofulltime.isSelected() || !fulltime.isVisible()));
     }
-    
+
     private Image getImage(int side, String color)
     {
         String filename = Rules.league.leagueName + "/" + side + "/" + color;
@@ -391,7 +391,7 @@ public class StartInput extends JFrame implements Serializable
 
             // Default color when color is not available in Rules.league.teamColor:
             Color c = Color.WHITE;
-            
+
             // Search the Java.awt.Color-Class for Color-Name:
             for(int i=0; i<Rules.league.teamColorName.length; i++){
                 if(Rules.league.teamColorName[i].toLowerCase().equals(color.toLowerCase())){
@@ -399,7 +399,7 @@ public class StartInput extends JFrame implements Serializable
                     break;
                 }
             }
-            
+
             Image image = new BackgroundImage(ICONS_PATH + Rules.league.leagueDirectory + BACKGROUND_EXT, side==1, c).getImage();
             images.put(filename, image);
         }
@@ -477,39 +477,39 @@ public class StartInput extends JFrame implements Serializable
 
     /**
      * @author Michel Bartsch
-     * 
+     *
      * This is a normal JPanel, but it has a background image.
      */
     class ImagePanel extends JPanel
     {
         private static final long serialVersionUID = 1L;
-        
+
         /** The image that is shown in the background. */
         private Image image;
 
         /**
          * Creates a new ImagePanel.
-         * 
+         *
          * @param image     The Image to be shown in the background.
          */
         public ImagePanel(Image image)
         {
             this.image = image;
         }
-        
+
         /**
          * Changes the background image.
-         * 
+         *
          * @param image     Changes the image to this one.
          */
         public void setImage(Image image)
         {
             this.image = image;
         }
-        
+
         /**
          * Paints this Component, should be called automatically.
-         * 
+         *
          * @param g     This components graphical content.
          */
         @Override
