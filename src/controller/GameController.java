@@ -11,6 +11,7 @@ import controller.ui.KeyboardListener;
 import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
+import data.GameType;
 import data.Rules;
 import data.Teams;
 import java.io.File;
@@ -47,6 +48,7 @@ public class GameController {
             + "\n  (-i | --interface) <interface>  set network interface (default is a connected IPv4 interface)"
             + "\n  (-l | --league) %s%sselect league (default is spl)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
+            + "\n  (-g | --game-type) <game type>  select game type (preliminary or play-off, no default)"
             + "\n";
     private static final String COMMAND_INTERFACE = "--interface";
     private static final String COMMAND_INTERFACE_SHORT = "-i";
@@ -54,6 +56,8 @@ public class GameController {
     private static final String COMMAND_LEAGUE_SHORT = "-l";
     private static final String COMMAND_WINDOW = "--window";
     private static final String COMMAND_WINDOW_SHORT = "-w";
+    private static final String COMMAND_GAME_TYPE = "--game-type";
+    private static final String COMMAND_GAME_TYPE_SHORT = "-g";
     private static final String COMMAND_TEST = "--test";
     private static final String COMMAND_TEST_SHORT = "-t";
 
@@ -69,6 +73,7 @@ public class GameController {
         //commands
         String interfaceName = "";
         boolean windowMode = false;
+        GameType gameType = GameType.UNDEFINED;
         boolean testMode = false;
 
         parsing:
@@ -90,6 +95,14 @@ public class GameController {
                 }
             } else if (args[i].equals(COMMAND_WINDOW_SHORT) || args[i].equals(COMMAND_WINDOW)) {
                 windowMode = true;
+                continue parsing;
+            } else if (args[i].equals(COMMAND_GAME_TYPE) || args[i].equals(COMMAND_GAME_TYPE_SHORT)) {
+                i++;
+                if (args[i].equalsIgnoreCase("preliminary")) {
+                    gameType = GameType.PRELIMINARY;
+                } else if (args[i].equalsIgnoreCase("playoff")) {
+                    gameType = GameType.PLAYOFF;
+                }
                 continue parsing;
             } else if (args[i].equals(COMMAND_TEST_SHORT) || args[i].equals(COMMAND_TEST)) {
                 testMode = true;
@@ -200,7 +213,7 @@ public class GameController {
         }
 
         //collect the start parameters and put them into the first data.
-        StartInput input = new StartInput(!windowMode);
+        StartInput input = new StartInput(!windowMode, gameType);
         while (!input.finished) {
             try {
                 Thread.sleep(100);
