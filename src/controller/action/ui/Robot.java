@@ -150,7 +150,6 @@ public class Robot extends GCAction
                 && lastUIEventAsRobot.side == side
                 && !isRobotSubstitute
                 && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
-                && (!(Rules.league instanceof SPL) || number != 0)
 
                 || data.testmode;
     }
