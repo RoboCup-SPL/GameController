@@ -41,6 +41,7 @@ Usage: `java -jar GameController.jar {options}`
     (-l | --league) (spl | spl_mixedteam | spl_penaltyshootout)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
+    (-g | --game-type) <game type>  select game type (preliminary or play-off, no default)
 
 
 ### Start Dialog
