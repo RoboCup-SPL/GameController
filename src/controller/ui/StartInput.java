@@ -101,6 +101,7 @@ public class StartInput extends JFrame implements Serializable
     /**
      * Creates a new StartInput.
      * @param fullscreenMode The preset value of the fullscreen checkbox.
+     * @param gameType The game type (either UNDEFINED, PRELIMINARY or PLAYOFF)
      */
     public StartInput(boolean fullscreenMode, final GameType gameType)
     {
