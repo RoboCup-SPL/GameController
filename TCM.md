@@ -56,8 +56,7 @@ marked in red.
 
 By default, the 3D view shows the field and visualizes some information about
 the robots of the currently playing teams, i.e. is their position, their
-penalized/fallen state, their player number, where they see the ball, and to
-which positions they intend to walk (black cross) and shoot (red cross).
+penalized/fallen state, their player number and where they see the ball.
 Each of these drawings may be toggled in the submenu `Drawings` that is located
 in the `View` menu in the menu bar of the main window. Additionally, the
 drawing `GameControllerInfo` that displays the current state of a running

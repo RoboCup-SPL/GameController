@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * This class extends the GameControlData that is send to the robots. It
- * contains all the additional informations the GameControler needs to represent
+ * contains all the additional information the GameController needs to represent
  * a state of the game, for example time in millis.
  *
  * There are no synchronized get and set methods because in this architecture
@@ -176,9 +176,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
             new ObjectOutputStream(out).writeObject(this);
             ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
             return new ObjectInputStream(in).readObject();
-        } catch (ClassNotFoundException e) {
-            System.out.println(e.getClass().getName() + ": " + e.getMessage());
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | IOException e) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return null; // Should never be reached
@@ -217,12 +215,12 @@ public class AdvancedData extends GameControlData implements Cloneable {
     }
 
     /**
-     * The number of seconds until a certion duration is over. The time already
+     * The number of seconds until a certain duration is over. The time already
      * passed is specified as a timestamp when it began.
      *
      * @param millis The timestamp in ms.
-     * @param duration The full duration in s.
-     * @param The number of seconds that still remain from the duration. Can be
+     * @param durationInSeconds The full duration in s.
+     * @return The number of seconds that still remain from the duration. Can be
      * negative.
      */
     public int getRemainingSeconds(long millis, int durationInSeconds) {
@@ -445,7 +443,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
         } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
                 && (setPlay == SET_PLAY_GOAL_FREE_KICK || setPlay == SET_PLAY_PUSHING_FREE_KICK 
-                || setPlay == SET_PLAY_CORNER_KICK || setPlay == SET_PLAY_KICK_IN)) {
+                    || setPlay == SET_PLAY_CORNER_KICK || setPlay == SET_PLAY_KICK_IN)) {
             return getRemainingSeconds(whenCurrentSetPlayBegan, Rules.league.freeKickTime);
         } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
                 && timeKickOffBlocked >= 0 && kickingTeam != DROPBALL) {
