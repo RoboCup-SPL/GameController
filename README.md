@@ -38,7 +38,7 @@ Usage: `java -jar GameController.jar {options}`
                                     delayed switch to playing in SPL
     (-i | --interface) <interface>  set network interface (default is a
                                     connected IPv4 interface)
-    (-l | --league) (spl | spl_mixedteam | spl_penaltyshootout | hl_kid | hl_teen | hl_adult)
+    (-l | --league) (spl | spl_mixedteam | spl_penaltyshootout)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
 
@@ -67,11 +67,6 @@ You also have to select whether you play a game in the preliminaries or a
 play-off game. In the preliminaries the clock will continue to run during game
 stoppages and there will be no penalty shootout in case of a draw. In play-off
 games, the clock will be stopped and there may be penalty shootout.
-
-HL: You also have to select whether you play a normal game or a knock-out game.
-A knock-out game will continue after a draw with two halves of extra time (if
-goals were scored before) and then a penalty shoot-out if necessary. You can
-also select whether teams exchange their colors in the halftime.
 
 You can select whether the GameController should run in fullscreen mode or in
 windowed mode. Note that the fullscreen mode does not work correctly on some
@@ -146,10 +141,10 @@ keyboard instead of pushing buttons:
 
 only SPL
 
-    B    - out by blue
-    R    - out by red
-    Y    - out by yellow
-    K    - out by black
+    B    - kick in for blue
+    R    - kick in for red
+    Y    - kick in for yellow
+    K    - kick in for black
          - the new team colors implemented for RoboCup 2016 do not yet have a key
            assigned
 
@@ -161,18 +156,6 @@ only SPL
     O    - illegal ball contact
     U    - request for pickup
     F    - foul
-
-only Humanoid-League
-
-    B    - out by blue
-    R    - out by red
-
-    M    - ball manipulation
-    P    - physical contact
-    A    - illegal attack
-    D    - illegal defense
-    I    - service / incapable
-    S    - substitute
 
 
 ### Adding teams to the GameController
@@ -277,21 +260,11 @@ the Initial state. An active GameController will overwrite these settings.
 The format of the packets the GameController broadcasts at port
 GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
 is defined in the file RoboCupGameControlData.h. It differs from the version used
-in 2017 in the following ways:
+in 2018 in the following ways:
 
-- Coach fields have been deleted.
-- `gameType` has been split into two fields, i.e.
-  ```
-  uint8_t competitionPhase;
-  uint8_t competitionType;
-  ```
-  and appropriate macros have been defined.
-- `gamePhase` replaces `secondaryState`.
-- `setPlay` has been added to indicate the currently active set play and appropriate macros
-  have been defined.
-- `kickingTeam` replaces `kickOffTeam` since it is also used in set plays.
-- The ability of a robot to notify the GameController about being manually (un-)penalized
-  has been removed.
+- Macros for the new set plays (`SET_PLAY_CORNER_KICK` and `SET_PLAY_KICK_IN`) have been defined.
+- The macro `COMPETITION_TYPE_GENERAL_PENALTY_KICK` has been removed.
+- Humanoid League macros have been removed.
 
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour

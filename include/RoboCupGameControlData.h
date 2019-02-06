@@ -1,6 +1,8 @@
 #ifndef ROBOCUPGAMECONTROLDATA_H
 #define ROBOCUPGAMECONTROLDATA_H
 
+#include <stdint.h>
+
 #define GAMECONTROLLER_DATA_PORT       3838
 #define GAMECONTROLLER_RETURN_PORT     3939
 
@@ -24,8 +26,8 @@
 #define COMPETITION_PHASE_ROUNDROBIN        0
 #define COMPETITION_PHASE_PLAYOFF           1
 
-#define COMPETITION_TYPE_NORMAL               0
-#define COMPETITION_TYPE_MIXEDTEAM            1
+#define COMPETITION_TYPE_NORMAL             0
+#define COMPETITION_TYPE_MIXEDTEAM          1
 
 #define GAME_PHASE_NORMAL                   0
 #define GAME_PHASE_PENALTYSHOOT             1
@@ -45,6 +47,7 @@
 #define SET_PLAY_KICK_IN                    4
 
 #define PENALTY_NONE                        0
+// SPL
 #define PENALTY_SPL_ILLEGAL_BALL_CONTACT    1 // ball holding / playing with hands
 #define PENALTY_SPL_PLAYER_PUSHING          2
 #define PENALTY_SPL_ILLEGAL_MOTION_IN_SET   3 // heard whistle too early?
@@ -81,12 +84,12 @@ struct RoboCupGameControlData
   uint8_t packetNumber;         // number incremented with each packet sent (with wraparound)
   uint8_t playersPerTeam;       // the number of players on a team
   uint8_t competitionPhase;     // phase of the competition (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
-  uint8_t competitionType;      // type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM, COMPETITION_TYPE_GENERAL_PENALTY_KICK)
+  uint8_t competitionType;      // type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM)
   uint8_t gamePhase;            // phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
   uint8_t state;                // state of the game (STATE_READY, STATE_PLAYING, etc)
   uint8_t setPlay;              // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_FREE_KICK, etc)
   uint8_t firstHalf;            // 1 = game in first half, 0 otherwise
-  uint8_t kickingTeam;          // the team number of the next team to kick off, free kick, DROPBALL etc.
+  uint8_t kickingTeam;          // the team number of the next team to kick off, free kick etc
   uint8_t dropInTeam;           // number of team that caused last drop in
   uint16_t dropInTime;          // number of seconds passed since the last drop in. -1 (0xffff) before first dropin
   uint16_t secsRemaining;       // estimate of number of seconds remaining in the half
