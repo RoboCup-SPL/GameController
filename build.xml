@@ -3,7 +3,6 @@
 <project default="jar">
     <property name="src.dir"     value="src"/>
     <property name="include.dir" value="include"/>
-    <property name="lib.dir"     value="lib"/>
     <property name="deps.dir"    value="deps"/>
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
@@ -79,7 +78,6 @@
             </manifest>
         </jar>
 
-        <mkdir dir="${jar.dir}/lib"/>
         <copy todir="${jar.dir}" overwrite="true">
             <fileset dir="${resources.dir}">
                 <exclude name="${plugins.dir}/" />
@@ -99,7 +97,6 @@
                 <include name="**/*.jar"/>
             </fileset>
         </copy>
-        <copy file="${lib.dir}/libgamectrl.so" tofile="${jar.dir}/lib/libgamectrl.so"/>
         <copy file="README.md" tofile="${jar.dir}/README.txt"/>
         <copy file="TCM.md" tofile="${jar.dir}/TCM.txt"/>
     </target>

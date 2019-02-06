@@ -209,13 +209,9 @@ buttons and LEDs according to the rules (with a few additions).
 
 ### Installation
 
-Put the file libgamectrl.so somewhere on your NAO and add the library to your
-file "autoload.ini" so that NAOqi can find it. The binary provided was built for
-NAOqi 2.1.
-
-It is also possible to build the library from source using Aldebaran's qibuild
-framework. The qiproject.xml and CMakeList.txt have been placed in libgamectrl's
-source folder. Just follow the instructions of the README file there.
+The library has to be built from source using Aldebaran's qibuild framework.
+The qiproject.xml and CMakeList.txt have been placed in libgamectrl's source
+folder. Just follow the instructions of the README file there.
 
 
 ### Usage
