@@ -262,6 +262,9 @@ GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
 is defined in the file RoboCupGameControlData.h. It differs from the version used
 in 2018 in the following ways:
 
+- `version` uses only one byte due to alignment reasons.
+- `dropInTeam` and `dropInTime` have been removed since they are not needed anymore.
+- A macro for `PENALTY_SPL_ILLEGAL_POSITIONING` has been defined.
 - Macros for the new set plays (`SET_PLAY_CORNER_KICK` and `SET_PLAY_KICK_IN`) have been defined.
 - The macro `COMPETITION_TYPE_GENERAL_PENALTY_KICK` has been removed.
 - Humanoid League macros have been removed.

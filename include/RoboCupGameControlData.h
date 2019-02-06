@@ -7,7 +7,7 @@
 #define GAMECONTROLLER_RETURN_PORT     3939
 
 #define GAMECONTROLLER_STRUCT_HEADER   "RGme"
-#define GAMECONTROLLER_STRUCT_VERSION  11
+#define GAMECONTROLLER_STRUCT_VERSION  12
 
 #define MAX_NUM_PLAYERS             6
 
@@ -57,6 +57,7 @@
 #define PENALTY_SPL_KICK_OFF_GOAL           7 // scored from inside center circle after kick-off
 #define PENALTY_SPL_REQUEST_FOR_PICKUP      8
 #define PENALTY_SPL_LOCAL_GAME_STUCK        9
+#define PENALTY_SPL_ILLEGAL_POSITIONING     10
 
 #define PENALTY_SUBSTITUTE                  14
 #define PENALTY_MANUAL                      15
@@ -80,7 +81,7 @@ struct TeamInfo
 struct RoboCupGameControlData
 {
   char header[4];               // header to identify the structure
-  uint16_t version;             // version of the data structure
+  uint8_t version;              // version of the data structure
   uint8_t packetNumber;         // number incremented with each packet sent (with wraparound)
   uint8_t playersPerTeam;       // the number of players on a team
   uint8_t competitionPhase;     // phase of the competition (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
@@ -90,8 +91,6 @@ struct RoboCupGameControlData
   uint8_t setPlay;              // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_FREE_KICK, etc)
   uint8_t firstHalf;            // 1 = game in first half, 0 otherwise
   uint8_t kickingTeam;          // the team number of the next team to kick off, free kick etc
-  uint8_t dropInTeam;           // number of team that caused last drop in
-  uint16_t dropInTime;          // number of seconds passed since the last drop in. -1 (0xffff) before first dropin
   uint16_t secsRemaining;       // estimate of number of seconds remaining in the half
   uint16_t secondaryTime;       // number of seconds shown as secondary time (remaining ready, until free ball, etc)
   TeamInfo teams[2];

@@ -23,7 +23,7 @@ public class GameControlData implements Serializable {
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final String GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER = "RGTD";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 11;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 12;
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte TEAM_YELLOW = 2;
@@ -67,7 +67,7 @@ public class GameControlData implements Serializable {
     public static final int SIZE
           = 4
             + // header
-            2
+            1
             + // version
             1
             + // packet number
@@ -87,10 +87,6 @@ public class GameControlData implements Serializable {
             + // firstHalf
             1
             + // kickingTeam
-            1
-            + // dropInTeam
-            2
-            + // dropInTime
             2
             + // secsRemaining
             2
@@ -111,8 +107,6 @@ public class GameControlData implements Serializable {
     public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_FREE_KICK, etc)
     public byte firstHalf = C_TRUE;                              // 1 = game in first half, 0 otherwise
     public byte kickingTeam;                                     // the next team to kick off
-    public byte dropInTeam;                                      // team that caused last drop in
-    protected short dropInTime = -1;                             // number of seconds passed since the last drop in. -1 before first dropin
     public short secsRemaining = (short) Rules.league.halfTime;  // estimate of number of seconds remaining in the half
     public short secondaryTime = 0;                              // sub-time (remaining in ready state etc.) in seconds
     public TeamInfo[] team = new TeamInfo[2];
@@ -138,7 +132,7 @@ public class GameControlData implements Serializable {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(GAMECONTROLLER_STRUCT_HEADER.getBytes(), 0, 4);
-        buffer.putShort(GAMECONTROLLER_STRUCT_VERSION);
+        buffer.put(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
         buffer.put(competitionPhase);
@@ -153,8 +147,6 @@ public class GameControlData implements Serializable {
         buffer.put(setPlay);
         buffer.put(firstHalf);
         buffer.put(kickingTeam);
-        buffer.put(dropInTeam);
-        buffer.putShort(dropInTime);
         buffer.putShort(secsRemaining);
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {
@@ -173,7 +165,7 @@ public class GameControlData implements Serializable {
         final ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER.getBytes(), 0, 4);
-        buffer.putShort(GAMECONTROLLER_STRUCT_VERSION);
+        buffer.put(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
         buffer.put(competitionPhase);
@@ -183,8 +175,6 @@ public class GameControlData implements Serializable {
         buffer.put(setPlay);
         buffer.put(firstHalf);
         buffer.put(kickingTeam);
-        buffer.put(dropInTeam);
-        buffer.putShort(dropInTime);
         buffer.putShort(secsRemaining);
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {
@@ -206,7 +196,7 @@ public class GameControlData implements Serializable {
         byte[] header = new byte[4];
         buffer.get(header, 0, 4);
         isTrueData = new String(header).equals(GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER);
-        if (buffer.getShort() != GAMECONTROLLER_STRUCT_VERSION) {
+        if (buffer.get() != GAMECONTROLLER_STRUCT_VERSION) {
             return false;
         }
         packetNumber = buffer.get();
@@ -218,8 +208,6 @@ public class GameControlData implements Serializable {
         setPlay = buffer.get();
         firstHalf = buffer.get();
         kickingTeam = buffer.get();
-        dropInTeam = buffer.get();
-        dropInTime = buffer.getShort();
         secsRemaining = buffer.getShort();
         secondaryTime = buffer.getShort();
         for (final TeamInfo t : team) {
@@ -331,8 +319,6 @@ public class GameControlData implements Serializable {
         }
         out += "          firstHalf: " + temp + "\n";
         out += "        kickingTeam: " + kickingTeam + "\n";
-        out += "         dropInTeam: " + dropInTeam + "\n";
-        out += "         dropInTime: " + dropInTime + "\n";
         out += "      secsRemaining: " + secsRemaining + "\n";
         out += "      secondaryTime: " + secondaryTime + "\n";
         return out;

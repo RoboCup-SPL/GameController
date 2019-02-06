@@ -55,11 +55,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public long timeSinceCurrentSetPlayBegan;
 
     /**
-     * When was the last drop-in? (ms, 0 = never)
-     */
-    public long whenDropIn;
-
-    /**
      * When was each player penalized last (ms, 0 = never)?
      */
     public long[][] whenPenalized = new long[2][Rules.league.teamSize];
@@ -236,7 +231,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public void updateTimes(boolean real) {
         secsRemaining = (short) getRemainingGameTime(real);
-        dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         Integer subT = getSecondaryTime(real);
 
         if (subT == null) {

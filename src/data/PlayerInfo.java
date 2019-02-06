@@ -29,6 +29,7 @@ public class PlayerInfo implements Serializable {
     public static final byte PENALTY_SPL_KICK_OFF_GOAL = 7;
     public static final byte PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
     public static final byte PENALTY_SPL_LOCAL_GAME_STUCK = 9;
+    public static final byte PENALTY_SPL_ILLEGAL_POSITIONING = 10;
 
     public static final byte PENALTY_SUBSTITUTE = 14;
     public static final byte PENALTY_MANUAL = 15;
@@ -91,6 +92,8 @@ public class PlayerInfo implements Serializable {
                 return "request for pickup";
             case PENALTY_SPL_LOCAL_GAME_STUCK:
                 return "local game stuck";
+            case PENALTY_SPL_ILLEGAL_POSITIONING:
+                return "illegal positioning";
             case PENALTY_SUBSTITUTE:
                 return "substitute";
             case PENALTY_MANUAL:
