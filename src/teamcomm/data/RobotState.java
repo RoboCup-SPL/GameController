@@ -18,8 +18,8 @@ public class RobotState {
     public static enum ConnectionStatus {
 
         INACTIVE(10000),
-        OFFLINE(2000),
-        HIGH_LATENCY(1000),
+        OFFLINE(5000),
+        HIGH_LATENCY(2000),
         ONLINE(0);
 
         public final int threshold;
@@ -108,12 +108,11 @@ public class RobotState {
         synchronized (recentMessageTimestamps) {
             final ListIterator<Long> it = recentMessageTimestamps.listIterator(recentMessageTimestamps.size());
 
-            final long curTime = System.currentTimeMillis();
-            while (!it.hasPrevious() && curTime - it.previous() > AVERAGE_CALCULATION_TIME) {
+            while (it.hasPrevious() && lastMessageTimestamp - it.previous() > AVERAGE_CALCULATION_TIME) {
                 it.remove();
             }
 
-            return recentMessageTimestamps.size() > 0 ? (recentMessageTimestamps.size() * 1000.0 / Math.max(1000, curTime - recentMessageTimestamps.getLast())) : 0;
+            return recentMessageTimestamps.size() > 0 ? ((recentMessageTimestamps.size() - 1) * 1000.0 / Math.max(1000, lastMessageTimestamp - recentMessageTimestamps.getLast())) : 0;
         }
     }
 
