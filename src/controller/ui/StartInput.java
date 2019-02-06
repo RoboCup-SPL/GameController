@@ -27,6 +27,7 @@ import javax.swing.JRadioButton;
 
 import data.GameControlData;
 import data.Rules;
+import data.SPLPenaltyShootout;
 import data.Teams;
 
 
@@ -98,7 +99,7 @@ public class StartInput extends JFrame implements Serializable
 
     /**
      * Creates a new StartInput.
-     * @param args The parameters that the jar file was started with.
+     * @param fullscreenMode The preset value of the fullscreen checkbox.
      */
     public StartInput(boolean fullscreenMode)
     {
@@ -244,8 +245,8 @@ public class StartInput extends JFrame implements Serializable
                             }
                         }
                     }
-                    nofulltime.setVisible(true);
-                    fulltime.setVisible(true);
+                    nofulltime.setVisible(!(Rules.league instanceof SPLPenaltyShootout));
+                    fulltime.setVisible(!(Rules.league instanceof SPLPenaltyShootout));
                     nofulltime.setText(FULLTIME_LABEL_NO);
                     fulltime.setText(FULLTIME_LABEL_YES);
                     autoColorChange.setVisible(false);

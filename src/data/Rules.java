@@ -13,7 +13,8 @@ public abstract class Rules
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
-        new SPLMixedTeam()
+        new SPLMixedTeam(),
+        new SPLPenaltyShootout()
     };
 
     /**
