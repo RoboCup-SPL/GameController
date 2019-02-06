@@ -5,7 +5,6 @@ import controller.action.ui.CancelUndo;
 import controller.action.ui.ClockPause;
 import controller.action.ui.ClockReset;
 import controller.action.ui.CornerKick;
-import controller.action.ui.DropBall;
 import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
 import controller.action.ui.GoalFreeKick;
@@ -95,7 +94,6 @@ public class ActionBoard
     public static BallContact ballContact;
     public static KickOffGoal kickOffGoal;
     public static PickUp pickUp;
-    public static DropBall dropBall;
     public static LocalGameStuck localGameStuck;
     public static Foul foul;
 
@@ -157,7 +155,6 @@ public class ActionBoard
         ballContact = new BallContact();
         kickOffGoal = new KickOffGoal();
         pickUp = new PickUp();
-        dropBall = new DropBall();
         localGameStuck = new LocalGameStuck();
         foul = new Foul();
     }

@@ -233,7 +233,6 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton penaltyShoot;
     private ButtonGroup halfGroup;
     private JToggleButton[] pen;
-    private JButton dropBall;
     private ImagePanel bottom;
     private JPanel log;
     private JToggleButton[] undo;
@@ -822,7 +821,7 @@ public class GUI extends JFrame implements GCGUI
                     assert false;
             }
         } else if (data.gameState == AdvancedData.STATE_PLAYING && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
-                && timeKickOffBlocked >= 0 && data.kickingTeam != AdvancedData.DROPBALL) {
+                && timeKickOffBlocked >= 0) {
             clockDescription.setText(KICKOFF_IN_PROGRESS);
         } else if (data.gamePhase == AdvancedData.GAME_PHASE_NORMAL
                 && (data.gameState == AdvancedData.STATE_INITIAL && data.firstHalf != AdvancedData.C_TRUE && !data.timeOutActive[0] && !data.timeOutActive[1]
@@ -943,11 +942,7 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updateKickoff(AdvancedData data)
     {
-        if (data.kickingTeam == GameControlData.DROPBALL) {
-            kickOff[2].setSelected(true);
-        } else {
-            kickOff[data.team[0].teamNumber == data.kickingTeam ? 0 : 1].setSelected(true);
-        }
+        kickOff[data.team[0].teamNumber == data.kickingTeam ? 0 : 1].setSelected(true);
         for (int i=0; i<2; i++) {
             kickOff[i].setEnabled(ActionBoard.kickOff[i].isLegal(data));
             if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
@@ -1001,7 +996,7 @@ public class GUI extends JFrame implements GCGUI
                             highlight(robot[i][j], false);
                         } else {
                             robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds));
-                            highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
+                            highlight(robot[i][j], robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
                     }  else {
                         robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
@@ -1276,9 +1271,6 @@ public class GUI extends JFrame implements GCGUI
         finish.setFont(stateFont);
         for (int i=0; i<pen.length; i++) {
             pen[i].setFont(standardFont);
-        }
-        if (dropBall != null) {
-            dropBall.setFont(standardFont);
         }
         for (int i=0; i<undo.length; i++) {
             undo[i].setFont(timeoutFont);

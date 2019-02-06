@@ -446,7 +446,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
                     || setPlay == SET_PLAY_CORNER_KICK || setPlay == SET_PLAY_KICK_IN)) {
             return getRemainingSeconds(whenCurrentSetPlayBegan, Rules.league.freeKickTime);
         } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
-                && timeKickOffBlocked >= 0 && kickingTeam != DROPBALL) {
+                && timeKickOffBlocked >= 0) {
             return timeKickOffBlocked;
         } else {
             return getRemainingPauseTime();

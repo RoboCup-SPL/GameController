@@ -41,8 +41,6 @@ public class Parser
      * for "Playing".
      */
     private static final String[] actions = {
-        "Manually Penalised",
-        "Dropped Ball",
         "Global Game Stuck",
         "Goal Free Kick for",
         "Pushing Free Kick for",
@@ -53,7 +51,7 @@ public class Parser
         "Corner Kick Complete",
         "Kick In Complete",
         "Goal for",
-        "Goal decrease for Team",
+        "Goal decrease for",
         "Referee Timeout",
         "Timeout",
         "Illegal Ball Contact",
@@ -65,11 +63,6 @@ public class Parser
         "Leaving the Field",
         "Kickoff Goal",
         "Request for PickUp",
-        "Ball Manipulation",
-        "Illegal Attack",
-        "Illegal Defense",
-        "Request for Service",
-        "Additional Request for Service",
         "Substituted",
         "Finished",
         "Initial",
@@ -128,13 +121,16 @@ public class Parser
                     for (int j=0; j<undos; j++) {
                         // This has to do with Log.setNextMessage (which leads to two messages for one state in the log file).
                         if (i-2-j > 0
-                                && (log.lines.get(i-2-j).endsWith("Ready")
-                                    && (log.lines.get(i-2-j-1).contains("Goal for")
-                                        || log.lines.get(i-2-j-1).contains("End of Timeout")
+                                && ((log.lines.get(i-2-j).endsWith("Ready")
+                                        || log.lines.get(i-2-j).endsWith("2nd Half")
+                                        || log.lines.get(i-2-j).endsWith("Finished"))
+                                    && log.lines.get(i-2-j-1).contains("Goal for")
+                                    || log.lines.get(i-2-j).endsWith("Ready")
+                                    && (log.lines.get(i-2-j-1).contains("End of Timeout")
                                         || log.lines.get(i-2-j-1).contains("End of Referee Timeout")
-                                        || log.lines.get(i-2-j-1).contains("Global Game Stuck")))
-                                || log.lines.get(i-2-j).endsWith("Initial")
-                                && log.lines.get(i-2-j-1).contains("Timeout")) {
+                                        || log.lines.get(i-2-j-1).contains("Global Game Stuck"))
+                                    || log.lines.get(i-2-j).endsWith("Initial")
+                                    && log.lines.get(i-2-j-1).contains("Timeout"))) {
                             ++undos;
                         }
                         log.lines.set(i-2-j, UNDONE_PREFIX+log.lines.get(i-2-j));

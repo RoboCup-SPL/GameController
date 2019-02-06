@@ -34,7 +34,6 @@ public class GameControlData implements Serializable {
     public static final byte TEAM_PURPLE = 7;
     public static final byte TEAM_BROWN = 8;
     public static final byte TEAM_GRAY = 9;
-    public static final byte DROPBALL = -128;
 
     public static final byte COMPETITION_PHASE_ROUNDROBIN = 0;
     public static final byte COMPETITION_PHASE_PLAYOFF = 1;
