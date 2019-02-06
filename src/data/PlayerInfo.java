@@ -39,7 +39,7 @@ public class PlayerInfo implements Serializable {
     public static final int SIZE
             = 1
             + // penalty
-            1;  // secsToUnpen
+            1;  // secsTillUnpenalised
 
     //this is streamed
     public byte penalty = PENALTY_NONE; // penalty state of the player

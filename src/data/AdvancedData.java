@@ -248,7 +248,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
             for (int number = 0; number < team[side].player.length; ++number) {
                 PlayerInfo player = team[side].player[number];
                 player.secsTillUnpenalised = player.penalty == PlayerInfo.PENALTY_NONE
-                        ? 0 : (byte) getRemainingPenaltyTime(side, number, real);
+                        ? 0 : (byte) Math.min(255, getRemainingPenaltyTime(side, number, real));
             }
         }
     }
