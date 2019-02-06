@@ -20,11 +20,6 @@ public class SideConfidence extends StreamedObject<SideConfidence> implements Me
     }
 
     /**
-     * Am I mirrored because of field symmetry (0 = no idea, 1 = absolute sure I
-     * am right).
-     */
-    public float sideConfidence;
-    /**
      * Indicates whether ball model of others is mirrored to own ball model.
      */
     public boolean mirror;
