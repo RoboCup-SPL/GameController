@@ -91,8 +91,8 @@ struct RoboCupGameControlData
   uint8_t setPlay;              // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_FREE_KICK, etc)
   uint8_t firstHalf;            // 1 = game in first half, 0 otherwise
   uint8_t kickingTeam;          // the team number of the next team to kick off, free kick etc
-  uint16_t secsRemaining;       // estimate of number of seconds remaining in the half
-  uint16_t secondaryTime;       // number of seconds shown as secondary time (remaining ready, until free ball, etc)
+  int16_t secsRemaining;        // estimate of number of seconds remaining in the half
+  int16_t secondaryTime;        // number of seconds shown as secondary time (remaining ready, until free ball, etc)
   TeamInfo teams[2];
 };
 
