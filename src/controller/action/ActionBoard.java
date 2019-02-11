@@ -31,6 +31,7 @@ import controller.action.ui.penalty.Inactive;
 import controller.action.ui.penalty.Leaving;
 import controller.action.ui.penalty.LocalGameStuck;
 import controller.action.ui.penalty.PickUp;
+import controller.action.ui.penalty.Positioning;
 import controller.action.ui.penalty.Pushing;
 import controller.action.ui.state.Finish;
 import controller.action.ui.state.Initial;
@@ -96,6 +97,7 @@ public class ActionBoard
     public static PickUp pickUp;
     public static LocalGameStuck localGameStuck;
     public static Foul foul;
+    public static Positioning positioning;
 
 
 
@@ -157,5 +159,6 @@ public class ActionBoard
         pickUp = new PickUp();
         localGameStuck = new LocalGameStuck();
         foul = new Foul();
+        positioning = new Positioning();
     }
 }
