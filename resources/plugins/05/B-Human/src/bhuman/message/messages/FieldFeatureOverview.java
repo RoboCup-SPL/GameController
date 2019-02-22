@@ -58,7 +58,7 @@ public class FieldFeatureOverview implements SimpleStreamReader<FieldFeatureOver
             status.rotation = new Angle((float) (((double) stream.get()) * Math.PI / 127.0));
             status.translation = new Eigen.Vector2f((float) (((int) stream.get()) << 6), (float) (((int) stream.get()) << 6));
             status.lastSeen = ((long) Unsigned.toUnsigned(stream.get())) << 3;
-            if (status.isValid = status.lastSeen < 300) {
+            if (status.isValid = status.lastSeen < 1000) {
                 isValid = true;
             }
             lastSeen = Math.max(lastSeen, status.lastSeen);
