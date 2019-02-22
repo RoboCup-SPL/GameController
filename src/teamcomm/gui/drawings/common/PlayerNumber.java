@@ -3,6 +3,7 @@ package teamcomm.gui.drawings.common;
 import com.jogamp.opengl.GL2;
 import data.PlayerInfo;
 import data.Rules;
+import data.SPL;
 import data.SPLStandardMessage;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
@@ -23,7 +24,7 @@ public class PlayerNumber extends PerPlayer {
         if (msg != null && msg.playerNumValid && msg.poseValid) {
             gl.glPushMatrix();
 
-            if (player.getPenalty() != PlayerInfo.PENALTY_NONE) {
+            if (player.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && player.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
                 gl.glTranslatef(-msg.playerNum, -3.5f, 0.7f);
             } else {
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0.7f);

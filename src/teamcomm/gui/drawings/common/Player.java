@@ -3,6 +3,8 @@ package teamcomm.gui.drawings.common;
 import com.jogamp.opengl.GL2;
 import data.GameControlData;
 import data.PlayerInfo;
+import data.Rules;
+import data.SPL;
 import data.SPLStandardMessage;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
@@ -55,7 +57,7 @@ public class Player extends PerPlayer {
         if (msg != null && msg.poseValid) {
             gl.glPushMatrix();
 
-            if (player.getPenalty() != PlayerInfo.PENALTY_NONE) {
+            if (player.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && player.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
                 gl.glTranslatef(-msg.playerNum, -3.5f, 0);
                 gl.glRotatef(-90, 0, 0, 1);
             } else {

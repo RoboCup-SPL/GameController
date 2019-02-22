@@ -4,6 +4,8 @@ import bhuman.message.BHumanMessage;
 import bhuman.message.messages.RobotHealth;
 import com.jogamp.opengl.GL2;
 import data.PlayerInfo;
+import data.Rules;
+import data.SPL;
 import java.io.File;
 import java.io.IOException;
 import java.util.EnumMap;
@@ -43,7 +45,7 @@ public class Heat extends PerPlayer {
             if (msg.message.queue != null && (health = msg.message.queue.getCachedMessage(RobotHealth.class)) != null && (image = filenames.get(health.maxJointTemperatureStatus)) != null) {
                 gl.glPushMatrix();
 
-                if (rs.getPenalty() != PlayerInfo.PENALTY_NONE) {
+                if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
                     gl.glTranslatef(-msg.playerNum, -3.5f, 1.f);
                 } else {
                     gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1.f);

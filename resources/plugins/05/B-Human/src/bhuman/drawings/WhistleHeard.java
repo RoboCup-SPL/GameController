@@ -3,6 +3,9 @@ package bhuman.drawings;
 import bhuman.message.BHumanMessage;
 import bhuman.message.BHumanMessageParts;
 import com.jogamp.opengl.GL2;
+import data.PlayerInfo;
+import data.Rules;
+import data.SPL;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -27,7 +30,13 @@ public class WhistleHeard extends PerPlayer {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
             if (msg.message.bhuman != null && msg.message.bhuman.confidenceOfLastWhistleDetection > 0 && (msg.message.bhuman.timestamp - msg.message.bhuman.lastTimeWhistleDetected.timestamp) <= 400) {
                 gl.glPushMatrix();
-                gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1);
+
+                if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
+                    gl.glTranslatef(-msg.playerNum, -3.5f, 1.f);
+                } else {
+                    gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1.f);
+                }
+
                 camera.turnTowardsCamera(gl);
                 try {
                     final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/whistle.png").getAbsoluteFile();
