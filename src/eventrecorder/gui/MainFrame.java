@@ -588,7 +588,7 @@ public class MainFrame extends JFrame {
             fileChooser.showSaveDialog(null);
             if(fileChooser.getSelectedFile() != null){
                 try {
-                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileChooser.getSelectedFile())));
+                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileChooser.getSelectedFile()), "UTF-8"));
                     out.write(MarkDownExporter.toMarkDown(EventRecorder.model));
                     out.close();
                     prefs.put("DEFAULT_SAVE_DIRECTORY", fileChooser.getSelectedFile().getParent());
