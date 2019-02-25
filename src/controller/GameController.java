@@ -97,11 +97,13 @@ public class GameController {
                 windowMode = true;
                 continue parsing;
             } else if (args[i].equals(COMMAND_GAME_TYPE) || args[i].equals(COMMAND_GAME_TYPE_SHORT)) {
-                i++;
-                if (args[i].equalsIgnoreCase("preliminary")) {
-                    gameType = GameType.PRELIMINARY;
-                } else if (args[i].equalsIgnoreCase("playoff")) {
-                    gameType = GameType.PLAYOFF;
+                if (args.length > i + 1) {
+                    i++;
+                    if (args[i].equalsIgnoreCase("preliminary")) {
+                        gameType = GameType.PRELIMINARY;
+                    } else if (args[i].equalsIgnoreCase("playoff")) {
+                        gameType = GameType.PLAYOFF;
+                    }
                 }
                 continue parsing;
             } else if (args[i].equals(COMMAND_TEST_SHORT) || args[i].equals(COMMAND_TEST)) {
