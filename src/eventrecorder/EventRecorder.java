@@ -116,12 +116,36 @@ public class EventRecorder {
 
             //Log Free Kicks
             if(logFreeKicks && (lastSetPlay != data.setPlay || lastKickingTeam != data.kickingTeam)) {
-                lastSetPlay = data.setPlay;
-                lastKickingTeam = data.kickingTeam;
-                if(data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK
-                        || data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK
-                        || data.setPlay == GameControlData.SET_PLAY_CORNER_KICK
-                        || data.setPlay == GameControlData.SET_PLAY_KICK_IN) {
+                if(data.setPlay == GameControlData.SET_PLAY_NONE) {
+                	String setPlayString = "";
+                    switch (lastSetPlay) {
+                        case GameControlData.SET_PLAY_GOAL_FREE_KICK:
+                            setPlayString = "Goal Free Kick Complete";
+                            break;
+                        case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
+                            setPlayString = "Pushing Free Kick Complete";
+                            break;
+                        case GameControlData.SET_PLAY_CORNER_KICK:
+                            setPlayString = "Corner Kick Complete";
+                            break;
+                        case GameControlData.SET_PLAY_KICK_IN:
+                            setPlayString = "Kick In Complete";
+                            break;
+                        default:
+                            setPlayString = "";
+                            break;
+                    }
+
+                    // Insert before empty logEntries:
+                    int insertPlace = EventRecorder.model.logEntries.size();
+
+                    while(insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text))
+                        --insertPlace;
+
+                    if(setPlayString != "")
+                    	history.execute(new EntryCreateAction(new LogEntry(setPlayString, SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.SetPlayState), insertPlace, false));
+                }
+                else {
                     String setPlayString = "";
                     switch (data.setPlay) {
                         case GameControlData.SET_PLAY_GOAL_FREE_KICK:
@@ -150,6 +174,8 @@ public class EventRecorder {
 
                     history.execute(new EntryCreateAction(new LogEntry(setPlayString, SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.SetPlayState), insertPlace, false));
                 }
+                lastSetPlay = data.setPlay;
+                lastKickingTeam = data.kickingTeam;
             }
 
             // Check for changed penalties:
