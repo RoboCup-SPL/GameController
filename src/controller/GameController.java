@@ -96,16 +96,17 @@ public class GameController {
             } else if (args[i].equals(COMMAND_WINDOW_SHORT) || args[i].equals(COMMAND_WINDOW)) {
                 windowMode = true;
                 continue parsing;
-            } else if (args[i].equals(COMMAND_GAME_TYPE) || args[i].equals(COMMAND_GAME_TYPE_SHORT)) {
-                if (args.length > i + 1) {
-                    i++;
-                    if (args[i].equalsIgnoreCase("preliminary")) {
-                        gameType = GameType.PRELIMINARY;
-                    } else if (args[i].equalsIgnoreCase("playoff")) {
-                        gameType = GameType.PLAYOFF;
-                    }
+            } else if ((args.length > i + 1)
+                    && ((args[i].equalsIgnoreCase(COMMAND_GAME_TYPE))
+                    || (args[i].equalsIgnoreCase(COMMAND_GAME_TYPE_SHORT)))) {
+                i++;
+                if (args[i].equalsIgnoreCase("preliminary")) {
+                    gameType = GameType.PRELIMINARY;
+                    continue parsing;
+                } else if (args[i].equalsIgnoreCase("playoff")) {
+                    gameType = GameType.PLAYOFF;
+                    continue parsing;
                 }
-                continue parsing;
             } else if (args[i].equals(COMMAND_TEST_SHORT) || args[i].equals(COMMAND_TEST)) {
                 testMode = true;
                 continue parsing;
