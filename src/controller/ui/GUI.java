@@ -162,6 +162,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_FOUL = "Foul";
     private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String PEN_LOCAL_GAME_STUCK = "Local Game Stuck";
+    private static final String PEN_POSITIONING = "Illegal Positioning";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
@@ -1144,12 +1145,23 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updatePenaltiesSPL(AdvancedData data)
     {
+        final boolean shouldPositioningBeActive = Rules.league instanceof SPL
+                                                  && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
+                                                  && data.gameState == AdvancedData.STATE_SET;
+
+        if (Rules.league instanceof SPL) {
+            // There is always exactly one ActionListener here.
+            pen[5].removeActionListener(pen[5].getActionListeners()[0]);
+            pen[5].addActionListener(shouldPositioningBeActive ? ActionBoard.positioning : ActionBoard.defender);
+            pen[5].setText(shouldPositioningBeActive ? PEN_POSITIONING : PEN_DEFENDER);
+        }
+
         pen[0].setEnabled(ActionBoard.pushing.isLegal(data));
         pen[1].setEnabled(ActionBoard.foul.isLegal(data));
         pen[2].setEnabled(ActionBoard.inactive.isLegal(data));
         pen[3].setEnabled(ActionBoard.leaving.isLegal(data));
         pen[4].setEnabled(ActionBoard.motionInSet.isLegal(data));
-        pen[5].setEnabled(ActionBoard.defender.isLegal(data));
+        pen[5].setEnabled(shouldPositioningBeActive ? ActionBoard.positioning.isLegal(data) : ActionBoard.defender.isLegal(data));
         pen[6].setEnabled(ActionBoard.ballContact.isLegal(data));
         pen[7].setEnabled(ActionBoard.kickOffGoal.isLegal(data));
         pen[8].setEnabled(ActionBoard.localGameStuck.isLegal(data));
@@ -1163,7 +1175,7 @@ public class GUI extends JFrame implements GCGUI
         pen[1].setSelected(highlightEvent == ActionBoard.foul);
         pen[2].setSelected(highlightEvent == ActionBoard.inactive);
         pen[3].setSelected(highlightEvent == ActionBoard.leaving);
-        pen[5].setSelected(highlightEvent == ActionBoard.defender);
+        pen[5].setSelected(shouldPositioningBeActive ? (highlightEvent == ActionBoard.positioning) : (highlightEvent == ActionBoard.defender));
         pen[6].setSelected(highlightEvent == ActionBoard.ballContact);
         pen[7].setSelected(highlightEvent == ActionBoard.kickOffGoal);
         pen[8].setSelected(highlightEvent == ActionBoard.localGameStuck);
