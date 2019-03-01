@@ -48,7 +48,7 @@ public class GameController {
             + "\n  (-i | --interface) <interface>  set network interface (default is a connected IPv4 interface)"
             + "\n  (-l | --league) %s%sselect league (default is spl)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
-            + "\n  (-g | --game-type) <game type>  select game type (preliminary or play-off, no default)"
+            + "\n  (-g | --game-type) %s%sselect game type (no default)"
             + "\n";
     private static final String COMMAND_INTERFACE = "--interface";
     private static final String COMMAND_INTERFACE_SHORT = "-i";
@@ -118,8 +118,19 @@ public class GameController {
             if (leagues.contains("|")) {
                 leagues = "(" + leagues + ")";
             }
+            String gameTypes = "";
+            for (GameType gt : GameType.values()) {
+                gameTypes += (gameTypes.equals("") ? "" : " | ") + gt;
+            }
+            if (gameTypes.contains("|")) {
+                gameTypes = "(" + gameTypes + ")";
+            }
+            gameTypes = gameTypes.toLowerCase();
             System.out.printf(HELP_TEMPLATE, leagues, leagues.length() < 17
                     ? "                ".substring(leagues.length())
+                    : "\n                                  ",
+                    gameTypes, gameTypes.length() < 17
+                    ? "                ".substring(gameTypes.length())
                     : "\n                                  ");
             System.exit(0);
         }
