@@ -9,9 +9,9 @@ import controller.net.TrueDataSender;
 import controller.ui.GUI;
 import controller.ui.KeyboardListener;
 import controller.ui.StartInput;
+import controller.ui.StartInput.GameType;
 import data.AdvancedData;
 import data.GameControlData;
-import data.GameType;
 import data.Rules;
 import data.Teams;
 import java.io.File;
@@ -48,7 +48,7 @@ public class GameController {
             + "\n  (-i | --interface) <interface>  set network interface (default is a connected IPv4 interface)"
             + "\n  (-l | --league) %s%sselect league (default is spl)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
-            + "\n  (-g | --game-type) %s%sselect game type (no default)"
+            + "\n  (-g | --game-type) %s%sselect game type (default is undefined)"
             + "\n";
     private static final String COMMAND_INTERFACE = "--interface";
     private static final String COMMAND_INTERFACE_SHORT = "-i";
@@ -88,26 +88,25 @@ public class GameController {
                     || (args[i].equalsIgnoreCase(COMMAND_LEAGUE)))) {
                 i++;
                 for (int j = 0; j < Rules.LEAGUES.length; j++) {
-                    if (Rules.LEAGUES[j].leagueDirectory.equals(args[i])) {
+                    if (Rules.LEAGUES[j].leagueDirectory.equalsIgnoreCase(args[i])) {
                         Rules.league = Rules.LEAGUES[j];
                         continue parsing;
                     }
                 }
-            } else if (args[i].equals(COMMAND_WINDOW_SHORT) || args[i].equals(COMMAND_WINDOW)) {
+            } else if (args[i].equalsIgnoreCase(COMMAND_WINDOW_SHORT) || args[i].equalsIgnoreCase(COMMAND_WINDOW)) {
                 windowMode = true;
                 continue parsing;
             } else if ((args.length > i + 1)
                     && ((args[i].equalsIgnoreCase(COMMAND_GAME_TYPE))
                     || (args[i].equalsIgnoreCase(COMMAND_GAME_TYPE_SHORT)))) {
                 i++;
-                if (args[i].equalsIgnoreCase("preliminary")) {
-                    gameType = GameType.PRELIMINARY;
-                    continue parsing;
-                } else if (args[i].equalsIgnoreCase("playoff")) {
-                    gameType = GameType.PLAYOFF;
-                    continue parsing;
+                for (GameType gt : GameType.values()) {
+                    if (gt.toString().equalsIgnoreCase(args[i])) {
+                        gameType = gt;
+                        continue parsing;
+                    }
                 }
-            } else if (args[i].equals(COMMAND_TEST_SHORT) || args[i].equals(COMMAND_TEST)) {
+            } else if (args[i].equalsIgnoreCase(COMMAND_TEST_SHORT) || args[i].equalsIgnoreCase(COMMAND_TEST)) {
                 testMode = true;
                 continue parsing;
             }

@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import data.GameControlData;
-import data.GameType;
 import data.Rules;
 import data.SPLPenaltyShootout;
 import data.Teams;
@@ -99,9 +98,19 @@ public class StartInput extends JFrame implements Serializable
     private HashMap<String, Image> images = new HashMap<String, Image>();
 
     /**
+     * @author Felix Wege
+     *
+     * The set of preselection values for the game type.
+     */
+    public enum GameType
+    {
+        UNDEFINED, PRELIMINARY, PLAYOFF;
+    }
+
+    /**
      * Creates a new StartInput.
      * @param fullscreenMode The preset value of the fullscreen checkbox.
-     * @param gameType The game type (either UNDEFINED, PRELIMINARY or PLAYOFF)
+     * @param gameType The game type (either UNDEFINED, PRELIMINARY or PLAYOFF).
      */
     public StartInput(boolean fullscreenMode, final GameType gameType)
     {
