@@ -62,7 +62,7 @@ public class SPL extends Rules
         /** Number of penalty-shots for each team. */
         numberOfPenaltyShots = 3;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
-        penaltyTime = new int[] {-1, 45, 45, 15, 45, 45, 45, 45, 45, 45, 45};
+        penaltyTime = new int[] {-1, 45, 45, 15, 45, 45, 45, 45, 45, 45, 15};
         /** Time in seconds to increment penalties. */
         penaltyIncreaseTime = 10;
         /** Whether the penalty count is reset on halftime */
