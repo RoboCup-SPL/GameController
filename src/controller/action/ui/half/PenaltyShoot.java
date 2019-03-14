@@ -38,6 +38,7 @@ public class PenaltyShoot extends GCAction
             data.gameState = GameControlData.STATE_INITIAL;
             data.setPlay = GameControlData.SET_PLAY_NONE;
             data.timeBeforeCurrentGameState = 0;
+            data.timeBeforeStoppageOfPlay = 0;
             data.kickOffReason = AdvancedData.KICKOFF_PENALTYSHOOT;
             data.resetPenalties();
             if (Rules.league.timeOutPerHalf) {

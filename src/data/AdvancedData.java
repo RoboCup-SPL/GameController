@@ -33,6 +33,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public long timeBeforeCurrentGameState;
 
     /**
+     * How much time summed up before the current stoppage of play? (ms)
+     */
+    public long timeBeforeStoppageOfPlay;
+
+    /**
      * When was switched to the current state? (ms)
      */
     public long whenCurrentGameStateBegan;

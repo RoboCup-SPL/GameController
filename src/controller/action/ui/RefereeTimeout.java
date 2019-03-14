@@ -21,6 +21,7 @@ public class RefereeTimeout extends GCAction
         if (!data.refereeTimeout) {
             data.previousGamePhase = data.gamePhase;
             data.gamePhase = GameControlData.GAME_PHASE_TIMEOUT;
+            data.timeBeforeCurrentGameState = data.timeBeforeStoppageOfPlay;
             data.refereeTimeout = true;
             Log.setNextMessage("Referee Timeout");
             if (data.gameState == GameControlData.STATE_PLAYING) {

@@ -31,6 +31,7 @@ public class ClockReset extends GCAction
     public void perform(AdvancedData data)
     {
         data.timeBeforeCurrentGameState = 0;
+        data.timeBeforeStoppageOfPlay = 0;
         data.whenCurrentGameStateBegan = data.getTime();
         data.manWhenClockChanged = data.whenCurrentGameStateBegan;
         data.manRemainingGameTimeOffset = 0;

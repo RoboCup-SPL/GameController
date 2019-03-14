@@ -101,6 +101,7 @@ public class FirstHalf extends GCAction
         }
         
         data.timeBeforeCurrentGameState = 0;
+        data.timeBeforeStoppageOfPlay = 0;
         if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
             data.resetPenalties();
         }

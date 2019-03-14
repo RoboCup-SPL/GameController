@@ -36,10 +36,14 @@ public class Set extends GCAction {
         if ((data.competitionPhase != GameControlData.COMPETITION_PHASE_PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
+        if (data.gameState == GameControlData.STATE_PLAYING) {
+            data.timeBeforeStoppageOfPlay = data.timeBeforeCurrentGameState;
+        }
         data.whenCurrentGameStateBegan = data.getTime();
 
         if (data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT) {
             data.timeBeforeCurrentGameState = 0;
+            data.timeBeforeStoppageOfPlay = 0;
             if (data.gameState != GameControlData.STATE_INITIAL) {
                 data.kickingTeam = data.team[data.kickingTeam == data.team[0].teamNumber ? 1 : 0].teamNumber;
                 FirstHalf.changeSide(data);

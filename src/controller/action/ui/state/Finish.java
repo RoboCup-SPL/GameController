@@ -39,6 +39,9 @@ public class Finish extends GCAction
             data.resetPenaltyTimes();
         }
         data.addTimeInCurrentState();
+        if (data.gameState == GameControlData.STATE_PLAYING) {
+            data.timeBeforeStoppageOfPlay = data.timeBeforeCurrentGameState;
+        }
         data.whenCurrentGameStateBegan = data.getTime();
         data.gameState = GameControlData.STATE_FINISHED;
         data.setPlay = GameControlData.SET_PLAY_NONE;

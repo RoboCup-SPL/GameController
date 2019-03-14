@@ -104,7 +104,7 @@ public class StartInput extends JFrame implements Serializable
      */
     public enum GameType
     {
-        UNDEFINED, PRELIMINARY, PLAYOFF;
+        UNDEFINED, PRELIMINARY, PLAYOFF
     }
 
     /**

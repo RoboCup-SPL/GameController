@@ -18,6 +18,9 @@ public class IncGameClock extends GCAction
     public void perform(AdvancedData data)
     {
         data.timeBeforeCurrentGameState -= 1000*60;
+        if (data.gameState != GameControlData.STATE_PLAYING && data.timeBeforeStoppageOfPlay != 0) {
+            data.timeBeforeStoppageOfPlay -= 1000 * 60;
+        }
         Log.state(data, "Increase Game Clock");
     }
 

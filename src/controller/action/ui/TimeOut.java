@@ -41,6 +41,7 @@ public class TimeOut extends GCAction
         if (!data.timeOutActive[side]) {
             data.previousGamePhase = data.gamePhase;
             data.gamePhase = GameControlData.GAME_PHASE_TIMEOUT;
+            data.timeBeforeCurrentGameState = data.timeBeforeStoppageOfPlay;
             data.timeOutActive[side] = true;
             data.timeOutTaken[side] = true;
             if (data.previousGamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {

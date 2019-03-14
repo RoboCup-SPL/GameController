@@ -37,6 +37,7 @@ public class Ready extends GCAction
             data.resetPenaltyTimes();
         } else if (data.gameState == GameControlData.STATE_PLAYING) {
             data.addTimeInCurrentState();
+            data.timeBeforeStoppageOfPlay = data.timeBeforeCurrentGameState;
         } else if (data.gameState == GameControlData.STATE_SET) {
             data.addTimeInCurrentStateToPenalties();
         }
