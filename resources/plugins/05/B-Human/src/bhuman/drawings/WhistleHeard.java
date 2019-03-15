@@ -28,7 +28,7 @@ public class WhistleHeard extends PerPlayer {
                 && rs.getLastMessage().valid
                 && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
-            if (msg.message.bhuman != null && msg.message.bhuman.confidenceOfLastWhistleDetection > 0 && (msg.message.bhuman.timestamp - msg.message.bhuman.lastTimeWhistleDetected.timestamp) <= 400) {
+            if (msg.message.bhuman != null && msg.message.bhuman.confidenceOfLastWhistleDetection > 0 && (msg.message.bhuman.timestamp - msg.message.bhuman.lastTimeWhistleDetected.timestamp) <= 1100) {
                 gl.glPushMatrix();
 
                 if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
