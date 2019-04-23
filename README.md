@@ -1,7 +1,6 @@
-# RoboCup SPL and Humanoid League GameController
+# RoboCup SPL GameController
 
-This is the GameController developed by team B-Human for the RoboCup SPL and
-Humanoid League. Please note that the Humanoid League currently uses a
+This is the GameController developed by team B-Human for the RoboCup SPL. Please note that the Humanoid League currently uses a
 [fork](https://github.com/RoboCup-Humanoid-TC/GameController).
 
 
@@ -203,6 +202,8 @@ For more info see [TCM](TCM.md).
 
 
 ## 5. libgamectrl (SPL)
+
+**libgamectrl is not supported on NAO V6!**
 
 libgamectrl automatically provides the GameController packets in ALMemory.
 It also implements the return channel of the GameController. It handles the
