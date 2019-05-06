@@ -361,9 +361,9 @@ public class GUI extends JFrame implements GCGUI
         cornerKick = new JButton[2];
         goalFreeKick = new JButton[2];
         for (int i=0; i<2; i++) {                
-            goalFreeKick[i] = new Button(GOAL_FREE_KICK+" for "+Rules.league.teamColorName[data.team[i].teamColor]);
-            kickIn[i] = new Button(KICK_IN+" for "+Rules.league.teamColorName[data.team[i].teamColor]);
-            cornerKick[i] = new Button(CORNER_KICK+" for "+Rules.league.teamColorName[data.team[i].teamColor]);
+            goalFreeKick[i] = new Button(GOAL_FREE_KICK);
+            kickIn[i] = new Button(KICK_IN);
+            cornerKick[i] = new Button(CORNER_KICK);
         }
         
         //--mid--
@@ -1108,7 +1108,6 @@ public class GUI extends JFrame implements GCGUI
     {
         for (int i=0; i<2; i++) {
             kickIn[i].setEnabled(ActionBoard.kickIn[i].isLegal(data));
-            kickIn[i].setText(KICK_IN+" for "+Rules.league.teamColorName[data.team[i].teamColor]);
         }
     }
     
@@ -1121,7 +1120,6 @@ public class GUI extends JFrame implements GCGUI
     {
         for (int i=0; i<2; i++) {
             goalFreeKick[i].setEnabled(ActionBoard.goalFreeKick[i].isLegal(data));
-            goalFreeKick[i].setText(GOAL_FREE_KICK+" for "+Rules.league.teamColorName[data.team[i].teamColor]);
         }
     }
     
@@ -1134,7 +1132,6 @@ public class GUI extends JFrame implements GCGUI
     {
         for (int i=0; i<2; i++) {
             cornerKick[i].setEnabled(ActionBoard.cornerKick[i].isLegal(data));
-            cornerKick[i].setText(CORNER_KICK+" for "+Rules.league.teamColorName[data.team[i].teamColor]);
         }
     }
 
