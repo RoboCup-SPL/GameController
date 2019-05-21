@@ -1,6 +1,7 @@
 package controller.action.ui;
 
 import common.Log;
+import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
@@ -12,7 +13,7 @@ import data.Rules;
  *
  * This action means that a team gets a corner kick
  */
-public class CornerKick extends GCAction 
+public class CornerKick extends GCAction
 {
     /** On which side (0:left, 1:right) */
     private int side;
@@ -35,6 +36,10 @@ public class CornerKick extends GCAction
      */
     @Override
     public void perform(AdvancedData data) {
+        if (data.gameState == GameControlData.STATE_PLAYING && data.setPlay != GameControlData.SET_PLAY_NONE) {
+            ActionBoard.play.perform(data);
+        }
+
         data.whenCurrentSetPlayBegan = data.getTime();
         data.setPlay = GameControlData.SET_PLAY_CORNER_KICK;
         data.kickingTeam = data.team[side].teamNumber;
@@ -51,7 +56,7 @@ public class CornerKick extends GCAction
     public boolean isLegal(AdvancedData data) {
         return (data.gameState == GameControlData.STATE_PLAYING)
                 && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
-                && (data.setPlay == GameControlData.SET_PLAY_NONE)
+                && (data.setPlay == GameControlData.SET_PLAY_NONE || data.kickingTeam != data.team[side].teamNumber)
                 || data.testmode;
     }
 }

@@ -1,6 +1,7 @@
 package controller.action.ui;
 
 import common.Log;
+import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
@@ -36,6 +37,10 @@ public class GoalFreeKick extends GCAction
      */
     @Override
     public void perform(AdvancedData data) {
+        if (data.gameState == GameControlData.STATE_PLAYING && data.setPlay != GameControlData.SET_PLAY_NONE) {
+            ActionBoard.play.perform(data);
+        }
+
         data.whenCurrentSetPlayBegan = data.getTime();
         data.setPlay = GameControlData.SET_PLAY_GOAL_FREE_KICK;
         data.kickingTeam = data.team[side].teamNumber;
@@ -52,7 +57,7 @@ public class GoalFreeKick extends GCAction
     public boolean isLegal(AdvancedData data) {
         return (data.gameState == GameControlData.STATE_PLAYING)
                 && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
-                && (data.setPlay == GameControlData.SET_PLAY_NONE)
+                && (data.setPlay == GameControlData.SET_PLAY_NONE || data.kickingTeam != data.team[side].teamNumber)
                 || data.testmode;
     }
 }

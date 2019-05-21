@@ -44,6 +44,10 @@ public class Goal extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        if (data.gameState == GameControlData.STATE_PLAYING && data.setPlay != GameControlData.SET_PLAY_NONE) {
+            ActionBoard.play.perform(data);
+        }
+
         data.team[side].score += set;
         if (set == 1) {
             if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
@@ -79,7 +83,6 @@ public class Goal extends GCAction
     {
         return ((set == 1)
               && (data.gameState == GameControlData.STATE_PLAYING)
-              && (data.setPlay == GameControlData.SET_PLAY_NONE)
               && ( (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
                 || (data.kickingTeam == data.team[side].teamNumber)) )
             || data.testmode;

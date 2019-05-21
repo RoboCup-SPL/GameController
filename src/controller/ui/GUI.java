@@ -813,11 +813,11 @@ public class GUI extends JFrame implements GCGUI
                     clockDescription.setText(PUSHING_FREE_KICK);
                     break;
                 case AdvancedData.SET_PLAY_CORNER_KICK:
-                	clockDescription.setText(CORNER_KICK);
-                	break;
+                    clockDescription.setText(CORNER_KICK);
+                    break;
                 case AdvancedData.SET_PLAY_KICK_IN:
-                	clockDescription.setText(KICK_IN);
-                	break;
+                    clockDescription.setText(KICK_IN);
+                    break;
                 default:
                     assert false;
             }
@@ -1256,7 +1256,7 @@ public class GUI extends JFrame implements GCGUI
                 robotLabel[i][j].setFont(titleFont);
             }
             timeOut[i].setFont(standardFont);
-			kickIn[i].setFont(standardFont);
+            kickIn[i].setFont(standardFont);
             stuck[i].setFont(timeoutFont);
             goalFreeKick[i].setFont(standardFont);
             cornerKick[i].setFont(standardFont);
