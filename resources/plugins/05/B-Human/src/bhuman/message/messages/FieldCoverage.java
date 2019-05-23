@@ -17,26 +17,47 @@ import util.Unsigned;
  */
 public class FieldCoverage implements ComplexStreamReader<FieldCoverage>, Message<FieldCoverage> {
 
-    public Map<Byte, List<Timestamp>> lines = new HashMap<>();
+    private static final int NUM_OF_CELLS_X = 18;
+    private static final int NUM_OF_CELLS_Y = 12;
+
+    public Map<Integer, List<Timestamp>> lines = new HashMap<>();
 
     @Override
     public int getStreamedSize(final ByteBuffer stream) {
-        return 1 + ((stream.remaining() - 1) & ~1);
+        return 4 + NUM_OF_CELLS_X * NUM_OF_CELLS_Y / 4;
     }
 
     @Override
     public FieldCoverage read(final ByteBuffer stream) {
-        final byte y = stream.get();
-        final List<Timestamp> line = lines.getOrDefault(y, new LinkedList<Timestamp>());
-        while (stream.remaining() >= 2) {
-            final Timestamp timestamp = new Timestamp(Unsigned.toUnsigned(stream.getShort()) * 100);
-            if (!line.isEmpty() && timestamp.timestamp < line.get(line.size() - 1).timestamp) {
-                line.clear();
+        final long timestamp = Unsigned.toUnsigned(stream.getInt());
+        int y = 0, counter = 0;
+        short coverage = 0;
+        while (stream.remaining() > 0) {
+            final List<Timestamp> line = new LinkedList<Timestamp>();
+            for (int x = 0; x < NUM_OF_CELLS_X; x++) {
+                if ((counter % 8) == 0) {
+                    coverage = Unsigned.toUnsigned(stream.get());
+                }
+
+                line.add(new Timestamp(timestamp - decodeTimeDifference((coverage >> 6) & 3)));
+                coverage <<= 2;
+                counter += 2;
             }
-            line.add(timestamp);
+            lines.put(y, line);
+            ++y;
         }
-        lines.put(y, line);
 
         return this;
+    }
+
+    private static long decodeTimeDifference(int code) {
+        if (code == 3) {
+            return 60000;
+        } else if (code == 2) {
+            return 20000;
+        } else if (code == 1) {
+            return 5000;
+        }
+        return 1000;
     }
 }
