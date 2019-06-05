@@ -135,7 +135,8 @@ public class BHumanMessageParts {
         public Eigen.Vector2f ballLastPercept = new Eigen.Vector2f();
         public float[] ballCovariance = new float[3];
 
-        public byte confidenceOfLastWhistleDetection;
+        public float confidenceOfLastWhistleDetection;
+        public byte channelsUsedForWhistleDetection;
         public Timestamp lastTimeWhistleDetected;
 
         public short teamActivity;
@@ -175,6 +176,7 @@ public class BHumanMessageParts {
                     + 2 * 2 // ballLastPercept
                     + 3 * 4 // ballCovariance
                     + 1 // confidenceOfLastWhistleDetection
+                    + 1 // channelsUsedForWhistleDetection
                     + 2 // lastTimeWhistleDetected
                     + 1 // teamActivity
                     + 1 // activity
@@ -234,7 +236,9 @@ public class BHumanMessageParts {
                 ballCovariance[i] = stream.getFloat();
             }
 
-            confidenceOfLastWhistleDetection = stream.get();
+            char encoded = (char) stream.get();
+            confidenceOfLastWhistleDetection = encoded == 255 ? -0.01f : encoded / 100.f;
+            channelsUsedForWhistleDetection = stream.get();
             lastTimeWhistleDetected = new Timestamp(timestamp - (long) Unsigned.toUnsigned(stream.getShort()));
 
             teamActivity = Unsigned.toUnsigned(stream.get());
