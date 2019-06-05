@@ -24,7 +24,7 @@ import util.Unsigned;
 public class BHumanMessageParts {
 
     private static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
-    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 8;
+    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 9;
 
     private static final String BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER = "BHUA";
     private static final short BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION = 0;
