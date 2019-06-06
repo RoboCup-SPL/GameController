@@ -23,8 +23,6 @@ public class PlayerTarget extends PerPlayer {
                 && rs.getLastMessage() instanceof BHumanMessage) {
             final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
             if (msg.message.bhuman != null && msg.poseValid && rs.getPenalty() == PlayerInfo.PENALTY_NONE) {
-                final float poseX = msg.pose[0] / 1000.f;
-                final float poseY = msg.pose[1] / 1000.f;
                 final float walkingToX = msg.message.bhuman.walkingTo.x / 1000.f;
                 final float walkingToY = msg.message.bhuman.walkingTo.y / 1000.f;
                 final float shootingToX = msg.message.bhuman.shootingTo.x / 1000.f;
@@ -33,13 +31,18 @@ public class PlayerTarget extends PerPlayer {
                 gl.glColor3f(0, 0, 1);
                 gl.glNormal3f(0, 0, 1);
 
+                gl.glPushMatrix();
+                gl.glTranslatef(msg.pose[0] / 1000.0f, msg.pose[1] / 1000.f, 0);
+                gl.glRotatef((float) Math.toDegrees(msg.pose[2]), 0, 0, 1);
+
                 gl.glBegin(GL2.GL_LINES);
-                gl.glVertex2f(poseX, poseY);
+                gl.glVertex2f(0, 0);
                 gl.glVertex2f(walkingToX, walkingToY);
                 gl.glEnd();
 
                 gl.glPushMatrix();
                 gl.glTranslatef(walkingToX, walkingToY, 0);
+                gl.glRotatef((float) -Math.toDegrees(msg.pose[2]), 0, 0, 1);
                 gl.glBegin(GL2.GL_LINES);
                 gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
                 gl.glVertex2f(CROSS_RADIUS, CROSS_RADIUS);
@@ -51,18 +54,21 @@ public class PlayerTarget extends PerPlayer {
                 gl.glColor3f(1, 0, 0);
 
                 gl.glBegin(GL2.GL_LINES);
-                gl.glVertex2f(poseX, poseY);
+                gl.glVertex2f(0, 0);
                 gl.glVertex2f(shootingToX, shootingToY);
                 gl.glEnd();
 
                 gl.glPushMatrix();
                 gl.glTranslatef(shootingToX, shootingToY, 0);
+                gl.glRotatef((float) -Math.toDegrees(msg.pose[2]), 0, 0, 1);
                 gl.glBegin(GL2.GL_LINES);
                 gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
                 gl.glVertex2f(CROSS_RADIUS, CROSS_RADIUS);
                 gl.glVertex2f(-CROSS_RADIUS, CROSS_RADIUS);
                 gl.glVertex2f(CROSS_RADIUS, -CROSS_RADIUS);
                 gl.glEnd();
+                gl.glPopMatrix();
+
                 gl.glPopMatrix();
             }
         }
