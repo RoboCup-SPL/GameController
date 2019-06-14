@@ -236,7 +236,7 @@ public class BHumanMessageParts {
                 ballCovariance[i] = stream.getFloat();
             }
 
-            char encoded = (char) stream.get();
+            final int encoded = stream.get() & 0xff;
             confidenceOfLastWhistleDetection = encoded == 255 ? -0.01f : encoded / 100.f;
             channelsUsedForWhistleDetection = stream.get();
             lastTimeWhistleDetected = new Timestamp(timestamp - (long) Unsigned.toUnsigned(stream.getShort()));
