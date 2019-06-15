@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 
 import javax.swing.JOptionPane;
 
+import controller.GameController;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.TeamInfo;
@@ -95,7 +96,20 @@ public class EventRecorder {
             
             // Set current time:
             model.currentTime = data.secsRemaining;
-            
+
+            //Log goals
+            if(lastData != null && data.gameState != GameControlData.STATE_INITIAL &&
+                (lastData.team[0].score != data.team[0].score || lastData.team[1].score != data.team[1].score)){
+
+                // Insert before empty logEntries:
+                int insertPlace = EventRecorder.model.logEntries.size();
+
+                while (insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace - 1).text))
+                    --insertPlace;
+
+                history.execute(new EntryCreateAction(new LogEntry(capitalize(data.team[0].getTeamColorName()) + " " + data.team[0].score + " : " + data.team[1].score + " " + capitalize(data.team[1].getTeamColorName()), SECONDS_FORMAT.format(data.secsRemaining * 1000), LogType.Manually), insertPlace, false));
+            }
+
             // If Gamestate is changed, add a LogEntry:
             if(lastGameState != data.gameState){
                 lastGameState = data.gameState;
