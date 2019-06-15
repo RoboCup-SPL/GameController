@@ -93,11 +93,9 @@ public class MenuBar extends JMenuBar {
         loggingPanel.add(new JLabel("<html><body><b>Penalty Logging Settings:</b></body></html>"));
         loggingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 
-        Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
         for(int i=0;i<10;i++) {
-            boolean checked = prefs.getBoolean("LOG_PENALTY_"+i, i == 4 || i == 6);
             // Load settings:
-			EventRecorder.setLogPenalty(i, checked);
+			EventRecorder.setLogPenalty(i, true);
         	
 			String penaltyString = i == 0 ? "Back In Game" : 
 				EventRecorder.capitalize(PlayerInfo.getPenaltyName(i));
@@ -106,7 +104,7 @@ public class MenuBar extends JMenuBar {
 			
 			// Setup the Checkbox:
         	final JCheckBox checkBox = new JCheckBox(penaltyString);
-        	checkBox.setSelected(checked);
+        	checkBox.setSelected(true);
         	checkBox.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
