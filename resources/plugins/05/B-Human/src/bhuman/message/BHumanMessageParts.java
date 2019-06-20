@@ -24,7 +24,7 @@ import util.Unsigned;
 public class BHumanMessageParts {
 
     private static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
-    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 9;
+    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 10;
 
     private static final String BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER = "BHUA";
     private static final short BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION = 0;
@@ -45,6 +45,9 @@ public class BHumanMessageParts {
 
         data.rewind();
         data.order(ByteOrder.LITTLE_ENDIAN);
+
+        // Skip Mixed Team Header
+        data.position(data.position() + 2);
 
         if (data.hasRemaining()) {
             String header = new NativeReaders.SimpleStringReader(4).read(data);
@@ -112,6 +115,8 @@ public class BHumanMessageParts {
             public Eigen.Vector2f center = new Eigen.Vector2f();
             public Eigen.Vector2f left = new Eigen.Vector2f();
             public Eigen.Vector2f right = new Eigen.Vector2f();
+            public Angle orientation;
+            public byte detectedOrientation;
             public Timestamp lastSeen;
             public Type type;
         }
@@ -206,7 +211,7 @@ public class BHumanMessageParts {
             final int obstacleCount = container >> 10;
 
             return size
-                    + obstacleCount * 25
+                    + obstacleCount * 27
                     + ntpCount * 5;
         }
 
@@ -298,13 +303,16 @@ public class BHumanMessageParts {
                 final short leftY_4Type = stream.getShort();
                 final short rightX_4Type = stream.getShort();
                 final short rightY_4Type = stream.getShort();
+                final short orientationInfo = stream.getShort();
                 obstacle.left.x = (float) ((short) (leftX_4Type << 2));
                 obstacle.left.y = (float) ((short) (leftY_4Type << 2));
                 obstacle.right.x = (float) ((short) (rightX_4Type << 2));
                 obstacle.right.y = (float) ((short) (rightY_4Type << 2));
                 obstacle.lastSeen = new Timestamp(timestamp - (((long) Unsigned.toUnsigned(stream.get())) << 6));
-
+                obstacle.orientation = new Angle(((float) ((short) (orientationInfo << 2))) / 32768.f * (float) Math.PI);
+                obstacle.detectedOrientation = (byte) ((orientationInfo >> 14) & 0x3);
                 obstacle.type = Obstacle.Type.values()[((leftX_4Type >> 14) & 0x3) | ((leftY_4Type >> 12) & 0xC) | ((rightX_4Type >> 10) & 0x30) | ((rightY_4Type >> 8) & 0xC0)];
+
 
                 obstacles.add(obstacle);
             }
