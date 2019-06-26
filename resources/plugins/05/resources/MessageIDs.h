@@ -92,9 +92,12 @@ ENUM(MessageID,
   idTeamData,
   idTeamPlayersModel,
   idThumbnail,
-  idWalkingEngineOutput,
   idWalkGenerator,
+  idWalkGeneratorData,
+  idWalkingEngineOutput,
+  idWalkLearner,
   idWhistle,
+  idWhistleDOA,
   numOfDataMessageIDs, /**< everything below this does not belong into log files */
 
   // infrastructure
