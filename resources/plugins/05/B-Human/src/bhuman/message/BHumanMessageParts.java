@@ -24,7 +24,7 @@ import util.Unsigned;
 public class BHumanMessageParts {
 
     private static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
-    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 10;
+    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 11;
 
     private static final String BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER = "BHUA";
     private static final short BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION = 0;
@@ -163,6 +163,9 @@ public class BHumanMessageParts {
 
         public List<Obstacle> obstacles;
 
+        public char say;
+        public Timestamp nextTeamTalk;
+
         public boolean requestsNTPMessage;
         public List<BNTPMessage> ntpMessages;
 
@@ -191,7 +194,9 @@ public class BHumanMessageParts {
                     + 2 * 2 // walkingTo
                     + 2 * 2 // shootingTo
                     + 2 // captain, teammateRolesTimestamp
-                    + 2; // number of obstacles, isPenalized, isUpright, hasGroundContact, requestsNTPMessage, NTP reply bitset
+                    + 2 // number of obstacles, isPenalized, isUpright, hasGroundContact, requestsNTPMessage, NTP reply bitset
+                    + 1 // say
+                    + 1; // nextTeamTalk
 
             if (stream.remaining() < size) {
                 return size;
@@ -316,6 +321,10 @@ public class BHumanMessageParts {
 
                 obstacles.add(obstacle);
             }
+
+            say = stream.getChar();
+            nextTeamTalk = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getChar())) << 6));
+
             ntpMessages = new LinkedList<>();
             for (short i = 1; runner != 0; ++i) {
                 if ((boolAndNTPReceiptContainer & (runner >>= 1)) != 0) {
