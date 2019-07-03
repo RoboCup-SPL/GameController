@@ -163,7 +163,7 @@ public class BHumanMessageParts {
 
         public List<Obstacle> obstacles;
 
-        public char say;
+        public byte say;
         public Timestamp nextTeamTalk;
 
         public boolean requestsNTPMessage;
@@ -322,8 +322,8 @@ public class BHumanMessageParts {
                 obstacles.add(obstacle);
             }
 
-            say = stream.getChar();
-            nextTeamTalk = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getChar())) << 6));
+            say = stream.get();
+            nextTeamTalk = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.get())) << 6));
 
             ntpMessages = new LinkedList<>();
             for (short i = 1; runner != 0; ++i) {
