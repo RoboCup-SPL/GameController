@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactManager">
+    <artifact type="jar" build-on-make="true" name="GameController:jar">
+      <output-path>$PROJECT_DIR$/bin/</output-path>
+      <root id="archive" name="GameController.jar">
+        <element id="directory" name="common">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
+        </element>
+        <element id="directory" name="data">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
+        </element>
+        <element id="directory" name="controller">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/controller" />
+        </element>
+        <element id="directory" name="teamcomm/net">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/net" />
+        </element>
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/controller/MANIFEST.MF" />
+        </element>
+      </root>
+    </artifact>
+    <artifact type="jar" build-on-make="true" name="GameControllerTester:jar">
+      <output-path>$PROJECT_DIR$/bin</output-path>
+      <root id="archive" name="GameControllerTester.jar">
+        <element id="directory" name="tester">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/tester" />
+        </element>
+        <element id="directory" name="teamcomm/net">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/net" />
+        </element>
+        <element id="directory" name="teamcomm/data/event">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/data/event" />
+        </element>
+        <element id="directory" name="common">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
+        </element>
+        <element id="directory" name="data">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
+        </element>
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/tester/MANIFEST.MF" />
+        </element>
+      </root>
+    </artifact>
+    <artifact type="jar" build-on-make="true" name="common:jar">
+      <output-path>$PROJECT_DIR$/bin/plugins</output-path>
+      <root id="archive" name="common.jar">
+        <element id="directory" name="teamcomm/gui/drawings/common">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/gui/drawings/common" />
+        </element>
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/teamcomm/gui/drawings/common/MANIFEST.MF" />
+        </element>
+      </root>
+    </artifact>
+    <artifact type="jar" build-on-make="true" name="TeamCommunicationMonitor:jar">
+      <output-path>$PROJECT_DIR$/bin</output-path>
+      <root id="archive" name="TeamCommunicationMonitor.jar">
+        <element id="directory" name="common">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
+        </element>
+        <element id="directory" name="data">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
+        </element>
+        <element id="directory" name="teamcomm">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm" />
+        </element>
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/teamcomm/MANIFEST.MF" />
+        </element>
+      </root>
+    </artifact>
+    <artifact type="jar" build-on-make="true" name="LogAnalyzer:jar">
+      <output-path>$PROJECT_DIR$/bin</output-path>
+      <root id="archive" name="LogAnalyzer.jar">
+        <element id="directory" name="common">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
+        </element>
+        <element id="directory" name="data">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
+        </element>
+        <element id="directory" name="analyzer">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/analyzer" />
+        </element>
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/analyzer/MANIFEST.MF" />
+        </element>
+      </root>
+    </artifact>
+    <artifact type="jar" build-on-make="true" name="LogExporter:jar">
+      <output-path>$PROJECT_DIR$/bin</output-path>
+      <root id="archive" name="LogExporter.jar">
+        <element id="directory" name="common">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
+        </element>
+        <element id="directory" name="data">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
+        </element>
+        <element id="directory" name="exporter">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/exporter" />
+        </element>
+        <element id="directory" name="teamcomm/net">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/net" />
+        </element>
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/exporter/MANIFEST.MF" />
+        </element>
+      </root>
+    </artifact>
+    <artifact type="jar" build-on-make="true" name="EventRecorder:jar">
+      <output-path>$PROJECT_DIR$/bin</output-path>
+      <root id="archive" name="EventRecorder.jar">
+        <element id="directory" name="eventrecorder">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/eventrecorder" />
+        </element>
+        <element id="directory" name="teamcomm/net">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/net" />
+        </element>
+        <element id="directory" name="teamcomm/data/event">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/data/event" />
+        </element>
+        <element id="directory" name="common">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
+        </element>
+        <element id="directory" name="data">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
+        </element>
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/eventrecorder/MANIFEST.MF" />
+        </element>
+      </root>
+    </artifact>
+    <artifact type="jar" build-on-make="true" name="bhuman:jar">
+      <output-path>$PROJECT_DIR$/bin/plugins/05</output-path>
+      <root id="archive" name="bhuman.jar">
+        <element id="directory" name="bhuman">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/bhuman" />
+        </element>
+        <element id="directory" name="util">
+          <element id="dir-copy" path="$PROJECT_DIR$/build/util" />
+        </element>
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/resources/plugins/05/B-Human/src/bhuman/MANIFEST.MF" />
+        </element>
+      </root>
+    </artifact>
+    <artifact build-on-make="true" name="Copy">
+      <output-path>$PROJECT_DIR$/bin</output-path>
+      <root id="root">
+        <element id="directory" name="config">
+          <element id="dir-copy" path="$PROJECT_DIR$/resources/config" />
+        </element>
+        <element id="directory" name="deps">
+          <element id="dir-copy" path="$PROJECT_DIR$/deps" />
+        </element>
+        <element id="directory" name="include">
+          <element id="dir-copy" path="$PROJECT_DIR$/include" />
+        </element>
+        <element id="directory" name="scene">
+          <element id="dir-copy" path="$PROJECT_DIR$/resources/scene" />
+        </element>
+        <element id="directory" name=".">
+          <element id="file-copy" path="$PROJECT_DIR$/README.md" />
+          <element id="file-copy" path="$PROJECT_DIR$/TCM.md" />
+        </element>
+        <element id="directory" name="plugins/05/resources">
+          <element id="dir-copy" path="$PROJECT_DIR$/resources/plugins/05/resources" />
+        </element>
+      </root>
+    </artifact>
+  </component>
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="GameController" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/GameController.iml" filepath="$PROJECT_DIR$/GameController.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_12" project-jdk-name="12" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="build">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/build" />
+        <root url="jar://$PROJECT_DIR$/deps/gluegen-rt.jar!/" />
+        <root url="jar://$PROJECT_DIR$/deps/jogl-all.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
+</project>
