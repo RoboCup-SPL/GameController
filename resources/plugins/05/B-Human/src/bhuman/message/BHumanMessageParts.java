@@ -198,11 +198,11 @@ public class BHumanMessageParts {
                     + 1 // say
                     + 1; // nextTeamTalk
 
-            if (stream.remaining() < size) {
+            if (stream.remaining() < size - 2) {
                 return size;
             }
 
-            final int container = Unsigned.toUnsigned(stream.getShort(stream.position() + size - 2));
+            final int container = Unsigned.toUnsigned(stream.getShort(stream.position() + size - 4));
 
             int ntpReceivers = container & 0x3F;
             int ntpCount = 0;
