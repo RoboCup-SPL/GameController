@@ -21,7 +21,7 @@ calls for Support for Projects for League Developments for 2013, 2015, 2017, and
 To build it from the source code you may use Apache Ant.
 Just call "ant" in the main directory.
 
-Building the source code requires the JDK 1.7 or newer.
+Building the source code requires the JDK 1.8 or newer.
 
 
 ## 2. GameController
