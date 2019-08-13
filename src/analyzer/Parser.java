@@ -63,6 +63,7 @@ public class Parser
         "Leaving the Field",
         "Kickoff Goal",
         "Request for PickUp",
+        "Unpenalised",
         "Substituted",
         "Finished",
         "Initial",
