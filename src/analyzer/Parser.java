@@ -177,6 +177,7 @@ public class Parser
         String raw, action = "";
         String team;
         String player;
+        String substitute;
         String[] teams = new String[2];
         if (log.team.length >= 2) {
             teams[0] = log.team[0];
@@ -234,6 +235,7 @@ public class Parser
             }
 
             player = "";
+            substitute = "";
             // The optional by in the end is for substitution (the player that leaves is the first number).
             String pattern = "("+log.color[0]+"|"+log.color[1]+")\\s*(\\d+)\\s*(by.*)?$";
             Matcher matcher = Pattern.compile(pattern).matcher(raw);
@@ -241,9 +243,12 @@ public class Parser
                 if (matcher.groupCount() >= 2) {
                     player = matcher.group(2);
                 }
+                if (action.equals("Substituted") && matcher.groupCount() >= 3) {
+                    substitute = matcher.group(3).replaceAll("[^\\d.]", "");
+                }
             }
             try{
-                LogAnalyzer.writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+player+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
+                LogAnalyzer.writer.write(time+OUT_SEP+action+OUT_SEP+team+OUT_SEP+player+OUT_SEP+substitute+OUT_SEP+teams[0]+OUT_SEP+teams[1]+"\n");
             } catch (IOException e) {
                 Log.error("cannot write to file "+LogAnalyzer.stats);
             }
