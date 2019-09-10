@@ -24,7 +24,7 @@ import util.Unsigned;
 public class BHumanMessageParts {
 
     private static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
-    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 11;
+    private static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 12;
 
     private static final String BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER = "BHUA";
     private static final short BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION = 0;
@@ -145,8 +145,6 @@ public class BHumanMessageParts {
         public short teamActivity;
         public Timestamp timeWhenReachBall;
         public Timestamp timeWhenReachBallStriker;
-        public boolean[] teammateRolesIsGoalkeeper = new boolean[BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
-        public boolean[] teammateRolesPlayBall = new boolean[BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
         public int[] teammateRolesPlayerIndex = new int[BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS];
         public int captain;
         public Timestamp teammateRolesTimestamp;
@@ -186,7 +184,7 @@ public class BHumanMessageParts {
                     + 2 // lastTimeWhistleDetected
                     + 1 // teamActivity
                     + 1 // activity
-                    + 5 // isGoalkeeper, playBall, supporterIndex, passTarget, teammateRolesIsGoalkeeper, teammateRolesPlayBall, teammateRolesPlayerIndex
+                    + 4 // isGoalkeeper, playBall, supporterIndex, passTarget, teammateRolesPlayerIndex
                     + 2 // timeWhenReachBall
                     + 2 // timeWhenReachBallStriker
                     + 2 * 2 // walkingTo
@@ -251,7 +249,7 @@ public class BHumanMessageParts {
             teamActivity = Unsigned.toUnsigned(stream.get());
             activity = Unsigned.toUnsigned(stream.get());
 
-            final long rolePassTargetTeammateRolesContainer = ((long) Unsigned.toUnsigned(stream.get())) | (Unsigned.toUnsigned(stream.getInt()) << 8);
+            final long rolePassTargetTeammateRolesContainer = Unsigned.toUnsigned(stream.getInt());
             passTarget = (int) (rolePassTargetTeammateRolesContainer & 0xF);
             if (passTarget == 15) {
                 passTarget = -1;
@@ -263,13 +261,10 @@ public class BHumanMessageParts {
             playBall = ((rolePassTargetTeammateRolesContainer >> 7) & 0x1) != 0;
             isGoalkeeper = ((rolePassTargetTeammateRolesContainer >> 8) & 0x1) != 0;
             for (int i = 0; i < BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS; ++i) {
-                final byte teammateRole = (byte) ((rolePassTargetTeammateRolesContainer >> (9 + (BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - i - 1) * 5)) & 0x1F);
-                teammateRolesPlayerIndex[i] = teammateRole & 0x7;
+                teammateRolesPlayerIndex[i] = (int) ((rolePassTargetTeammateRolesContainer >> (9 + (BHUMAN_STANDARD_MESSAGE_MAX_NUM_OF_PLAYERS - i - 1) * 3)) & 0x7);
                 if (teammateRolesPlayerIndex[i] == 7) {
                     teammateRolesPlayerIndex[i] = -1;
                 }
-                teammateRolesPlayBall[i] = (teammateRole & 0x8) != 0;
-                teammateRolesIsGoalkeeper[i] = (teammateRole & 0x10) != 0;
             }
             timeWhenReachBall = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3));
             timeWhenReachBallStriker = new Timestamp(timestamp + (((long) Unsigned.toUnsigned(stream.getShort())) << 3));
