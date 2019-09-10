@@ -574,7 +574,7 @@ public class GameState implements GameControlDataEventListener {
     }
 
     /**
-     * Registeres a GUI component as a listener receiving events about team
+     * Registers a GUI component as a listener receiving events about team
      * changes.
      *
      * @param listener component
@@ -585,7 +585,7 @@ public class GameState implements GameControlDataEventListener {
     }
 
     /**
-     * Unregisteres a GUI component as a listener receiving events about team
+     * Unregisters a GUI component as a listener receiving events about team
      * changes.
      *
      * @param listener component

@@ -161,7 +161,7 @@ public class RobotState {
     /**
      * Returns the total count of illegal messages.
      *
-     * @return illegal messasge count
+     * @return illegal message count
      */
     public int getIllegalMessageCount() {
         return illegalMessageCount;
@@ -215,7 +215,7 @@ public class RobotState {
     }
 
     /**
-     * Registeres a GUI component as a listener receiving events when this robot
+     * Registers a GUI component as a listener receiving events when this robot
      * sends a message.
      *
      * @param listener component
