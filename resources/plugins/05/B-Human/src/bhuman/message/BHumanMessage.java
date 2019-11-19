@@ -44,14 +44,14 @@ public class BHumanMessage extends AdvancedMessage {
 
             if (message.bhuman != null) {
                 display.add("Magic: " + message.bhuman.magicNumber);
-                display.add("IsGoalkeeper: " + message.bhuman.isGoalkeeper);
-                display.add("PlayBall: " + message.bhuman.playBall);
-                display.add("SupporterIndex: " + message.bhuman.supporterIndex);
-                display.add("Activity: " + message.bhuman.activity);
-                display.add("TimeToReachBall: " + message.bhuman.timeWhenReachBall.getTimeSince(message.bhuman.timestamp) + "ms");
-                display.add("TimeToReachBallStriker: " + message.bhuman.timeWhenReachBallStriker.getTimeSince(message.bhuman.timestamp) + "ms");
-                display.add("TimeSinceLastJumped: " + (message.bhuman.timestamp - message.bhuman.timestampLastJumped.timestamp) + "ms");
-                display.add("HearingConfidence: " + message.bhuman.confidenceOfLastWhistleDetection);
+                display.add("IsGoalkeeper: " + message.bhuman.theTeamBehaviorStatus.role.isGoalkeeper);
+                display.add("PlayBall: " + message.bhuman.theTeamBehaviorStatus.role.playBall);
+                display.add("SupporterIndex: " + message.bhuman.theTeamBehaviorStatus.role.supporterIndex);
+                display.add("Activity: " + message.bhuman.theBehaviorStatus.activity);
+                display.add("TimeToReachBall: " + message.bhuman.theTeamBehaviorStatus.timeToReachBall.timeWhenReachBall.getTimeSince(message.bhuman.timestamp) + "ms");
+                display.add("TimeToReachBallStriker: " + message.bhuman.theTeamBehaviorStatus.timeToReachBall.timeWhenReachBallStriker.getTimeSince(message.bhuman.timestamp) + "ms");
+                display.add("TimeSinceLastJumped: " + (message.bhuman.timestamp - message.bhuman.theRobotPose.timestampLastJump.timestamp) + "ms");
+                display.add("HearingConfidence: " + message.bhuman.theWhistle.confidenceOfLastWhistleDetection);
                 display.add("");
             }
 

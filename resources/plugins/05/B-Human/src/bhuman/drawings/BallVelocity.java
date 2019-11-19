@@ -34,7 +34,7 @@ public class BallVelocity extends PerPlayer {
                 gl.glColor3f(1, 0, 0);
                 gl.glNormal3f(0, 0, 1);
                 gl.glVertex3f(0, 0, BALL_RADIUS);
-                gl.glVertex3f(msg.message.bhuman.ballVelocity.x / 1000.f, msg.message.bhuman.ballVelocity.y / 1000.f, BALL_RADIUS);
+                gl.glVertex3f(msg.message.bhuman.theBallModel.estimate.velocity.x / 1000.f, msg.message.bhuman.theBallModel.estimate.velocity.y / 1000.f, BALL_RADIUS);
                 gl.glEnd();
 
                 gl.glPopMatrix();
