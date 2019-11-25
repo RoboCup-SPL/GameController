@@ -42,6 +42,10 @@
       <Compound ref="field" />
     </Compound>
 	
+    <Compound name="field2020">
+      <Compound ref="field2020" />
+    </Compound>
+	
     <Compound name="fieldSmall">
       <Compound ref="fieldSmall" />
     </Compound>

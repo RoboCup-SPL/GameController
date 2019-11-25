@@ -3,6 +3,31 @@
   <Compound name="field">
 
     <Set name="size" value=""/>
+    <Set name="penalty" value=""/>
+	
+    <ComplexAppearance ref="fieldLines" name="fieldLines1"/>
+    <ComplexAppearance ref="fieldLines" name="fieldLines2">
+      <Rotation z="180degree"/>
+    </ComplexAppearance>
+    <ComplexAppearance ref="fieldCrossCenter"/>
+    <ComplexAppearance ref="fieldGreen"/>
+
+    <Compound ref="fieldGoal" name="Goal1">
+      <Translation x="-4525mm"/>
+      <Set name="color" value="fieldWhite"/>
+    </Compound>
+    <Compound ref="fieldGoal" name="Goal2">
+      <Translation x="4525mm"/>
+      <Rotation z="180degree"/>
+      <Set name="color" value="fieldWhite"/>
+    </Compound>
+
+  </Compound>
+
+  <Compound name="field2020">
+
+    <Set name="size" value=""/>
+    <Set name="penalty" value="2020"/>
 	
     <ComplexAppearance ref="fieldLines" name="fieldLines1"/>
     <ComplexAppearance ref="fieldLines" name="fieldLines2">
@@ -26,6 +51,7 @@
   <Compound name="fieldSmall">
   
     <Set name="size" value="Small"/>
+    <Set name="penalty" value=""/>
 
     <ComplexAppearance ref="fieldLines" name="fieldLines1"/>
     <ComplexAppearance ref="fieldLines" name="fieldLines2">
@@ -139,6 +165,43 @@
 3.875 -1.125 0
 3.925 -1.125 0
 3.925 1.125 0
+  </Vertices>
+  <Vertices name="fieldLines2020">
+# middle line
+-0.025 2.975 0
+-0.025 0.05 0
+0.025 0.05 0
+0.025 2.975 0
+
+# goal line
+4.475 3.025 0
+4.475 -3.025 0
+4.525 -3.025 0
+4.525 3.025 0
+
+# outer line left
+-4.475 3.025 0
+-4.475 2.975 0
+4.475 2.975 0
+4.475 3.025 0
+
+# keeper line left
+2.875 2.025 0
+2.875 1.975 0
+4.475 1.975 0
+4.475 2.025 0
+
+# keeper line right
+4.475 -2.025 0
+4.475 -1.975 0
+2.875 -1.975 0
+2.875 -2.025 0
+
+# keeper line front
+2.825 2.025 0
+2.825 -2.025 0
+2.875 -2.025 0
+2.875 2.025 0
   </Vertices>
   <Vertices name="fieldLinesSmall">
 # middle line
@@ -549,7 +612,7 @@
 
   <ComplexAppearance name="fieldLines">
     <Surface ref="fieldWhite"/>
-    <Vertices ref="fieldLines$size"/>
+    <Vertices ref="fieldLines$size$penalty"/>
     <Quads>
 0 1 2 3
 4 5 6 7
@@ -558,7 +621,7 @@
 16 17 18 19
 20 21 22 23
     </Quads>
-    <ComplexAppearance ref="fieldCross$size"/>
+    <ComplexAppearance ref="fieldCross$size$penalty"/>
     <ComplexAppearance ref="fieldCenterCircle"/>
   </ComplexAppearance>
 
@@ -574,6 +637,17 @@
 
   <ComplexAppearance name="fieldCross">
     <Translation x="3.2" y="0" z="0"/>
+    <Surface ref="fieldWhite"/>
+    <Vertices ref="fieldCross"/>
+    <Quads>
+2 3 1 0
+6 7 5 4
+8 9 11 10
+    </Quads>
+  </ComplexAppearance>
+
+  <ComplexAppearance name="fieldCross2020">
+    <Translation x="3.1" y="0" z="0"/>
     <Surface ref="fieldWhite"/>
     <Vertices ref="fieldCross"/>
     <Quads>
