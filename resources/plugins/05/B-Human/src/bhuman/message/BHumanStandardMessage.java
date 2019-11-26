@@ -73,13 +73,25 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
     }
 
     public static class Obstacle {
+        public Eigen.ColumnMatrix<Float> covariance = new Eigen.ColumnMatrix<Float>();
         public Eigen.Vector2f center = new Eigen.Vector2f();
         public Eigen.Vector2f left = new Eigen.Vector2f();
         public Eigen.Vector2f right = new Eigen.Vector2f();
         public Timestamp lastSeen;
         public Obstacle__Type type;
 
+        @SuppressWarnings("unchecked")
         public void read(final BitStream bitStream, final long __timestampBase) {
+            covariance.cols = new Eigen.Vector[2];
+            for (int i = 0; i < 2; ++i) {
+                covariance.cols[i] = new Eigen.Vector<>();
+                covariance.cols[i].elems = new Float[2];
+                for (int j = 0; j < 2; ++j) {
+                    float _covariance;
+                    _covariance = bitStream.readFloat(0, 0, 0);
+                    covariance.cols[i].elems[j] = _covariance;
+                }
+            }
             center.x = bitStream.readFloat(-32768, 32767, 16);
             center.y = bitStream.readFloat(-32768, 32767, 16);
             left.x = bitStream.readFloat(-32768, 32767, 14);

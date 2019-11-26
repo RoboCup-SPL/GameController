@@ -136,4 +136,26 @@ public abstract class Eigen {
             return Math.hypot(x.doubleValue(), y.doubleValue());
         }
     }
+
+    public static class Vector3<T> {
+
+        public T x;
+        public T y;
+        public T z;
+    }
+
+    public static class Vector<T> {
+
+        public T[] elems;
+    }
+
+    public static class RowMatrix<T> {
+
+        public Vector<T>[] rows;
+    }
+
+    public static class ColumnMatrix<T> {
+
+        public Vector<T>[] cols;
+    }
 }
