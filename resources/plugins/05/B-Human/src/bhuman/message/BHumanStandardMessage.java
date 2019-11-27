@@ -86,7 +86,10 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
             for (int i = 0; i < 2; ++i) {
                 covariance.cols[i] = new Eigen.Vector<>();
                 covariance.cols[i].elems = new Float[2];
-                for (int j = 0; j < 2; ++j) {
+                for (int j = 0; j < i; ++j) {
+                    covariance.cols[i].elems[j] = covariance.cols[j].elems[i];
+                }
+                for (int j = i; j < 2; ++j) {
                     float _covariance;
                     _covariance = bitStream.readFloat(0, 0, 0);
                     covariance.cols[i].elems[j] = _covariance;
