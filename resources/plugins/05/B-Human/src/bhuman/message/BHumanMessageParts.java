@@ -32,9 +32,6 @@ public class BHumanMessageParts {
         data.rewind();
         data.order(ByteOrder.LITTLE_ENDIAN);
 
-        // Skip Mixed Team Header
-        data.position(data.position() + 2);
-
         if (data.hasRemaining()) {
             String header = new NativeReaders.SimpleStringReader(4).read(data);
             short version = NativeReaders.ucharReader.read(data);
