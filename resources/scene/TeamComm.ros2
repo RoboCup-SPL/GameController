@@ -2,7 +2,7 @@
 
   <Include href="NaoV4H21.rsi2"/>
   <Include href="Ball2010SPL.rsi2"/>
-  <Include href="Field2015SPL.rsi2"/>
+  <Include href="FieldsSPL.rsi2"/>
 
   <Scene>
     <Body ref="Nao" name="robotBlue" />
