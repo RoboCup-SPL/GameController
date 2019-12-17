@@ -67,18 +67,26 @@ public class GameControllerInfo extends Static {
                     state = "Initial";
                     break;
                 case GameControlData.STATE_READY:
-                    state = "Ready";
+                    if (data.setPlay == GameControlData.SET_PLAY_PENALTY_KICK) {
+                        state = "Ready (Penalty Kick)";
+                    } else {
+                        state = "Ready";
+                    }
                     break;
                 case GameControlData.STATE_SET:
-                    state = "Set";
+                    if (data.setPlay == GameControlData.SET_PLAY_PENALTY_KICK) {
+                        state = "Set (Penalty Kick)";
+                    } else {
+                        state = "Set";
+                    }
                     break;
                 case GameControlData.STATE_PLAYING:
                     switch (data.setPlay) {
                         case GameControlData.SET_PLAY_NONE:
                             state = "Playing";
                             break;
-                        case GameControlData.SET_PLAY_GOAL_FREE_KICK:
-                            state = "Goal Free Kick";
+                        case GameControlData.SET_PLAY_GOAL_KICK:
+                            state = "Goal Kick";
                             break;
                         case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
                             state = "Pushing Free Kick";
@@ -88,6 +96,9 @@ public class GameControllerInfo extends Static {
                             break;
                         case GameControlData.SET_PLAY_KICK_IN:
                             state = "Kick In";
+                            break;
+                        case GameControlData.SET_PLAY_PENALTY_KICK:
+                            state = "Penalty Kick";
                             break;
                         default:
                             state = "";

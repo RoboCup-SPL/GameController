@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * This class is part of the data wich are send to the robots. It just
+ * This class is part of the data which are sent to the robots. It just
  * represents this data, reads and writes between C-structure and Java, nothing
  * more.
  *
@@ -24,12 +24,11 @@ public class PlayerInfo implements Serializable {
     public static final byte PENALTY_SPL_PLAYER_PUSHING = 2;
     public static final byte PENALTY_SPL_ILLEGAL_MOTION_IN_SET = 3;
     public static final byte PENALTY_SPL_INACTIVE_PLAYER = 4;
-    public static final byte PENALTY_SPL_ILLEGAL_DEFENDER = 5;
+    public static final byte PENALTY_SPL_ILLEGAL_POSITION = 5;
     public static final byte PENALTY_SPL_LEAVING_THE_FIELD = 6;
-    public static final byte PENALTY_SPL_KICK_OFF_GOAL = 7;
-    public static final byte PENALTY_SPL_REQUEST_FOR_PICKUP = 8;
-    public static final byte PENALTY_SPL_LOCAL_GAME_STUCK = 9;
-    public static final byte PENALTY_SPL_ILLEGAL_POSITIONING = 10;
+    public static final byte PENALTY_SPL_REQUEST_FOR_PICKUP = 7;
+    public static final byte PENALTY_SPL_LOCAL_GAME_STUCK = 8;
+    public static final byte PENALTY_SPL_ILLEGAL_POSITION_IN_SET = 9;
 
     public static final byte PENALTY_SUBSTITUTE = 14;
     public static final byte PENALTY_MANUAL = 15;
@@ -82,18 +81,16 @@ public class PlayerInfo implements Serializable {
                 return "illegal motion in set";
             case PENALTY_SPL_INACTIVE_PLAYER:
                 return "inactive";
-            case PENALTY_SPL_ILLEGAL_DEFENDER:
-                return "illegal defender";
+            case PENALTY_SPL_ILLEGAL_POSITION:
+                return "illegal position";
             case PENALTY_SPL_LEAVING_THE_FIELD:
                 return "leaving the field";
-            case PENALTY_SPL_KICK_OFF_GOAL:
-                return "kickoff goal";
             case PENALTY_SPL_REQUEST_FOR_PICKUP:
                 return "request for pickup";
             case PENALTY_SPL_LOCAL_GAME_STUCK:
                 return "local game stuck";
-            case PENALTY_SPL_ILLEGAL_POSITIONING:
-                return "illegal positioning";
+            case PENALTY_SPL_ILLEGAL_POSITION_IN_SET:
+                return "illegal position in set";
             case PENALTY_SUBSTITUTE:
                 return "substitute";
             case PENALTY_MANUAL:

@@ -44,7 +44,7 @@ public class GameController {
 
     private static final String HELP_TEMPLATE = "Usage: java -jar GameController.jar {options}"
             + "\n  (-h | --help)                   display help"
-            + "\n  (-t | --test)                   use test-mode - currently only disabling the delayed switch to playing in SPL"
+            + "\n  (-t | --test)                   use test-mode - currently only disabling the delayed game state switches in the SPL"
             + "\n  (-i | --interface) <interface>  set network interface (default is a connected IPv4 interface)"
             + "\n  (-l | --league) %s%sselect league (default is spl)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
@@ -112,7 +112,7 @@ public class GameController {
             }
             String leagues = "";
             for (Rules rules : Rules.LEAGUES) {
-                leagues += (leagues.equals("") ? "" : " | ") + rules.leagueDirectory;
+                leagues += (leagues.equals("") ? "" : " | ") + rules.leagueName.toLowerCase().replace(' ', '_');
             }
             if (leagues.contains("|")) {
                 leagues = "(" + leagues + ")";
@@ -248,6 +248,7 @@ public class GameController {
 
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
+            Rules.league.delayedSwitchAfterGoal = 0;
         }
 
         try {
@@ -291,7 +292,7 @@ public class GameController {
         }
         Log.toFile("League = " + Rules.league.leagueName);
         Log.toFile("Competition phase = " + (data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF ? "playoff" : "round robin"));
-        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_MIXEDTEAM ? "mixed team" : (data.competitionType == GameControlData.COMPETITION_TYPE_NORMAL ? "normal" : "general penalty kick challenge")));
+        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK ? "general penalty kick challenge" : "normal"));
         Log.toFile("Auto color change = " + data.colorChangeAuto);
         Log.toFile("Using broadcast address " + (localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast()));
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));

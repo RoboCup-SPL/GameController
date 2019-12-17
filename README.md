@@ -34,10 +34,10 @@ Usage: `java -jar GameController.jar {options}`
 
     (-h | --help)                   display help
     (-t | --test)                   use test-mode - currently only disabling the
-                                    delayed switch to playing in SPL
+                                    delayed game state switches in the SPL
     (-i | --interface) <interface>  set network interface (default is a
                                     connected IPv4 interface)
-    (-l | --league) (spl | spl_mixedteam | spl_penaltyshootout)
+    (-l | --league) (spl | spl_penalty_shootout | spl_general_penalty_kick_challenge)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
     (-g | --game-type) (undefined | preliminary | playoff)
@@ -53,7 +53,7 @@ Pick the two teams that are playing. They have to be different teams. If you are
 practicing alone, use the "Invisibles" as second team.
 
 SPL: The GameController automatically selects the jersey colors as defined in
-the file "teams.cfg". The left teams jersey color is picked first regardless if
+the file "teams.cfg". The left team's jersey color is picked first regardless if
 it has a custom jersey or not. For both teams, the first jersey color that they
 have and, if picking second, that does not conflict with the jersey color of the
 opponent is selected in the following sequence:
@@ -102,7 +102,7 @@ will be automatically unpenalized 15 seconds after pressing the button "Play".
 
 Before unpenalizing a robot that was taken off the field, please make sure that
 it was put back on the field by the assistant referees. For that reason, robots
-are never unpenalized automatically.
+are never unpenalized automatically, except for the "Illegal Motion in Set" penalty.
 
 To substitute a robot, press "Substitute" and then the robot that should leave
 the field.  Afterwards, any of the substitutes can be activated. If the robot
@@ -111,8 +111,8 @@ it is not, the substitute can immediately enter the field in the HL, but gets a
 "request for pickup" penalty before it can enter the field in the SPL.
 
 When pressing the big "+" (goal), "Timeout", or "Global Game Stuck", the other
-team gets the next kick-off. When pressing "Goal Free Kick" or "Pushing Free Kick",
-the same team gets the next kick-off.
+team gets the next kick-off. When pressing "Goal Kick", "Corner Kick" or
+"Kick In", the same team gets the next kick-off.
 
 SPL: When the referee decides that too much game time has been lost, use the
 thin "+" next to the clock to increase the game time in one-minute steps. This
@@ -152,8 +152,7 @@ only SPL
     P    - pushing
     L    - leaving the field
     I    - fallen / inactive
-    D    - illegal defender
-    G    - kickoff goal
+    D    - illegal position
     O    - illegal ball contact
     U    - request for pickup
     F    - foul
@@ -259,14 +258,16 @@ the Initial state. An active GameController will overwrite these settings.
 The format of the packets the GameController broadcasts at port
 GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
 is defined in the file RoboCupGameControlData.h. It differs from the version used
-in 2018 in the following ways:
+in 2019 in the following ways:
 
-- `version` uses only one byte due to alignment reasons.
-- `dropInTeam` and `dropInTime` have been removed since they are not needed anymore.
-- A macro for `PENALTY_SPL_ILLEGAL_POSITIONING` has been defined.
-- Macros for the new set plays (`SET_PLAY_CORNER_KICK` and `SET_PLAY_KICK_IN`) have been defined.
-- The macro `COMPETITION_TYPE_GENERAL_PENALTY_KICK` has been removed.
-- Humanoid League macros have been removed.
+- The macro `COMPETITION_TYPE_MIXEDTEAM` has been removed.
+- The macro `COMPETITION_TYPE_GENERAL_PENALTY_KICK` has been added.
+- The macro `SET_PLAY_GOAL_FREE_KICK` has been renamed to `SET_PLAY_GOAL_KICK`.
+- The macro `SET_PLAY_PENALTY_KICK` has been added.
+- The penalty macros have been reorganized:
+  - `PENATLY_SPL_KICKOFF_GOAL` has been removed.
+  - `PENALTY_SPL_ILLEGAL_DEFENDER` has been renamed to `PENALTY_SPL_ILLEGAL_POSITION`.
+  - `PENALTY_SPL_ILLEGAL_POSITIONING` has been renamed to `PENALTY_SPL_ILLEGAL_POSITION_IN_SET`.
 
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour

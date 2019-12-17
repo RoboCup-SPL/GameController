@@ -12,20 +12,20 @@ import data.Rules;
 /**
  * @author Mario Grobler
  *
- * This action means that a team gets a goal free kick
+ * This action means that a team gets a goal kick
  */
-public class GoalFreeKick extends GCAction
+public class GoalKick extends GCAction
 {
     /** On which side (0:left, 1:right) */
     private int side;
 
     /**
-     * Creates a new GoalFreeKick action.
+     * Creates a new GoalKick action.
      * Look at the ActionBoard before using this.
      *
      * @param side      On which side (0:left, 1:right)
      */
-    public GoalFreeKick(int side) {
+    public GoalKick(int side) {
         super(ActionType.UI);
         this.side = side;
     }
@@ -42,9 +42,9 @@ public class GoalFreeKick extends GCAction
         }
 
         data.whenCurrentSetPlayBegan = data.getTime();
-        data.setPlay = GameControlData.SET_PLAY_GOAL_FREE_KICK;
+        data.setPlay = GameControlData.SET_PLAY_GOAL_KICK;
         data.kickingTeam = data.team[side].teamNumber;
-        Log.state(data, "Goal Free Kick for "+Rules.league.teamColorName[data.team[side].teamColor]);
+        Log.state(data, "Goal Kick for "+Rules.league.teamColorName[data.team[side].teamColor]);
     }
 
     /**

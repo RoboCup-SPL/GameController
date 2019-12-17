@@ -104,8 +104,7 @@ public class KeyboardListener implements KeyEventDispatcher
                     case KeyEvent.VK_P: event = ActionBoard.pushing; break;
                     case KeyEvent.VK_L: event = ActionBoard.leaving; break;
                     case KeyEvent.VK_I: event = ActionBoard.inactive; break;
-                    case KeyEvent.VK_D: event = ActionBoard.defender; break;
-                    case KeyEvent.VK_G: event = ActionBoard.kickOffGoal; break;
+                    case KeyEvent.VK_D: event = ActionBoard.position; break;
                     case KeyEvent.VK_O: event = ActionBoard.ballContact; break;
                     case KeyEvent.VK_U: event = ActionBoard.pickUp; break;
                     case KeyEvent.VK_F: event = ActionBoard.foul; break;

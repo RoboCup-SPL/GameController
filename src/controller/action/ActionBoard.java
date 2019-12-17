@@ -7,7 +7,7 @@ import controller.action.ui.ClockReset;
 import controller.action.ui.CornerKick;
 import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
-import controller.action.ui.GoalFreeKick;
+import controller.action.ui.GoalKick;
 import controller.action.ui.IncGameClock;
 import controller.action.ui.KickIn;
 import controller.action.ui.KickOff;
@@ -22,16 +22,15 @@ import controller.action.ui.half.FirstHalfOvertime;
 import controller.action.ui.half.PenaltyShoot;
 import controller.action.ui.half.SecondHalf;
 import controller.action.ui.half.SecondHalfOvertime;
-import controller.action.ui.penalty.Defender;
 import controller.action.ui.penalty.Foul;
+import controller.action.ui.penalty.FoulPenaltyArea;
 import controller.action.ui.penalty.MotionInSet;
-import controller.action.ui.penalty.KickOffGoal;
 import controller.action.ui.penalty.BallContact;
 import controller.action.ui.penalty.Inactive;
 import controller.action.ui.penalty.Leaving;
 import controller.action.ui.penalty.LocalGameStuck;
 import controller.action.ui.penalty.PickUp;
-import controller.action.ui.penalty.Positioning;
+import controller.action.ui.penalty.Position;
 import controller.action.ui.penalty.Pushing;
 import controller.action.ui.state.Finish;
 import controller.action.ui.state.Initial;
@@ -68,7 +67,7 @@ public class ActionBoard
     public static Goal[] goalInc = new Goal[2];
     public static KickOff[] kickOff = new KickOff[2];
     public static Robot[][] robot;
-    public static GoalFreeKick[] goalFreeKick = new GoalFreeKick[2];
+    public static GoalKick[] goalKick = new GoalKick[2];
     public static TimeOut[] timeOut = new TimeOut[2];
     public static GlobalStuck[] stuck = new GlobalStuck[2];
     public static KickIn[] kickIn = new KickIn[2];
@@ -91,13 +90,12 @@ public class ActionBoard
     public static Leaving leaving;
     public static MotionInSet motionInSet;
     public static Inactive inactive;
-    public static Defender defender;
+    public static Position position;
     public static BallContact ballContact;
-    public static KickOffGoal kickOffGoal;
     public static PickUp pickUp;
     public static LocalGameStuck localGameStuck;
     public static Foul foul;
-    public static Positioning positioning;
+    public static FoulPenaltyArea foulPenaltyArea;
 
 
 
@@ -129,7 +127,7 @@ public class ActionBoard
             timeOut[i] = new TimeOut(i);
             stuck[i] = new GlobalStuck(i);
             kickIn[i] = new KickIn(i);
-            goalFreeKick[i] = new GoalFreeKick(i);
+            goalKick[i] = new GoalKick(i);
             cornerKick[i] = new CornerKick(i);
         }
 
@@ -153,12 +151,11 @@ public class ActionBoard
         leaving = new Leaving();
         motionInSet = new MotionInSet();
         inactive = new Inactive();
-        defender = new Defender();
+        position = new Position();
         ballContact = new BallContact();
-        kickOffGoal = new KickOffGoal();
         pickUp = new PickUp();
         localGameStuck = new LocalGameStuck();
         foul = new Foul();
-        positioning = new Positioning();
+        foulPenaltyArea = new FoulPenaltyArea();
     }
 }

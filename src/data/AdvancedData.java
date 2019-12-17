@@ -154,6 +154,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public AdvancedData() {
         if (Rules.league.startWithPenalty) {
             gamePhase = GAME_PHASE_PENALTYSHOOT;
+            kickOffReason = KICKOFF_PENALTYSHOOT;
         }
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < team[i].player.length; j++) {
@@ -280,7 +281,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * is what the primary clock will show.
      *
      * @param real If true, the real time will be returned. If false, the first
-     * number of seconds in the playing state games will not be updated.
+     * number of seconds in the playing state or after a goal will not be updated.
      * @return The remaining number of seconds.
      */
     public int getRemainingGameTime(boolean real) {
@@ -293,9 +294,12 @@ public class AdvancedData extends GameControlData implements Cloneable {
                                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > Rules.league.numberOfPenaltyShots
                                 ? Rules.league.penaltyShotTimeSuddenDeath
                                 : Rules.league.penaltyShotTime;
-        int timePlayed = gameState == STATE_INITIAL// during timeouts
+        int timePlayed = gameState == STATE_INITIAL // during timeouts
                 || ((gameState == STATE_READY || gameState == STATE_SET)
-                        && (competitionPhase == COMPETITION_PHASE_PLAYOFF && Rules.league.playOffTimeStop || timeBeforeCurrentGameState == 0))
+                    && (competitionPhase == COMPETITION_PHASE_PLAYOFF && Rules.league.playOffTimeStop
+                        && (real || gamePhase != GAME_PHASE_NORMAL || gameState != STATE_READY || kickOffReason != KICKOFF_GOAL
+                            || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchAfterGoal)
+                        || timeBeforeCurrentGameState == 0))
                 || gameState == STATE_FINISHED
                         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
                         : real || (competitionPhase != COMPETITION_PHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || gamePhase != GAME_PHASE_NORMAL || gameState != STATE_PLAYING
@@ -423,14 +427,16 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * secondary time will also be encoded in the network packet.
      *
      * @param real If true, the real time will be returned. If false, the first
-     * number of seconds in the playing state there will be no secondary time
-     * (otherwise the start of the game could be inferred by the decreasing secondary
-     * time until the ball is free).
+     * number of seconds in the playing state or after a goal there will be no
+     * secondary time (otherwise the start of the game could be inferred by the
+     * decreasing secondary time until the ball is free / ready ends).
      * @return The secondary time in seconds or null if there currently is none.
      */
     public Integer getSecondaryTime(boolean real) {
-        if (!real && gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
-                && (getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying)) {
+        if (!real && (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
+                    && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying
+                    || gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY && kickOffReason == KICKOFF_GOAL
+                    && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchAfterGoal)) {
             return null;
         }
         int timeKickOffBlocked = getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.kickoffTime);
@@ -439,12 +445,15 @@ public class AdvancedData extends GameControlData implements Cloneable {
         } else if (gameState == STATE_INITIAL && (refereeTimeout)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.refereeTimeout);
         } else if (gameState == STATE_READY) {
-            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.readyTime);
+            return getRemainingSeconds(whenCurrentGameStateBegan, setPlay == SET_PLAY_PENALTY_KICK ? Rules.league.penaltyKickReadyTime : Rules.league.readyTime);
         } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
-                && (setPlay == SET_PLAY_GOAL_FREE_KICK || setPlay == SET_PLAY_PUSHING_FREE_KICK 
+                && (setPlay == SET_PLAY_GOAL_KICK || setPlay == SET_PLAY_PUSHING_FREE_KICK
                     || setPlay == SET_PLAY_CORNER_KICK || setPlay == SET_PLAY_KICK_IN)) {
             return getRemainingSeconds(whenCurrentSetPlayBegan, Rules.league.freeKickTime);
         } else if (gameState == STATE_PLAYING && gamePhase != GAME_PHASE_PENALTYSHOOT
+                && setPlay == SET_PLAY_PENALTY_KICK) {
+            return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.penaltyShotTime);
+        } else if (gameState == STATE_PLAYING && kickOffReason != KICKOFF_PENALTYSHOOT
                 && timeKickOffBlocked >= 0) {
             return timeKickOffBlocked;
         } else {

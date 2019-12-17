@@ -42,14 +42,16 @@ public class Parser
      */
     private static final String[] actions = {
         "Global Game Stuck",
-        "Goal Free Kick for",
+        "Goal Kick for",
         "Pushing Free Kick for",
         "Corner Kick for",
         "Kick In for",
-        "Goal Free Kick Complete",
+        "Penalty Kick for",
+        "Goal Kick Complete",
         "Pushing Free Kick Complete",
         "Corner Kick Complete",
         "Kick In Complete",
+        "Penalty Kick Complete",
         "Goal for",
         "Goal decrease for",
         "Referee Timeout",
@@ -58,12 +60,10 @@ public class Parser
         "Player Pushing",
         "Illegal Motion in Set",
         "Inactive Player",
-        "Illegal Defender",
+        "Illegal Position",
         "Leaving the Field",
-        "Kickoff Goal",
         "Request for PickUp",
         "Local Game Stuck",
-        "Illegal Positioning",
         "Unpenalised",
         "Substituted",
         "Finished",
@@ -102,7 +102,7 @@ public class Parser
                 log.parseErrors += "error in line "+i+": Cannot parse timestamp" + GUI.HTML_LF;
             }
             String action = line.substring(divPos+2);
-            
+
             if (i == 1) {
                 log.version = action;
             } else if (action.startsWith("League = ")) {
@@ -130,7 +130,8 @@ public class Parser
                                     || log.lines.get(i-2-j).endsWith("Ready")
                                     && (log.lines.get(i-2-j-1).contains("End of Timeout")
                                         || log.lines.get(i-2-j-1).contains("End of Referee Timeout")
-                                        || log.lines.get(i-2-j-1).contains("Global Game Stuck"))
+                                        || log.lines.get(i-2-j-1).contains("Global Game Stuck")
+                                        || log.lines.get(i-2-j-1).contains("Penalty Kick for"))
                                     || log.lines.get(i-2-j).endsWith("Initial")
                                     && log.lines.get(i-2-j-1).contains("Timeout"))) {
                             ++undos;

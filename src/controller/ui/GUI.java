@@ -130,10 +130,11 @@ public class GUI extends JFrame implements GCGUI
     private static final String STUCK = "Global Game Stuck";
     private static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
     private static final String REFEREE_TIMEOUT_WITHOUT_BREAK = "Referee Timeout";
-    private static final String GOAL_FREE_KICK = "Goal Free Kick";
+    private static final String GOAL_KICK = "Goal Kick";
     private static final String PUSHING_FREE_KICK = "Pushing Free Kick";
     private static final String CORNER_KICK = "Corner Kick";
     private static final String KICK_IN = "Kick In";
+    private static final String PENALTY_KICK = "Penalty Kick";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
     private static final String STATE_SET = "Set";
@@ -155,14 +156,13 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_LEAVING = "Leaving the Field";
     private static final String PEN_MOTION_IN_SET = "Motion in Set";
     private static final String PEN_INACTIVE = "Fallen / Inactive";
-    private static final String PEN_DEFENDER = "Illegal Defender";
     private static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
-    private static final String PEN_KICK_OFF_GOAL = "Kickoff Goal";
     private static final String PEN_PICKUP = "Pick-Up";
     private static final String PEN_FOUL = "Foul";
     private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String PEN_LOCAL_GAME_STUCK = "Local Game Stuck";
-    private static final String PEN_POSITIONING = "Illegal Positioning";
+    private static final String PEN_POSITION = "Illegal Position";
+    private static final String PEN_FOUL_PENALTY_AREA = "Foul<br/>(Penalty Kick)";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
@@ -208,7 +208,7 @@ public class GUI extends JFrame implements GCGUI
     private ImageIcon[][] lanIcon;
     private JProgressBar[][] robotTime;
     private JToggleButton refereeTimeout;
-    private JButton[] goalFreeKick;
+    private JButton[] goalKick;
     private JToggleButton[] timeOut;
     private JButton[] stuck;
     private JButton[] kickIn;
@@ -359,9 +359,9 @@ public class GUI extends JFrame implements GCGUI
         //  team
         kickIn = new JButton[2];
         cornerKick = new JButton[2];
-        goalFreeKick = new JButton[2];
+        goalKick = new JButton[2];
         for (int i=0; i<2; i++) {                
-            goalFreeKick[i] = new Button(GOAL_FREE_KICK);
+            goalKick[i] = new Button(GOAL_KICK);
             kickIn[i] = new Button(KICK_IN);
             cornerKick[i] = new Button(CORNER_KICK);
         }
@@ -445,9 +445,9 @@ public class GUI extends JFrame implements GCGUI
         pen[2] = new ToggleButton(PEN_INACTIVE);
         pen[3] = new ToggleButton(PEN_LEAVING);
         pen[4] = new ToggleButton(PEN_MOTION_IN_SET);
-        pen[5] = new ToggleButton(PEN_DEFENDER);
+        pen[5] = new ToggleButton(PEN_POSITION);
         pen[6] = new ToggleButton(PEN_BALL_CONTACT);
-        pen[7] = new ToggleButton(PEN_KICK_OFF_GOAL);
+        pen[7] = new ToggleButton(PEN_FOUL_PENALTY_AREA);
         pen[8] = new ToggleButton(PEN_LOCAL_GAME_STUCK);
         pen[9] = new ToggleButton(PEN_PICKUP);
         //--bottom--
@@ -482,8 +482,8 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.91, .05, .08, .065, timeOut[1]);
         layout.add(.01, .13, .08, .065, stuck[0]);
         layout.add(.91, .13, .08, .065, stuck[1]);
-        layout.add(.01, .77, .09, .09, goalFreeKick[0]);
-        layout.add(.9, .77, .09, .09, goalFreeKick[1]);
+        layout.add(.01, .77, .09, .09, goalKick[0]);
+        layout.add(.9, .77, .09, .09, goalKick[1]);
         layout.add(.105, .77, .09, .09, kickIn[0]);
         layout.add(.805, .77, .09, .09, kickIn[1]);
         layout.add(.2, .77, .09, .09, cornerKick[0]);
@@ -563,7 +563,7 @@ public class GUI extends JFrame implements GCGUI
             }
             timeOut[i].addActionListener(ActionBoard.timeOut[i]);
             stuck[i].addActionListener(ActionBoard.stuck[i]);
-            goalFreeKick[i].addActionListener(ActionBoard.goalFreeKick[i]);
+            goalKick[i].addActionListener(ActionBoard.goalKick[i]);
             cornerKick[i].addActionListener(ActionBoard.cornerKick[i]);
             kickIn[i].addActionListener(ActionBoard.kickIn[i]);
         }
@@ -590,9 +590,9 @@ public class GUI extends JFrame implements GCGUI
         pen[2].addActionListener(ActionBoard.inactive);
         pen[3].addActionListener(ActionBoard.leaving);
         pen[4].addActionListener(ActionBoard.motionInSet);
-        pen[5].addActionListener(ActionBoard.defender);
+        pen[5].addActionListener(ActionBoard.position);
         pen[6].addActionListener(ActionBoard.ballContact);
-        pen[7].addActionListener(ActionBoard.kickOffGoal);
+        pen[7].addActionListener(ActionBoard.foulPenaltyArea);
         pen[8].addActionListener(ActionBoard.localGameStuck);
         pen[9].addActionListener(ActionBoard.pickUp);
         for (int i=0; i<undo.length; i++) {
@@ -743,7 +743,7 @@ public class GUI extends JFrame implements GCGUI
             }
         }
         updateGlobalStuck(data);
-        updateFreeKick(data);
+        updateGoalKick(data);
         updateCornerKick(data);
         updateKickIn(data);
         updatePenaltiesSPL(data);
@@ -802,12 +802,16 @@ public class GUI extends JFrame implements GCGUI
         } else if (data.gameState == AdvancedData.STATE_INITIAL && (data.refereeTimeout)) {
             clockDescription.setText(REFEREE_TIMEOUT_WITHOUT_BREAK);
         } else if (data.gameState == AdvancedData.STATE_READY) {
-            clockDescription.setText(STATE_READY);
+            if (data.setPlay == AdvancedData.SET_PLAY_PENALTY_KICK) {
+                clockDescription.setText(PENALTY_KICK);
+            } else {
+                clockDescription.setText(STATE_READY);
+            }
         } else if (data.gameState == AdvancedData.STATE_PLAYING && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
                 && data.setPlay != AdvancedData.SET_PLAY_NONE) {
             switch (data.setPlay) {
-                case AdvancedData.SET_PLAY_GOAL_FREE_KICK:
-                    clockDescription.setText(GOAL_FREE_KICK);
+                case AdvancedData.SET_PLAY_GOAL_KICK:
+                    clockDescription.setText(GOAL_KICK);
                     break;
                 case AdvancedData.SET_PLAY_PUSHING_FREE_KICK:
                     clockDescription.setText(PUSHING_FREE_KICK);
@@ -818,10 +822,12 @@ public class GUI extends JFrame implements GCGUI
                 case AdvancedData.SET_PLAY_KICK_IN:
                     clockDescription.setText(KICK_IN);
                     break;
+                case AdvancedData.SET_PLAY_PENALTY_KICK:
+                    clockDescription.setText(PENALTY_KICK);
                 default:
                     assert false;
             }
-        } else if (data.gameState == AdvancedData.STATE_PLAYING && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
+        } else if (data.gameState == AdvancedData.STATE_PLAYING && data.kickOffReason != AdvancedData.KICKOFF_PENALTYSHOOT
                 && timeKickOffBlocked >= 0) {
             clockDescription.setText(KICKOFF_IN_PROGRESS);
         } else if (data.gamePhase == AdvancedData.GAME_PHASE_NORMAL
@@ -1112,14 +1118,14 @@ public class GUI extends JFrame implements GCGUI
     }
     
     /**
-     * Updates the free kick.
+     * Updates the goal kick.
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateFreeKick(AdvancedData data)
+    private void updateGoalKick(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            goalFreeKick[i].setEnabled(ActionBoard.goalFreeKick[i].isLegal(data));
+            goalKick[i].setEnabled(ActionBoard.goalKick[i].isLegal(data));
         }
     }
     
@@ -1142,25 +1148,14 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updatePenaltiesSPL(AdvancedData data)
     {
-        final boolean shouldPositioningBeActive = Rules.league instanceof SPL
-                                                  && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
-                                                  && data.gameState == AdvancedData.STATE_SET;
-
-        if (Rules.league instanceof SPL) {
-            // There is always exactly one ActionListener here.
-            pen[5].removeActionListener(pen[5].getActionListeners()[0]);
-            pen[5].addActionListener(shouldPositioningBeActive ? ActionBoard.positioning : ActionBoard.defender);
-            pen[5].setText(shouldPositioningBeActive ? PEN_POSITIONING : PEN_DEFENDER);
-        }
-
         pen[0].setEnabled(ActionBoard.pushing.isLegal(data));
         pen[1].setEnabled(ActionBoard.foul.isLegal(data));
         pen[2].setEnabled(ActionBoard.inactive.isLegal(data));
         pen[3].setEnabled(ActionBoard.leaving.isLegal(data));
         pen[4].setEnabled(ActionBoard.motionInSet.isLegal(data));
-        pen[5].setEnabled(shouldPositioningBeActive ? ActionBoard.positioning.isLegal(data) : ActionBoard.defender.isLegal(data));
+        pen[5].setEnabled(ActionBoard.position.isLegal(data));
         pen[6].setEnabled(ActionBoard.ballContact.isLegal(data));
-        pen[7].setEnabled(ActionBoard.kickOffGoal.isLegal(data));
+        pen[7].setEnabled(ActionBoard.foulPenaltyArea.isLegal(data));
         pen[8].setEnabled(ActionBoard.localGameStuck.isLegal(data));
         pen[9].setEnabled(ActionBoard.pickUp.isLegal(data));
         
@@ -1172,9 +1167,9 @@ public class GUI extends JFrame implements GCGUI
         pen[1].setSelected(highlightEvent == ActionBoard.foul);
         pen[2].setSelected(highlightEvent == ActionBoard.inactive);
         pen[3].setSelected(highlightEvent == ActionBoard.leaving);
-        pen[5].setSelected(shouldPositioningBeActive ? (highlightEvent == ActionBoard.positioning) : (highlightEvent == ActionBoard.defender));
+        pen[5].setSelected(highlightEvent == ActionBoard.position);
         pen[6].setSelected(highlightEvent == ActionBoard.ballContact);
-        pen[7].setSelected(highlightEvent == ActionBoard.kickOffGoal);
+        pen[7].setSelected(highlightEvent == ActionBoard.foulPenaltyArea);
         pen[8].setSelected(highlightEvent == ActionBoard.localGameStuck);
         pen[9].setSelected(highlightEvent == ActionBoard.pickUp);
 
@@ -1258,7 +1253,7 @@ public class GUI extends JFrame implements GCGUI
             timeOut[i].setFont(standardFont);
             kickIn[i].setFont(standardFont);
             stuck[i].setFont(timeoutFont);
-            goalFreeKick[i].setFont(standardFont);
+            goalKick[i].setFont(standardFont);
             cornerKick[i].setFont(standardFont);
         }
         clock.setFont(timeFont);

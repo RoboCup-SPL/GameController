@@ -10,7 +10,7 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that a timeOut is to be taken or ending.
  */
 public class TimeOut extends GCAction
@@ -21,7 +21,7 @@ public class TimeOut extends GCAction
     /**
      * Creates a new TimeOut action.
      * Look at the ActionBoard before using this.
-     * 
+     *
      * @param side      On which side (0:left, 1:right)
      */
     public TimeOut(int side)
@@ -32,7 +32,7 @@ public class TimeOut extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -64,11 +64,11 @@ public class TimeOut extends GCAction
             }
         }
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override
@@ -76,8 +76,9 @@ public class TimeOut extends GCAction
     {
       return data.timeOutActive[side]
             || ((data.gameState == GameControlData.STATE_INITIAL ||
-                  data.gameState == GameControlData.STATE_READY ||
-                  data.gameState == GameControlData.STATE_SET)
+                    ((data.gameState == GameControlData.STATE_READY ||
+                            data.gameState == GameControlData.STATE_SET)
+                        && data.setPlay != GameControlData.SET_PLAY_PENALTY_KICK))
                 && !data.timeOutTaken[side]
                 && !data.timeOutActive[side == 0 ? 1 : 0]
                 && !(data.gamePhase == GameControlData.GAME_PHASE_TIMEOUT)

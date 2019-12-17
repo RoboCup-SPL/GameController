@@ -13,8 +13,8 @@ public abstract class Rules
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
-        new SPLMixedTeam(),
-        new SPLPenaltyShootout()
+        new SPLPenaltyShootout(),
+        new SPLGeneralPenaltyKick()
     };
 
     /**
@@ -59,10 +59,14 @@ public abstract class Rules
     public int kickoffTime;
     /** Time in seconds the ball is blocked after a free kick. */
     public int freeKickTime;
+    /** Time in seconds the the ready state during a penalty kick is long. */
+    public int penaltyKickReadyTime;
     /** Time in seconds before a global game stuck can be called. */
     public int minDurationBeforeStuck;
     /** The number of seconds switching to Playing is delayed. */
     public int delayedSwitchToPlaying;
+    /** The number of seconds switching to Ready after a goal is delayed. */
+    public int delayedSwitchAfterGoal;
     /** If there is an overtime before the penalty shoot-out in a play-off game. */
     public boolean overtime;
     /** Time in seconds one overtime half is long. */
@@ -105,6 +109,6 @@ public abstract class Rules
     public boolean lostTime;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
-    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM) */
+    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
     public byte competitionType;
 }

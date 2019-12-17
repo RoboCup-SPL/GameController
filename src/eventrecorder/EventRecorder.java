@@ -133,8 +133,8 @@ public class EventRecorder {
                 if(data.setPlay == GameControlData.SET_PLAY_NONE) {
                 	String setPlayString = "";
                     switch (lastSetPlay) {
-                        case GameControlData.SET_PLAY_GOAL_FREE_KICK:
-                            setPlayString = "Goal Free Kick Complete";
+                        case GameControlData.SET_PLAY_GOAL_KICK:
+                            setPlayString = "Goal Kick Complete";
                             break;
                         case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
                             setPlayString = "Pushing Free Kick Complete";
@@ -162,8 +162,8 @@ public class EventRecorder {
                 else {
                     String setPlayString = "";
                     switch (data.setPlay) {
-                        case GameControlData.SET_PLAY_GOAL_FREE_KICK:
-                            setPlayString = "Goal Free Kick for team: ";
+                        case GameControlData.SET_PLAY_GOAL_KICK:
+                            setPlayString = "Goal Kick for team: ";
                             break;
                         case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
                             setPlayString = "Pushing Free Kick for team: ";

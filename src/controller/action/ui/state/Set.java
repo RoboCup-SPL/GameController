@@ -71,7 +71,9 @@ public class Set extends GCAction {
 
         }
         data.gameState = GameControlData.STATE_SET;
-        data.setPlay = GameControlData.SET_PLAY_NONE;
+        if (data.setPlay != GameControlData.SET_PLAY_PENALTY_KICK) {
+            data.setPlay = GameControlData.SET_PLAY_NONE;
+        }
         Log.state(data, "Set");
     }
 

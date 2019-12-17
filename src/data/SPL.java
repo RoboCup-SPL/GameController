@@ -39,10 +39,14 @@ public class SPL extends Rules
         kickoffTime = 10;
         /** Time in seconds the ball is blocked after a free kick. */
         freeKickTime = 30;
+        /** Time in seconds the the ready state during a penalty kick is long. */
+        penaltyKickReadyTime = 30;
         /** Time in seconds before a global game stuck can be called. */
         minDurationBeforeStuck = 30;
         /** The number of seconds switching to Playing is delayed. */
         delayedSwitchToPlaying = 15;
+        /** The number of seconds switching to Ready after a goal is delayed. */
+        delayedSwitchAfterGoal = 15;
         /** If there is an overtime before penalty-shoot in a play-off game. */
         overtime = false;
         /** Time in seconds one overtime half is long. */
@@ -62,7 +66,7 @@ public class SPL extends Rules
         /** Number of penalty-shots for each team. */
         numberOfPenaltyShots = 3;
         /** Time in seconds for each kind of penalty (-1 = should not be used). */
-        penaltyTime = new int[] {-1, 45, 45, 15, 45, 45, 45, 45, 45, 45, 15};
+        penaltyTime = new int[] {-1, 45, 45, 15, 45, 45, 45, 45, 45, 15};
         /** Time in seconds to increment penalties. */
         penaltyIncreaseTime = 10;
         /** Whether the penalty count is reset on halftime */
@@ -85,7 +89,7 @@ public class SPL extends Rules
         lostTime = true;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = true;
-        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM) */
+        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
         competitionType = GameControlData.COMPETITION_TYPE_NORMAL;
     }
 }

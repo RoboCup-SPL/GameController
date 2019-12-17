@@ -31,14 +31,16 @@ public class ClockTick extends GCAction
     @Override
     public void perform(AdvancedData data) {
         if (data.gameState == GameControlData.STATE_READY
-                && (data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime)) {
+                && (data.getSecondsSince(data.whenCurrentGameStateBegan) >= (data.setPlay == GameControlData.SET_PLAY_PENALTY_KICK ? Rules.league.penaltyKickReadyTime : Rules.league.readyTime))) {
             ActionBoard.set.perform(data);
         } else if (data.gameState == GameControlData.STATE_PLAYING
-                && (data.setPlay == GameControlData.SET_PLAY_GOAL_FREE_KICK
-                    || data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK
-                    || data.setPlay == GameControlData.SET_PLAY_CORNER_KICK
-                    || data.setPlay == GameControlData.SET_PLAY_KICK_IN)
-                && (data.getSecondsSince(data.whenCurrentSetPlayBegan) >= Rules.league.freeKickTime)) {
+                && (((data.setPlay == GameControlData.SET_PLAY_GOAL_KICK
+                            || data.setPlay == GameControlData.SET_PLAY_PUSHING_FREE_KICK
+                            || data.setPlay == GameControlData.SET_PLAY_CORNER_KICK
+                            || data.setPlay == GameControlData.SET_PLAY_KICK_IN)
+                        && data.getSecondsSince(data.whenCurrentSetPlayBegan) >= Rules.league.freeKickTime)
+                    || (data.setPlay == GameControlData.SET_PLAY_PENALTY_KICK
+                        && data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.penaltyShotTime))) {
             ActionBoard.play.perform(data);
         } else if (data.gameState == GameControlData.STATE_FINISHED) {
             Integer remainingPauseTime = data.getRemainingPauseTime();

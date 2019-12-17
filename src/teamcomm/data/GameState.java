@@ -3,8 +3,6 @@ package teamcomm.data;
 import common.ApplicationLock;
 import data.GameControlData;
 import data.Rules;
-import data.SPL;
-import data.SPLMixedTeam;
 import data.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
@@ -239,15 +237,17 @@ public class GameState implements GameControlDataEventListener {
         // Open a new logfile for the current GameController state if the
         // state changed from or to initial/finished
         final StringBuilder logfileName = new StringBuilder();
-        if (Rules.league.competitionType == GameControlData.COMPETITION_TYPE_MIXEDTEAM || (e.data.team[0].teamNumber >= 90 && e.data.team[0].teamNumber < 100 && e.data.team[1].teamNumber >= 90 && e.data.team[1].teamNumber < 100)) {
-            logfileName.append("MixedTeam_");
+        if (Rules.league.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK) {
+            logfileName.append("GPKC_");
         }
         if (e.data.firstHalf == GameControlData.C_TRUE) {
             logfileName.append(getTeamName((int) e.data.team[0].teamNumber, false, false)).append("_").append(getTeamName((int) e.data.team[1].teamNumber, false, false));
         } else {
             logfileName.append(getTeamName((int) e.data.team[1].teamNumber, false, false)).append("_").append(getTeamName((int) e.data.team[0].teamNumber, false, false));
         }
-        logfileName.append(e.data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
+        if (!Rules.league.startWithPenalty) {
+            logfileName.append(e.data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
+        }
         if (e.data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {
             Logger.getInstance().createLogfile(logfileName.toString());
         } else if (e.data.gameState == GameControlData.STATE_INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_INITIAL)) {
@@ -455,19 +455,9 @@ public class GameState implements GameControlDataEventListener {
         Integer color = teamColors.get(teamNumber);
         if (color == null) {
             String[] colorStrings = null;
-            if (Rules.league == Rules.getLeagueRules(SPL.class) && teamNumber >= 90 && teamNumber < 100) {
-                Rules.league = Rules.getLeagueRules(SPLMixedTeam.class);
-                try {
-                    colorStrings = Teams.getColors(teamNumber);
-                } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
-                } finally {
-                    Rules.league = Rules.getLeagueRules(SPL.class);
-                }
-            } else {
-                try {
-                    colorStrings = Teams.getColors(teamNumber);
-                } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
-                }
+            try {
+                colorStrings = Teams.getColors(teamNumber);
+            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
             }
             if (colorStrings == null || colorStrings.length < 1) {
                 if (teamNumber == teamNumbers[TEAM_RIGHT]) {
@@ -521,21 +511,10 @@ public class GameState implements GameControlDataEventListener {
      */
     public String getTeamName(final Integer teamNumber, final boolean withNumber, final boolean withPrefix) {
         final String[] teamNames;
-        if (Rules.league == Rules.getLeagueRules(SPL.class) && teamNumber >= 90 && teamNumber < 100) {
-            Rules.league = Rules.getLeagueRules(SPLMixedTeam.class);
-            try {
-                teamNames = Teams.getNames(withNumber);
-            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
-                return null;
-            } finally {
-                Rules.league = Rules.getLeagueRules(SPL.class);
-            }
-        } else {
-            try {
-                teamNames = Teams.getNames(withNumber);
-            } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
-                return null;
-            }
+        try {
+            teamNames = Teams.getNames(withNumber);
+        } catch (final NullPointerException | ArrayIndexOutOfBoundsException e) {
+            return null;
         }
         if (teamNumber != null) {
             if (teamNumber < teamNames.length && teamNames[teamNumber] != null) {

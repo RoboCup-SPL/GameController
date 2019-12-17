@@ -7,11 +7,11 @@ import data.PlayerInfo;
 import data.Rules;
 
 /**
- * @author Arne Hasselbring
+ * @author Michel Bartsch
  *
- * This action means that the illegal positioning penalty has been selected.
+ * This action means that the illegal position penalty has been selected.
  */
-public class Positioning extends Penalty
+public class Position extends Penalty
 {
     /**
      * Performs this action`s penalty on a selected player.
@@ -24,10 +24,15 @@ public class Positioning extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_POSITIONING;
-        data.robotPenaltyCount[side][number] = 0;
+        if (data.gameState == GameControlData.STATE_SET) {
+            player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_POSITION_IN_SET;
+            data.robotPenaltyCount[side][number] = 0;
+        } else {
+            player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_POSITION;
+            handleRepeatedPenalty(data, side, number);
+        }
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Illegal Positioning "+
+        Log.state(data, "Illegal Position "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
     }
@@ -41,7 +46,10 @@ public class Positioning extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ((data.gameState == GameControlData.STATE_SET) && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
+        return ((data.gameState == GameControlData.STATE_READY
+                    || data.gameState == GameControlData.STATE_SET
+                    || data.gameState == GameControlData.STATE_PLAYING)
+                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
             || data.testmode;
     }
 }

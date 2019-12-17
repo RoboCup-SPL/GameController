@@ -23,7 +23,7 @@ public class GameControlData implements Serializable {
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final String GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER = "RGTD";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 12;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 13;
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte TEAM_YELLOW = 2;
@@ -39,7 +39,7 @@ public class GameControlData implements Serializable {
     public static final byte COMPETITION_PHASE_PLAYOFF = 1;
 
     public static final byte COMPETITION_TYPE_NORMAL = 0;
-    public static final byte COMPETITION_TYPE_MIXEDTEAM = 1;
+    public static final byte COMPETITION_TYPE_GENERAL_PENALTY_KICK = 1;
 
     public static final byte GAME_PHASE_NORMAL = 0;
     public static final byte GAME_PHASE_PENALTYSHOOT = 1;
@@ -53,10 +53,11 @@ public class GameControlData implements Serializable {
     public static final byte STATE_FINISHED = 4;
 
     public static final byte SET_PLAY_NONE = 0;
-    public static final byte SET_PLAY_GOAL_FREE_KICK = 1;
+    public static final byte SET_PLAY_GOAL_KICK = 1;
     public static final byte SET_PLAY_PUSHING_FREE_KICK = 2;
     public static final byte SET_PLAY_CORNER_KICK = 3;
     public static final byte SET_PLAY_KICK_IN = 4;
+    public static final byte SET_PLAY_PENALTY_KICK = 5;
 
     public static final byte C_FALSE = 0;
     public static final byte C_TRUE = 1;
@@ -101,10 +102,10 @@ public class GameControlData implements Serializable {
     public byte packetNumber = 0;
     public byte playersPerTeam = (byte) Rules.league.teamSize;   // The number of players on a team
     public byte competitionPhase = COMPETITION_PHASE_ROUNDROBIN; // phase of the game (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
-    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the game (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MIXEDTEAM)
+    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the game (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK)
     public byte gamePhase = GAME_PHASE_NORMAL;                   // Extra state information - (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
     public byte gameState = STATE_INITIAL;                       // state of the game (STATE_READY, STATE_PLAYING, etc)
-    public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_FREE_KICK, etc)
+    public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)
     public byte firstHalf = C_TRUE;                              // 1 = game in first half, 0 otherwise
     public byte kickingTeam;                                     // the next team to kick off
     public short secsRemaining = (short) Rules.league.halfTime;  // estimate of number of seconds remaining in the half
@@ -141,6 +142,10 @@ public class GameControlData implements Serializable {
         if (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
                 && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
             buffer.put(STATE_SET);
+        } else if (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY
+                && data.kickOffReason == AdvancedData.KICKOFF_GOAL
+                && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchAfterGoal) {
+            buffer.put(STATE_PLAYING);
         } else {
             buffer.put(gameState);
         }
@@ -150,7 +155,10 @@ public class GameControlData implements Serializable {
         buffer.putShort(secsRemaining);
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {
-            buffer.put(aTeam.toByteArray());
+            buffer.put(aTeam.toByteArray(gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY
+                        && data.kickOffReason == AdvancedData.KICKOFF_GOAL
+                        && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchAfterGoal
+                        && data.kickingTeam != aTeam.teamNumber));
         }
 
         return buffer;
@@ -178,7 +186,7 @@ public class GameControlData implements Serializable {
         buffer.putShort(secsRemaining);
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {
-            buffer.put(aTeam.toByteArray());
+            buffer.put(aTeam.toByteArray(false));
         }
 
         return buffer;
@@ -242,8 +250,8 @@ public class GameControlData implements Serializable {
             case COMPETITION_TYPE_NORMAL:
                 temp = "normal";
                 break;
-            case COMPETITION_TYPE_MIXEDTEAM:
-                temp = "mixed team";
+            case COMPETITION_TYPE_GENERAL_PENALTY_KICK:
+                temp = "general penalty kick";
                 break;
             default:
                 temp = "undefined(" + competitionType + ")";
@@ -291,18 +299,21 @@ public class GameControlData implements Serializable {
             case SET_PLAY_NONE:
                 temp = "none";
                 break;
-            case SET_PLAY_GOAL_FREE_KICK:
-                temp = "goal free kick";
+            case SET_PLAY_GOAL_KICK:
+                temp = "goal kick";
                 break;
             case SET_PLAY_PUSHING_FREE_KICK:
                 temp = "pushing free kick";
-                break;   
+                break;
             case SET_PLAY_CORNER_KICK:
                 temp = "corner kick";
-                break; 
+                break;
             case SET_PLAY_KICK_IN:
                 temp = "kick in";
-                break;            
+                break;
+            case SET_PLAY_PENALTY_KICK:
+                temp = "penalty kick";
+                break;
             default:
                 temp = "undefined(" + setPlay + ")";
         }
