@@ -36,9 +36,6 @@ received messages in log files.
 Although the TCM was made for usage in SPL games, the league can be changed by
 passing the command line parameter `-l` or `--league`. This is mainly useful for
 the GameStateVisualizer mode.
-The league spl_mixedteam for the Mixed Teams Competition of the SPL does not
-need to be specified explicitly as in SPL games, mixed teams are automatically
-detected via their team number.
 
 
 ## User Interface
