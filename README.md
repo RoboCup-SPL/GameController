@@ -265,7 +265,7 @@ in 2019 in the following ways:
 - The macro `SET_PLAY_GOAL_FREE_KICK` has been renamed to `SET_PLAY_GOAL_KICK`.
 - The macro `SET_PLAY_PENALTY_KICK` has been added.
 - The penalty macros have been reorganized:
-  - `PENATLY_SPL_KICKOFF_GOAL` has been removed.
+  - `PENATLY_SPL_KICK_OFF_GOAL` has been removed.
   - `PENALTY_SPL_ILLEGAL_DEFENDER` has been renamed to `PENALTY_SPL_ILLEGAL_POSITION`.
   - `PENALTY_SPL_ILLEGAL_POSITIONING` has been renamed to `PENALTY_SPL_ILLEGAL_POSITION_IN_SET`.
 
