@@ -378,6 +378,8 @@ public class GameState implements GameControlDataEventListener {
         boolean rightSent = false;
 
         if ((changed & CHANGED_OTHER) != 0) {
+            // Use Lists instead of Sets so that multiple robots with the same player number appear in the TCM
+            // https://github.com/bhuman/GameController/pull/37
             final List<RobotState> rs = new ArrayList<>();
             synchronized (robotsByAddress) {
                 for (final Entry<Integer, Collection<RobotState>> entry : robots.entrySet()) {
