@@ -383,28 +383,20 @@ public class GameState implements GameControlDataEventListener {
                 for (final Entry<Integer, Collection<RobotState>> entry : robots.entrySet()) {
                     if (entry.getKey() == teamNumbers[TEAM_LEFT]) {
                         if ((changed & CHANGED_LEFT) != 0) {
-                            final List<RobotState> list = new ArrayList<>();
-                            for (final RobotState r : entry.getValue()) {
-                                list.add(r);
-                            }
+                            final List<RobotState> list = new ArrayList<>(entry.getValue());
                             list.sort(playerNumberComparator);
                             fireEvent(new TeamEvent(this, outputSide(TEAM_LEFT), teamNumbers[TEAM_LEFT], list));
                             leftSent = true;
                         }
                     } else if (entry.getKey() == teamNumbers[TEAM_RIGHT]) {
                         if ((changed & CHANGED_RIGHT) != 0) {
-                            final List<RobotState> list = new ArrayList<>();
-                            for (final RobotState r : entry.getValue()) {
-                                list.add(r);
-                            }
+                            final List<RobotState> list = new ArrayList<>(entry.getValue());
                             list.sort(playerNumberComparator);
                             fireEvent(new TeamEvent(this, outputSide(TEAM_RIGHT), teamNumbers[TEAM_RIGHT], list));
                             rightSent = true;
                         }
                     } else {
-                        for (final RobotState r : entry.getValue()) {
-                            rs.add(r);
-                        }
+                        rs.addAll(entry.getValue());
                     }
                 }
             }
@@ -419,9 +411,7 @@ public class GameState implements GameControlDataEventListener {
             }
             final List<RobotState> list = new ArrayList<>();
             if (rs != null) {
-                for (final RobotState r : rs) {
-                    list.add(r);
-                }
+                list.addAll(rs);
                 list.sort(playerNumberComparator);
             }
             fireEvent(new TeamEvent(this, outputSide(TEAM_LEFT), teamNumbers[TEAM_LEFT], list));
@@ -434,9 +424,7 @@ public class GameState implements GameControlDataEventListener {
             }
             final List<RobotState> list = new ArrayList<>();
             if (rs != null) {
-                for (final RobotState r : rs) {
-                    list.add(r);
-                }
+                list.addAll(rs);
                 list.sort(playerNumberComparator);
             }
             fireEvent(new TeamEvent(this, outputSide(TEAM_RIGHT), teamNumbers[TEAM_RIGHT], list));
