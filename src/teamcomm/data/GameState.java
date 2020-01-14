@@ -7,14 +7,15 @@ import data.SPLStandardMessage;
 import data.TeamInfo;
 import data.Teams;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -377,24 +378,26 @@ public class GameState implements GameControlDataEventListener {
         boolean rightSent = false;
 
         if ((changed & CHANGED_OTHER) != 0) {
-            final Collection<RobotState> rs = new TreeSet<>(playerNumberComparator);
+            final List<RobotState> rs = new ArrayList<>();
             synchronized (robotsByAddress) {
                 for (final Entry<Integer, Collection<RobotState>> entry : robots.entrySet()) {
                     if (entry.getKey() == teamNumbers[TEAM_LEFT]) {
                         if ((changed & CHANGED_LEFT) != 0) {
-                            final Collection<RobotState> list = new TreeSet<>(playerNumberComparator);
+                            final List<RobotState> list = new ArrayList<>();
                             for (final RobotState r : entry.getValue()) {
                                 list.add(r);
                             }
+                            list.sort(playerNumberComparator);
                             fireEvent(new TeamEvent(this, outputSide(TEAM_LEFT), teamNumbers[TEAM_LEFT], list));
                             leftSent = true;
                         }
                     } else if (entry.getKey() == teamNumbers[TEAM_RIGHT]) {
                         if ((changed & CHANGED_RIGHT) != 0) {
-                            final Collection<RobotState> list = new TreeSet<>(playerNumberComparator);
+                            final List<RobotState> list = new ArrayList<>();
                             for (final RobotState r : entry.getValue()) {
                                 list.add(r);
                             }
+                            list.sort(playerNumberComparator);
                             fireEvent(new TeamEvent(this, outputSide(TEAM_RIGHT), teamNumbers[TEAM_RIGHT], list));
                             rightSent = true;
                         }
@@ -405,6 +408,7 @@ public class GameState implements GameControlDataEventListener {
                     }
                 }
             }
+            rs.sort(playerNumberComparator);
             fireEvent(new TeamEvent(this, TEAM_OTHER, 0, rs));
         }
 
@@ -413,11 +417,12 @@ public class GameState implements GameControlDataEventListener {
             synchronized (robotsByAddress) {
                 rs = robots.get(teamNumbers[TEAM_LEFT]);
             }
-            final Collection<RobotState> list = new TreeSet<>(playerNumberComparator);
+            final List<RobotState> list = new ArrayList<>();
             if (rs != null) {
                 for (final RobotState r : rs) {
                     list.add(r);
                 }
+                list.sort(playerNumberComparator);
             }
             fireEvent(new TeamEvent(this, outputSide(TEAM_LEFT), teamNumbers[TEAM_LEFT], list));
         }
@@ -427,11 +432,12 @@ public class GameState implements GameControlDataEventListener {
             synchronized (robotsByAddress) {
                 rs = robots.get(teamNumbers[TEAM_RIGHT]);
             }
-            final Collection<RobotState> list = new TreeSet<>(playerNumberComparator);
+            final List<RobotState> list = new ArrayList<>();
             if (rs != null) {
                 for (final RobotState r : rs) {
                     list.add(r);
                 }
+                list.sort(playerNumberComparator);
             }
             fireEvent(new TeamEvent(this, outputSide(TEAM_RIGHT), teamNumbers[TEAM_RIGHT], list));
         }
