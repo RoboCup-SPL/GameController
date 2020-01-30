@@ -135,6 +135,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public byte previousGamePhase = GAME_PHASE_NORMAL;
 
+    /**
+     * The kicking team before the last goal.
+     */
+    public byte kickingTeamBeforeGoal = 0;
+
     public static final byte KICKOFF_HALF = 0;
     public static final byte KICKOFF_TIMEOUT = 1;
     public static final byte KICKOFF_GAMESTUCK = 2;

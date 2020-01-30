@@ -151,7 +151,12 @@ public class GameControlData implements Serializable {
         }
         buffer.put(setPlay);
         buffer.put(firstHalf);
-        buffer.put(kickingTeam);
+        if (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY && data.kickOffReason == AdvancedData.KICKOFF_GOAL
+                && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchAfterGoal) {
+            buffer.put(data.kickingTeamBeforeGoal);
+        } else {
+            buffer.put(kickingTeam);
+        }
         buffer.putShort(secsRemaining);
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {

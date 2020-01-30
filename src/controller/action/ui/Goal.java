@@ -51,6 +51,7 @@ public class Goal extends GCAction
         data.team[side].score += set;
         if (set == 1) {
             if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
+                data.kickingTeamBeforeGoal = data.kickingTeam;
                 data.kickingTeam = data.team[1 - side].teamNumber;
                 data.kickOffReason = AdvancedData.KICKOFF_GOAL;
                 Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
