@@ -139,7 +139,7 @@ public class GameControlData implements Serializable {
         buffer.put(competitionPhase);
         buffer.put(competitionType);
         buffer.put(gamePhase);
-        if (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
+        if (gameState == STATE_PLAYING
                 && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
             buffer.put(STATE_SET);
         } else if (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY

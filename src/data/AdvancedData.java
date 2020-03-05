@@ -307,7 +307,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
                         || timeBeforeCurrentGameState == 0))
                 || gameState == STATE_FINISHED
                         ? (int) ((timeBeforeCurrentGameState + manRemainingGameTimeOffset + (manPlay ? System.currentTimeMillis() - manWhenClockChanged : 0)) / 1000)
-                        : real || (competitionPhase != COMPETITION_PHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || gamePhase != GAME_PHASE_NORMAL || gameState != STATE_PLAYING
+                        : real || (competitionPhase != COMPETITION_PHASE_PLAYOFF && timeBeforeCurrentGameState > 0) || gameState != STATE_PLAYING
                         || getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying
                         ? getSecondsSince(whenCurrentGameStateBegan - timeBeforeCurrentGameState - manRemainingGameTimeOffset)
                         : (int) ((timeBeforeCurrentGameState - manRemainingGameTimeOffset) / 1000);
@@ -385,7 +385,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
         }
         assert penalty != PlayerInfo.PENALTY_MANUAL && penalty != PlayerInfo.PENALTY_SUBSTITUTE;
         long start = whenPenalized[side][number];
-        if (start != 0 && (gameState == STATE_SET || (!real && gamePhase == GAME_PHASE_NORMAL
+        if (start != 0 && (gameState == STATE_SET || (!real
                     && gameState == STATE_PLAYING
                     && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying))) {
             start += getTime() - Math.max(whenCurrentGameStateBegan, whenPenalized[side][number]);
@@ -438,7 +438,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * @return The secondary time in seconds or null if there currently is none.
      */
     public Integer getSecondaryTime(boolean real) {
-        if (!real && (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_PLAYING
+        if (!real && (gameState == STATE_PLAYING
                     && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying
                     || gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY && kickOffReason == KICKOFF_GOAL
                     && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchAfterGoal)) {
