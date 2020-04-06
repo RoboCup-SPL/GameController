@@ -39,6 +39,7 @@ public class ApplicationLock {
 
         // create lock-file in tmp-dir
         lockFile = new File(tmp_dir + key + ".app_lock");
+        lockFile.deleteOnExit();
     }
 
     /**
@@ -70,5 +71,6 @@ public class ApplicationLock {
         if (lockChannel.isOpen()) {
             lockChannel.close();
         }
+        lockFile.delete();
     }
 }
