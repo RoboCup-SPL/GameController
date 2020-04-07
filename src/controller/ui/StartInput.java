@@ -303,13 +303,26 @@ public class StartInput extends JFrame implements Serializable
     /** Show in the combo box which teams are available for the selected league and competition*/
     private void showAvailableTeams()
     {
-        outTeam[0] = 0;
-        outTeam[1] = 0;
+        final String[] previousColors = {colorNames[0][0], colorNames[1][0]};
+        String[] names = getShortTeams();
         for (int i=0; i < 2; i++) {
+            final Object previousSelection = team[i].getSelectedItem();
             team[i].removeAllItems();
-            String[] names = getShortTeams();
+            boolean foundTeam = false;
             for (int j=0; j < names.length; j++) {
                 team[i].addItem(names[j]);
+                // Try to restore the previous selection (including its selected color).
+                if (names[j].equals(previousSelection)) {
+                    team[i].setSelectedIndex(j);
+                    if (previousColors[i].equals(colorNames[i][1])) {
+                        switchTeamColor(i);
+                        updateBackgrounds();
+                    }
+                    foundTeam = true;
+                }
+            }
+            if (!foundTeam) {
+                outTeam[i] = 0;
             }
             setTeamIcon(i, outTeam[i]);
             teamIconLabel[i].setIcon(teamIcon[i]);
