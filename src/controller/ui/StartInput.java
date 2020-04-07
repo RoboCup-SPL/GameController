@@ -73,7 +73,6 @@ public class StartInput extends JFrame implements Serializable
     public boolean outFulltime;
     public String outGameTypeTitle;
     public boolean outFullscreen;
-    public boolean outAutoColorChange;
 
     /** All the components of this GUI. */
     private ImagePanel[] teamContainer = new ImagePanel[2];
@@ -90,7 +89,6 @@ public class StartInput extends JFrame implements Serializable
     private JRadioButton fulltime;
     private ButtonGroup fulltimeGroup;
     private Checkbox fullscreen;
-    private Checkbox autoColorChange;
     private JButton start;
 
     private String[][] colorNames = new String[2][];
@@ -176,7 +174,7 @@ public class StartInput extends JFrame implements Serializable
                     if (selected == null) {
                         return;
                     }
-                    outTeam[0] = Integer.valueOf(((String)selected).split(" \\(")[1].split("\\)")[0]);
+                    outTeam[0] = Integer.parseInt(((String)selected).split(" \\(")[1].split("\\)")[0]);
                     reloadTeamColor(0);
                     updateBackgrounds();
                     setTeamIcon(0, outTeam[0]);
@@ -196,7 +194,7 @@ public class StartInput extends JFrame implements Serializable
                     if (selected == null){
                         return;
                     }
-                    outTeam[1] = Integer.valueOf(((String)selected).split(" \\(")[1].split("\\)")[0]);
+                    outTeam[1] = Integer.parseInt(((String)selected).split(" \\(")[1].split("\\)")[0]);
                     reloadTeamColor(1);
                     updateBackgrounds();
                     setTeamIcon(1, outTeam[1]);
@@ -216,20 +214,11 @@ public class StartInput extends JFrame implements Serializable
         JPanel fullscreenPanel = new JPanel();
         fullscreenPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         optionsLeft.add(fullscreenPanel);
-        JPanel autoColorChangePanel = new JPanel();
-        autoColorChangePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        optionsLeft.add(autoColorChangePanel);
 
         fullscreen = new Checkbox(FULLSCREEN_LABEL);
         fullscreen.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         fullscreen.setState(fullscreenMode);
         fullscreenPanel.add(fullscreen);
-
-        autoColorChange = new Checkbox(COLOR_CHANGE_LABEL);
-        autoColorChange.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
-        autoColorChange.setState(Rules.league.colorChangeAuto);
-        autoColorChangePanel.add(autoColorChange);
-        autoColorChange.setState(Rules.league.colorChangeAuto);
 
         optionsRight = new JPanel();
         optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
@@ -265,7 +254,6 @@ public class StartInput extends JFrame implements Serializable
                     } else if (gameType == GameType.PLAYOFF) {
                         fulltime.setSelected(true);
                     }
-                    autoColorChange.setVisible(false);
                     teamColorChange[0].setVisible(true);
                     teamColorChange[1].setVisible(true);
                     showAvailableTeams();
@@ -303,7 +291,6 @@ public class StartInput extends JFrame implements Serializable
                     outFulltime = fulltime.isSelected() && fulltime.isVisible();
                     outGameTypeTitle = outFulltime ? FULLTIME_LABEL_YES : FULLTIME_LABEL_NO;
                     outFullscreen = fullscreen.getState();
-                    outAutoColorChange = autoColorChange.getState();
                     finished = true;
                 }});
 

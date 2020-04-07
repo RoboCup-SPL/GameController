@@ -242,7 +242,7 @@ public class GameController {
         data.team[0].teamColor = input.outTeamColor[0];
         data.team[1].teamColor = input.outTeamColor[1];
         data.kickingTeam = (byte) input.outTeam[0];
-        data.colorChangeAuto = input.outAutoColorChange;
+        data.colorChangeAuto = false;
         data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
         data.competitionType = Rules.league.competitionType;
 
