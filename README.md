@@ -42,6 +42,8 @@ Usage: `java -jar GameController.jar {options}`
     (-w | --window)                 select window mode (default is fullscreen)
     (-g | --game-type) (undefined | preliminary | playoff)
                                     select game type (default is undefined)
+    --team1 <team name or number>   select first team (default is 0)
+    --team2 <team name or number>   select second team (default is 0)
 
 
 ### Start Dialog

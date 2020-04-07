@@ -49,6 +49,8 @@ public class GameController {
             + "\n  (-l | --league) %s%sselect league (default is spl)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
             + "\n  (-g | --game-type) %s%sselect game type (default is undefined)"
+            + "\n  --team1 <team name or number>   select first team (default is 0)"
+            + "\n  --team2 <team name or number>   select second team (default is 0)"
             + "\n";
     private static final String COMMAND_INTERFACE = "--interface";
     private static final String COMMAND_INTERFACE_SHORT = "-i";
@@ -58,6 +60,8 @@ public class GameController {
     private static final String COMMAND_WINDOW_SHORT = "-w";
     private static final String COMMAND_GAME_TYPE = "--game-type";
     private static final String COMMAND_GAME_TYPE_SHORT = "-g";
+    private static final String COMMAND_FIRST_TEAM = "--team1";
+    private static final String COMMAND_SECOND_TEAM = "--team2";
     private static final String COMMAND_TEST = "--test";
     private static final String COMMAND_TEST_SHORT = "-t";
 
@@ -74,6 +78,7 @@ public class GameController {
         String interfaceName = "";
         boolean windowMode = false;
         GameType gameType = GameType.UNDEFINED;
+        int[] teams = {0, 0};
         boolean testMode = false;
 
         parsing:
@@ -104,6 +109,25 @@ public class GameController {
                     if (gt.toString().equalsIgnoreCase(args[i])) {
                         gameType = gt;
                         continue parsing;
+                    }
+                }
+            } else if ((args.length > i + 1)
+                    && ((args[i].equalsIgnoreCase(COMMAND_FIRST_TEAM))
+                    || (args[i].equalsIgnoreCase(COMMAND_SECOND_TEAM)))) {
+                final int arrayIndex = args[i].equalsIgnoreCase(COMMAND_FIRST_TEAM) ? 0 : 1;
+                i++;
+                final String[] names = Teams.getNames(false);
+                try {
+                    teams[arrayIndex] = Integer.parseInt(args[i]);
+                    if (teams[arrayIndex] >= 0 && teams[arrayIndex] < names.length && names[teams[arrayIndex]] != null) {
+                        continue parsing;
+                    }
+                } catch (NumberFormatException e) {
+                    for (int j = 0; j < names.length; ++j) {
+                        if (names[j] != null && names[j].equalsIgnoreCase(args[i])) {
+                            teams[arrayIndex] = j;
+                            continue parsing;
+                        }
                     }
                 }
             } else if (args[i].equalsIgnoreCase(COMMAND_TEST_SHORT) || args[i].equalsIgnoreCase(COMMAND_TEST)) {
@@ -226,7 +250,7 @@ public class GameController {
         }
 
         //collect the start parameters and put them into the first data.
-        StartInput input = new StartInput(!windowMode, gameType);
+        StartInput input = new StartInput(!windowMode, gameType, teams);
         while (!input.finished) {
             try {
                 Thread.sleep(100);

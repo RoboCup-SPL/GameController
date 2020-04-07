@@ -109,8 +109,9 @@ public class StartInput extends JFrame implements Serializable
      * Creates a new StartInput.
      * @param fullscreenMode The preset value of the fullscreen checkbox.
      * @param gameType The game type (either UNDEFINED, PRELIMINARY or PLAYOFF).
+     * @param presetTeams The preset team numbers.
      */
-    public StartInput(boolean fullscreenMode, final GameType gameType)
+    public StartInput(boolean fullscreenMode, final GameType gameType, final int[] presetTeams)
     {
         super(WINDOW_TITLE);
 
@@ -121,8 +122,18 @@ public class StartInput extends JFrame implements Serializable
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, STANDARD_SPACE));
 
         String[] teams = getShortTeams();
+        outTeam = presetTeams;
         for (int i=0; i<2; i++) {
-            teamContainer[i] = new ImagePanel(getImage(i, i == 0 ? "blue" : "red"));
+            team[i] = new JComboBox<>(teams);
+            for (int j=0; j<teams.length; ++j) {
+                if (Integer.parseInt(teams[j].split(" \\(")[1].split("\\)")[0]) == outTeam[i]) {
+                    team[i].setSelectedIndex(j);
+                    break;
+                }
+            }
+            teamColorChange[i] = new JButton(TEAM_COLOR_CHANGE);
+            reloadTeamColor(i);
+            teamContainer[i] = new ImagePanel(getImage(i, colorNames[i][0]));
             teamContainer[i].setPreferredSize(new Dimension(WINDOW_WIDTH/2-STANDARD_SPACE, TEAMS_HEIGHT));
             teamContainer[i].setOpaque(true);
             teamContainer[i].setLayout(new BorderLayout());
@@ -130,12 +141,9 @@ public class StartInput extends JFrame implements Serializable
             setTeamIcon(i, 0);
             teamIconLabel[i] = new JLabel(teamIcon[i]);
             teamContainer[i].add(teamIconLabel[i], BorderLayout.CENTER);
-            team[i] = new JComboBox<String>(teams);
             teamChooseContainer[i] = new JPanel(new BorderLayout());
             teamContainer[i].add(teamChooseContainer[i], BorderLayout.SOUTH);
             teamChooseContainer[i].add(team[i], BorderLayout.CENTER);
-            colorNames[i] = new String[]{"red", "blue"};
-            teamColorChange[i] = new JButton(TEAM_COLOR_CHANGE);
         }
         teamChooseContainer[0].add(teamColorChange[0], BorderLayout.WEST);
         teamChooseContainer[1].add(teamColorChange[1], BorderLayout.EAST);
