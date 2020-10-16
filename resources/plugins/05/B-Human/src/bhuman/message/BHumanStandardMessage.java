@@ -24,13 +24,294 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         public short receiver;
     }
 
-    public static class ExternStrategyInput {
-        public float priority;
-        public long externStrategy;
+    public enum PlayerRole__RoleType {
+        none,
+        goalkeeper,
+        ballPlayer,
+        supporter0,
+        supporter1,
+        supporter2,
+        supporter3,
+        supporter4,
+        UNKNOWN
+    }
+
+    public static class PlayerRole {
+        public PlayerRole__RoleType role;
 
         public void read(final BitStream bitStream, final long __timestampBase) {
-            priority = bitStream.readFloat(0, 0, 0);
-            externStrategy = bitStream.readUnsignedInt(0, 0, 0);
+            role = PlayerRole__RoleType.values()[Math.min((int) bitStream.readBits(3), PlayerRole__RoleType.values().length - 1)];
+        }
+    }
+
+    public static class TeammateRoles {
+        public List<Integer> roles;
+        public int captain;
+        public Timestamp timestamp;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            final int _rolesSize = (int) (bitStream.readBits(3));
+            roles = new ArrayList<>(_rolesSize);
+            for (int i = 0; i < _rolesSize; ++i) {
+                int _roles;
+                _roles = bitStream.readInt(-1, 14, 4);
+                roles.add(_roles);
+            }
+            captain = bitStream.readInt(-1, 14, 4);
+            timestamp = bitStream.readTimestamp(__timestampBase, 13, 0, -1, false);
+        }
+    }
+
+    public static class TimeToReachBall {
+        public Timestamp timeWhenReachBall;
+        public Timestamp timeWhenReachBallStriker;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            timeWhenReachBall = bitStream.readTimestamp(__timestampBase, 16, 3, 1, false);
+            timeWhenReachBallStriker = bitStream.readTimestamp(__timestampBase, 16, 3, 1, false);
+        }
+    }
+
+    public enum TeamBehaviorStatus__TeamActivity {
+        noTeam,
+        penaltyShootoutTeam,
+        kickoffTeam,
+        playingTeam,
+        defendFreeKickNearGoalTeam,
+        ownPenaltyKickTeam,
+        opponentPenaltyKickTeam,
+        UNKNOWN
+    }
+
+    public static class TeamBehaviorStatus {
+        public TeamBehaviorStatus__TeamActivity teamActivity;
+        public TimeToReachBall timeToReachBall = new TimeToReachBall();
+        public TeammateRoles teammateRoles = new TeammateRoles();
+        public PlayerRole role = new PlayerRole();
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            teamActivity = TeamBehaviorStatus__TeamActivity.values()[Math.min((int) bitStream.readBits(3), TeamBehaviorStatus__TeamActivity.values().length - 1)];
+            timeToReachBall.read(bitStream, __timestampBase);
+            teammateRoles.read(bitStream, __timestampBase);
+            role.read(bitStream, __timestampBase);
+        }
+    }
+
+    public static class TeamTalk {
+        public short say;
+        public Timestamp timestamp;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            say = bitStream.readChar(0, 255, 8);
+            timestamp = bitStream.readTimestamp(__timestampBase, 8, 6, 1, true);
+        }
+    }
+
+    public enum SetPlay__Type {
+        none,
+        directKickOff,
+        passKickOff,
+        diamondKickOff,
+        theOneTrueOwnPenaltyKick,
+        theOneTrueOpponentPenaltyKick,
+        passFreeKick,
+        cornerKick,
+        placeholder,
+        UNKNOWN
+    }
+
+    public enum Role__Type {
+        none,
+        active,
+        goalkeeper,
+        defender,
+        midfielder,
+        forward,
+        UNKNOWN
+    }
+
+    public enum Tactic__Position__Type {
+        none,
+        goalkeeper,
+        defender,
+        defenderL,
+        defenderR,
+        midfielder,
+        midfielderL,
+        midfielderR,
+        forward,
+        forwardL,
+        forwardR,
+        UNKNOWN
+    }
+
+    public enum Tactic__Type {
+        none,
+        t211,
+        t121,
+        t112,
+        UNKNOWN
+    }
+
+    public static class StrategyStatus {
+        public Tactic__Type proposedTactic;
+        public Tactic__Type acceptedTactic;
+        public boolean proposedMirror;
+        public boolean acceptedMirror;
+        public SetPlay__Type proposedSetPlay;
+        public SetPlay__Type acceptedSetPlay;
+        public Tactic__Position__Type position;
+        public Role__Type role;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            proposedTactic = Tactic__Type.values()[Math.min((int) bitStream.readBits(2), Tactic__Type.values().length - 1)];
+            acceptedTactic = Tactic__Type.values()[Math.min((int) bitStream.readBits(2), Tactic__Type.values().length - 1)];
+            proposedMirror = bitStream.readBoolean();
+            acceptedMirror = bitStream.readBoolean();
+            proposedSetPlay = SetPlay__Type.values()[Math.min((int) bitStream.readBits(4), SetPlay__Type.values().length - 1)];
+            acceptedSetPlay = SetPlay__Type.values()[Math.min((int) bitStream.readBits(4), SetPlay__Type.values().length - 1)];
+            position = Tactic__Position__Type.values()[Math.min((int) bitStream.readBits(4), Tactic__Position__Type.values().length - 1)];
+            role = Role__Type.values()[Math.min((int) bitStream.readBits(3), Role__Type.values().length - 1)];
+        }
+    }
+
+    public enum BehaviorStatus__Activity {
+        unknown,
+        avoidCenterCircle,
+        kickoffStriker,
+        keeperKickoffPositioning,
+        defenderKickoffPositioning,
+        supporterKickoffPositioning,
+        strikerKickoffPositioning,
+        blockingOffenseBlocker,
+        blockingOffenseStriker,
+        passingOffenseTarget,
+        passingOffenseStriker,
+        blockRobot,
+        markRobot,
+        buildWall,
+        distantKick,
+        kickToOwnRobot,
+        tapFreeKickLeft,
+        tapFreeKickRight,
+        guardGoal,
+        keeperCatchBall,
+        keeperSearchForBall,
+        dribbleToGoal,
+        duel,
+        handleBallAtOwnGoalPost,
+        kickAtGoal,
+        passUpfield,
+        clearBall,
+        waitForFreeKick,
+        waitForPass,
+        blockAfterBallLost,
+        defendGoal,
+        waitUpfield,
+        walkNextToStriker,
+        afterInterceptBall,
+        catchBall,
+        fallen,
+        finished,
+        initial,
+        lookAroundAfterPenalty,
+        nearFieldSearchForBall,
+        searchForBallAtBallPosition,
+        searchForBallAtDropInPosition,
+        searchForBallFieldCoverage,
+        searchForBall,
+        searchForBallTurnAround,
+        set,
+        turnToBallClosest,
+        penaltyStriker,
+        penaltyKeeper,
+        penaltyKickStriker,
+        penaltyKickSupporter,
+        penaltyKickDefender,
+        penaltyKickKeeper,
+        demo,
+        UNKNOWN
+    }
+
+    public static class BehaviorStatus {
+        public BehaviorStatus__Activity activity;
+        public int passTarget;
+        public Eigen.Vector2f walkingTo = new Eigen.Vector2f();
+        public float speed;
+        public Eigen.Vector2f shootingTo = new Eigen.Vector2f();
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            activity = BehaviorStatus__Activity.values()[Math.min((int) bitStream.readBits(6), BehaviorStatus__Activity.values().length - 1)];
+            passTarget = bitStream.readInt(-1, 14, 4);
+            walkingTo.x = bitStream.readFloat(-32768, 32767, 16);
+            walkingTo.y = bitStream.readFloat(-32768, 32767, 16);
+            speed = bitStream.readFloat(-500, 500, 16);
+            shootingTo.x = bitStream.readFloat(-32768, 32767, 16);
+            shootingTo.y = bitStream.readFloat(-32768, 32767, 16);
+        }
+    }
+
+    public static class BallState {
+        public Eigen.Vector2f position = new Eigen.Vector2f();
+        public Eigen.Vector2f velocity = new Eigen.Vector2f();
+        public Eigen.ColumnMatrix<Float> covariance = new Eigen.ColumnMatrix<Float>();
+
+        @SuppressWarnings("unchecked")
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            position.x = bitStream.readFloat(-32768, 32767, 16);
+            position.y = bitStream.readFloat(-32768, 32767, 16);
+            velocity.x = bitStream.readFloat(-32768, 32767, 16);
+            velocity.y = bitStream.readFloat(-32768, 32767, 16);
+            covariance.cols = new Eigen.Vector[2];
+            for (int i = 0; i < 2; ++i) {
+                covariance.cols[i] = new Eigen.Vector<>();
+                covariance.cols[i].elems = new Float[2];
+                for (int j = 0; j < i; ++j) {
+                    covariance.cols[i].elems[j] = covariance.cols[j].elems[i];
+                }
+                for (int j = i; j < 2; ++j) {
+                    float _covariance;
+                    _covariance = bitStream.readFloat(0, 0, 0);
+                    covariance.cols[i].elems[j] = _covariance;
+                }
+            }
+        }
+    }
+
+    public static class BallModel {
+        public Eigen.Vector2f lastPerception = new Eigen.Vector2f();
+        public BallState estimate = new BallState();
+        public Timestamp timeWhenLastSeen;
+        public Timestamp timeWhenDisappeared;
+        public short seenPercentage;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            lastPerception.x = bitStream.readFloat(-32768, 32767, 16);
+            lastPerception.y = bitStream.readFloat(-32768, 32767, 16);
+            estimate.read(bitStream, __timestampBase);
+            timeWhenLastSeen = bitStream.readTimestamp(__timestampBase, 0, 0, 0, false);
+            timeWhenDisappeared = bitStream.readTimestamp(__timestampBase, 0, 0, 0, false);
+            seenPercentage = bitStream.readUnsignedChar(0, 100, 7);
+        }
+    }
+
+    public static class Whistle {
+        public float confidenceOfLastWhistleDetection;
+        public short channelsUsedForWhistleDetection;
+        public Timestamp lastTimeWhistleDetected;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            confidenceOfLastWhistleDetection = bitStream.readFloat(0, 2.55, 8);
+            channelsUsedForWhistleDetection = bitStream.readUnsignedChar(0, 4, 3);
+            lastTimeWhistleDetected = bitStream.readTimestamp(__timestampBase, 16, 0, -1, true);
+        }
+    }
+
+    public static class FrameInfo {
+        public Timestamp time;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            time = bitStream.readTimestamp(__timestampBase, 8, 0, -1, false);
         }
     }
 
@@ -94,11 +375,17 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         }
     }
 
+    public enum RobotPose__LocalizationQuality {
+        superb,
+        okay,
+        poor,
+        UNKNOWN
+    }
+
     public static class RobotPose {
         public Angle rotation;
         public Eigen.Vector2f translation = new Eigen.Vector2f();
-        public float validity;
-        public float deviation;
+        public RobotPose__LocalizationQuality quality;
         public Eigen.ColumnMatrix<Float> covariance = new Eigen.ColumnMatrix<Float>();
         public Timestamp timestampLastJump;
 
@@ -107,8 +394,7 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
             rotation = bitStream.readAngle(8);
             translation.x = bitStream.readFloat(-32768, 32767, 16);
             translation.y = bitStream.readFloat(-32768, 32767, 16);
-            validity = bitStream.readFloat(0, 1, 8);
-            deviation = bitStream.readFloat(0, 0, 0);
+            quality = RobotPose__LocalizationQuality.values()[Math.min((int) bitStream.readBits(2), RobotPose__LocalizationQuality.values().length - 1)];
             covariance.cols = new Eigen.Vector[3];
             for (int i = 0; i < 3; ++i) {
                 covariance.cols[i] = new Eigen.Vector<>();
@@ -126,75 +412,11 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         }
     }
 
-    public static class Role {
-        public boolean isGoalkeeper;
-        public boolean playBall;
-        public int supporterIndex;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            isGoalkeeper = bitStream.readBoolean();
-            playBall = bitStream.readBoolean();
-            supporterIndex = bitStream.readInt(-1, 14, 4);
-        }
-    }
-
-    public static class TeammateRoles {
-        public List<Integer> roles;
-        public int captain;
-        public Timestamp timestamp;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            final int _rolesSize = (int) (bitStream.readBits(3));
-            roles = new ArrayList<>(_rolesSize);
-            for (int i = 0; i < _rolesSize; ++i) {
-                int _roles;
-                _roles = bitStream.readInt(-1, 14, 4);
-                roles.add(_roles);
-            }
-            captain = bitStream.readInt(-1, 14, 4);
-            timestamp = bitStream.readTimestamp(__timestampBase, 13, 0, -1, false);
-        }
-    }
-
-    public enum TeamBehaviorStatus__TeamActivity {
-        noTeam,
-        penaltyShootoutTeam,
-        kickoffTeam,
-        playingTeam,
-        defendFreeKickNearGoalTeam,
-        shootingPenaltyTeam,
-        defendingPenaltyTeam,
-        UNKNOWN
-    }
-
-    public static class TimeToReachBall {
-        public Timestamp timeWhenReachBall;
-        public Timestamp timeWhenReachBallStriker;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            timeWhenReachBall = bitStream.readTimestamp(__timestampBase, 16, 3, 1, false);
-            timeWhenReachBallStriker = bitStream.readTimestamp(__timestampBase, 16, 3, 1, false);
-        }
-    }
-
-    public static class TeamBehaviorStatus {
-        public TeamBehaviorStatus__TeamActivity teamActivity;
-        public TimeToReachBall timeToReachBall = new TimeToReachBall();
-        public TeammateRoles teammateRoles = new TeammateRoles();
-        public Role role = new Role();
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            teamActivity = TeamBehaviorStatus__TeamActivity.values()[Math.min((int) bitStream.readBits(3), TeamBehaviorStatus__TeamActivity.values().length - 1)];
-            timeToReachBall.read(bitStream, __timestampBase);
-            teammateRoles.read(bitStream, __timestampBase);
-            role.read(bitStream, __timestampBase);
-        }
-    }
-
     public static class RobotStatus {
         public boolean isPenalized;
         public boolean isUpright;
         public boolean hasGroundContact;
+        public Timestamp timeWhenLastUpright;
         public Timestamp timeOfLastGroundContact;
         public byte[] sequenceNumbers = new byte[6];
 
@@ -202,6 +424,7 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
             isPenalized = bitStream.readBoolean();
             isUpright = bitStream.readBoolean();
             hasGroundContact = bitStream.readBoolean();
+            timeWhenLastUpright = bitStream.readTimestamp(__timestampBase, 8, 6, -1, false);
             timeOfLastGroundContact = bitStream.readTimestamp(__timestampBase, 8, 6, -1, false);
             final int _sequenceNumbersSize = 6;
             for (int i = 0; i < _sequenceNumbersSize; ++i) {
@@ -209,192 +432,6 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
                 _sequenceNumbers = bitStream.readSignedChar(-1, 14, 4);
                 sequenceNumbers[i] = _sequenceNumbers;
             }
-        }
-    }
-
-    public enum SideConfidence__ConfidenceState {
-        CONFIDENT,
-        ALMOST_CONFIDENT,
-        UNSURE,
-        CONFUSED,
-        UNKNOWN
-    }
-
-    public static class SideConfidence {
-        public boolean mirror;
-        public SideConfidence__ConfidenceState confidenceState;
-        public List<Integer> agreeMates;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            mirror = bitStream.readBoolean();
-            confidenceState = SideConfidence__ConfidenceState.values()[Math.min((int) bitStream.readBits(2), SideConfidence__ConfidenceState.values().length - 1)];
-            final int _agreeMatesSize = (int) (bitStream.readBits(3));
-            agreeMates = new ArrayList<>(_agreeMatesSize);
-            for (int i = 0; i < _agreeMatesSize; ++i) {
-                int _agreeMates;
-                _agreeMates = bitStream.readInt(1, 6, 3);
-                agreeMates.add(_agreeMates);
-            }
-        }
-    }
-
-    public static class FrameInfo {
-        public Timestamp time;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            time = bitStream.readTimestamp(__timestampBase, 8, 0, -1, false);
-        }
-    }
-
-    public static class BallState {
-        public Eigen.Vector2f position = new Eigen.Vector2f();
-        public Eigen.Vector2f velocity = new Eigen.Vector2f();
-        public Eigen.ColumnMatrix<Float> covariance = new Eigen.ColumnMatrix<Float>();
-
-        @SuppressWarnings("unchecked")
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            position.x = bitStream.readFloat(-32768, 32767, 16);
-            position.y = bitStream.readFloat(-32768, 32767, 16);
-            velocity.x = bitStream.readFloat(-32768, 32767, 16);
-            velocity.y = bitStream.readFloat(-32768, 32767, 16);
-            covariance.cols = new Eigen.Vector[2];
-            for (int i = 0; i < 2; ++i) {
-                covariance.cols[i] = new Eigen.Vector<>();
-                covariance.cols[i].elems = new Float[2];
-                for (int j = 0; j < i; ++j) {
-                    covariance.cols[i].elems[j] = covariance.cols[j].elems[i];
-                }
-                for (int j = i; j < 2; ++j) {
-                    float _covariance;
-                    _covariance = bitStream.readFloat(0, 0, 0);
-                    covariance.cols[i].elems[j] = _covariance;
-                }
-            }
-        }
-    }
-
-    public static class BallModel {
-        public Eigen.Vector2f lastPerception = new Eigen.Vector2f();
-        public BallState estimate = new BallState();
-        public Timestamp timeWhenLastSeen;
-        public Timestamp timeWhenDisappeared;
-        public short seenPercentage;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            lastPerception.x = bitStream.readFloat(-32768, 32767, 16);
-            lastPerception.y = bitStream.readFloat(-32768, 32767, 16);
-            estimate.read(bitStream, __timestampBase);
-            timeWhenLastSeen = bitStream.readTimestamp(__timestampBase, 0, 0, 0, false);
-            timeWhenDisappeared = bitStream.readTimestamp(__timestampBase, 0, 0, 0, false);
-            seenPercentage = bitStream.readUnsignedChar(0, 100, 7);
-        }
-    }
-
-    public static class TeamTalk {
-        public short say;
-        public Timestamp timestamp;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            say = bitStream.readChar(0, 255, 8);
-            timestamp = bitStream.readTimestamp(__timestampBase, 8, 6, 1, true);
-        }
-    }
-
-    public enum BehaviorStatus__Activity {
-        unknown,
-        avoidCenterCircle,
-        kickoffStriker,
-        keeperKickoffPositioning,
-        brokenKeeperKickoffPositioning,
-        defenderKickoffPositioning,
-        supporterKickoffPositioning,
-        strikerKickoffPositioning,
-        blockingOffenseBlocker,
-        blockingOffenseStriker,
-        passingOffenseTarget,
-        passingOffenseStriker,
-        blockRobot,
-        markRobot,
-        buildWall,
-        distantKick,
-        kickToOwnRobot,
-        tapFreeKickLeft,
-        tapFreeKickRight,
-        cornerKickToOwnRobot,
-        goalFreeKick,
-        kickIn,
-        pushingFreeKick,
-        brokenKeeper,
-        guardGoal,
-        keeperCatchBall,
-        keeperClearBall,
-        keeperSearchForBall,
-        returnToGoal,
-        dribbleToGoal,
-        duel,
-        handleBallAtOwnGoalPost,
-        kickAtGoal,
-        passUpfield,
-        waitForFreeKick,
-        waitForPass,
-        blockAfterBallLost,
-        defendGoal,
-        waitForCornerBall,
-        waitForGoalFreeKick,
-        waitForKickInBall,
-        waitUpfield,
-        walkNextToKeeper,
-        walkNextToStriker,
-        afterInterceptBall,
-        catchBall,
-        continueToOwnBall,
-        fallen,
-        finished,
-        initial,
-        lookAroundAfterPenalty,
-        nearFieldSearchForBall,
-        searchForBallAtBallPosition,
-        searchForBallAtDropInPosition,
-        searchForBallFieldCoverage,
-        searchForBall,
-        searchForBallTurnAround,
-        set,
-        turnToBallClosest,
-        penaltyStriker,
-        penaltyKeeper,
-        ingamePenaltyStriker,
-        ingamePenaltySupporter,
-        ingamePenaltyDefender,
-        ingamePenaltyKeeper,
-        demo,
-        UNKNOWN
-    }
-
-    public static class BehaviorStatus {
-        public BehaviorStatus__Activity activity;
-        public int passTarget;
-        public Eigen.Vector2f walkingTo = new Eigen.Vector2f();
-        public Eigen.Vector2f shootingTo = new Eigen.Vector2f();
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            activity = BehaviorStatus__Activity.values()[Math.min((int) bitStream.readBits(7), BehaviorStatus__Activity.values().length - 1)];
-            passTarget = bitStream.readInt(-1, 14, 4);
-            walkingTo.x = bitStream.readFloat(-32768, 32767, 16);
-            walkingTo.y = bitStream.readFloat(-32768, 32767, 16);
-            shootingTo.x = bitStream.readFloat(-32768, 32767, 16);
-            shootingTo.y = bitStream.readFloat(-32768, 32767, 16);
-        }
-    }
-
-    public static class Whistle {
-        public float confidenceOfLastWhistleDetection;
-        public short channelsUsedForWhistleDetection;
-        public Timestamp lastTimeWhistleDetected;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            confidenceOfLastWhistleDetection = bitStream.readFloat(0, 2.55, 8);
-            channelsUsedForWhistleDetection = bitStream.readUnsignedChar(0, 4, 3);
-            lastTimeWhistleDetected = bitStream.readTimestamp(__timestampBase, 16, 0, -1, true);
         }
     }
 
@@ -407,12 +444,11 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
     public RobotPose theRobotPose = new RobotPose();
     public FrameInfo theFrameInfo = new FrameInfo();
     public BallModel theBallModel = new BallModel();
-    public SideConfidence theSideConfidence = new SideConfidence();
     public ObstacleModel theObstacleModel = new ObstacleModel();
     public Whistle theWhistle = new Whistle();
     public BehaviorStatus theBehaviorStatus = new BehaviorStatus();
+    public StrategyStatus theStrategyStatus = new StrategyStatus();
     public TeamBehaviorStatus theTeamBehaviorStatus = new TeamBehaviorStatus();
-    public ExternStrategyInput theExternStrategyInput = new ExternStrategyInput();
     public TeamTalk theTeamTalk = new TeamTalk();
 
     @Override
@@ -460,12 +496,11 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         theRobotPose.read(bitStream, __timestampBase);
         theFrameInfo.read(bitStream, __timestampBase);
         theBallModel.read(bitStream, __timestampBase);
-        theSideConfidence.read(bitStream, __timestampBase);
         theObstacleModel.read(bitStream, __timestampBase);
         theWhistle.read(bitStream, __timestampBase);
         theBehaviorStatus.read(bitStream, __timestampBase);
+        theStrategyStatus.read(bitStream, __timestampBase);
         theTeamBehaviorStatus.read(bitStream, __timestampBase);
-        theExternStrategyInput.read(bitStream, __timestampBase);
         theTeamTalk.read(bitStream, __timestampBase);
         assert stream.position() == positionAfterCompressed;
         return this;

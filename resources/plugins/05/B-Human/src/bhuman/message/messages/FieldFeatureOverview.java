@@ -21,7 +21,7 @@ public class FieldFeatureOverview implements SimpleStreamReader<FieldFeatureOver
         MidCircle,
         MidCorner,
         OuterCorner,
-        GoalFrame
+        PenaltyMarkWithPenaltyAreaLine
     }
 
     public static class FieldFeatureStatus {

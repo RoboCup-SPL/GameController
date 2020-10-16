@@ -44,9 +44,7 @@ public class BHumanMessage extends AdvancedMessage {
 
             if (message.bhuman != null) {
                 display.add("Magic: " + message.bhuman.magicNumber);
-                display.add("IsGoalkeeper: " + message.bhuman.theTeamBehaviorStatus.role.isGoalkeeper);
-                display.add("PlayBall: " + message.bhuman.theTeamBehaviorStatus.role.playBall);
-                display.add("SupporterIndex: " + message.bhuman.theTeamBehaviorStatus.role.supporterIndex);
+                display.add("Role: " + message.bhuman.theTeamBehaviorStatus.role.role);
                 display.add("Activity: " + message.bhuman.theBehaviorStatus.activity);
                 display.add("TimeToReachBall: " + message.bhuman.theTeamBehaviorStatus.timeToReachBall.timeWhenReachBall.getTimeSince(message.bhuman.timestamp) + "ms");
                 display.add("TimeToReachBallStriker: " + message.bhuman.theTeamBehaviorStatus.timeToReachBall.timeWhenReachBallStriker.getTimeSince(message.bhuman.timestamp) + "ms");

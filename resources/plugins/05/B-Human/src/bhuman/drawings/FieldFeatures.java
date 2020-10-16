@@ -180,7 +180,7 @@ public class FieldFeatures extends PerPlayer {
                                     gl.glEnd();
                                 }
                                 break;
-                                case GoalFrame: {
+                                case PenaltyMarkWithPenaltyAreaLine: {
                                     final float hypotsize = (float) (Math.sqrt(2) * FIELD_FEATURE_SIZE);
                                     gl.glBegin(GL2.GL_QUADS);
                                     gl.glVertex2f(LINE_RADIUS, FIELD_FEATURE_SIZE);
