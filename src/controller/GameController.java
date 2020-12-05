@@ -17,6 +17,7 @@ import data.Teams;
 import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,7 @@ public class GameController {
             + "\n  (-l | --league) %s%sselect league (default is spl)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
             + "\n  (-g | --game-type) %s%sselect game type (default is undefined)"
+            + "\n  (-b | --limited-broadcast)      use 255.255.255.255 as broadcast address"
             + "\n  --team1 <team name or number>   select first team (default is 0)"
             + "\n  --team2 <team name or number>   select second team (default is 0)"
             + "\n";
@@ -62,6 +64,8 @@ public class GameController {
     private static final String COMMAND_GAME_TYPE_SHORT = "-g";
     private static final String COMMAND_FIRST_TEAM = "--team1";
     private static final String COMMAND_SECOND_TEAM = "--team2";
+    private static final String COMMAND_GLOBAL_BROADCAST = "--limited-broadcast";
+    private static final String COMMAND_GLOBAL_BROADCAST_SHORT = "-b";
     private static final String COMMAND_TEST = "--test";
     private static final String COMMAND_TEST_SHORT = "-t";
 
@@ -80,6 +84,7 @@ public class GameController {
         GameType gameType = GameType.UNDEFINED;
         int[] teams = {0, 0};
         boolean testMode = false;
+        boolean limitedBroadcast = false;
 
         parsing:
         for (int i = 0; i < args.length; i++) {
@@ -132,6 +137,9 @@ public class GameController {
                 }
             } else if (args[i].equalsIgnoreCase(COMMAND_TEST_SHORT) || args[i].equalsIgnoreCase(COMMAND_TEST)) {
                 testMode = true;
+                continue parsing;
+            } else if (args[i].equalsIgnoreCase(COMMAND_GLOBAL_BROADCAST_SHORT) || args[i].equalsIgnoreCase(COMMAND_GLOBAL_BROADCAST)) {
+                limitedBroadcast = true;
                 continue parsing;
             }
             String leagues = "";
@@ -275,13 +283,17 @@ public class GameController {
             Rules.league.delayedSwitchAfterGoal = 0;
         }
 
+        InetAddress broadcastAddress = localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast();
         try {
             // TrueDataSender
             TrueDataSender.initialize(localAddress.getAddress());
             TrueDataSender.getInstance().start();
 
             //sender
-            Sender.initialize(localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast());
+            if (limitedBroadcast) {
+                broadcastAddress = InetAddress.getByName("255.255.255.255");
+            }
+            Sender.initialize(broadcastAddress);
             Sender sender = Sender.getInstance();
             sender.send(data);
             sender.start();
@@ -318,7 +330,7 @@ public class GameController {
         Log.toFile("Competition phase = " + (data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF ? "playoff" : "round robin"));
         Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK ? "general penalty kick challenge" : "normal"));
         Log.toFile("Auto color change = " + data.colorChangeAuto);
-        Log.toFile("Using broadcast address " + (localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast()));
+        Log.toFile("Using broadcast address " + broadcastAddress);
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));
 
         //ui
