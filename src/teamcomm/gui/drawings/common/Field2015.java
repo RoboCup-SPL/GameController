@@ -10,18 +10,18 @@ import teamcomm.gui.drawings.Static;
  *
  * @author Felix Thielke
  */
-public class Field2020 extends Static {
+public class Field2015 extends Static {
 
     @Override
     protected void init(GL2 gl) {
-        RoSi2Loader.getInstance().cacheModels(gl, new String[]{"field2020"});
+        RoSi2Loader.getInstance().cacheModels(gl, new String[]{"field2015"});
         setActive(false);
     }
 
     @Override
     public void draw(final GL2 gl, final Camera camera) {
         gl.glDepthFunc(GL2.GL_LESS);
-        gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "field2020"));
+        gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "field2015"));
         gl.glDepthFunc(GL2.GL_LEQUAL);
     }
 

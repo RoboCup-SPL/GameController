@@ -3,8 +3,8 @@
   <Compound name="field">
 
     <Set name="size" value=""/>
-	
-    <ComplexAppearance ref="fieldLines$size" name="fieldLines1"/>
+
+    <ComplexAppearance ref="fieldLines" name="fieldLines1"/>
     <ComplexAppearance ref="fieldLines" name="fieldLines2">
       <Rotation z="180degree"/>
     </ComplexAppearance>
@@ -23,12 +23,12 @@
 
   </Compound>
 
-  <Compound name="field2020">
+  <Compound name="field2015">
 
     <Set name="size" value=""/>
-	
-    <ComplexAppearance ref="fieldLines2020" name="fieldLines1"/>
-    <ComplexAppearance ref="fieldLines2020" name="fieldLines2">
+
+    <ComplexAppearance ref="fieldLines2015" name="fieldLines1"/>
+    <ComplexAppearance ref="fieldLines2015" name="fieldLines2">
       <Rotation z="180degree"/>
     </ComplexAppearance>
     <ComplexAppearance ref="fieldCrossCenter"/>
@@ -47,11 +47,11 @@
   </Compound>
 
   <Compound name="fieldSmall">
-  
+
     <Set name="size" value="Small"/>
 
-    <ComplexAppearance ref="fieldLines" name="fieldLines1"/>
-    <ComplexAppearance ref="fieldLines" name="fieldLines2">
+    <ComplexAppearance ref="fieldLines2015" name="fieldLines1"/>
+    <ComplexAppearance ref="fieldLines2015" name="fieldLines2">
       <Rotation z="180degree"/>
     </ComplexAppearance>
     <ComplexAppearance ref="fieldCrossCenter"/>
@@ -124,46 +124,8 @@
   <Surface name="fieldGreen" diffuseColor="#000000" ambientColor="#20cb20" diffuseTexture="Textures/shadow.png"/>
   <Surface name="fieldNet" diffuseColor="rgb(100%, 100%, 100%)" diffuseTexture="Textures/net.png"/>
   <Surface name="fieldWhite" diffuseColor="rgb(100%, 100%, 100%)" specularColor="rgb(80%, 80%, 80%)" shininess="10" diffuseTexture="Textures/shadow.png"/>
-  <Surface name="fieldYellow" diffuseColor="rgb(60%, 54%, 0%)" ambientColor="rgb(45%, 40%, 0%)" specularColor="rgb(40%, 36%, 30%)" shininess="30"/>
 
   <Vertices name="fieldLines">
-# middle line
--0.025 2.975 0
--0.025 0.05 0
-0.025 0.05 0
-0.025 2.975 0
-
-# goal line
-4.475 3.025 0
-4.475 -3.025 0
-4.525 -3.025 0
-4.525 3.025 0
-
-# outer line left
--4.475 3.025 0
--4.475 2.975 0
-4.475 2.975 0
-4.475 3.025 0
-
-# keeper line left
-3.925 1.125 0
-3.925 1.075 0
-4.475 1.075 0
-4.475 1.125 0
-
-# keeper line right
-4.475 -1.125 0
-4.475 -1.075 0
-3.925 -1.075 0
-3.925 -1.125 0
-
-# keeper line front
-3.875 1.125 0
-3.875 -1.125 0
-3.925 -1.125 0
-3.925 1.125 0
-  </Vertices>
-  <Vertices name="fieldLines2020">
 # middle line
 -0.025 2.975 0
 -0.025 0.05 0
@@ -218,7 +180,44 @@
 3.925 -1.125 0
 3.925 1.125 0
   </Vertices>
-  <Vertices name="fieldLinesSmall">
+  <Vertices name="fieldLines2015">
+# middle line
+-0.025 2.975 0
+-0.025 0.05 0
+0.025 0.05 0
+0.025 2.975 0
+
+# goal line
+4.475 3.025 0
+4.475 -3.025 0
+4.525 -3.025 0
+4.525 3.025 0
+
+# outer line left
+-4.475 3.025 0
+-4.475 2.975 0
+4.475 2.975 0
+4.475 3.025 0
+
+# keeper line left
+3.925 1.125 0
+3.925 1.075 0
+4.475 1.075 0
+4.475 1.125 0
+
+# keeper line right
+4.475 -1.125 0
+4.475 -1.075 0
+3.925 -1.075 0
+3.925 -1.125 0
+
+# keeper line front
+3.875 1.125 0
+3.875 -1.125 0
+3.925 -1.125 0
+3.925 1.125 0
+  </Vertices>
+  <Vertices name="fieldLines2015Small">
 # middle line
 -0.025 1.975 0
 -0.025 0.05 0
@@ -251,7 +250,7 @@
 
 # keeper line front
 2.375 1.125 0
-2.375 -1.125 0 
+2.375 -1.125 0
 2.425 -1.125 0
 2.425 1.125 0
   </Vertices>
@@ -427,7 +426,7 @@
 0.775 0 0
 0.548008 -0.548008 0
   </Vertices>
-  <Vertices name="fieldCenterCircleSmall">  
+  <Vertices name="fieldCenterCircleSmall">
 0.0000 0.5750 0
 0.0000 0.6250 0
 0.0250 0.6245 0
@@ -499,7 +498,7 @@
 0.5750 0.0000 0
 0.6250 0.0000 0
 0.6250 0.6250 0
-		
+
 0.0000 -0.5750 0
 0.0000 -0.6250 0
 0.0250 -0.6245 0
@@ -570,7 +569,7 @@
 0.5750 -0.0000 0
 0.5750 -0.0000 0
 0.6250 -0.0000 0
-0.6250 -0.6250 0  
+0.6250 -0.6250 0
   </Vertices>
 
   <Vertices name="fieldGreen">
@@ -625,9 +624,9 @@
 0 16
   </TexCoords>
 
-  <ComplexAppearance name="fieldLines">
+  <ComplexAppearance name="fieldLines2015">
     <Surface ref="fieldWhite"/>
-    <Vertices ref="fieldLines$size"/>
+    <Vertices ref="fieldLines2015$size"/>
     <Quads>
 0 1 2 3
 4 5 6 7
@@ -640,9 +639,9 @@
     <ComplexAppearance ref="fieldCenterCircle"/>
   </ComplexAppearance>
 
-  <ComplexAppearance name="fieldLines2020">
+  <ComplexAppearance name="fieldLines">
     <Surface ref="fieldWhite"/>
-    <Vertices ref="fieldLines2020$size"/>
+    <Vertices ref="fieldLines$size"/>
     <Quads>
 0 1 2 3
 4 5 6 7
