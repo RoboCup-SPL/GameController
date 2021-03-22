@@ -94,7 +94,7 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
         // Top label
         final StringBuilder sb = new StringBuilder("<html>");
         if (!msg.teamNumValid || msg.teamNum != robot.getTeamNumber()) {
-            sb.append("<font color='red'>Invalid team no: ").append(msg.teamNum).append("</font>");
+            sb.append("<font color='red'>Invalid team no: ").append(msg.teamNum).append(" on port ").append(robot.getTeamNumber()).append("</font>");
         } else {
             sb.append(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
         }
