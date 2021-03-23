@@ -203,60 +203,7 @@ It serves two main purposes:
 For more info see [TCM](TCM.md).
 
 
-## 5. libgamectrl (SPL)
-
-**libgamectrl is not supported on NAO V6!**
-
-libgamectrl automatically provides the GameController packets in ALMemory.
-It also implements the return channel of the GameController. It handles the
-buttons and LEDs according to the rules (with a few additions).
-
-
-### Installation
-
-The library has to be built from source using Aldebaran's qibuild framework.
-The qiproject.xml and CMakeList.txt have been placed in libgamectrl's source
-folder. Just follow the instructions of the README file there.
-
-
-### Usage
-
-In your NAOqi module, execute the following code at the beginning (only once):
-
-    AL::ALMemoryProxy *memory = new AL::ALMemoryProxy(pBroker);
-    memory->insertData("GameCtrl/teamNumber", <your team number>);
-    memory->insertData("GameCtrl/teamColour", <your default team color>);
-    memory->insertData("GameCtrl/playerNumber", <your robot's player number>);
-
-The team number must be non-zero. Setting the team number will reset libgamectrl
-(i.e. go back to the initial state). libgamectrl will also set
-"GameCtrl/teamNumber" back to zero, so it will recognize the next time your
-application is started.
-
-Setting the default team color can actually be omitted now. In that case, it is
-black, i.e. the corresponding foot LED is switched off.
-
-You can receive the current GameController packet with:
-
-    RoboCupGameControlData gameCtrlData; // should probably zero it the first time it is used
-    AL::ALValue value = memory->getData("GameCtrl/RoboCupGameControlData");
-    if (value.isBinary() && value.getSize() == sizeof(RoboCupGameControlData))
-        memcpy(&gameCtrlData, value, sizeof(RoboCupGameControlData));
-
-
-### Deviations from the Rules
-
-The first time the chest button is pressed it is ignored, because many teams
-will use it to let the robot get up.
-
-In the Initial state, it is also possible to switch between "normal",
-"penalty taker" (green LED), and "penalty goalkeeper" (yellow LED) by pressing
-the right foot bumper. The state is shown by the right foot LED, and only in
-the Initial state. An active GameController will overwrite these settings.
-
-
-
-## 6. Misc
+## 5. Misc
 
 The format of the packets the GameController broadcasts at port
 GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
@@ -289,11 +236,9 @@ for receiving the true game state, the request is ignored and its network
 address is written into the GameController's error log.
 
 
-## 7. Known Issues
+## 6. Known Issues
 
 There are still a number of issues left:
-
-- The qibuild file for libgamectrl is untested.
 
 - The alignment of button labels is bad if the buttons are small.
 
