@@ -271,17 +271,13 @@ public class MainWindow extends JFrame implements TeamEventListener {
                     i++;
                 }
 
-                boolean teamPanelChanged = false;
                 while (e.players.size() < teamPanels[e.side].getComponentCount() - (e.side < 2 ? 1 : 0)) {
-                    teamPanelChanged = true;
                     final RobotPanel panel = (RobotPanel) teamPanels[e.side].getComponent(teamPanels[e.side].getComponentCount() - 1);
                     teamPanels[e.side].remove(teamPanels[e.side].getComponentCount() - 1);
                     robotPanels.remove(panel.getRobotAddress());
                     panel.dispose();
                 }
-                if (teamPanelChanged) {
-                    teamPanels[e.side].repaint();
-                }
+                teamPanels[e.side].repaint();
             }
         });
     }
