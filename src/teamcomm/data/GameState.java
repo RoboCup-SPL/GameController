@@ -362,6 +362,8 @@ public class GameState implements GameControlDataEventListener {
                     changed |= CHANGED_LEFT;
                 } else if (teamNumbers[TEAM_RIGHT] == teamNumber) {
                     changed |= CHANGED_RIGHT;
+                } else {
+                    changed |= CHANGED_OTHER;
                 }
             }
         }
