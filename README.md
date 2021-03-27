@@ -4,8 +4,6 @@ This is the GameController developed by team B-Human for the RoboCup SPL. Please
 [fork](https://github.com/RoboCup-Humanoid-TC/GameController).
 
 
-Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
-
 The sources mentioned in some sections of this document are available at
 [https://github.com/bhuman/GameController](https://github.com/bhuman/GameController).
 
