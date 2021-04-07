@@ -23,6 +23,7 @@ import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
 import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.PerPlayer;
+import teamcomm.gui.drawings.PerPlayerWithTeam;
 import teamcomm.gui.drawings.Static;
 import teamcomm.gui.drawings.Text;
 
@@ -198,12 +199,16 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
                         } catch (final Throwable e) {
                             Log.error(e.getClass().getSimpleName() + " was thrown while drawing custom drawing " + d.getClass().getName() + ": " + e.getMessage());
                         }
-                    } else if (d instanceof PerPlayer) {
+                    } else if (d instanceof PerPlayer || d instanceof PerPlayerWithTeam) {
                         if (d.getTeamNumber() == PluginLoader.TEAMNUMBER_COMMON || d.getTeamNumber() == teamNumbers[GameState.TEAM_LEFT]) {
                             synchronized (leftRobots) {
                                 for (final RobotState r : leftRobots) {
                                     try {
-                                        ((PerPlayer) d).draw(gl, r, camera);
+                                        if (d instanceof PerPlayer) {
+                                            ((PerPlayer) d).draw(gl, r, camera);
+                                        } else {
+                                            ((PerPlayerWithTeam) d).draw(gl, leftRobots, r, camera);
+                                        }
                                     } catch (final Throwable e) {
                                         Log.error(e.getClass().getSimpleName() + " was thrown while drawing custom drawing " + d.getClass().getName() + ": " + e.getMessage());
                                     }
@@ -215,7 +220,11 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
                             synchronized (rightRobots) {
                                 for (final RobotState r : rightRobots) {
                                     try {
-                                        ((PerPlayer) d).draw(gl, r, camera);
+                                        if (d instanceof PerPlayer) {
+                                            ((PerPlayer) d).draw(gl, r, camera);
+                                        } else {
+                                            ((PerPlayerWithTeam) d).draw(gl, rightRobots, r, camera);
+                                        }
                                     } catch (final Throwable e) {
                                         Log.error(e.getClass().getSimpleName() + " was thrown while drawing custom drawing " + d.getClass().getName() + ": " + e.getMessage());
                                     }

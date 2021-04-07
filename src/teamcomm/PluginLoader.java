@@ -27,6 +27,7 @@ import teamcomm.gui.RobotDetailFrame;
 import teamcomm.gui.RobotDetailFrameDefault;
 import teamcomm.gui.drawings.Drawing;
 import teamcomm.gui.drawings.PerPlayer;
+import teamcomm.gui.drawings.PerPlayerWithTeam;
 import teamcomm.gui.drawings.Static;
 
 /**
@@ -237,7 +238,7 @@ public class PluginLoader {
                         if (!robotDetailFrameClasses.containsKey(teamNumber)) {
                             robotDetailFrameClasses.put(teamNumber, cls.asSubclass(RobotDetailFrame.class));
                         }
-                    } else if (PerPlayer.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
+                    } else if (PerPlayer.class.isAssignableFrom(cls) || PerPlayerWithTeam.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
                         // Class is a drawing: add it to the team drawings
                         // if it does not yet exist
                         Collection<Drawing> drawingsForTeam = drawings.get(teamNumber);
