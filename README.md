@@ -5,7 +5,7 @@ This is the GameController developed by team B-Human for the RoboCup SPL. Please
 
 
 The sources mentioned in some sections of this document are available at
-[https://github.com/bhuman/GameController](https://github.com/bhuman/GameController).
+[https://github.com/RoboCup-SPL/GameController](https://github.com/RoboCup-SPL/GameController).
 
 
 ### Acknowledgement
