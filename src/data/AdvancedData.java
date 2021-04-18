@@ -75,6 +75,16 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public int[][] robotPenaltyCount = new int[2][Rules.league.teamSize];
 
     /**
+     * How many hardware penalties can each robot get until it is ejected?
+     */
+    public int[][] robotHardwarePenaltyBudget = new int[2][Rules.league.teamSize];
+
+    /**
+     * Which players are already ejected?
+     */
+    public boolean[][] ejected = new boolean[2][Rules.league.teamSize];
+
+    /**
      * If true, the referee set a timeout
      */
     public boolean refereeTimeout = false;
@@ -166,6 +176,9 @@ public class AdvancedData extends GameControlData implements Cloneable {
                 if (j >= Rules.league.robotsPlaying) {
                     team[i].player[j].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
                 }
+                if (j < robotHardwarePenaltyBudget[i].length) {
+                    robotHardwarePenaltyBudget[i][j] = Rules.league.allowedHardwarePenaltiesPerHalf;
+                }
             }
         }
     }
@@ -253,7 +266,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
             for (int number = 0; number < team[side].player.length; ++number) {
                 PlayerInfo player = team[side].player[number];
                 player.secsTillUnpenalised = player.penalty == PlayerInfo.PENALTY_NONE
-                        ? 0 : (byte) Math.min(255, getRemainingPenaltyTime(side, number, real));
+                        ? 0 : (byte) (number < ejected[side].length && ejected[side][number] ? 255 : Math.min(255, getRemainingPenaltyTime(side, number, real)));
             }
         }
     }
@@ -352,12 +365,14 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public void resetPenalties() {
         for (int i = 0; i < team.length; ++i) {
             for (int j = 0; j < Rules.league.teamSize; j++) {
-                if (team[i].player[j].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
+                if (team[i].player[j].penalty != PlayerInfo.PENALTY_SUBSTITUTE && !ejected[i][j]) {
                     team[i].player[j].penalty = PlayerInfo.PENALTY_NONE;
                 }
                 if (Rules.league.resetPenaltyCountOnHalftime) {
                     robotPenaltyCount[i][j] = 0;
                 }
+                robotHardwarePenaltyBudget[i][j] = Math.min(Rules.league.allowedHardwarePenaltiesPerHalf,
+                        Rules.league.allowedHardwarePenaltiesPerGame - (Rules.league.allowedHardwarePenaltiesPerHalf - robotHardwarePenaltyBudget[i][j]));
             }
             if (Rules.league.resetPenaltyCountOnHalftime) {
                 penaltyCount[i] = 0;

@@ -84,6 +84,14 @@ public class FirstHalf extends GCAction
         data.penaltyShootOutPlayers[0] = data.penaltyShootOutPlayers[1];
         data.penaltyShootOutPlayers[1] = tmp;
 
+        boolean[] ejected = data.ejected[0];
+        data.ejected[0] = data.ejected[1];
+        data.ejected[1] = ejected;
+
+        tmp = data.robotHardwarePenaltyBudget[0];
+        data.robotHardwarePenaltyBudget[0] = data.robotHardwarePenaltyBudget[1];
+        data.robotHardwarePenaltyBudget[1] = tmp;
+
         // if necessary, swap back team colors
         if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
                 && data.colorChangeAuto) {

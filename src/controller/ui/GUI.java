@@ -120,6 +120,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PENALTIES = "Penalties";
     private static final String SHOT = "Shot";
     private static final String SHOTS = "Shots";
+    private static final String EJECTED = "Ejected";
     private static final String ONLINE = "wlan_status_green.png";
     private static final String OFFLINE = "wlan_status_red.png";
     private static final String HIGH_LATENCY = "wlan_status_yellow.png";
@@ -989,28 +990,34 @@ public class GUI extends JFrame implements GCGUI
         for (int i=0; i<robot.length; i++) {
             for (int j=0; j<robot[i].length; j++) {
                 if (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
-                    int seconds = data.getRemainingPenaltyTime(i, j, true);
-                    boolean pickup = ((Rules.league instanceof SPL &&
-                                data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP));
-                    boolean illegalMotion = Rules.league instanceof SPL
-                            && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET;
-                    if (seconds == 0) {
-                        if (pickup) {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_PICKUP+")");
-                            highlight(robot[i][j], true);
-                        } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
-                            highlight(robot[i][j], false);
-                        } else {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds));
-                            highlight(robot[i][j], robot[i][j].getBackground() != COLOR_HIGHLIGHT);
+                    if (!data.ejected[i][j]) {
+                        int seconds = data.getRemainingPenaltyTime(i, j, true);
+                        boolean pickup = ((Rules.league instanceof SPL &&
+                                    data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP));
+                        boolean illegalMotion = Rules.league instanceof SPL
+                                && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET;
+                        if (seconds == 0) {
+                            if (pickup) {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_PICKUP+")");
+                                highlight(robot[i][j], true);
+                            } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
+                                highlight(robot[i][j], false);
+                            } else {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds));
+                                highlight(robot[i][j], robot[i][j].getBackground() != COLOR_HIGHLIGHT);
+                            }
+                        }  else {
+                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
+                            robotTime[i][j].setValue(1000 * seconds / data.getPenaltyDuration(i, j));
+                            highlight(robot[i][j], (seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT) || illegalMotion);
                         }
-                    }  else {
-                        robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
-                        robotTime[i][j].setValue(1000 * seconds / data.getPenaltyDuration(i, j));
-                        highlight(robot[i][j], (seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT) || illegalMotion);
+                        robotTime[i][j].setVisible(seconds != 0);
+                    } else {
+                        robotLabel[i][j].setText(EJECTED);
+                        robotTime[i][j].setVisible(false);
+                        highlight(robot[i][j], false);
                     }
-                    robotTime[i][j].setVisible(seconds != 0);
                 } else {
                     robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1));
                     robotTime[i][j].setVisible(false);

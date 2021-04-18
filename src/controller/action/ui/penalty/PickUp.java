@@ -31,6 +31,11 @@ public class PickUp extends Penalty
                 data.whenPenalized[side][number] = data.getTime();
             }
             data.robotPenaltyCount[side][number] = 0;
+            if (data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT
+                    && (data.gameState == AdvancedData.STATE_READY
+                        || data.gameState == AdvancedData.STATE_PLAYING)) {
+                handleHardwarePenalty(data, side, number);
+            }
         }
         
         player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;

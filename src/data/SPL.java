@@ -91,5 +91,9 @@ public class SPL extends Rules
         dropBroadcastMessages = true;
         /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
         competitionType = GameControlData.COMPETITION_TYPE_NORMAL;
+        /** Number of hardware penalties per half before the robot is ejected. */
+        allowedHardwarePenaltiesPerHalf = Integer.MAX_VALUE;
+        /** Number of hardware penalties per game before the robot is ejected. */
+        allowedHardwarePenaltiesPerGame = Integer.MAX_VALUE;
     }
 }

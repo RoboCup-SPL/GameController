@@ -26,6 +26,7 @@ public class Inactive extends Penalty
     {
         player.penalty = PlayerInfo.PENALTY_SPL_INACTIVE_PLAYER;
         data.robotPenaltyCount[side][number] = 0;
+        handleHardwarePenalty(data, side, number);
         data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Inactive Player "+
                 Rules.league.teamColorName[data.team[side].teamColor]

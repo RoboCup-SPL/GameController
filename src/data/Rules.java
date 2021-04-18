@@ -13,6 +13,7 @@ public abstract class Rules
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
+        new SPLGORE(),
         new SPLPenaltyShootout(),
         new SPLGeneralPenaltyKick()
     };
@@ -111,4 +112,8 @@ public abstract class Rules
     public boolean dropBroadcastMessages;
     /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
     public byte competitionType;
+    /** Number of hardware penalties per half before the robot is ejected. */
+    public int allowedHardwarePenaltiesPerHalf;
+    /** Number of hardware penalties per game before the robot is ejected. */
+    public int allowedHardwarePenaltiesPerGame;
 }

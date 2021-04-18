@@ -134,7 +134,8 @@ public class Robot extends GCAction
                     && (data.gameState == AdvancedData.STATE_SET
                         || data.gameState == AdvancedData.STATE_INITIAL))
                 // unpenalize a robot / select a robot that should enter (i.e. that is currently substituted)
-                || (!lastUIEventWasPenalty || lastUIEventWasMotionInSet)
+                || !data.ejected[side][number]
+                && (!lastUIEventWasPenalty || lastUIEventWasMotionInSet)
                 && data.team[side].player[number].penalty != PlayerInfo.PENALTY_NONE
                 && (Rules.league.allowEarlyPenaltyRemoval
                     // special case: Illegal motion in Set can be removed manually because it happens that accidentally

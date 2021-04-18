@@ -45,4 +45,19 @@ public abstract class Penalty extends GCAction
         data.robotPenaltyCount[side][number] = data.penaltyCount[side];
         data.penaltyCount[side]++;
     }
+
+    /**
+     * Decreases the hardware penalty budget of a robot and possibly ejects it.
+     *
+     * @param data      The current data to work on.
+     * @param side      The side the player is playing on (0:left, 1:right).
+     * @param number    The player`s number, beginning with 0!
+     */
+    protected void handleHardwarePenalty(final AdvancedData data, final int side, final int number) {
+        if (data.robotHardwarePenaltyBudget[side][number] == 0) {
+            data.ejected[side][number] = true;
+        } else {
+            data.robotHardwarePenaltyBudget[side][number]--;
+        }
+    }
 }
