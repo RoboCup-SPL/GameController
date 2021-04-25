@@ -1019,7 +1019,11 @@ public class GUI extends JFrame implements GCGUI
                         highlight(robot[i][j], false);
                     }
                 } else {
-                    robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1));
+                    String label = Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1);
+                    if (Rules.league.allowedHardwarePenaltiesPerGame < Integer.MAX_VALUE || Rules.league.allowedHardwarePenaltiesPerHalf < Integer.MAX_VALUE) {
+                        label += " ("+data.robotHardwarePenaltyBudget[i][j]+")";
+                    }
+                    robotLabel[i][j].setText(label);
                     robotTime[i][j].setVisible(false);
                     highlight(robot[i][j], false);
                 }
