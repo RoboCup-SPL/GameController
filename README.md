@@ -41,6 +41,8 @@ Usage: `java -jar GameController.jar {options}`
     (-g | --game-type) (undefined | preliminary | playoff)
                                     select game type (default is undefined)
     (-b | --limited-broadcast)      use 255.255.255.255 as broadcast address
+    --load <path>                   load initial state from a file
+    --save <path>                   save state to a file on exit
     --team1 <team name or number>   select first team (default is 0)
     --team2 <team name or number>   select second team (default is 0)
 

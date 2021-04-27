@@ -489,4 +489,30 @@ public class AdvancedData extends GameControlData implements Cloneable {
             }
         }
     }
+
+    /**
+     * Adjusts all timestamps in this class which depend on the system clock
+     * for the current time.
+     *
+     * @param originalTime The time when the structure was saved.
+     */
+    public void adjustTimestamps(long originalTime) {
+        final long timeUpdate = getTime() - originalTime;
+        if (whenCurrentGameStateBegan != 0) {
+            whenCurrentGameStateBegan += timeUpdate;
+        }
+        if (whenCurrentSetPlayBegan != 0) {
+            whenCurrentSetPlayBegan += timeUpdate;
+        }
+        for (int i = 0; i < whenPenalized.length; ++i) {
+            for (int j = 0; j < whenPenalized[i].length; ++j) {
+                if (whenPenalized[i][j] != 0) {
+                    whenPenalized[i][j] += timeUpdate;
+                }
+            }
+        }
+        if (manWhenClockChanged != 0) {
+            manWhenClockChanged += timeUpdate;
+        }
+    }
 }

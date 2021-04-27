@@ -70,7 +70,6 @@ public class StartInput extends JFrame implements Serializable
     public int[] outTeam = {0, 0};
     public byte[] outTeamColor = new byte[2];
     public boolean outFulltime;
-    public String outGameTypeTitle;
     public boolean outFullscreen;
 
     /** All the components of this GUI. */
@@ -109,8 +108,9 @@ public class StartInput extends JFrame implements Serializable
      * @param fullscreenMode The preset value of the fullscreen checkbox.
      * @param gameType The game type (either UNDEFINED, PRELIMINARY or PLAYOFF).
      * @param presetTeams The preset team numbers.
+     * @param onlyTeamsAndColors Whether only the teams and their colors should be selectable.
      */
-    public StartInput(boolean fullscreenMode, final GameType gameType, final int[] presetTeams)
+    public StartInput(boolean fullscreenMode, final GameType gameType, final int[] presetTeams, boolean onlyTeamsAndColors)
     {
         super(WINDOW_TITLE);
 
@@ -252,8 +252,8 @@ public class StartInput extends JFrame implements Serializable
                             }
                         }
                     }
-                    nofulltime.setVisible(!(Rules.league instanceof SPLPenaltyShootout));
-                    fulltime.setVisible(!(Rules.league instanceof SPLPenaltyShootout));
+                    nofulltime.setVisible(!onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout));
+                    fulltime.setVisible(!onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout));
                     nofulltime.setText(FULLTIME_LABEL_NO);
                     fulltime.setText(FULLTIME_LABEL_YES);
                     if (gameType == GameType.PRELIMINARY) {
@@ -268,7 +268,9 @@ public class StartInput extends JFrame implements Serializable
                 }
             }
         );
-        optionsRight.add(league);
+        if (!onlyTeamsAndColors) {
+            optionsRight.add(league);
+        }
         nofulltime = new JRadioButton();
         nofulltime.setPreferredSize(optionsDim);
         fulltime = new JRadioButton();
@@ -276,8 +278,10 @@ public class StartInput extends JFrame implements Serializable
         fulltimeGroup = new ButtonGroup();
         fulltimeGroup.add(nofulltime);
         fulltimeGroup.add(fulltime);
-        optionsRight.add(nofulltime);
-        optionsRight.add(fulltime);
+        if (!onlyTeamsAndColors) {
+            optionsRight.add(nofulltime);
+            optionsRight.add(fulltime);
+        }
         nofulltime.addActionListener(new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
@@ -296,7 +300,6 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = fulltime.isSelected() && fulltime.isVisible();
-                    outGameTypeTitle = outFulltime ? FULLTIME_LABEL_YES : FULLTIME_LABEL_NO;
                     outFullscreen = fullscreen.getState();
                     finished = true;
                 }});

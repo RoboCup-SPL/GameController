@@ -14,8 +14,14 @@ import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
 import data.Teams;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -51,6 +57,8 @@ public class GameController {
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
             + "\n  (-g | --game-type) %s%sselect game type (default is undefined)"
             + "\n  (-b | --limited-broadcast)      use 255.255.255.255 as broadcast address"
+            + "\n  --load <path>                   load initial state from a file"
+            + "\n  --save <path>                   save state to a file on exit"
             + "\n  --team1 <team name or number>   select first team (default is 0)"
             + "\n  --team2 <team name or number>   select second team (default is 0)"
             + "\n";
@@ -66,6 +74,8 @@ public class GameController {
     private static final String COMMAND_SECOND_TEAM = "--team2";
     private static final String COMMAND_GLOBAL_BROADCAST = "--limited-broadcast";
     private static final String COMMAND_GLOBAL_BROADCAST_SHORT = "-b";
+    private static final String COMMAND_LOAD = "--load";
+    private static final String COMMAND_SAVE = "--save";
     private static final String COMMAND_TEST = "--test";
     private static final String COMMAND_TEST_SHORT = "-t";
 
@@ -85,6 +95,7 @@ public class GameController {
         int[] teams = {0, 0};
         boolean testMode = false;
         boolean limitedBroadcast = false;
+        String loadPath = null, savePath = null;
 
         parsing:
         for (int i = 0; i < args.length; i++) {
@@ -140,6 +151,12 @@ public class GameController {
                 continue parsing;
             } else if (args[i].equalsIgnoreCase(COMMAND_GLOBAL_BROADCAST_SHORT) || args[i].equalsIgnoreCase(COMMAND_GLOBAL_BROADCAST)) {
                 limitedBroadcast = true;
+                continue parsing;
+            } else if (args.length > i + 1 && args[i].equalsIgnoreCase(COMMAND_LOAD)) {
+                loadPath = args[++i];
+                continue parsing;
+            } else if (args.length > i + 1 && args[i].equalsIgnoreCase(COMMAND_SAVE)) {
+                savePath = args[++i];
                 continue parsing;
             }
             String leagues = "";
@@ -257,8 +274,39 @@ public class GameController {
             System.exit(-1);
         }
 
+        AdvancedData data = new AdvancedData();
+        boolean loadedState = false;
+        if (loadPath != null) {
+            try (final ObjectInputStream stream = new ObjectInputStream(new FileInputStream(loadPath))) {
+                final long timeWhenSaved = stream.readLong();
+                data = (AdvancedData) stream.readObject();
+                final String leagueName = stream.readUTF();
+                for (Rules league : Rules.LEAGUES) {
+                    if (league.leagueName.equals(leagueName)) {
+                        Rules.league = league;
+                        break;
+                    }
+                }
+                if (!Rules.league.leagueName.equals(leagueName)) {
+                    JOptionPane.showMessageDialog(null,
+                            "Selected rules do not match loaded game state.",
+                            "Error loading game state",
+                            JOptionPane.ERROR_MESSAGE);
+                    System.exit(-1);
+                }
+                data.adjustTimestamps(timeWhenSaved);
+                loadedState = true;
+            } catch (ClassNotFoundException | IOException e) {
+                JOptionPane.showMessageDialog(null,
+                        "Error while loading game state from file: " + e.getMessage(),
+                        "Error loading game state",
+                        JOptionPane.ERROR_MESSAGE);
+                System.exit(-1);
+            }
+        }
+
         //collect the start parameters and put them into the first data.
-        StartInput input = new StartInput(!windowMode, gameType, teams);
+        StartInput input = new StartInput(!windowMode, gameType, teams, loadedState);
         while (!input.finished) {
             try {
                 Thread.sleep(100);
@@ -267,15 +315,18 @@ public class GameController {
             }
         }
 
-        AdvancedData data = new AdvancedData();
+        if (loadedState) {
+            data.kickingTeam = (byte) (data.kickingTeam == data.team[0].teamNumber ? input.outTeam[0] : (data.kickingTeam == data.team[1].teamNumber ? input.outTeam[1] : 0));
+        } else {
+            data.kickingTeam = (byte) input.outTeam[0];
+            data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
+            data.competitionType = Rules.league.competitionType;
+        }
+
         for (int i = 0; i < 2; i++) {
             data.team[i].teamNumber = (byte) input.outTeam[i];
+            data.team[i].teamColor = input.outTeamColor[i];
         }
-        data.team[0].teamColor = input.outTeamColor[0];
-        data.team[1].teamColor = input.outTeamColor[1];
-        data.kickingTeam = (byte) input.outTeam[0];
-        data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
-        data.competitionType = Rules.league.competitionType;
 
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
@@ -337,7 +388,7 @@ public class GameController {
                 + " (" + Rules.league.teamColorName[data.team[0].teamColor]
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
                 + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
-        GUI gui = new GUI(input.outFullscreen, input.outGameTypeTitle, data);
+        GUI gui = new GUI(input.outFullscreen, data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF ? "Play-off Game" : "Preliminaries Game", data);
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);
@@ -350,6 +401,15 @@ public class GameController {
 
         // shutdown
         Log.toFile("Shutdown GameController");
+        if (savePath != null) {
+            try (final ObjectOutputStream stream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(savePath)))) {
+                stream.writeLong(data.getTime());
+                stream.writeObject(data);
+                stream.writeUTF(Rules.league.leagueName);
+            } catch (IOException e) {
+                Log.error("Error while trying to save the game state.");
+            }
+        }
         try {
             applicationLock.release();
         } catch (IOException e) {
