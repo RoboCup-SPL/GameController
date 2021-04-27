@@ -60,7 +60,6 @@ public class StartInput extends JFrame implements Serializable
     private static final String FULLTIME_LABEL_NO = "Preliminaries Game";
     private static final String FULLTIME_LABEL_YES = "Play-off Game";
     private static final String FULLSCREEN_LABEL = "Fullscreen";
-    private static final String COLOR_CHANGE_LABEL = "Auto color change";
     private static final String START_LABEL = "Start";
     private static final String TEAM_COLOR_CHANGE = "Color";
 

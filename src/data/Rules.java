@@ -44,8 +44,6 @@ public abstract class Rules
     public Color[] teamColor;
     /** The name of the colors. */
     public String[] teamColorName;
-    /** If the colors change automatically. */
-    public boolean colorChangeAuto;
     /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
     public boolean playOffTimeStop;
     /** Time in seconds one half is long. */

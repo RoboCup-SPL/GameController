@@ -106,11 +106,6 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public boolean leftSideKickoff = true;
 
     /**
-     * If true, the colors change automatically.
-     */
-    public boolean colorChangeAuto;
-
-    /**
      * If true, the testmode has been activated.
      */
     public boolean testmode = false;

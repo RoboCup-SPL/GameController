@@ -274,7 +274,6 @@ public class GameController {
         data.team[0].teamColor = input.outTeamColor[0];
         data.team[1].teamColor = input.outTeamColor[1];
         data.kickingTeam = (byte) input.outTeam[0];
-        data.colorChangeAuto = false;
         data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
         data.competitionType = Rules.league.competitionType;
 
@@ -329,7 +328,6 @@ public class GameController {
         Log.toFile("League = " + Rules.league.leagueName);
         Log.toFile("Competition phase = " + (data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF ? "playoff" : "round robin"));
         Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK ? "general penalty kick challenge" : "normal"));
-        Log.toFile("Auto color change = " + data.colorChangeAuto);
         Log.toFile("Using broadcast address " + broadcastAddress);
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));
 

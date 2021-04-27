@@ -92,13 +92,6 @@ public class FirstHalf extends GCAction
         data.robotHardwarePenaltyBudget[0] = data.robotHardwarePenaltyBudget[1];
         data.robotHardwarePenaltyBudget[1] = tmp;
 
-        // if necessary, swap back team colors
-        if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
-                && data.colorChangeAuto) {
-            byte color = data.team[0].teamColor;
-            data.team[0].teamColor = data.team[1].teamColor;
-            data.team[1].teamColor = color;
-        }
 
         if (Rules.league.timeOutPerHalf && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)) {
             data.timeOutTaken = new boolean[] {false, false};

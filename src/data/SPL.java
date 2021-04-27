@@ -23,8 +23,6 @@ public class SPL extends Rules
         teamColor = new Color[] {Color.BLUE, Color.RED, new Color(224, 200, 0), Color.BLACK, Color.WHITE, new Color(0, 128, 0), new Color(255, 165, 0), new Color(128, 0, 128), new Color(165, 42, 42), new Color(128, 128, 128)};
         /** The name of the colors. */
         teamColorName = new String[] {"Blue", "Red", "Yellow", "Black", "White", "Green", "Orange", "Purple", "Brown", "Gray"};
-        /** If the colors change automatically. */
-        colorChangeAuto = false;
         /** If the clock may stop in certain states (Ready, Set) in a play-off game. */
         playOffTimeStop = true;
         /** Time in seconds one half is long. */
