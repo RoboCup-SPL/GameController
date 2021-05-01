@@ -164,12 +164,12 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         public Role__Type role;
 
         public void read(final BitStream bitStream, final long __timestampBase) {
-            proposedTactic = Tactic__Type.values()[Math.min((int) bitStream.readBits(2), Tactic__Type.values().length - 1)];
-            acceptedTactic = Tactic__Type.values()[Math.min((int) bitStream.readBits(2), Tactic__Type.values().length - 1)];
+            proposedTactic = Tactic__Type.values()[Math.min((int) bitStream.readBits(8), Tactic__Type.values().length - 1)];
+            acceptedTactic = Tactic__Type.values()[Math.min((int) bitStream.readBits(8), Tactic__Type.values().length - 1)];
             proposedMirror = bitStream.readBoolean();
             acceptedMirror = bitStream.readBoolean();
-            proposedSetPlay = SetPlay__Type.values()[Math.min((int) bitStream.readBits(4), SetPlay__Type.values().length - 1)];
-            acceptedSetPlay = SetPlay__Type.values()[Math.min((int) bitStream.readBits(4), SetPlay__Type.values().length - 1)];
+            proposedSetPlay = SetPlay__Type.values()[Math.min((int) bitStream.readBits(8), SetPlay__Type.values().length - 1)];
+            acceptedSetPlay = SetPlay__Type.values()[Math.min((int) bitStream.readBits(8), SetPlay__Type.values().length - 1)];
             position = Tactic__Position__Type.values()[Math.min((int) bitStream.readBits(4), Tactic__Position__Type.values().length - 1)];
             role = Role__Type.values()[Math.min((int) bitStream.readBits(3), Role__Type.values().length - 1)];
         }
@@ -230,6 +230,7 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         penaltyKickDefender,
         penaltyKickKeeper,
         demo,
+        calibrationFinished,
         UNKNOWN
     }
 
@@ -241,7 +242,7 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         public Eigen.Vector2f shootingTo = new Eigen.Vector2f();
 
         public void read(final BitStream bitStream, final long __timestampBase) {
-            activity = BehaviorStatus__Activity.values()[Math.min((int) bitStream.readBits(6), BehaviorStatus__Activity.values().length - 1)];
+            activity = BehaviorStatus__Activity.values()[Math.min((int) bitStream.readBits(8), BehaviorStatus__Activity.values().length - 1)];
             passTarget = bitStream.readInt(-1, 14, 4);
             walkingTo.x = bitStream.readFloat(-32768, 32767, 16);
             walkingTo.y = bitStream.readFloat(-32768, 32767, 16);

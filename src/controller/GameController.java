@@ -319,7 +319,7 @@ public class GameController {
             data.kickingTeam = (byte) (data.kickingTeam == data.team[0].teamNumber ? input.outTeam[0] : (data.kickingTeam == data.team[1].teamNumber ? input.outTeam[1] : 0));
         } else {
             data.kickingTeam = (byte) input.outTeam[0];
-            data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
+            data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN; // TODO: SPL1vs1 is always PLAYOFF
             data.competitionType = Rules.league.competitionType;
         }
 
