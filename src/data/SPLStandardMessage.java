@@ -137,7 +137,7 @@ public class SPLStandardMessage implements Serializable {
                     }
 
                     teamNum = buffer.get();
-                    if (teamNum < 0) {
+                    if (teamNum <= 0) {
                         errors.add("team number not set");
                     } else {
                         teamNumValid = true;
