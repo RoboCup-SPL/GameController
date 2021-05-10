@@ -26,14 +26,6 @@ public class Parser
     /* The output´s date format (date-time) */
     public static final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 
-    /* All the actions that would cause the teams to change colors */
-    private static final String[] colorChangeActions = {
-        "1st Half",
-        "1st Half Extra Time",
-        "2nd Half",
-        "2nd Half Extra Time"
-    };
-
     /*
      * All the actions to extract from the logs into statistics.
      * If there are actions which are not prefix-free, the longer
