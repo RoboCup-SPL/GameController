@@ -112,8 +112,6 @@ public class Parser
                         log.league = Rules.LEAGUES[j];
                     }
                 }
-            } else if (action.startsWith("Auto color change = false")) {
-                log.keepColors = true;
             } else if (action.startsWith("Undo")) {
                 String[] splitted = action.split(" ");
                 if (splitted.length < 2) {
@@ -204,17 +202,6 @@ public class Parser
             raw = line.substring(divPos);
 
             time = timeFormat.format(rawTime);
-
-            if (!log.keepColors) {
-                for (String ca : colorChangeActions) {
-                    if (raw.startsWith(ca)) {
-                        String tmp = teams[0];
-                        teams[0] = teams[1];
-                        teams[1] = tmp;
-                        break;
-                    }
-                }
-            }
 
             boolean actionMatch = false;
             for (String a : actions) {

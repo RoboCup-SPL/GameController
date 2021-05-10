@@ -36,8 +36,6 @@ public class LogInfo
     public String version;
     /* The league this log´s game was layed in. */
     public Rules league;
-    /* If the teams have kept there team colors during the game. */
-    public boolean keepColors = false;
     /* The teams's names. */
     public String[] team = new String[2];
     /* The teams's jersey colors. */
@@ -154,7 +152,6 @@ public class LogInfo
                 + (isRealTeam(true) ? team[0] : GUI.HTML_RED + team[0] + GUI.HTML_END)
                 + " vs "
                 + (isRealTeam(false) ? team[1] : GUI.HTML_RED + team[1] + GUI.HTML_END) + GUI.HTML_LF
-                + (keepColors ? "No Color Change" : "Color Change") + GUI.HTML_LF
                 + (start != null ? start : GUI.HTML_RED + start + GUI.HTML_END) + " starting" + GUI.HTML_LF
                 + (isRealDuration() ? duration : GUI.HTML_RED + duration + GUI.HTML_END) + " seconds" + GUI.HTML_LF
                 + (lines.size()-NUM_OF_INFO_ENTRIES) + " actions" + GUI.HTML_LF
