@@ -41,8 +41,9 @@ public class LocalGameStuck extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (((data.gameState == GameControlData.STATE_PLAYING) && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
-                && (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) <= 0))
-            || data.testmode;
+        return (data.competitionType == GameControlData.COMPETITION_TYPE_NORMAL)
+                && (((data.gameState == GameControlData.STATE_PLAYING) && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
+                    && (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) <= 0))
+                || data.testmode;
     }
 }

@@ -58,11 +58,12 @@ public class Ready extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ((data.gameState == GameControlData.STATE_INITIAL)
-              && !data.timeOutActive[0] 
-              && !data.timeOutActive[1]
-              && !data.refereeTimeout
-              && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
+        return ((data.competitionType != GameControlData.COMPETITION_TYPE_PASSING_CHALLENGE)
+                && (data.gameState == GameControlData.STATE_INITIAL)
+                && !data.timeOutActive[0]
+                && !data.timeOutActive[1]
+                && !data.refereeTimeout
+                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
             || (data.gameState == GameControlData.STATE_READY)
             || data.testmode;
     }

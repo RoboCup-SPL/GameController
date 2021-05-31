@@ -149,8 +149,6 @@ public class GUI extends JFrame implements GCGUI
     private static final String SECOND_HALF = "Second Half";
     private static final String FIRST_HALF_SHORT = "1st Half";
     private static final String SECOND_HALF_SHORT = "2nd Half";
-    private static final String FIRST_HALF_OVERTIME = "1st Extra";
-    private static final String SECOND_HALF_OVERTIME = "2nd Extra";
     private static final String PENALTY_SHOOT = "Penalty Shots";
     private static final String PENALTY_SHOOT_SHORT = "Penalty";
     private static final String PEN_PUSHING = "Pushing";
@@ -230,8 +228,6 @@ public class GUI extends JFrame implements GCGUI
     private ImageButton clockPause;
     private JToggleButton firstHalf;
     private JToggleButton secondHalf;
-    private JToggleButton firstHalfOvertime;
-    private JToggleButton secondHalfOvertime;
     private JToggleButton penaltyShoot;
     private ButtonGroup halfGroup;
     private JToggleButton[] pen;
@@ -392,39 +388,18 @@ public class GUI extends JFrame implements GCGUI
         incGameClock.setBorder(null);
         clockDescription = new JLabel("");
         clockDescription.setHorizontalAlignment(JLabel.CENTER);
-        if (!Rules.league.overtime) {
-            firstHalf = new ToggleButton(FIRST_HALF);
-            firstHalf.setSelected(true);
-            secondHalf = new ToggleButton(SECOND_HALF);
-            penaltyShoot = new ToggleButton(PENALTY_SHOOT);
-            refereeTimeout = new ToggleButton(REFEREE_TIMEOUT);
-            halfGroup = new ButtonGroup();
-            halfGroup.add(firstHalf);
-            halfGroup.add(secondHalf);
-            halfGroup.add(penaltyShoot);
-            
-            if (Rules.league.isRefereeTimeoutAvailable) {
-                halfGroup.add(refereeTimeout);
-            }
-        } else {
-            firstHalf = new ToggleButton(FIRST_HALF_SHORT);
-            firstHalf.setSelected(true);
-            secondHalf = new ToggleButton(SECOND_HALF_SHORT);
-            firstHalfOvertime = new ToggleButton(FIRST_HALF_OVERTIME);
-            secondHalfOvertime = new ToggleButton(SECOND_HALF_OVERTIME);
-            penaltyShoot = new ToggleButton(PENALTY_SHOOT_SHORT);
-            refereeTimeout = new ToggleButton(REFEREE_TIMEOUT);
-            halfGroup = new ButtonGroup();
-            halfGroup.add(firstHalf);
-            halfGroup.add(secondHalf);
-            halfGroup.add(firstHalfOvertime);
-            halfGroup.add(secondHalfOvertime);
-            halfGroup.add(penaltyShoot);
-            
-            if (Rules.league.isRefereeTimeoutAvailable) {
-                halfGroup.add(refereeTimeout);
-            }
-        }
+
+        firstHalf = new ToggleButton(FIRST_HALF);
+        firstHalf.setSelected(true);
+        secondHalf = new ToggleButton(SECOND_HALF);
+        penaltyShoot = new ToggleButton(PENALTY_SHOOT);
+        refereeTimeout = new ToggleButton(REFEREE_TIMEOUT);
+        halfGroup = new ButtonGroup();
+        halfGroup.add(firstHalf);
+        halfGroup.add(secondHalf);
+        halfGroup.add(penaltyShoot);
+        halfGroup.add(refereeTimeout);
+
         //  state
         initial = new ToggleButton(STATE_INITIAL);
         initial.setSelected(true);
@@ -505,33 +480,10 @@ public class GUI extends JFrame implements GCGUI
         else{
             layout.add(.4, .0, .2, .11, clockContainer);
         }
-        if (!Rules.league.overtime) {
-            if (Rules.league.isRefereeTimeoutAvailable) {
-                layout.add(.31, .2, .09, .06, firstHalf);
-                layout.add(.407, .2, .09, .06, secondHalf);
-                layout.add(.503, .2, .09, .06, penaltyShoot);
-                layout.add(.60, .2, .09, .06, refereeTimeout);
-            } else {
-                layout.add(.31, .2, .12, .06, firstHalf);
-                layout.add(.44, .2, .12, .06, secondHalf);
-                layout.add(.57, .2, .12, .06, penaltyShoot);
-            }
-        } else {
-            if (Rules.league.isRefereeTimeoutAvailable) {
-                layout.add(.31, .2, .06, .06, firstHalf);
-                layout.add(.375, .2, .06, .06, secondHalf);
-                layout.add(.439, .2, .06, .06, firstHalfOvertime);
-                layout.add(.501, .2, .06, .06, secondHalfOvertime);
-                layout.add(.565, .2, .06, .06, penaltyShoot);
-                layout.add(.63, .2, .06, .06, refereeTimeout);
-            } else {
-                layout.add(.31, .2, .07, .06, firstHalf);
-                layout.add(.3875, .2, .07, .06, secondHalf);
-                layout.add(.465, .2, .07, .06, firstHalfOvertime);
-                layout.add(.5425, .2, .07, .06, secondHalfOvertime);
-                layout.add(.62, .2, .07, .06, penaltyShoot);
-            }
-        }
+        layout.add(.31, .2, .09, .06, firstHalf);
+        layout.add(.407, .2, .09, .06, secondHalf);
+        layout.add(.503, .2, .09, .06, penaltyShoot);
+        layout.add(.60, .2, .09, .06, refereeTimeout);
         layout.add(.31, .27, .07, .08, initial);
         layout.add(.3875, .27, .07, .08, ready);
         layout.add(.465, .27, .07, .08, set);
@@ -581,10 +533,6 @@ public class GUI extends JFrame implements GCGUI
         }
         firstHalf.addActionListener(ActionBoard.firstHalf);
         secondHalf.addActionListener(ActionBoard.secondHalf);
-        if (Rules.league.overtime) {
-            firstHalfOvertime.addActionListener(ActionBoard.firstHalfOvertime);
-            secondHalfOvertime.addActionListener(ActionBoard.secondHalfOvertime);
-        }
         penaltyShoot.addActionListener(ActionBoard.penaltyShoot);
         pen[0].addActionListener(ActionBoard.pushing);
         pen[1].addActionListener(ActionBoard.foul);
@@ -856,21 +804,11 @@ public class GUI extends JFrame implements GCGUI
         }
         firstHalf.setEnabled(ActionBoard.firstHalf.isLegal(data));
         secondHalf.setEnabled(ActionBoard.secondHalf.isLegal(data));
-        if (Rules.league.overtime) {
-            firstHalfOvertime.setEnabled(ActionBoard.firstHalfOvertime.isLegal(data));
-            secondHalfOvertime.setEnabled(ActionBoard.secondHalfOvertime.isLegal(data));
-        }
         penaltyShoot.setEnabled(ActionBoard.penaltyShoot.isLegal(data));
         firstHalf.setSelected((data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                             && (data.firstHalf == GameControlData.C_TRUE));
         secondHalf.setSelected((data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                             && (data.firstHalf != GameControlData.C_TRUE));
-        if (Rules.league.overtime) {
-           firstHalfOvertime.setSelected((data.gamePhase == GameControlData.GAME_PHASE_OVERTIME)
-                            && (data.firstHalf == GameControlData.C_TRUE));
-           secondHalfOvertime.setSelected((data.gamePhase == GameControlData.GAME_PHASE_OVERTIME)
-                            && (data.firstHalf != GameControlData.C_TRUE)); 
-        }
         penaltyShoot.setSelected(data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT || data.previousGamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT);
     }
     
@@ -937,7 +875,11 @@ public class GUI extends JFrame implements GCGUI
     private void updateGoal(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            goals[i].setText(""+data.team[i].score);
+            if (Rules.league.autonomousCalibrationScoreFactor != 1.f) {
+                goals[i].setText(Float.toString(data.team[i].score * (data.autonomouslyCalibrated[i] ? Rules.league.autonomousCalibrationScoreFactor : 1.f)));
+            } else {
+                goals[i].setText(""+data.team[i].score);
+            }
             goalInc[i].setEnabled(ActionBoard.goalInc[i].isLegal(data));
             goalDec[i].setVisible(ActionBoard.goalDec[i].isLegal(data));
         }
@@ -1273,14 +1215,8 @@ public class GUI extends JFrame implements GCGUI
         
         firstHalf.setFont(timeoutFont);
         secondHalf.setFont(timeoutFont);
-        if (Rules.league.overtime) {
-            firstHalfOvertime.setFont(timeoutFont);
-            secondHalfOvertime.setFont(timeoutFont);
-        }
         penaltyShoot.setFont(timeoutFont);
-        if (Rules.league.isRefereeTimeoutAvailable) {
-            refereeTimeout.setFont(timeoutFont);
-        }
+        refereeTimeout.setFont(timeoutFont);
 
         initial.setFont(stateFont);
         ready.setFont(stateFont);

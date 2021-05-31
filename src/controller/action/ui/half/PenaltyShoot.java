@@ -57,15 +57,11 @@ public class PenaltyShoot extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)
-          || (data.previousGamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)      
-          || ((data.firstHalf != GameControlData.C_TRUE)
-            && (data.gameState == GameControlData.STATE_FINISHED)
-            && !(Rules.league.overtime
-                && (data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF)
-                && (data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
-                && (data.team[0].score == data.team[1].score)
-                && (data.team[0].score > 0)) )
-          || (data.testmode);
+        return data.competitionType == GameControlData.COMPETITION_TYPE_NORMAL
+                && ((data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)
+                    || (data.previousGamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)
+                    || ((data.firstHalf != GameControlData.C_TRUE)
+                        && (data.gameState == GameControlData.STATE_FINISHED)))
+                || (data.testmode);
     }
 }

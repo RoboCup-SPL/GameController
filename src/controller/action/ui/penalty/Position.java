@@ -46,10 +46,12 @@ public class Position extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ((data.gameState == GameControlData.STATE_READY
-                    || data.gameState == GameControlData.STATE_SET
-                    || data.gameState == GameControlData.STATE_PLAYING)
-                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
-            || data.testmode;
+        return (((data.competitionType == GameControlData.COMPETITION_TYPE_NORMAL)
+                        && (data.gameState == GameControlData.STATE_READY
+                            || data.gameState == GameControlData.STATE_PLAYING))
+                    || (data.competitionType != GameControlData.COMPETITION_TYPE_PASSING_CHALLENGE
+                        && data.gameState == GameControlData.STATE_SET))
+                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
+                || data.testmode;
     }
 }

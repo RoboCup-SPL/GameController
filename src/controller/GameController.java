@@ -317,9 +317,10 @@ public class GameController {
             data.kickingTeam = (byte) (data.kickingTeam == data.team[0].teamNumber ? input.outTeam[0] : (data.kickingTeam == data.team[1].teamNumber ? input.outTeam[1] : 0));
         } else {
             data = new AdvancedData();
-            data.kickingTeam = (byte) input.outTeam[0];
-            data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN; // TODO: SPL1vs1 is always PLAYOFF
+            data.kickingTeam = Rules.league.competitionType == GameControlData.COMPETITION_TYPE_1VS1 ? 0 : (byte) input.outTeam[0];
+            data.competitionPhase = (input.outFulltime || Rules.league.competitionType == GameControlData.COMPETITION_TYPE_1VS1) ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
             data.competitionType = Rules.league.competitionType;
+            data.autonomouslyCalibrated = input.outAutonomousCalibration;
         }
 
         for (int i = 0; i < 2; i++) {
@@ -377,7 +378,7 @@ public class GameController {
         }
         Log.toFile("League = " + Rules.league.leagueName);
         Log.toFile("Competition phase = " + (data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF ? "playoff" : "round robin"));
-        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK ? "general penalty kick challenge" : "normal"));
+        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_PASSING_CHALLENGE ? "passing challenge" : (data.competitionType == GameControlData.COMPETITION_TYPE_1VS1 ? "1vs1" : "normal")));
         Log.toFile("Using broadcast address " + broadcastAddress);
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));
 

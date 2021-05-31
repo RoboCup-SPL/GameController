@@ -45,10 +45,6 @@ public class SPL extends Rules
         delayedSwitchToPlaying = 15;
         /** The number of seconds switching to Ready after a goal is delayed. */
         delayedSwitchAfterGoal = 15;
-        /** If there is an overtime before penalty-shoot in a play-off game. */
-        overtime = false;
-        /** Time in seconds one overtime half is long. */
-        overtimeTime = 0;
         /** If the game starts with penalty-shoots. */
         startWithPenalty = false;
         /** Time in seconds between second half and penalty shoot. */
@@ -79,19 +75,19 @@ public class SPL extends Rules
         timeOutTime = 5*60;
         /** Time in seconds of a referee timeout */
         refereeTimeout = 10*60;
-        /** Defines if the option for a referee timeout is available */
-        isRefereeTimeoutAvailable = true;
         /** One time-out per half? */
         timeOutPerHalf = false;
         /** Allowed to compensate the lost time? */
         lostTime = true;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = true;
-        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
+        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_1VS1, COMPETITION_TYPE_PASSING_CHALLENGE) */
         competitionType = GameControlData.COMPETITION_TYPE_NORMAL;
         /** Number of hardware penalties per half before the robot is ejected. */
         allowedHardwarePenaltiesPerHalf = Integer.MAX_VALUE;
         /** Number of hardware penalties per game before the robot is ejected. */
         allowedHardwarePenaltiesPerGame = Integer.MAX_VALUE;
+        /** The score factor that a team gets for using the fully autonomous calibration procedure. */
+        autonomousCalibrationScoreFactor = 1.f;
     }
 }

@@ -54,8 +54,10 @@ public class KickIn extends GCAction
      */
     @Override
     public boolean isLegal(AdvancedData data) {
-        return (data.gameState == GameControlData.STATE_PLAYING)
+        return (data.competitionType == GameControlData.COMPETITION_TYPE_NORMAL)
+                && (data.gameState == GameControlData.STATE_PLAYING)
                 && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
-                && (data.setPlay == GameControlData.SET_PLAY_NONE || data.kickingTeam != data.team[side].teamNumber) || data.testmode;
+                && (data.setPlay == GameControlData.SET_PLAY_NONE || data.kickingTeam != data.team[side].teamNumber)
+                || data.testmode;
     }
 }

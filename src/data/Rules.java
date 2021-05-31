@@ -12,10 +12,8 @@ public abstract class Rules
 {
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
-        new SPL(),
-        new SPLGORE(),
-        new SPLPenaltyShootout(),
-        new SPLGeneralPenaltyKick()
+        new SPL1vs1(),
+        new SPLPassingChallenge()
     };
 
     /**
@@ -66,10 +64,6 @@ public abstract class Rules
     public int delayedSwitchToPlaying;
     /** The number of seconds switching to Ready after a goal is delayed. */
     public int delayedSwitchAfterGoal;
-    /** If there is an overtime before the penalty shoot-out in a play-off game. */
-    public boolean overtime;
-    /** Time in seconds one overtime half is long. */
-    public int overtimeTime;
     /** If the game starts with penalty-shots. */
     public boolean startWithPenalty;
     /** Time in seconds between second half and penalty shoot-out. */
@@ -100,18 +94,18 @@ public abstract class Rules
     public int timeOutTime;
     /** Time in seconds of a referee timeout. */
     public int refereeTimeout;
-    /** Defines if the option for a referee timeout is available. */
-    public boolean isRefereeTimeoutAvailable;
     /** One time-out per half? */
     public boolean timeOutPerHalf;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
-    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
+    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_1VS1, COMPETITION_TYPE_PASSING_CHALLENGE) */
     public byte competitionType;
     /** Number of hardware penalties per half before the robot is ejected. */
     public int allowedHardwarePenaltiesPerHalf;
     /** Number of hardware penalties per game before the robot is ejected. */
     public int allowedHardwarePenaltiesPerGame;
+    /** The score factor that a team gets for using the fully autonomous calibration procedure. */
+    public float autonomousCalibrationScoreFactor;
 }

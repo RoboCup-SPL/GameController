@@ -16,7 +16,7 @@ import data.Rules;
  */
 public class GlobalStuck extends GCAction
 {
-    /** On which side (0:left, 1:right) */
+    /** On which side (-1:none, 0:left, 1:right) */
     private int side;
 
 
@@ -24,7 +24,7 @@ public class GlobalStuck extends GCAction
      * Creates a new GlobalStuck action.
      * Look at the ActionBoard before using this.
      *
-     * @param side      On which side (0:left, 1:right)
+     * @param side      On which side (-1:none, 0:left, 1:right)
      */
     public GlobalStuck(int side)
     {
@@ -40,9 +40,9 @@ public class GlobalStuck extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        data.kickingTeam = data.team[1 - side].teamNumber;
+        data.kickingTeam = side < 0 ? 0 : data.team[1 - side].teamNumber;
         data.kickOffReason = AdvancedData.KICKOFF_GAMESTUCK;
-        Log.setNextMessage("Global Game Stuck, Kickoff "+Rules.league.teamColorName[data.team[data.kickingTeam == data.team[0].teamNumber ? 0 : 1].teamColor]);
+        Log.setNextMessage("Global Game Stuck" + (side < 0 ? "" : ", Kickoff "+Rules.league.teamColorName[data.team[data.kickingTeam == data.team[0].teamNumber ? 0 : 1].teamColor]));
         ActionBoard.ready.perform(data);
     }
 
@@ -55,8 +55,10 @@ public class GlobalStuck extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ((data.gameState == GameControlData.STATE_PLAYING)
-                  && (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) <= 0))
-              || data.testmode;
+        return (data.competitionType != GameControlData.COMPETITION_TYPE_PASSING_CHALLENGE)
+                && ((side < 0) == (data.competitionType == GameControlData.COMPETITION_TYPE_1VS1))
+                && ((data.gameState == GameControlData.STATE_PLAYING)
+                    && (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) <= 0))
+                || data.testmode;
     }
 }

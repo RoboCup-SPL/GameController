@@ -92,6 +92,9 @@ public class FirstHalf extends GCAction
         data.robotHardwarePenaltyBudget[0] = data.robotHardwarePenaltyBudget[1];
         data.robotHardwarePenaltyBudget[1] = tmp;
 
+        boolean autonomouslyCalibrated = data.autonomouslyCalibrated[0];
+        data.autonomouslyCalibrated[0] = data.autonomouslyCalibrated[1];
+        data.autonomouslyCalibrated[1] = autonomouslyCalibrated;
 
         if (Rules.league.timeOutPerHalf && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)) {
             data.timeOutTaken = new boolean[] {false, false};

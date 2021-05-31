@@ -50,12 +50,15 @@ public class Goal extends GCAction
 
         data.team[side].score += set;
         if (set == 1) {
-            if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
+            if (data.competitionType == GameControlData.COMPETITION_TYPE_1VS1
+                    || data.competitionType == GameControlData.COMPETITION_TYPE_PASSING_CHALLENGE) {
+                Log.state(data, "Point for "+Rules.league.teamColorName[data.team[side].teamColor]);
+            } else if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
                 data.kickingTeamBeforeGoal = data.kickingTeam;
                 data.kickingTeam = data.team[1 - side].teamNumber;
                 data.kickOffReason = AdvancedData.KICKOFF_GOAL;
                 Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
-                if(data.team[side].score >= data.team[1-side].score + 10) {
+                if (data.team[side].score >= data.team[1 - side].score + 10) {
                     // mercy rule
                     ActionBoard.secondHalf.perform(data);
                     ActionBoard.finish.perform(data);
@@ -83,9 +86,9 @@ public class Goal extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ((set == 1)
-              && (data.gameState == GameControlData.STATE_PLAYING)
-              && ( (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
-                || (data.kickingTeam == data.team[side].teamNumber)) )
-            || data.testmode;
+                    && (data.gameState == GameControlData.STATE_PLAYING)
+                    && ((data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
+                        || (data.kickingTeam == data.team[side].teamNumber)))
+                || data.testmode;
     }
 }

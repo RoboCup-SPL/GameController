@@ -1,6 +1,7 @@
 package controller.action.ui.state;
 
 import common.Log;
+import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
@@ -57,10 +58,12 @@ public class Finish extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_READY)
-            || (data.gameState == GameControlData.STATE_SET)
-            || (data.gameState == GameControlData.STATE_PLAYING)
-            || (data.gameState == GameControlData.STATE_FINISHED)
-            || data.testmode;
+        return ((data.gameState == GameControlData.STATE_READY)
+                    || (data.gameState == GameControlData.STATE_SET)
+                    || (data.gameState == GameControlData.STATE_PLAYING))
+                && (data.competitionType != GameControlData.COMPETITION_TYPE_1VS1
+                    || !ActionBoard.incGameClock.isLegal(data))
+                || (data.gameState == GameControlData.STATE_FINISHED)
+                || data.testmode;
     }
 }

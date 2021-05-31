@@ -53,7 +53,8 @@ public class SecondHalf extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (((data.firstHalf != GameControlData.C_TRUE)
+        return data.competitionType != GameControlData.COMPETITION_TYPE_PASSING_CHALLENGE
+                && (((data.firstHalf != GameControlData.C_TRUE)
                         && (data.gamePhase == GameControlData.GAME_PHASE_NORMAL))
                    || ((data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                         && (data.gameState == GameControlData.STATE_FINISHED)))

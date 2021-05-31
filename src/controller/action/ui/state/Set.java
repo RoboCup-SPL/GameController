@@ -88,11 +88,13 @@ public class Set extends GCAction {
         return (data.gameState == GameControlData.STATE_READY)
                 || (data.gameState == GameControlData.STATE_SET)
                 || ((data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)
-                && ((data.gameState != GameControlData.STATE_PLAYING)
-                || (Rules.league.penaltyShotRetries))
-                && !data.timeOutActive[0]
-                && !data.timeOutActive[1]
-                && !data.refereeTimeout)
+                    && ((data.gameState != GameControlData.STATE_PLAYING)
+                        || Rules.league.penaltyShotRetries)
+                    && !data.timeOutActive[0]
+                    && !data.timeOutActive[1]
+                    && !data.refereeTimeout)
+                || ((data.competitionType == GameControlData.COMPETITION_TYPE_PASSING_CHALLENGE)
+                    && (data.gameState == GameControlData.STATE_INITIAL))
                 || data.testmode;
     }
 }

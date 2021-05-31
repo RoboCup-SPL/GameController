@@ -19,6 +19,7 @@ import java.util.HashMap;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,6 +28,8 @@ import javax.swing.JRadioButton;
 
 import data.GameControlData;
 import data.Rules;
+import data.SPL1vs1;
+import data.SPLPassingChallenge;
 import data.SPLPenaltyShootout;
 import data.Teams;
 
@@ -62,6 +65,7 @@ public class StartInput extends JFrame implements Serializable
     private static final String FULLSCREEN_LABEL = "Fullscreen";
     private static final String START_LABEL = "Start";
     private static final String TEAM_COLOR_CHANGE = "Color";
+    private static final String AUTONOMOUS_CALIBRATION = "Uses Autonomous Calibration";
 
     /** If true, this GUI has finished and offers it`s input. */
     public boolean finished = false;
@@ -69,6 +73,7 @@ public class StartInput extends JFrame implements Serializable
     /** The inputs that can be read from this GUI when it has finished. */
     public int[] outTeam = {0, 0};
     public byte[] outTeamColor = new byte[2];
+    public boolean[] outAutonomousCalibration = {false, false};
     public boolean outFulltime;
     public boolean outFullscreen;
 
@@ -78,6 +83,7 @@ public class StartInput extends JFrame implements Serializable
     private ImageIcon[] teamIcon = new ImageIcon[2];
     private JButton[] teamColorChange = new JButton[2];
     private JLabel[] teamIconLabel = new JLabel[2];
+    private JCheckBox[] teamAutonomousCalibration = new JCheckBox[2];
     @SuppressWarnings("unchecked")
     private JComboBox<String>[] team = (JComboBox<String>[]) new JComboBox[2];
     private JPanel optionsLeft;
@@ -132,6 +138,7 @@ public class StartInput extends JFrame implements Serializable
             }
             teamColorChange[i] = new JButton(TEAM_COLOR_CHANGE);
             reloadTeamColor(i);
+            teamAutonomousCalibration[i] = new JCheckBox(AUTONOMOUS_CALIBRATION);
             teamContainer[i] = new ImagePanel(getImage(i, colorNames[i][0]));
             teamContainer[i].setPreferredSize(new Dimension(WINDOW_WIDTH/2-STANDARD_SPACE, TEAMS_HEIGHT));
             teamContainer[i].setOpaque(true);
@@ -143,9 +150,9 @@ public class StartInput extends JFrame implements Serializable
             teamChooseContainer[i] = new JPanel(new BorderLayout());
             teamContainer[i].add(teamChooseContainer[i], BorderLayout.SOUTH);
             teamChooseContainer[i].add(team[i], BorderLayout.CENTER);
+            teamChooseContainer[i].add(teamColorChange[i], i == 0 ? BorderLayout.WEST : BorderLayout.EAST);
+            teamChooseContainer[i].add(teamAutonomousCalibration[i], BorderLayout.SOUTH);
         }
-        teamChooseContainer[0].add(teamColorChange[0], BorderLayout.WEST);
-        teamChooseContainer[1].add(teamColorChange[1], BorderLayout.EAST);
 
         teamColorChange[0].addActionListener(new ActionListener()
             {
@@ -252,8 +259,9 @@ public class StartInput extends JFrame implements Serializable
                             }
                         }
                     }
-                    nofulltime.setVisible(!onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout));
-                    fulltime.setVisible(!onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout));
+                    final boolean showFulltimeOptions = !onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout || Rules.league instanceof SPL1vs1 || Rules.league instanceof SPLPassingChallenge);
+                    nofulltime.setVisible(showFulltimeOptions);
+                    fulltime.setVisible(showFulltimeOptions);
                     nofulltime.setText(FULLTIME_LABEL_NO);
                     fulltime.setText(FULLTIME_LABEL_YES);
                     if (gameType == GameType.PRELIMINARY) {
@@ -261,8 +269,8 @@ public class StartInput extends JFrame implements Serializable
                     } else if (gameType == GameType.PLAYOFF) {
                         fulltime.setSelected(true);
                     }
-                    teamColorChange[0].setVisible(true);
-                    teamColorChange[1].setVisible(true);
+                    teamAutonomousCalibration[0].setVisible(Rules.league instanceof SPL1vs1);
+                    teamAutonomousCalibration[1].setVisible(Rules.league instanceof SPL1vs1);
                     showAvailableTeams();
                     startEnabling();
                 }
@@ -301,6 +309,8 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e) {
                     outFulltime = fulltime.isSelected() && fulltime.isVisible();
                     outFullscreen = fullscreen.getState();
+                    outAutonomousCalibration[0] = teamAutonomousCalibration[0].isSelected();
+                    outAutonomousCalibration[1] = teamAutonomousCalibration[1].isSelected();
                     finished = true;
                 }});
 

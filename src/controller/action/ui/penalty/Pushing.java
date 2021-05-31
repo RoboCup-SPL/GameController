@@ -42,8 +42,9 @@ public class Pushing extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_READY)
-            || (data.gameState == GameControlData.STATE_PLAYING) 
-            || (data.testmode);
+        return (data.competitionType == GameControlData.COMPETITION_TYPE_NORMAL)
+                && ((data.gameState == GameControlData.STATE_READY)
+                    || (data.gameState == GameControlData.STATE_PLAYING))
+                || (data.testmode);
     }
 }

@@ -18,10 +18,8 @@ import controller.action.ui.Testmode;
 import controller.action.ui.TimeOut;
 import controller.action.ui.Undo;
 import controller.action.ui.half.FirstHalf;
-import controller.action.ui.half.FirstHalfOvertime;
 import controller.action.ui.half.PenaltyShoot;
 import controller.action.ui.half.SecondHalf;
-import controller.action.ui.half.SecondHalfOvertime;
 import controller.action.ui.penalty.Foul;
 import controller.action.ui.penalty.FoulPenaltyArea;
 import controller.action.ui.penalty.MotionInSet;
@@ -69,7 +67,7 @@ public class ActionBoard
     public static Robot[][] robot;
     public static GoalKick[] goalKick = new GoalKick[2];
     public static TimeOut[] timeOut = new TimeOut[2];
-    public static GlobalStuck[] stuck = new GlobalStuck[2];
+    public static GlobalStuck[] stuck = new GlobalStuck[3];
     public static KickIn[] kickIn = new KickIn[2];
     public static CornerKick[] cornerKick = new CornerKick[2];
     public static ClockReset clockReset;
@@ -77,8 +75,6 @@ public class ActionBoard
     public static IncGameClock incGameClock;
     public static FirstHalf firstHalf;
     public static SecondHalf secondHalf;
-    public static FirstHalfOvertime firstHalfOvertime;
-    public static SecondHalfOvertime secondHalfOvertime;
     public static PenaltyShoot penaltyShoot;
     public static RefereeTimeout refereeTimeout;
     public static Initial initial;
@@ -131,13 +127,13 @@ public class ActionBoard
             cornerKick[i] = new CornerKick(i);
         }
 
+        stuck[2] = new GlobalStuck(-1);
+
         clockReset = new ClockReset();
         clockPause = new ClockPause();
         incGameClock = new IncGameClock();
         firstHalf = new FirstHalf();
         secondHalf = new SecondHalf();
-        firstHalfOvertime = new FirstHalfOvertime();
-        secondHalfOvertime = new SecondHalfOvertime();
         penaltyShoot = new PenaltyShoot();
         refereeTimeout = new RefereeTimeout();
 

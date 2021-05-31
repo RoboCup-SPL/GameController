@@ -60,6 +60,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public long timeSinceCurrentSetPlayBegan;
 
     /**
+     * How often the game time has already been extended.
+     */
+    public int incGameClockCounter;
+
+    /**
      * When was each player penalized last (ms, 0 = never)?
      */
     public long[][] whenPenalized = new long[2][Rules.league.teamSize];
@@ -99,6 +104,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * TimeOut counters for each team, 0:left side, 1:right side.
      */
     public boolean[] timeOutTaken = {false, false};
+
+    /**
+     * Whether each team used autonomous calibration.
+     */
+    public boolean[] autonomouslyCalibrated = {false, false};
 
     /**
      * If true, left side has the kickoff.
@@ -300,13 +310,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public int getRemainingGameTime(boolean real) {
         int duration = gamePhase == GAME_PHASE_TIMEOUT
                 ? (previousGamePhase == GAME_PHASE_NORMAL ? Rules.league.halfTime
-                        : previousGamePhase == GAME_PHASE_OVERTIME ? Rules.league.overtimeTime
-                                : Rules.league.penaltyShotTime)
+                        : Rules.league.penaltyShotTime)
                 : (gamePhase == GAME_PHASE_NORMAL) ? Rules.league.halfTime
-                        : gamePhase == GAME_PHASE_OVERTIME ? Rules.league.overtimeTime
-                                : Math.max(team[0].penaltyShot, team[1].penaltyShot) > Rules.league.numberOfPenaltyShots
-                                ? Rules.league.penaltyShotTimeSuddenDeath
-                                : Rules.league.penaltyShotTime;
+                        : Math.max(team[0].penaltyShot, team[1].penaltyShot) > Rules.league.numberOfPenaltyShots
+                        ? Rules.league.penaltyShotTimeSuddenDeath
+                        : Rules.league.penaltyShotTime;
         int timePlayed = gameState == STATE_INITIAL // during timeouts
                 || ((gameState == STATE_READY || gameState == STATE_SET)
                     && (competitionPhase == COMPETITION_PHASE_PLAYOFF && Rules.league.playOffTimeStop

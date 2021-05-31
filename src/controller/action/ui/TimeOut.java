@@ -74,16 +74,17 @@ public class TimeOut extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-      return data.timeOutActive[side]
-            || ((data.gameState == GameControlData.STATE_INITIAL ||
-                    ((data.gameState == GameControlData.STATE_READY ||
-                            data.gameState == GameControlData.STATE_SET)
-                        && data.setPlay != GameControlData.SET_PLAY_PENALTY_KICK))
-                && !data.timeOutTaken[side]
-                && !data.timeOutActive[side == 0 ? 1 : 0]
-                && !(data.gamePhase == GameControlData.GAME_PHASE_TIMEOUT)
-                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
-                    || data.gameState == GameControlData.STATE_INITIAL))
-            || data.testmode;
+        return (data.competitionType == GameControlData.COMPETITION_TYPE_NORMAL)
+                && (data.timeOutActive[side]
+                    || ((data.gameState == GameControlData.STATE_INITIAL
+                            || ((data.gameState == GameControlData.STATE_READY
+                                    || data.gameState == GameControlData.STATE_SET)
+                                && data.setPlay != GameControlData.SET_PLAY_PENALTY_KICK))
+                        && !data.timeOutTaken[side]
+                        && !data.timeOutActive[side == 0 ? 1 : 0]
+                        && !(data.gamePhase == GameControlData.GAME_PHASE_TIMEOUT)
+                        && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
+                            || data.gameState == GameControlData.STATE_INITIAL)))
+                || data.testmode;
     }
 }
