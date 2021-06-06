@@ -799,6 +799,8 @@ public class GUI extends JFrame implements GCGUI
         } else if (data.gameState == AdvancedData.STATE_PLAYING && data.kickOffReason != AdvancedData.KICKOFF_PENALTYSHOOT
                 && timeKickOffBlocked >= 0) {
             clockDescription.setText(KICKOFF_IN_PROGRESS);
+        } else if (data.competitionType == AdvancedData.COMPETITION_TYPE_PASSING_CHALLENGE) {
+            clockDescription.setText("");
         } else if (data.gamePhase == AdvancedData.GAME_PHASE_NORMAL
                 && (data.gameState == AdvancedData.STATE_INITIAL && data.firstHalf != AdvancedData.C_TRUE && !data.timeOutActive[0] && !data.timeOutActive[1]
                 || data.gameState == AdvancedData.STATE_FINISHED && data.firstHalf == AdvancedData.C_TRUE)) {

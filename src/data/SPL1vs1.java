@@ -17,6 +17,8 @@ public class SPL1vs1 extends SPL
         halfTime = 5*60;
         /** Time in seconds the ball is blocked after kickoff. */
         kickoffTime = -1;
+        /** Time in seconds between second half and penalty shoot. */
+        pausePenaltyShootOutTime = 0;
         /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_1VS1, COMPETITION_TYPE_PASSING_CHALLENGE) */
         competitionType = GameControlData.COMPETITION_TYPE_1VS1;
         /** Number of hardware penalties per half before the robot is ejected. */

@@ -317,10 +317,15 @@ public class GameController {
             data.kickingTeam = (byte) (data.kickingTeam == data.team[0].teamNumber ? input.outTeam[0] : (data.kickingTeam == data.team[1].teamNumber ? input.outTeam[1] : 0));
         } else {
             data = new AdvancedData();
-            data.kickingTeam = Rules.league.competitionType == GameControlData.COMPETITION_TYPE_1VS1 ? 0 : (byte) input.outTeam[0];
-            data.competitionPhase = (input.outFulltime || Rules.league.competitionType == GameControlData.COMPETITION_TYPE_1VS1) ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
             data.competitionType = Rules.league.competitionType;
-            data.autonomouslyCalibrated = input.outAutonomousCalibration;
+            data.kickingTeam = data.competitionType == GameControlData.COMPETITION_TYPE_1VS1 ? 0 : (byte) input.outTeam[0];
+            data.competitionPhase = (input.outFulltime || data.competitionType != GameControlData.COMPETITION_TYPE_NORMAL) ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
+            if (data.competitionType == GameControlData.COMPETITION_TYPE_1VS1) {
+                data.autonomouslyCalibrated = input.outAutonomousCalibration;
+                // Abuse the penaltyShot field so that the serialized data contain this, too.
+                data.team[0].penaltyShot = (byte) (data.autonomouslyCalibrated[0] ? 1 : 0);
+                data.team[1].penaltyShot = (byte) (data.autonomouslyCalibrated[1] ? 1 : 0);
+            }
         }
 
         for (int i = 0; i < 2; i++) {

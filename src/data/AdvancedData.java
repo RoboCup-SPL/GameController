@@ -337,7 +337,9 @@ public class AdvancedData extends GameControlData implements Cloneable {
      * there currently is no pause.
      */
     public Integer getRemainingPauseTime() {
-        if (gamePhase == GAME_PHASE_NORMAL
+        if (competitionType == COMPETITION_TYPE_PASSING_CHALLENGE) {
+            return null;
+        } else if (gamePhase == GAME_PHASE_NORMAL
                 && (gameState == STATE_INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == STATE_FINISHED && firstHalf == C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pauseTime);
