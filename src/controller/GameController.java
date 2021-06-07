@@ -274,8 +274,7 @@ public class GameController {
             System.exit(-1);
         }
 
-        AdvancedData data = new AdvancedData();
-        boolean loadedState = false;
+        AdvancedData data = null;
         if (loadPath != null) {
             try (final ObjectInputStream stream = new ObjectInputStream(new FileInputStream(loadPath))) {
                 final long timeWhenSaved = stream.readLong();
@@ -295,7 +294,6 @@ public class GameController {
                     System.exit(-1);
                 }
                 data.adjustTimestamps(timeWhenSaved);
-                loadedState = true;
             } catch (ClassNotFoundException | IOException e) {
                 JOptionPane.showMessageDialog(null,
                         "Error while loading game state from file: " + e.getMessage(),
@@ -306,7 +304,7 @@ public class GameController {
         }
 
         //collect the start parameters and put them into the first data.
-        StartInput input = new StartInput(!windowMode, gameType, teams, loadedState);
+        StartInput input = new StartInput(!windowMode, gameType, teams, data != null);
         while (!input.finished) {
             try {
                 Thread.sleep(100);
@@ -315,9 +313,10 @@ public class GameController {
             }
         }
 
-        if (loadedState) {
+        if (data != null) {
             data.kickingTeam = (byte) (data.kickingTeam == data.team[0].teamNumber ? input.outTeam[0] : (data.kickingTeam == data.team[1].teamNumber ? input.outTeam[1] : 0));
         } else {
+            data = new AdvancedData();
             data.kickingTeam = (byte) input.outTeam[0];
             data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN; // TODO: SPL1vs1 is always PLAYOFF
             data.competitionType = Rules.league.competitionType;
