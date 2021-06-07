@@ -11,6 +11,8 @@ public class SPLPassingChallenge extends SPL
     {
         /** The league´s name this rules are for. */
         leagueName = "SPL Passing Challenge";
+        /** The league´s directory name with it´s teams and icons. */
+        leagueDirectory = "spl_passing_challenge";
         /** How many robots are in a team. */
         teamSize = 5; // 5 players
         /** Time in seconds one half is long. */

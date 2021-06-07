@@ -53,7 +53,7 @@ public class GameController {
             + "\n  (-h | --help)                   display help"
             + "\n  (-t | --test)                   use test-mode - currently only disabling the delayed game state switches in the SPL"
             + "\n  (-i | --interface) <interface>  set network interface (default is a connected IPv4 interface)"
-            + "\n  (-l | --league) %s%sselect league (default is spl)"
+            + "\n  (-l | --league) %s%sselect league (default is spl_1vs1)"
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
             + "\n  (-g | --game-type) %s%sselect game type (default is undefined)"
             + "\n  (-b | --limited-broadcast)      use 255.255.255.255 as broadcast address"

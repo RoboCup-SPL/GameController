@@ -11,6 +11,8 @@ public class SPL1vs1 extends SPL
     {
         /** The league´s name this rules are for. */
         leagueName = "SPL 1vs1";
+        /** The league´s directory name with it´s teams and icons. */
+        leagueDirectory = "spl_1vs1";
         /** How many robots are in a team. */
         teamSize = 5; // 5 players
         /** Time in seconds one half is long. */
