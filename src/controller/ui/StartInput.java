@@ -329,17 +329,22 @@ public class StartInput extends JFrame implements Serializable
             final Object previousSelection = team[i].getSelectedItem();
             team[i].removeAllItems();
             boolean foundTeam = false;
-            for (int j=0; j < names.length; j++) {
-                team[i].addItem(names[j]);
-                // Try to restore the previous selection (including its selected color).
-                if (names[j].equals(previousSelection)) {
-                    team[i].setSelectedIndex(j);
-                    if (previousColors[i].equals(colorNames[i][1])) {
-                        switchTeamColor(i);
-                        updateBackgrounds();
+            if (Rules.league.competitionType != GameControlData.COMPETITION_TYPE_PASSING_CHALLENGE || i == 0) {
+                for (int j = 0; j < names.length; j++) {
+                    team[i].addItem(names[j]);
+                    // Try to restore the previous selection (including its selected color).
+                    if (names[j].equals(previousSelection)) {
+                        team[i].setSelectedIndex(j);
+                        if (previousColors[i].equals(colorNames[i][1])) {
+                            switchTeamColor(i);
+                            updateBackgrounds();
+                        }
+                        foundTeam = true;
                     }
-                    foundTeam = true;
                 }
+                team[i].setEnabled(true);
+            } else {
+                team[i].setEnabled(false);
             }
             if (!foundTeam) {
                 outTeam[i] = 0;

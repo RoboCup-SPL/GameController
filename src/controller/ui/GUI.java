@@ -506,18 +506,25 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.465, .27, .07, .08, set);
         layout.add(.5425, .27, .07, .08, play);
         layout.add(.62, .27, .07, .08, finish);
-        if (data.competitionType != GameControlData.COMPETITION_TYPE_1VS1) {
+        if (data.competitionType != GameControlData.COMPETITION_TYPE_NORMAL) {
+            layout.add(.31, .48, .185, .08, pen[2]);
+            layout.add(.505, .48, .185, .08, pen[3]);
+            layout.add(.31, .58, .185, .08, pen[4]);
+            layout.add(.505, .58, .185, .08, pen[5]);
+            layout.add(.31, .68, .185, .08, pen[6]);
+            layout.add(.505, .68, .185, .08, pen[9]);
+        } else {
             layout.add(.31, .38, .185, .08, pen[0]);
             layout.add(.505, .38, .185, .08, pen[1]);
+            layout.add(.31, .48, .185, .08, pen[2]);
+            layout.add(.505, .48, .185, .08, pen[3]);
+            layout.add(.31, .58, .185, .08, pen[4]);
+            layout.add(.505, .58, .185, .08, pen[5]);
+            layout.add(.31, .68, .185, .08, pen[6]);
+            layout.add(.505, .68, .185, .08, pen[7]);
+            layout.add(.31, .78, .185, .08, pen[8]);
+            layout.add(.505, .78, .185, .08, pen[9]);
         }
-        layout.add(.31, .48, .185, .08, pen[2]);
-        layout.add(.505, .48, .185, .08, pen[3]);
-        layout.add(.31, .58, .185, .08, pen[4]);
-        layout.add(.505, .58, .185, .08, pen[5]);
-        layout.add(.31, .68, .185, .08, pen[6]);
-        layout.add(.505, .68, .185, .08, pen[7]);
-        layout.add(.31, .78, .185, .08, pen[8]);
-        layout.add(.505, .78, .185, .08, pen[9]);
         layout.add(.08, .88, .84, .11, log);
         layout.add(.925, .88, .07, .11, cancelUndo);
         layout.add(0, 0, .3, .87, side[0]);
