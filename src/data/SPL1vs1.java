@@ -17,6 +17,8 @@ public class SPL1vs1 extends SPL
         teamSize = 5; // 5 players
         /** Time in seconds one half is long. */
         halfTime = 5*60;
+        /** Time in seconds between first and second half. */
+        pauseTime = 5*60;
         /** Time in seconds the ball is blocked after kickoff. */
         kickoffTime = -1;
         /** Time in seconds between second half and penalty shoot. */
