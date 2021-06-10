@@ -211,13 +211,15 @@ is defined in the file RoboCupGameControlData.h. It differs from the version use
 in 2019 in the following ways:
 
 - The macro `COMPETITION_TYPE_MIXEDTEAM` has been removed.
-- The macro `COMPETITION_TYPE_GENERAL_PENALTY_KICK` has been added.
+- The macro `COMPETITION_TYPE_1VS1` has been added.
+- The macro `COMPETITION_TYPE_PASSING_CHALLENGE` has been added.
 - The macro `SET_PLAY_GOAL_FREE_KICK` has been renamed to `SET_PLAY_GOAL_KICK`.
 - The macro `SET_PLAY_PENALTY_KICK` has been added.
 - The penalty macros have been reorganized:
   - `PENATLY_SPL_KICK_OFF_GOAL` has been removed.
   - `PENALTY_SPL_ILLEGAL_DEFENDER` has been renamed to `PENALTY_SPL_ILLEGAL_POSITION`.
   - `PENALTY_SPL_ILLEGAL_POSITIONING` has been renamed to `PENALTY_SPL_ILLEGAL_POSITION_IN_SET`.
+- In a 1vs1 game, the field `TeamInfo::penaltyShot` indicates whether the team used autonomous calibration (`=1`) and thus gets the score multiplied by `1.5` or not (`=0`).
 
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour
