@@ -240,7 +240,7 @@ public class View3DGSV extends View3D {
         textRendererSizes[RENDERER_STATE] = 60 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_GAME_PHASE] = 80 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_TIME] = 120 * window.getWidth() / 1920;
-        textRendererSizes[RENDERER_SCORE] = window.getWidth() / 6;
+        textRendererSizes[RENDERER_SCORE] = window.getWidth() / 12;
         for (int i = 0; i < textRenderers.length; i++) {
             textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i]), true, true);
         }
@@ -420,13 +420,16 @@ public class View3DGSV extends View3D {
             }
 
             // Score
+            final boolean is1vs1 = data.competitionType == GameControlData.COMPETITION_TYPE_1VS1;
+            final String score1 = is1vs1 ? Float.toString(data.team[1].score * (data.team[1].penaltyShot != 0 ? 1.5f : 1.f)) : ("" + data.team[1].score);
+            final String score0 = is1vs1 ? Float.toString(data.team[0].score * (data.team[0].penaltyShot != 0 ? 1.5f : 1.f)) : ("" + data.team[0].score);
             textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], score1, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], score0, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds(score0).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
             textRenderers[RENDERER_SCORE].endRendering();
 
             // Penalty shots
-            if (data.team[0].penaltyShot > 0 || data.team[1].penaltyShot > 0) {
+            if (!is1vs1 && (data.team[0].penaltyShot > 0 || data.team[1].penaltyShot > 0)) {
                 switchTo2D(gl);
                 final GLU glu = GLU.createGLU(gl);
                 final GLUquadric q = glu.gluNewQuadric();

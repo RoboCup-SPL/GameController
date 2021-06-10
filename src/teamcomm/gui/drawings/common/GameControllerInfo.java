@@ -116,9 +116,12 @@ public class GameControllerInfo extends Static {
             // Display scores
             final TeamInfo teamLeft = data.team[GameState.getInstance().isMirrored() ? 1 : 0];
             final TeamInfo teamRight = data.team[GameState.getInstance().isMirrored() ? 0 : 1];
-            Text.drawText("" + teamLeft.score, -0.3f, 0, 0.3f, getColor(teamLeft.teamColor));
+            final boolean is1vs1 = data.competitionType == GameControlData.COMPETITION_TYPE_1VS1;
+            final String scoreLeft = is1vs1 ? Float.toString(teamLeft.score * (teamLeft.penaltyShot != 0 ? 1.5f : 1.f)) : ("" + teamLeft.score);
+            final String scoreRight = is1vs1 ? Float.toString(teamRight.score * (teamRight.penaltyShot != 0 ? 1.5f : 1.f)) : ("" + teamRight.score);
+            Text.drawText("" + scoreLeft, is1vs1 ? -0.5f : -0.3f, 0, 0.3f, getColor(teamLeft.teamColor));
             Text.drawText(":", 0, 0, 0.3f);
-            Text.drawText("" + teamRight.score, 0.3f, 0, 0.3f, getColor(teamRight.teamColor));
+            Text.drawText("" + scoreRight, is1vs1 ? 0.5f : 0.3f, 0, 0.3f, getColor(teamRight.teamColor));
             gl.glPopMatrix();
         }
     }
