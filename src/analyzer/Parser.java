@@ -18,18 +18,18 @@ import data.Rules;
  */
 public class Parser
 {
-    /* This prefix will be placed at the beginning of every logInfo´s log line,
+    /* This prefix will be placed at the beginning of every logInfo's log line,
      which was made undone by an undo*/
     private static final String UNDONE_PREFIX = "<undone>";
     /* The separator used for the output within a row. */
     private static final String OUT_SEP = ",";
-    /* The output´s date format (date-time) */
+    /* The output's date format (date-time) */
     public static final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 
     /*
      * All the actions to extract from the logs into statistics.
      * If there are actions which are not prefix-free, the longer
-     * action´s string must be first. For example "Playing with Hands"
+     * action's string must be first. For example "Playing with Hands"
      * for "Playing".
      */
     private static final String[] actions = {

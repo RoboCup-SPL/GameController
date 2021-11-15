@@ -41,7 +41,7 @@ import data.Teams;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This is the main GUI.
  * In this class you will find the whole graphical output and the bindings
  * of buttons to their actions, nothing less and nothing more.
@@ -53,7 +53,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String BUTTON_MASK = IS_OSX
             ? "<html><div style=\"padding: 0px 12px\"><center>%s</center></div></html>"
             : "<html><center>%s</center></html>";
-    
+
     /** Fix button centering for Apple Java. */
     private class Button extends JButton
     {
@@ -64,13 +64,13 @@ public class GUI extends JFrame implements GCGUI
             setMargin(insets);
             setText(text);
         }
-        
+
         public void setText(String text)
         {
             super.setText(String.format(BUTTON_MASK, text));
         }
     }
-    
+
     /** Fix button centering for Apple Java. */
     private class ToggleButton extends JToggleButton
     {
@@ -80,21 +80,21 @@ public class GUI extends JFrame implements GCGUI
         {
             setMargin(insets);
         }
-        
+
         public ToggleButton(String text)
         {
             setMargin(insets);
             setText(text);
         }
-        
+
         public void setText(String text)
         {
             super.setText(String.format(BUTTON_MASK, text));
         }
     }
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
@@ -193,7 +193,7 @@ public class GUI extends JFrame implements GCGUI
     private ImageIcon lanOffline;
     private ImageIcon lanUnknown;
     private ImageIcon[][] backgroundSide;
-    
+
     /** All the components of this GUI. */
     private ImagePanel[] side;
     private JLabel[] name;
@@ -239,11 +239,11 @@ public class GUI extends JFrame implements GCGUI
     private JPanel log;
     private JToggleButton[] undo;
     private JButton cancelUndo;
-  
-    
+
+
     /**
      * Creates a new GUI.
-     * 
+     *
      * @param fullscreen    If true, the GUI tries to start using the full
      *                      size of the screen. Actually this means changing
      *                      the display`s resolution to the GUI`s size.
@@ -257,7 +257,7 @@ public class GUI extends JFrame implements GCGUI
 
         final Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         setLocation((int) center.getX() - WINDOW_WIDTH / 2, (int) center.getY() - WINDOW_HEIGHT / 2);
-        
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -265,7 +265,7 @@ public class GUI extends JFrame implements GCGUI
                 dispose();
             }
         });
-        
+
         clockImgReset = new ImageIcon(ICONS_PATH+CLOCK_RESET);
         clockImgPlay = new ImageIcon(ICONS_PATH+CLOCK_PLAY);
         clockImgPause = new ImageIcon(ICONS_PATH+CLOCK_PAUSE);
@@ -274,15 +274,15 @@ public class GUI extends JFrame implements GCGUI
         lanHighLatency = new ImageIcon(ICONS_PATH+HIGH_LATENCY);
         lanOffline = new ImageIcon(ICONS_PATH+OFFLINE);
         lanUnknown = new ImageIcon(ICONS_PATH+UNKNOWN_ONLINE_STATUS);
-        
+
         backgroundSide = new ImageIcon[2][Rules.league.teamColor.length];
         for (int i=0; i<backgroundSide.length; i++) {
             for (int j=0; j<backgroundSide[i].length; j++) {
                 backgroundSide[i][j] = new BackgroundImage(ICONS_PATH+Rules.league.leagueDirectory+BACKGROUND_EXT, i==1, Rules.league.teamColor[j]);
             }
         }
-        
-        
+
+
         //Components
         stateGroup = new ButtonGroup();
         side = new ImagePanel[2];
@@ -292,7 +292,7 @@ public class GUI extends JFrame implements GCGUI
         }
         mid = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_MID).getImage());
         bottom = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_BOTTOM).getImage());
-        
+
         //--side--
         //  score
         name = new JLabel[2];
@@ -328,19 +328,19 @@ public class GUI extends JFrame implements GCGUI
         }
         kickOff[2] = new JRadioButton();
         kickOffGroup.add(kickOff[2]);
-        
+
         //  robots
         robots = new JPanel[2];
         robot = new JToggleButton[2][Rules.league.teamSize];
         robotLabel = new JLabel[2][Rules.league.teamSize];
         lanIcon = new ImageIcon[2][Rules.league.teamSize];
         robotTime = new JProgressBar[2][Rules.league.teamSize];
-        
+
         for (int i=0; i<2; i++) {
             robots[i] = new JPanel();
             robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, Math.max(0, 11 - robot[i].length) * 2));
             robots[i].setOpaque(false);
-            
+
             for (int j=0; j<robot[i].length; j++) {
                 robot[i][j] = new ToggleButton();
                 robotLabel[i][j] = new JLabel();
@@ -361,12 +361,12 @@ public class GUI extends JFrame implements GCGUI
         kickIn = new JButton[2];
         cornerKick = new JButton[2];
         goalKick = new JButton[2];
-        for (int i=0; i<2; i++) {                
+        for (int i=0; i<2; i++) {
             goalKick[i] = new Button(GOAL_KICK);
             kickIn[i] = new Button(KICK_IN);
             cornerKick[i] = new Button(CORNER_KICK);
         }
-        
+
         //--mid--
         //  time
         clockReset = new ImageButton(clockImgReset.getImage());
@@ -402,7 +402,7 @@ public class GUI extends JFrame implements GCGUI
             halfGroup.add(firstHalf);
             halfGroup.add(secondHalf);
             halfGroup.add(penaltyShoot);
-            
+
             if (Rules.league.isRefereeTimeoutAvailable) {
                 halfGroup.add(refereeTimeout);
             }
@@ -420,7 +420,7 @@ public class GUI extends JFrame implements GCGUI
             halfGroup.add(firstHalfOvertime);
             halfGroup.add(secondHalfOvertime);
             halfGroup.add(penaltyShoot);
-            
+
             if (Rules.league.isRefereeTimeoutAvailable) {
                 halfGroup.add(refereeTimeout);
             }
@@ -432,7 +432,7 @@ public class GUI extends JFrame implements GCGUI
         set = new ToggleButton(STATE_SET);
         play = new ToggleButton(STATE_PLAY);
         finish = new ToggleButton(STATE_FINISH);
-        
+
         stateGroup.add(initial);
         stateGroup.add(ready);
         stateGroup.add(set);
@@ -440,7 +440,7 @@ public class GUI extends JFrame implements GCGUI
         stateGroup.add(finish);
         //  penalties
         pen = new JToggleButton[10];
-        
+
         pen[0] = new ToggleButton(PEN_PUSHING);
         pen[1] = new ToggleButton(PEN_FOUL);
         pen[2] = new ToggleButton(PEN_INACTIVE);
@@ -464,11 +464,11 @@ public class GUI extends JFrame implements GCGUI
         }
         cancelUndo = new Button(CANCEL);
         cancelUndo.setVisible(false);
-      
+
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
-        
+
         layout.add(0, 0, .3, .04, name[0]);
         layout.add(.7, 0, .3, .04, name[1]);
         layout.add(.17, .05, .12, .04, kickOff[0]);
@@ -553,7 +553,7 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.3, 0, .4, .87, mid);
         layout.add(.7, 0, .3, .87, side[1]);
         layout.add(0, .87, 1, .132, bottom);
-        
+
         //--listener--
         for (int i=0; i<2; i++) {
             goalDec[i].addActionListener(ActionBoard.goalDec[i]);
@@ -600,52 +600,52 @@ public class GUI extends JFrame implements GCGUI
             undo[i].addActionListener(ActionBoard.undo[i+1]);
         }
         cancelUndo.addActionListener(ActionBoard.cancelUndo);
-      
+
         //fullscreen
         if (fullscreen) {
             setUndecorated(true);
             GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
         }
-        
+
         setVisible(true);
     }
-    
+
     /**
      * @author Michel Bartsch
-     * 
+     *
      * This is a normal JPanel, but it has a background image.
      */
     class ImagePanel extends JPanel
     {
         private static final long serialVersionUID = 1L;
-        
-        
+
+
         /** The image that is shown in the background. */
         private Image image;
 
         /**
          * Creates a new ImagePanel.
-         * 
+         *
          * @param image     The Image to be shown in the background.
          */
         public ImagePanel(Image image)
         {
             this.image = image;
         }
-        
+
         /**
          * Changes the background image.
-         * 
+         *
          * @param image     Changes the image to this one.
          */
         public void setImage(Image image)
         {
             this.image = image;
         }
-        
+
         /**
          * Paints this Component, should be called automatically.
-         * 
+         *
          * @param g     This components graphical content.
          */
         @Override
@@ -658,43 +658,43 @@ public class GUI extends JFrame implements GCGUI
             g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         }
     }
-    
+
     /**
      * @author Michel Bartsch
-     * 
+     *
      * This is a normal JButton, but it has a background image.
      */
     class ImageButton extends JButton
     {
         private static final long serialVersionUID = 1L;
-        
-        
+
+
         /** The image that is shown in the background. */
         private Image image;
 
         /**
          * Creates a new ImageButton.
-         * 
+         *
          * @param image     The Image to be shown in the background.
          */
         public ImageButton(Image image)
         {
             this.image = image;
         }
-        
+
         /**
          * Changes the background image.
-         * 
+         *
          * @param image     Changes the image to this one.
          */
         public void setImage(Image image)
         {
             this.image = image;
         }
-        
+
         /**
          * Paints this Component, should be called automatically.
-         * 
+         *
          * @param g     This components graphical content.
          */
         @Override
@@ -716,7 +716,7 @@ public class GUI extends JFrame implements GCGUI
      *     this for less dependencies between actions and GUI (view and control).
      *  3. The actions isLegal method to enable or disable buttons.
      * This method should never have other effects than updating the view!
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     @Override
@@ -767,7 +767,7 @@ public class GUI extends JFrame implements GCGUI
 
     /**
      * Updates the clock.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateClock(AdvancedData data)
@@ -779,7 +779,7 @@ public class GUI extends JFrame implements GCGUI
         } else {
             clockSub.setText("");
         }
-        
+
         updateClockDescription(data);
 
         ImageIcon tmp;
@@ -795,7 +795,7 @@ public class GUI extends JFrame implements GCGUI
             incGameClock.setVisible(ActionBoard.incGameClock.isLegal(data));
         }
     }
-    
+
     private void updateClockDescription(AdvancedData data) {
         int timeKickOffBlocked = data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime);
         if (data.gameState == AdvancedData.STATE_INITIAL && (data.timeOutActive[0] || data.timeOutActive[1])) {
@@ -843,10 +843,10 @@ public class GUI extends JFrame implements GCGUI
             clockDescription.setText("");
         }
     }
-    
+
     /**
      * Updates the half.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateHalf(AdvancedData data)
@@ -869,14 +869,14 @@ public class GUI extends JFrame implements GCGUI
            firstHalfOvertime.setSelected((data.gamePhase == GameControlData.GAME_PHASE_OVERTIME)
                             && (data.firstHalf == GameControlData.C_TRUE));
            secondHalfOvertime.setSelected((data.gamePhase == GameControlData.GAME_PHASE_OVERTIME)
-                            && (data.firstHalf != GameControlData.C_TRUE)); 
+                            && (data.firstHalf != GameControlData.C_TRUE));
         }
         penaltyShoot.setSelected(data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT || data.previousGamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT);
     }
-    
+
     /**
      * Updates left and right background picture.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateColor(AdvancedData data)
@@ -890,10 +890,10 @@ public class GUI extends JFrame implements GCGUI
             side[i].setImage(backgroundSide[i][data.team[i].teamColor].getImage());
         }
     }
-    
+
     /**
      * Updates the state.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateState(AdvancedData data)
@@ -928,10 +928,10 @@ public class GUI extends JFrame implements GCGUI
                 && (data.getRemainingGameTime(true) <= FINISH_HIGHLIGHT_SECONDS)
                 && (finish.getBackground() != COLOR_HIGHLIGHT));
     }
-    
+
     /**
      * Updates the goal.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateGoal(AdvancedData data)
@@ -942,10 +942,10 @@ public class GUI extends JFrame implements GCGUI
             goalDec[i].setVisible(ActionBoard.goalDec[i].isLegal(data));
         }
     }
-    
+
     /**
      * Updates the kickoff.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateKickoff(AdvancedData data)
@@ -978,10 +978,10 @@ public class GUI extends JFrame implements GCGUI
             }
         }
     }
-    
+
     /**
      * Updates the robots.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateRobots(AdvancedData data)
@@ -1027,7 +1027,7 @@ public class GUI extends JFrame implements GCGUI
                     robotTime[i][j].setVisible(false);
                     highlight(robot[i][j], false);
                 }
-                
+
                 // Adds an information if player is selected for penalty
                 // shootout:
                 if (data.gamePhase == AdvancedData.GAME_PHASE_PENALTYSHOOT) {
@@ -1060,9 +1060,9 @@ public class GUI extends JFrame implements GCGUI
                         }
                     }
                 }
-                
+
                 robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
-                
+
                 ImageIcon currentLanIcon;
                 if (onlineStatus[i][j] == RobotOnlineStatus.ONLINE) {
                     currentLanIcon = lanOnline;
@@ -1077,10 +1077,10 @@ public class GUI extends JFrame implements GCGUI
             }
         }
     }
-    
+
     /**
      * Updates the time-out.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateTimeOut(AdvancedData data)
@@ -1098,15 +1098,15 @@ public class GUI extends JFrame implements GCGUI
             timeOut[i].setEnabled(ActionBoard.timeOut[i].isLegal(data));
         }
 }
-    
+
     private void updateRefereeTimeout(AdvancedData data) {
         refereeTimeout.setSelected(data.refereeTimeout);
         refereeTimeout.setEnabled(ActionBoard.refereeTimeout.isLegal(data));
     }
-    
+
     /**
      * Updates the global game stuck.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateGlobalStuck(AdvancedData data)
@@ -1115,10 +1115,10 @@ public class GUI extends JFrame implements GCGUI
             stuck[i].setEnabled(ActionBoard.stuck[i].isLegal(data));
         }
     }
-    
+
     /**
      * Updates the kick in.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateKickIn(AdvancedData data)
@@ -1127,10 +1127,10 @@ public class GUI extends JFrame implements GCGUI
             kickIn[i].setEnabled(ActionBoard.kickIn[i].isLegal(data));
         }
     }
-    
+
     /**
      * Updates the goal kick.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateGoalKick(AdvancedData data)
@@ -1139,10 +1139,10 @@ public class GUI extends JFrame implements GCGUI
             goalKick[i].setEnabled(ActionBoard.goalKick[i].isLegal(data));
         }
     }
-    
+
     /**
      * Updates the corner kick.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateCornerKick(AdvancedData data)
@@ -1154,7 +1154,7 @@ public class GUI extends JFrame implements GCGUI
 
     /**
      * Updates the SPL penalties.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updatePenaltiesSPL(AdvancedData data)
@@ -1169,7 +1169,7 @@ public class GUI extends JFrame implements GCGUI
         pen[7].setEnabled(ActionBoard.foulPenaltyArea.isLegal(data));
         pen[8].setEnabled(ActionBoard.localGameStuck.isLegal(data));
         pen[9].setEnabled(ActionBoard.pickUp.isLegal(data));
-        
+
         GCAction highlightEvent = EventHandler.getInstance().lastUIEvent;
         if (highlightEvent != null && !highlightEvent.isLegal(data)) {
           EventHandler.getInstance().lastUIEvent = null;
@@ -1206,10 +1206,10 @@ public class GUI extends JFrame implements GCGUI
             pen[4].setSelected(EventHandler.getInstance().lastUIEvent == ActionBoard.motionInSet);
         }
     }
-    
+
     /**
      * Updates the timeline/undo.
-     * 
+     *
      * @param data     The current data (model) the GUI should view.
      */
     private void updateUndo(AdvancedData data)
@@ -1233,16 +1233,16 @@ public class GUI extends JFrame implements GCGUI
         }
         cancelUndo.setVisible(undoFromHere);
     }
-    
+
     private void updateFonts()
     {
         double size = Math.min((getWidth()/(double)WINDOW_WIDTH), (getHeight()/(double)WINDOW_HEIGHT));
-        
+
         if (size == lastSize) {
             return;
         }
         lastSize = size;
-        
+
         titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TITLE_FONT_SIZE*(size)));
         standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*(size)));
         goalsFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(GOALS_FONT_SIZE*(size)));
@@ -1270,7 +1270,7 @@ public class GUI extends JFrame implements GCGUI
         clock.setFont(timeFont);
         clockSub.setFont(timeSubFont);
         clockDescription.setFont(standardFont);
-        
+
         firstHalf.setFont(timeoutFont);
         secondHalf.setFont(timeoutFont);
         if (Rules.league.overtime) {
@@ -1295,10 +1295,10 @@ public class GUI extends JFrame implements GCGUI
         }
         cancelUndo.setFont(standardFont);
     }
-    
+
     /**
      * Set the given button highlighted or normal.
-     * 
+     *
      * @param button        The button to highlight.
      * @param highlight     If the button should be highlighted.
      */

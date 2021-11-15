@@ -9,7 +9,7 @@ import data.AdvancedData;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the operator wants to go back in the timeline.
  */
 public class Undo extends GCAction
@@ -18,12 +18,12 @@ public class Undo extends GCAction
     public boolean executed = false;
     /** How far to go back in the timeline by this action. */
     private int states;
-    
-    
+
+
     /**
      * Creates a new Undo action.
      * Look at the ActionBoard before using this.
-     * 
+     *
      * @param states        How far to go back in the timeline by this action.
      */
     public Undo(int states)
@@ -34,7 +34,7 @@ public class Undo extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -48,11 +48,11 @@ public class Undo extends GCAction
             executed = false;
         }
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

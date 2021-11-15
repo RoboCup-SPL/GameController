@@ -11,7 +11,7 @@ import data.TeamInfo;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the state is to be set to play.
  */
 public class Play extends GCAction
@@ -64,11 +64,11 @@ public class Play extends GCAction
 
         Log.state(data, "Playing");
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override
@@ -81,7 +81,7 @@ public class Play extends GCAction
     /**
      * Checks whether both teams have at least one player that is not penalized.
      * This is a precondition for a penalty shot.
-     * 
+     *
      * @param data      The current data to check with.
      * @return At least one player not penalized in both teams?
      */

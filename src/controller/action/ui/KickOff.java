@@ -10,19 +10,19 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that a team get kickoff.
  */
 public class KickOff extends GCAction
 {
     /** On which side (0:left, 1:right) */
     private int side;
-    
-    
+
+
     /**
      * Creates a new KickOff action.
      * Look at the ActionBoard before using this.
-     * 
+     *
      * @param side      On which side (0:left, 1:right)
      */
     public KickOff(int side)
@@ -33,7 +33,7 @@ public class KickOff extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -52,11 +52,11 @@ public class KickOff extends GCAction
         Log.state(data, "Kickoff "+
                 Rules.league.teamColorName[data.team[side].teamColor]);
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

@@ -5,12 +5,12 @@ import eventrecorder.data.LogEntry;
 
 /**
  * Action for delete a logEntry.
- * 
+ *
  * @author Andre Muehlenbrock
  */
 public class EntryDeleteAction extends Action{
     private int savedPosition;
-    
+
     public EntryDeleteAction(LogEntry entry) {
         super(entry, true);
     }

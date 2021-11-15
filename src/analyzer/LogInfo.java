@@ -15,13 +15,13 @@ import java.util.LinkedList;
  * @author Michel Bartsch
  *
  * Instances of this class represent a log file. It can analyze some basic
- * information of it´s log to guess, if it was made by a real game.
+ * information of its log to guess, if it was made by a real game.
  */
 public class LogInfo
 {
     /* A log should be written in this charset. */
     private final static String CHARSET = "UTF-8";
-    /* A team´s name which indicates, that this is not a real game´s log. */
+    /* A team's name which indicates, that this is not a real game's log. */
     private final static String NOT_A_REAL_TEAM = "Invisibles";
     /* Minimal duration in seconds between the first ready and the last
      Finish a real game should have.*/
@@ -34,7 +34,7 @@ public class LogInfo
     public File file;
     /* The version information found in the log. */
     public String version;
-    /* The league this log´s game was layed in. */
+    /* The league this log's game was layed in. */
     public Rules league;
     /* The teams's names. */
     public String[] team = new String[2];
@@ -83,10 +83,10 @@ public class LogInfo
     }
 
     /**
-     * Makes a guess if this is a real game´s log based on all basic
+     * Makes a guess if this is a real game's log based on all basic
      * information.
      *
-     * @return  True, if this looks like a real game´s log or false, if not.
+     * @return  True, if this looks like a real game's log or false, if not.
      */
     public boolean isRealLog()
     {
@@ -98,9 +98,9 @@ public class LogInfo
     }
 
     /**
-     * Makes a guess if this is a real game´s log based on it´s version.
+     * Makes a guess if this is a real game's log based on its version.
      *
-     * @return  True, if this looks like a real game´s log or false, if not.
+     * @return  True, if this looks like a real game's log or false, if not.
      */
     private boolean isRealVersion()
     {
@@ -108,9 +108,9 @@ public class LogInfo
     }
 
     /**
-     * Makes a guess if this is a real game´s log based on it´s league.
+     * Makes a guess if this is a real game's log based on its league.
      *
-     * @return  True, if this looks like a real game´s log or false, if not.
+     * @return  True, if this looks like a real game's log or false, if not.
      */
     private boolean isRealLeague()
     {
@@ -118,11 +118,11 @@ public class LogInfo
     }
 
     /**
-     * Makes a guess if this is a real game´s log based on a team name.
+     * Makes a guess if this is a real game's log based on a team name.
      *
-     * @param firstTeam     True, if you want to check the first team´s name,
+     * @param firstTeam     True, if you want to check the first team's name,
      *                      or false for the second.
-     * @return      True, if this looks like a real game´s log or false, if not.
+     * @return      True, if this looks like a real game's log or false, if not.
      */
     private boolean isRealTeam(boolean firstTeam)
     {
@@ -130,9 +130,9 @@ public class LogInfo
     }
 
     /**
-     * Makes a guess if this is a real game´s log based on it´s duration.
+     * Makes a guess if this is a real game's log based on its duration.
      *
-     * @return  True, if this looks like a real game´s log or false, if not.
+     * @return  True, if this looks like a real game's log or false, if not.
      */
     private boolean isRealDuration()
     {

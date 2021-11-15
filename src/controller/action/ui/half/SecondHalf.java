@@ -9,7 +9,7 @@ import data.GameControlData;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the half is to be set to the second half.
  */
 public class SecondHalf extends GCAction
@@ -25,7 +25,7 @@ public class SecondHalf extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -43,11 +43,11 @@ public class SecondHalf extends GCAction
             Log.state(data, "2nd Half");
         }
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

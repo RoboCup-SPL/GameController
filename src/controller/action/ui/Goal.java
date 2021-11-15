@@ -11,7 +11,7 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that a team has scored or it`s score is to be decreased.
  */
 public class Goal extends GCAction
@@ -20,12 +20,12 @@ public class Goal extends GCAction
     private int side;
     /** This value will be added to the score. */
     private int set;
-    
-    
+
+
     /**
      * Creates a new Goal action.
      * Look at the ActionBoard before using this.
-     * 
+     *
      * @param side      On which side (0:left, 1:right)
      * @param set       This value will be added to the score.
      */
@@ -38,7 +38,7 @@ public class Goal extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -72,11 +72,11 @@ public class Goal extends GCAction
             Log.state(data, "Goal decrease for "+Rules.league.teamColorName[data.team[side].teamColor]);
         }
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

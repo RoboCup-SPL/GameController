@@ -10,7 +10,7 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that a penalty shoot is to be starting.
  */
 public class PenaltyShoot extends GCAction
@@ -26,7 +26,7 @@ public class PenaltyShoot extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -47,18 +47,18 @@ public class PenaltyShoot extends GCAction
             Log.state(data, "Penalty Shoot-out");
         }
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override
     public boolean isLegal(AdvancedData data)
     {
         return (data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)
-          || (data.previousGamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)      
+          || (data.previousGamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)
           || ((data.firstHalf != GameControlData.C_TRUE)
             && (data.gameState == GameControlData.STATE_FINISHED)
             && !(Rules.league.overtime

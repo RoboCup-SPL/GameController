@@ -44,11 +44,11 @@ public class FirstHalf extends GCAction
             Log.state(data, "1st Half");
         }
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override
@@ -58,11 +58,11 @@ public class FirstHalf extends GCAction
                 && (data.gamePhase == GameControlData.GAME_PHASE_NORMAL))
                 || (data.testmode);
     }
-    
+
     /**
      * Switches sides for the teams, both for first to second and also
      * second to first half if needed.
-     * 
+     *
      * @param data      The current data to work on.
      */
     public static void changeSide(AdvancedData data)
@@ -100,7 +100,7 @@ public class FirstHalf extends GCAction
             data.timeOutTaken[0] = data.timeOutTaken[1];
             data.timeOutTaken[1] = timeOutTaken;
         }
-        
+
         data.timeBeforeCurrentGameState = 0;
         data.timeBeforeStoppageOfPlay = 0;
         if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {

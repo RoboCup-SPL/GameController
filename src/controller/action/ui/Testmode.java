@@ -8,7 +8,7 @@ import data.AdvancedData;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the testmode should be toggled on or off.
  */
 public class Testmode extends GCAction
@@ -21,10 +21,10 @@ public class Testmode extends GCAction
     {
         super(ActionType.UI);
     }
-    
+
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -33,11 +33,11 @@ public class Testmode extends GCAction
         data.testmode = !data.testmode;
         Log.toFile("Testmode = "+data.testmode);
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

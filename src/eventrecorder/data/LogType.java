@@ -2,7 +2,7 @@ package eventrecorder.data;
 
 /**
  * Possible types of a LogEntry.
- * 
+ *
  * @author Andre Muehlenbrock
  */
 

@@ -134,7 +134,7 @@ public class SPLStandardMessageReceiver extends Thread {
     }
 
     protected void handleMessage(final SPLStandardMessagePackage p) {
-        
+
     }
 
     @Override

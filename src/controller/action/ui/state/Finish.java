@@ -10,7 +10,7 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the state is to be set to finish.
  */
 public class Finish extends GCAction
@@ -26,7 +26,7 @@ public class Finish extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -47,11 +47,11 @@ public class Finish extends GCAction
         data.setPlay = GameControlData.SET_PLAY_NONE;
         Log.state(data, "Finished");
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

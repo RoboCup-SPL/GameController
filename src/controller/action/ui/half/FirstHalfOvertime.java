@@ -10,7 +10,7 @@ import data.Rules;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the half is to be set to the first half.
  */
 public class FirstHalfOvertime extends GCAction
@@ -26,7 +26,7 @@ public class FirstHalfOvertime extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -42,11 +42,11 @@ public class FirstHalfOvertime extends GCAction
             Log.state(data, "1st Half Extra Time");
         }
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

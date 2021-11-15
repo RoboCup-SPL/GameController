@@ -11,26 +11,26 @@ import java.awt.event.KeyEvent;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This class listens to the keyboard. It does not depend on the GUI.
  */
 public class KeyboardListener implements KeyEventDispatcher
 {
     /** The key that is actually pressed, 0 if no key is pressed. */
     private int pressing = 0;
-    
+
     /**
      * Creates a new KeyboardListener and sets himself to listening.
      */
     public KeyboardListener() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(this);
     }
-    
+
     /**
      * This is called every time a key is pressed or released.
-     * 
+     *
      * @param e     The key that has been pressed or released.
-     * 
+     *
      * @return If false, the key will be consumed.
      */
     @Override
@@ -39,32 +39,32 @@ public class KeyboardListener implements KeyEventDispatcher
             pressing = 0;
         } else if (e.getID() == KeyEvent.KEY_PRESSED) {
             int key = e.getKeyCode();
-        
+
             if ((key == 0) || (key == pressing)) {
                 return false;
             }
             pressing = key;
             return pressed(key);
         }
-        
+
         return false;
     }
-    
+
     /**
      * This is called once every time a key is pressed. It is called once and
      * not as long as the key is pressed.
      * You can easily set the keys for each action here. The actions are
      * to be performed via the actionPerformed method as they are in the
      * GUI.
-     * 
+     *
      * @param key  The key that has just been pressed.
-     * 
+     *
      * @return If false, the key was used and should be consumed.
      */
     private boolean pressed(int key)
     {
         GCAction event = null;
-        
+
         switch (key) {
             case KeyEvent.VK_ESCAPE: event = ActionBoard.quit; break;
             case KeyEvent.VK_DELETE: event = ActionBoard.testmode; break;
@@ -110,7 +110,7 @@ public class KeyboardListener implements KeyEventDispatcher
                     case KeyEvent.VK_F: event = ActionBoard.foul; break;
                 }
         }
-        
+
         if (event != null) {
             event.actionPerformed(null);
             return true;

@@ -9,7 +9,7 @@ import data.AdvancedData;
 
 /**
  * @author Michel Bartsch
- * 
+ *
  * This action means that the operator tries to close the GameController.
  */
 public class Quit extends GCAction
@@ -25,7 +25,7 @@ public class Quit extends GCAction
 
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override
@@ -35,11 +35,11 @@ public class Quit extends GCAction
             Clock.getInstance().interrupt();
         }
     }
-    
+
     /**
      * Checks if this action is legal with the given data (model).
      * Illegal actions are not performed by the EventHandler.
-     * 
+     *
      * @param data      The current data to check with.
      */
     @Override

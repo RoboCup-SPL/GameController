@@ -56,7 +56,7 @@ public class GUI extends JFrame implements ListSelectionListener
     public final static String HTML_RED = "<font color='red'>";
     public final static String HTML_END = "</font>";
 
-    /* This gui´s components. */
+    /* This gui's components. */
     private DefaultListModel<CheckListItem> list;
     private JList<CheckListItem> listDisplay;
     private ListSelectionModel selection;

@@ -5,7 +5,7 @@ import eventrecorder.data.LogEntry;
 
 /**
  * Action for changing title and additional information.
- * 
+ *
  * @author Andre Muehlenbrock
  */
 
@@ -14,7 +14,7 @@ public class TitleChangeAction extends Action{
     String savedAdditional;
     String newTitle;
     String newAdditional;
-    
+
     public TitleChangeAction(LogEntry entry, String newTitle, String newAdditional, String savedTitle, String savedAdditional) {
         super(entry, true);
         this.savedTitle = savedTitle;
@@ -27,7 +27,7 @@ public class TitleChangeAction extends Action{
     public boolean executeAction() {
         EventRecorder.model.title = newTitle;
         EventRecorder.model.additionalInfo = newAdditional;
-        
+
         return true;
     }
 
@@ -35,7 +35,7 @@ public class TitleChangeAction extends Action{
     public boolean undoAction() {
         EventRecorder.model.title = savedTitle;
         EventRecorder.model.additionalInfo = savedAdditional;
-        
+
         return true;
     }
 

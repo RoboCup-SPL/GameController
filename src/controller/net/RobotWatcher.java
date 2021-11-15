@@ -6,9 +6,9 @@ import data.Rules;
 
 /**
  * @author Marcel Steinbeck, Michel Bartsch
- * 
+ *
  * You can ask this class about the robots online-status.
- * 
+ *
  * This class is a sigleton!
  */
 public class RobotWatcher
@@ -36,11 +36,11 @@ public class RobotWatcher
             }
         }
     }
-    
+
     /**
-     * Recieves robot´s answers to update corresponding timestamps.
-     * 
-     * @param gameControlReturnData     The robot`s answer.
+     * Recieves robots' answers to update corresponding timestamps.
+     *
+     * @param gameControlReturnData     The robot's answer.
      */
     public static synchronized void update(GameControlReturnData gameControlReturnData)
     {
@@ -61,7 +61,7 @@ public class RobotWatcher
 
     /**
      * Calculates new online-status for each robot.
-     * 
+     *
      * @return The updated online-status of each robot.
      */
     public static synchronized RobotOnlineStatus[][] updateRobotOnlineStatus()

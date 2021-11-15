@@ -10,7 +10,7 @@ public class EntryTypeChangeAction extends Action{
     public EntryTypeChangeAction(LogEntry entry, LogType newLogType, LogType savedLogType){
         this(entry, true, newLogType, savedLogType);
     }
-    
+
     public EntryTypeChangeAction(LogEntry entry, boolean addToHistory, LogType newLogType, LogType savedLogType) {
         super(entry, addToHistory);
         this.savedLogType = savedLogType;

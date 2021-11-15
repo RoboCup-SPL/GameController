@@ -20,10 +20,10 @@ public abstract class Penalty extends GCAction
     {
         super(ActionType.UI);
     }
-    
+
     /**
      * Performs this action to manipulate the data (model).
-     * 
+     *
      * @param data      The current data to work on.
      */
     @Override

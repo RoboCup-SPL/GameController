@@ -18,26 +18,26 @@ import eventrecorder.data.LogType;
 
 /**
  * This class is the shown logEntryTable which displays all saved log entries.
- * 
- * It also implements for the timeField and textField how to Jump when 
+ *
+ * It also implements for the timeField and textField how to Jump when
  * UP,DOWN,LEFT,RIGHT,BACK_SPACE,ENTF OR ENTER is pressed.
- * 
+ *
  * @author Andre Muehlenbrock
  */
 
 public class LogEntryTable extends JPanel{
     private static final long serialVersionUID = 6135881777310302271L;
-    
+
     public LogEntryTable(){
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         createLogEntryTable();
     }
-    
+
     private void createLogEntryTable(){
         // Removes all childs:
         removeAll();
-        
+
         // Adds all LogEntries from the DataModel:
         ArrayList<LogEntry> entries = EventRecorder.model.logEntries;
         for(LogEntry e : entries){
@@ -46,59 +46,59 @@ public class LogEntryTable extends JPanel{
             entryPanel.getTextField().addKeyListener(new TextFieldKeyListener(this,e));
             add(entryPanel);
         }
-        
+
         revalidate();
         repaint();
     }
-    
+
     public int getIdByLogEntry(LogEntry entry){
         for(int i=0;i<getComponents().length;i++){
             if(entry == ((EntryPanel)getComponent(i)).getTextField().getLogEntry())
                 return i;
         }
-        
+
         return -1;
     }
 
     /**
      * KeyListener for a TimeField in the EntryPanel
-     * 
+     *
      * @author Andre Muehlenbrock
      */
 
     class TimeFieldKeyListener extends KeyAdapter {
         private LogEntryTable table;
         private LogEntry entry;
-        
+
         public TimeFieldKeyListener(LogEntryTable table, LogEntry entry){
             this.table = table;
-            this.entry = entry;      
+            this.entry = entry;
         }
-        
+
         @Override
         public void keyPressed(KeyEvent e) {
             int id = table.getIdByLogEntry(entry);
-            EntryPanel nextPanel = id + 1 >= table.getComponents().length ? null : (EntryPanel)table.getComponent(id+1); 
-            EntryPanel thisPanel = (EntryPanel)table.getComponent(id); 
-            EntryPanel prevPanel = id - 1 < 0 ? null : (EntryPanel)table.getComponent(id-1); 
+            EntryPanel nextPanel = id + 1 >= table.getComponents().length ? null : (EntryPanel)table.getComponent(id+1);
+            EntryPanel thisPanel = (EntryPanel)table.getComponent(id);
+            EntryPanel prevPanel = id - 1 < 0 ? null : (EntryPanel)table.getComponent(id-1);
             TimeField thisField = thisPanel.getTimeField();
 
             if(e.getKeyCode() == KeyEvent.VK_ENTER){
                 thisField.executeChangeAction();
                 EventRecorder.history.execute(new EntryCreateAction(new LogEntry("", "", LogType.Manually)));
-                
+
                 e.consume();
             } else  if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE && thisField.getCaretPosition() == 0){
-                if(prevPanel != null && thisField.getSelectedText() == null){                    
+                if(prevPanel != null && thisField.getSelectedText() == null){
                     if("".equals(thisPanel.getTextField().getText()) && "".equals(thisPanel.getTimeField().getText())){
                         thisField.executeChangeAction();
                         EventRecorder.history.execute(new EntryDeleteAction(entry));
-                        
+
                         e.consume();
                     } else {
                         prevPanel.getTextField().setCaretPosition(prevPanel.getTextField().getText().length());
                         prevPanel.getTextField().requestFocus();
-                        
+
                         e.consume();
                     }
                 }
@@ -107,7 +107,7 @@ public class LogEntryTable extends JPanel{
                     int newCaretPosition = Math.min(prevPanel.getTimeField().getText().length(), thisField.getCaretPosition());
                     prevPanel.getTimeField().setCaretPosition(newCaretPosition);
                     prevPanel.getTimeField().requestFocus();
-                    
+
                     e.consume();
                 }
             } else if(e.getKeyCode() == KeyEvent.VK_DOWN){
@@ -115,19 +115,19 @@ public class LogEntryTable extends JPanel{
                     int newCaretPosition = Math.min(nextPanel.getTimeField().getText().length(), thisField.getCaretPosition());
                     nextPanel.getTimeField().setCaretPosition(newCaretPosition);
                     nextPanel.getTimeField().requestFocus();
-                    
+
                     e.consume();
                 }
             } else if(e.getKeyCode() == KeyEvent.VK_RIGHT && thisField.getCaretPosition() == thisField.getText().length()){
                 thisPanel.getTextField().setCaretPosition(0);
                 thisPanel.getTextField().requestFocus();
-                
+
                 e.consume();
             } else if(e.getKeyCode() == KeyEvent.VK_LEFT && thisField.getCaretPosition() == 0){
                 if(prevPanel != null){
                     prevPanel.getTextField().setCaretPosition(prevPanel.getTextField().getText().length());
                     prevPanel.getTextField().requestFocus();
-                    
+
                     e.consume();
                 }
             } else if(thisField.getLogEntry().firstTimeSet){
@@ -138,43 +138,43 @@ public class LogEntryTable extends JPanel{
 
     /**
      * KeyListener for a TextField in the EntryPanel
-     * 
+     *
      * @author Andre Muehlenbrock
      */
 
     class TextFieldKeyListener extends KeyAdapter {
         private LogEntryTable table;
         private LogEntry entry;
-        
+
         public TextFieldKeyListener(LogEntryTable table, LogEntry entry){
             this.table = table;
-            this.entry = entry;      
+            this.entry = entry;
         }
-        
+
         @Override
         public void keyPressed(KeyEvent e) {
             int id = table.getIdByLogEntry(entry);
-            EntryPanel nextPanel = id + 1 >= table.getComponents().length ? null : (EntryPanel)table.getComponent(id+1); 
-            EntryPanel thisPanel = (EntryPanel)table.getComponent(id); 
-            EntryPanel prevPanel = id - 1 < 0 ? null : (EntryPanel)table.getComponent(id-1); 
+            EntryPanel nextPanel = id + 1 >= table.getComponents().length ? null : (EntryPanel)table.getComponent(id+1);
+            EntryPanel thisPanel = (EntryPanel)table.getComponent(id);
+            EntryPanel prevPanel = id - 1 < 0 ? null : (EntryPanel)table.getComponent(id-1);
             TextField thisField = thisPanel.getTextField();
-            
+
             if(e.getKeyCode() == KeyEvent.VK_ENTER){
                 thisField.executeChangeAction();
                 EventRecorder.history.execute(new EntryCreateAction(new LogEntry("", "", LogType.Manually),id+1));
-                
+
                 e.consume();
             } else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE && thisField.getCaretPosition() == 0 && thisField.getSelectedText() == null){
                 if("".equals(thisPanel.getTextField().getText())){
                     thisField.executeChangeAction();
                     EventRecorder.history.execute(new EntryDeleteAction(entry));
-                    
+
                     e.consume();
                 } else {
                     thisField.executeChangeAction();
                     thisPanel.getTimeField().setCaretPosition(thisPanel.getTimeField().getText().length());
                     thisPanel.getTimeField().requestFocus();
-                    
+
                     e.consume();
                 }
             } else if(e.getKeyCode() == KeyEvent.VK_UP){
@@ -182,7 +182,7 @@ public class LogEntryTable extends JPanel{
                     int newCaretPosition = Math.min(prevPanel.getTextField().getText().length(), thisField.getCaretPosition());
                     prevPanel.getTextField().setCaretPosition(newCaretPosition);
                     prevPanel.getTextField().requestFocus();
-                    
+
                     e.consume();
                 }
             } else if(e.getKeyCode() == KeyEvent.VK_DOWN){
@@ -190,19 +190,19 @@ public class LogEntryTable extends JPanel{
                     int newCaretPosition = Math.min(nextPanel.getTextField().getText().length(), thisField.getCaretPosition());
                     nextPanel.getTextField().setCaretPosition(newCaretPosition);
                     nextPanel.getTextField().requestFocus();
-                    
+
                     e.consume();
                 }
             } else if(e.getKeyCode() == KeyEvent.VK_LEFT && thisField.getCaretPosition() == 0){
                 thisPanel.getTimeField().setCaretPosition(thisPanel.getTimeField().getText().length());
                 thisPanel.getTimeField().requestFocus();
-                
+
                 e.consume();
             } else if(e.getKeyCode() == KeyEvent.VK_RIGHT && thisField.getCaretPosition() == thisField.getText().length()){
                 if(nextPanel != null){
                     nextPanel.getTimeField().setCaretPosition(0);
                     nextPanel.getTimeField().requestFocus();
-                    
+
                     e.consume();
                 }
             } else if(thisField.getLogEntry().firstTimeSet && !thisField.getText().isEmpty()){
@@ -211,50 +211,50 @@ public class LogEntryTable extends JPanel{
             }
         }
     }
-    
+
     public void entryActionWasExecuted(Action action){
         int id = getIdByLogEntry(action.getAffectedLogEntry());
-        
+
         if(action instanceof EntryChangeTimeAction){
             if(id == -1)
                 return;
-            
+
             EntryPanel entryPanel = (EntryPanel)getComponent(id);
             String timeString = action.getAffectedLogEntry().time;
-            
+
             if(entryPanel.getTimeField().getText().equals(timeString))
                 return;
-            
+
             entryPanel.getTimeField().setText(timeString);
             entryPanel.getTimeField().setCaretPosition(0);
             entryPanel.revalidate();
             entryPanel.repaint();
-            
+
         } else if(action instanceof EntryChangeTextAction){
             if(id == -1)
                 return;
-            
+
             EntryPanel entryPanel = (EntryPanel)getComponent(id);
             if(entryPanel.getTextField().getText().equals(action.getAffectedLogEntry().text))
                 return;
-            
+
             entryPanel.getTextField().setText(action.getAffectedLogEntry().text);
             entryPanel.getTextField().setCaretPosition(0);
             entryPanel.revalidate();
             entryPanel.repaint();
-        } else if(action instanceof EntryCreateAction && !action.shouldBeAddedToHistory()){        
+        } else if(action instanceof EntryCreateAction && !action.shouldBeAddedToHistory()){
             EntryPanel entryPanel = new EntryPanel(action.getAffectedLogEntry());
             entryPanel.getTimeField().addKeyListener(new TimeFieldKeyListener(this,action.getAffectedLogEntry()));
             entryPanel.getTextField().addKeyListener(new TextFieldKeyListener(this,action.getAffectedLogEntry()));
-            
+
             int index = EventRecorder.model.logEntries.indexOf(action.getAffectedLogEntry());
-            
+
             if(index != -1)
-            	add(entryPanel, index);
-        } else if(action instanceof EntryCreateAction || action instanceof EntryDeleteAction){        
-            createLogEntryTable();            
+                add(entryPanel, index);
+        } else if(action instanceof EntryCreateAction || action instanceof EntryDeleteAction){
+            createLogEntryTable();
             int newId = getIdByLogEntry(action.getAffectedLogEntry());
-            
+
             EntryPanel entryPanel = null;
             // if the entry was added:
             if(newId != -1){
@@ -273,6 +273,6 @@ public class LogEntryTable extends JPanel{
         } else {
             createLogEntryTable();
         }
-        
+
     }
 }
