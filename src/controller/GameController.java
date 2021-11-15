@@ -109,7 +109,7 @@ public class GameController {
                     || (args[i].equalsIgnoreCase(COMMAND_LEAGUE)))) {
                 i++;
                 for (int j = 0; j < Rules.LEAGUES.length; j++) {
-                    if (Rules.LEAGUES[j].leagueDirectory.equalsIgnoreCase(args[i])) {
+                    if (Rules.LEAGUES[j].leagueName.replace(' ', '_').equalsIgnoreCase(args[i])) {
                         Rules.league = Rules.LEAGUES[j];
                         continue parsing;
                     }
@@ -318,7 +318,7 @@ public class GameController {
         } else {
             data = new AdvancedData();
             data.kickingTeam = (byte) input.outTeam[0];
-            data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN; // TODO: SPL1vs1 is always PLAYOFF
+            data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
             data.competitionType = Rules.league.competitionType;
         }
 
@@ -377,7 +377,7 @@ public class GameController {
         }
         Log.toFile("League = " + Rules.league.leagueName);
         Log.toFile("Competition phase = " + (data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF ? "playoff" : "round robin"));
-        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_GENERAL_PENALTY_KICK ? "general penalty kick challenge" : "normal"));
+        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_7V7 ? "7v7 competition" : (data.competitionType == GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING ? "dynamic ball handling challenge" : "normal")));
         Log.toFile("Using broadcast address " + broadcastAddress);
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));
 

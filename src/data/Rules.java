@@ -10,12 +10,12 @@ import java.awt.Color;
  */
 public abstract class Rules
 {
-    /** Note all league´s rules here to have them available. */
+    /** Note all league's rules here to have them available. */
     public static final Rules[] LEAGUES = {
         new SPL(),
         new SPLGORE(),
         new SPLPenaltyShootout(),
-        new SPLGeneralPenaltyKick()
+        new SPL7v7()
     };
 
     /**
@@ -32,9 +32,9 @@ public abstract class Rules
 
     /** The rules of the league playing. */
     public static Rules league = LEAGUES[0];
-    /** The league´s name this rules are for. */
+    /** The league's name this rules are for. */
     public String leagueName;
-    /** The league´s directory name with it´s teams and icons. */
+    /** The league's directory name with its teams and icons. */
     public String leagueDirectory;
     /** How many robots are in a team. */
     public int teamSize;
@@ -108,7 +108,7 @@ public abstract class Rules
     public boolean lostTime;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
-    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
+    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_7V7, COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) */
     public byte competitionType;
     /** Number of hardware penalties per half before the robot is ejected. */
     public int allowedHardwarePenaltiesPerHalf;

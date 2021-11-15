@@ -35,7 +35,7 @@ Usage: `java -jar GameController.jar {options}`
                                     delayed game state switches in the SPL
     (-i | --interface) <interface>  set network interface (default is a
                                     connected IPv4 interface)
-    (-l | --league) (spl | spl_penalty_shootout | spl_general_penalty_kick_challenge)
+    (-l | --league) (spl | spl_gore | spl_penalty_shootout | spl_7v7)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
     (-g | --game-type) (undefined | preliminary | playoff)
@@ -210,14 +210,19 @@ GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
 is defined in the file RoboCupGameControlData.h. It differs from the version used
 in 2019 in the following ways:
 
+- The macro `MAX_NUM_PLAYERS` has been increased to 7 to accommodate for the 7v7 challenge.
+    This also affects the size of the `TeamInfo` and therefore `RoboCupGameControlData` structs.
 - The macro `COMPETITION_TYPE_MIXEDTEAM` has been removed.
-- The macro `COMPETITION_TYPE_GENERAL_PENALTY_KICK` has been added.
+- The macro `COMPETITION_TYPE_7V7` has been added.
+- The macro `COMPETITION_TYPE_DYNAMIC_BALL_HANDLING` has been added.
 - The macro `SET_PLAY_GOAL_FREE_KICK` has been renamed to `SET_PLAY_GOAL_KICK`.
 - The macro `SET_PLAY_PENALTY_KICK` has been added.
 - The penalty macros have been reorganized:
   - `PENATLY_SPL_KICK_OFF_GOAL` has been removed.
   - `PENALTY_SPL_ILLEGAL_DEFENDER` has been renamed to `PENALTY_SPL_ILLEGAL_POSITION`.
   - `PENALTY_SPL_ILLEGAL_POSITIONING` has been renamed to `PENALTY_SPL_ILLEGAL_POSITION_IN_SET`.
+- The struct `TeamInfo` has the new member `messageBudget` which indicates the number of team
+    team messages the team is allowed to send for the remainder of the game.
 
 Since 2015, after a change from Set to Playing in SPL games the GameController
 does not send the correct game state and time for 15 seconds. This behaviour

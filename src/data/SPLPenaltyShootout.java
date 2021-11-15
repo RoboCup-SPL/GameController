@@ -9,7 +9,7 @@ public class SPLPenaltyShootout extends SPL
 {
     SPLPenaltyShootout()
     {
-        /** The league´s name this rules are for. */
+        /** The league's name this rules are for. */
         leagueName = "SPL Penalty Shootout";
         /** If the game starts with penalty-shots. */
         startWithPenalty = true;

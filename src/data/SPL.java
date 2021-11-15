@@ -11,9 +11,9 @@ public class SPL extends Rules
 {
     SPL()
     {
-        /** The league´s name this rules are for. */
+        /** The league's name this rules are for. */
         leagueName = "SPL";
-        /** The league´s directory name with it´s teams and icons. */
+        /** The league's directory name with its teams and icons. */
         leagueDirectory = "spl";
         /** How many robots are in a team. */
         teamSize = 6; // 5 players + 1 sub
@@ -87,7 +87,7 @@ public class SPL extends Rules
         lostTime = true;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = true;
-        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_GENERAL_PENALTY_KICK) */
+        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_7V7, COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) */
         competitionType = GameControlData.COMPETITION_TYPE_NORMAL;
         /** Number of hardware penalties per half before the robot is ejected. */
         allowedHardwarePenaltiesPerHalf = Integer.MAX_VALUE;

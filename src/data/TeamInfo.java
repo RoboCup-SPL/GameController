@@ -19,7 +19,7 @@ public class TeamInfo implements Serializable {
      * How many players a team may have. Actually that many players in each team
      * need to be sent, even if playersPerTeam in GameControlData is less.
      */
-    public static final byte MAX_NUM_PLAYERS = 6;
+    public static final byte MAX_NUM_PLAYERS = 7;
 
     /**
      * The size in bytes this class has packed.
@@ -35,6 +35,8 @@ public class TeamInfo implements Serializable {
             + // penaltyShot
             2
             + // singleShots
+            2
+            + // messageBudget
             MAX_NUM_PLAYERS * PlayerInfo.SIZE;
 
     //this is streamed
@@ -43,6 +45,7 @@ public class TeamInfo implements Serializable {
     public byte score;                                              // team's score
     public byte penaltyShot = 0;                                    // penalty shot counter
     public short singleShots = 0;                                   // bits represent penalty shot success
+    public short messageBudget = 0;                                 // number of team messages the team is allowed to send for the remainder of the game
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
 
     /**
@@ -69,6 +72,7 @@ public class TeamInfo implements Serializable {
         buffer.put(decreaseScore ? (byte) (score - 1) : score);
         buffer.put(penaltyShot);
         buffer.putShort(singleShots);
+        buffer.putShort(messageBudget);
         for (int i = 0; i < MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray());
         }
@@ -88,6 +92,7 @@ public class TeamInfo implements Serializable {
         score = buffer.get();
         penaltyShot = buffer.get();
         singleShots = buffer.getShort();
+        messageBudget = buffer.getShort();
         for (int i = 0; i < player.length; i++) {
             player[i].fromByteArray(buffer);
         }
@@ -130,6 +135,7 @@ public class TeamInfo implements Serializable {
         out += "              score: " + score + "\n";
         out += "        penaltyShot: " + penaltyShot + "\n";
         out += "        singleShots: " + Integer.toBinaryString(singleShots) + "\n";
+        out += "      messageBudget: " + Integer.toBinaryString(messageBudget) + "\n";
 
         for (int i = 0; i < player.length; i++) {
             out += "Player #" + (i + 1) + "\n" + player[i].toString();
