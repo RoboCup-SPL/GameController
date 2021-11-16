@@ -39,7 +39,7 @@ public class BHumanMessageParts {
                 if (version == BHumanStandardMessage.BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION) {
                     bhum = new BHumanStandardMessage();
                     if (bhum.getStreamedSize(data) <= data.remaining()) {
-                        bhum.read(data);
+                        bhum.read(data, origin.playerNum);
                     } else {
                         Log.error("Wrong size of B-Human standard message struct: was " + data.remaining() + ", expected " + bhum.getStreamedSize(data));
                     }

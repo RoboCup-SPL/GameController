@@ -2,7 +2,6 @@ package bhuman.message;
 
 import bhuman.message.data.Angle;
 import bhuman.message.data.BitStream;
-import bhuman.message.data.ComplexStreamReader;
 import bhuman.message.data.Eigen;
 import bhuman.message.data.Timestamp;
 import java.nio.ByteBuffer;
@@ -14,9 +13,9 @@ import util.Unsigned;
 /**
  * This class was generated automatically. DO NOT EDIT!
  */
-public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandardMessage> {
+public class BHumanStandardMessage {
     public static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
-    public static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 13;
+    public static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 14;
 
     public static class BNTPMessage {
         public long requestOrigination;
@@ -209,9 +208,7 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         defendGoal,
         waitUpfield,
         walkNextToStriker,
-        afterInterceptBall,
         catchBall,
-        fallen,
         finished,
         initial,
         lookAroundAfterPenalty,
@@ -452,7 +449,6 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
     public TeamBehaviorStatus theTeamBehaviorStatus = new TeamBehaviorStatus();
     public TeamTalk theTeamTalk = new TeamTalk();
 
-    @Override
     public int getStreamedSize(final ByteBuffer stream) {
         int size = 1 + 4 + 2;
         if (stream.remaining() < size) {
@@ -471,8 +467,7 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         return size + ntpCount * 5 + compressedSize;
     }
 
-    @Override
-    public BHumanStandardMessage read(final ByteBuffer stream) {
+    public BHumanStandardMessage read(final ByteBuffer stream, byte playerNumber) {
         magicNumber = Unsigned.toUnsigned(stream.get());
         timestamp = Unsigned.toUnsigned(stream.getInt());
         final int ntpAndSizeContainer = Unsigned.toUnsigned(stream.getShort());
@@ -480,6 +475,9 @@ public class BHumanStandardMessage implements ComplexStreamReader<BHumanStandard
         ntpMessages = new LinkedList<>();
         long runner = 1 << 6;
         for (short i = 1; runner != 0; ++i) {
+            if (i == playerNumber) {
+                ++i;
+            }
             if ((ntpAndSizeContainer & (runner >>= 1)) != 0) {
                 final BNTPMessage message = new BNTPMessage();
                 message.receiver = i;
