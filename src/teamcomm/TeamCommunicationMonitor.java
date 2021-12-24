@@ -2,6 +2,7 @@ package teamcomm;
 
 import com.jogamp.opengl.GLProfile;
 import common.ApplicationLock;
+import common.net.logging.Logger;
 import data.Rules;
 import java.awt.HeadlessException;
 import java.io.File;
@@ -14,7 +15,6 @@ import teamcomm.gui.View3DGSV;
 import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.SPLStandardMessageReceiverTCM;
 import teamcomm.net.logging.LogReplayer;
-import teamcomm.net.logging.Logger;
 
 /**
  * The team communication monitor starts in this class.

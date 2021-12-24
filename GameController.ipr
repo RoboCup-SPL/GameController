@@ -13,9 +13,6 @@
         <element id="directory" name="controller">
           <element id="dir-copy" path="$PROJECT_DIR$/build/controller" />
         </element>
-        <element id="directory" name="teamcomm/net">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/net" />
-        </element>
         <element id="directory" name="META-INF">
           <element id="file-copy" path="$PROJECT_DIR$/src/controller/MANIFEST.MF" />
         </element>
@@ -100,9 +97,6 @@
         </element>
         <element id="directory" name="exporter">
           <element id="dir-copy" path="$PROJECT_DIR$/build/exporter" />
-        </element>
-        <element id="directory" name="teamcomm/net">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/net" />
         </element>
         <element id="directory" name="META-INF">
           <element id="file-copy" path="$PROJECT_DIR$/src/exporter/MANIFEST.MF" />

@@ -1,6 +1,7 @@
 package teamcomm.data;
 
 import common.ApplicationLock;
+import common.net.logging.Logger;
 import data.GameControlData;
 import data.Rules;
 import data.SPLStandardMessage;
@@ -28,7 +29,6 @@ import teamcomm.data.event.GameControlDataTimeoutEvent;
 import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
 import teamcomm.net.logging.LogReplayer;
-import teamcomm.net.logging.Logger;
 
 /**
  * Singleton class managing the known information about communicating robots.

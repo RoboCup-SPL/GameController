@@ -1,5 +1,6 @@
 package teamcomm.net.logging;
 
+import common.net.logging.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -59,6 +60,9 @@ public class LogReplayer {
         // Reset GameState
         GameState.getInstance().reset();
 
+        // Prevent the logger from logging (disableLogging can't be used for that)
+        Logger.getInstance().setIsReplaying(true);
+
         // Open new log
         task = new LogReplayTask(logfile, listeners);
         taskHandle = scheduler.scheduleAtFixedRate(task, LogReplayTask.PLAYBACK_TASK_DELAY, LogReplayTask.PLAYBACK_TASK_DELAY, TimeUnit.MILLISECONDS);
@@ -117,6 +121,9 @@ public class LogReplayer {
 
             // Reset GameState
             GameState.getInstance().reset();
+
+            // Tell the logger that it can log again
+            Logger.getInstance().setIsReplaying(false);
         }
     }
 

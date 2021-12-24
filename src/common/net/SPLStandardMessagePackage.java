@@ -1,4 +1,4 @@
-package teamcomm.net;
+package common.net;
 
 import java.io.Serializable;
 

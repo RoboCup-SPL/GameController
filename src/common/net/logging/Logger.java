@@ -1,6 +1,7 @@
-package teamcomm.net.logging;
+package common.net.logging;
 
 import common.Log;
+import common.net.SPLStandardMessagePackage;
 import data.GameControlData;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,7 +10,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import teamcomm.net.SPLStandardMessagePackage;
 
 /**
  * Singleton class for logging received messages.
@@ -26,6 +26,7 @@ public class Logger {
     private ObjectOutputStream logger;
     private long beginTimestamp;
     private boolean enabled = true;
+    private boolean isReplaying = false;
 
     private Logger() {
         createLogfile();
@@ -56,6 +57,10 @@ public class Logger {
         }
     }
 
+    public final void setIsReplaying(boolean replaying) {
+        isReplaying = replaying;
+    }
+
     /**
      * Creates a new log file to store received messages in.
      */
@@ -69,7 +74,7 @@ public class Logger {
      * @param name string appended to the name of the new log file
      */
     public final void createLogfile(final String name) {
-        if (enabled && !LogReplayer.getInstance().isReplaying()) {
+        if (enabled && !isReplaying) {
             // Close current log file
             closeLogfile();
 
@@ -93,7 +98,7 @@ public class Logger {
      * Closes the currently used log file.
      */
     public void closeLogfile() {
-        if (!LogReplayer.getInstance().isReplaying()) {
+        if (!isReplaying) {
             synchronized (this) {
                 if (logger != null) {
                     try {
@@ -139,7 +144,7 @@ public class Logger {
      * @param p package
      */
     public <T extends Serializable> void log(final Class<T> cls, final T p) {
-        if (enabled && !LogReplayer.getInstance().isReplaying()) {
+        if (enabled && !isReplaying) {
             boolean error = false;
             synchronized (this) {
                 if (logFile != null) {

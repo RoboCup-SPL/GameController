@@ -1,6 +1,7 @@
 package controller.net;
 
 import common.Log;
+import common.net.logging.Logger;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
@@ -120,11 +121,11 @@ public class Sender extends Thread {
                 logfileName.append(data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
             }
             if (data.gameState == GameControlData.STATE_READY && (this.data == null || this.data.gameState == GameControlData.STATE_INITIAL)) {
-                teamcomm.net.logging.Logger.getInstance().createLogfile(logfileName.toString());
+                Logger.getInstance().createLogfile(logfileName.toString());
             } else if (data.gameState == GameControlData.STATE_INITIAL && (this.data == null || this.data.gameState != GameControlData.STATE_INITIAL)) {
-                teamcomm.net.logging.Logger.getInstance().createLogfile(logfileName.append("_initial").toString());
+                Logger.getInstance().createLogfile(logfileName.append("_initial").toString());
             } else if (data.gameState == GameControlData.STATE_FINISHED && (this.data == null || this.data.gameState != GameControlData.STATE_FINISHED)) {
-                teamcomm.net.logging.Logger.getInstance().createLogfile(logfileName.append("_finished").toString());
+                Logger.getInstance().createLogfile(logfileName.append("_finished").toString());
             }
         }
 
@@ -142,7 +143,7 @@ public class Sender extends Thread {
             if (data != null) {
                 data.updateTimes(false);
                 data.packetNumber = packetNumber;
-                teamcomm.net.logging.Logger.getInstance().log(data);
+                Logger.getInstance().log(data);
                 byte[] arr = data.toByteArray().array();
                 DatagramPacket packet = new DatagramPacket(arr, arr.length, group, GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
 

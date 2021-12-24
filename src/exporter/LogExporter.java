@@ -1,6 +1,6 @@
 package exporter;
 
-import teamcomm.net.SPLStandardMessagePackage;
+import common.net.SPLStandardMessagePackage;
 import data.GameControlData;
 import data.TeamInfo;
 import data.PlayerInfo;

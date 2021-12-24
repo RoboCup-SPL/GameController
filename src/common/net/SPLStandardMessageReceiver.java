@@ -1,6 +1,7 @@
-package teamcomm.net;
+package common.net;
 
 import common.Log;
+import common.net.logging.Logger;
 import data.SPLStandardMessage;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -18,7 +19,6 @@ import java.nio.channels.spi.SelectorProvider;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
-import teamcomm.net.logging.Logger;
 
 /**
  * Class for a thread which handles messages from the robots. It spawns another

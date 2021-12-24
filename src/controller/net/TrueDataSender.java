@@ -1,6 +1,7 @@
 package controller.net;
 
 import common.Log;
+import common.net.logging.Logger;
 import data.AdvancedData;
 import data.GameControlData;
 import data.TrueDataRequest;
@@ -148,7 +149,7 @@ public class TrueDataSender extends Thread {
                 synchronized (dataMutex) {
                     data.updateTimes(true);
                     data.packetNumber = packetNumber++;
-                    teamcomm.net.logging.Logger.getInstance().log(data);
+                    Logger.getInstance().log(data);
                     arr = data.getTrueDataAsByteArray().array();
                 }
 

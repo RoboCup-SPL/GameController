@@ -34,7 +34,7 @@
 
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}" includes="${common_classes} controller/ teamcomm/net/">
+        <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}" includes="${common_classes} controller/">
             <manifest>
                 <attribute name="Main-Class" value="controller.GameController"/>
                 <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
@@ -46,7 +46,7 @@
                 <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
             </manifest>
         </jar>
-        <jar destfile="${jar.dir}/LogExporter.jar" basedir="${classes.dir}" includes="${common_classes} exporter/ teamcomm/">
+        <jar destfile="${jar.dir}/LogExporter.jar" basedir="${classes.dir}" includes="${common_classes} exporter/">
             <manifest>
                 <attribute name="Main-Class" value="exporter.LogExporter"/>
                 <attribute name="Author" value="Tim Laue" />

@@ -2,6 +2,8 @@ package controller;
 
 import common.ApplicationLock;
 import common.Log;
+import common.net.logging.Logger;
+import common.net.SPLStandardMessageReceiver;
 import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.Sender;
@@ -261,13 +263,13 @@ public class GameController {
         }
 
         //SPLStandardMessageReceiver
-        teamcomm.net.SPLStandardMessageReceiver splStandardMessageReceiver = null;
+        SPLStandardMessageReceiver splStandardMessageReceiver = null;
         try {
-            splStandardMessageReceiver = new teamcomm.net.SPLStandardMessageReceiver();
+            splStandardMessageReceiver = new SPLStandardMessageReceiver();
             splStandardMessageReceiver.start();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
-                    "Error while setting up GameController on port: " + GameControlData.GAMECONTROLLER_RETURNDATA_PORT + ".",
+                    "Error while setting up SPLStandardMessageReceiver.",
                     "Error on configured port",
                     JOptionPane.ERROR_MESSAGE);
             Log.error("fatal: " + e.getMessage());
@@ -431,7 +433,7 @@ public class GameController {
         } catch (IOException e) {
             Log.error("Error while trying to close the log.");
         }
-        teamcomm.net.logging.Logger.getInstance().closeLogfile();
+        Logger.getInstance().closeLogfile();
 
         gui.dispose();
 
