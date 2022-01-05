@@ -85,6 +85,11 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public boolean[][] ejected = new boolean[2][Rules.league.teamSize];
 
     /**
+     * Did the team send too many messages so that its score is set to 0 forever?
+     */
+    public boolean[] sentIllegalMessages = {false, false};
+
+    /**
      * If true, the referee set a timeout
      */
     public boolean refereeTimeout = false;

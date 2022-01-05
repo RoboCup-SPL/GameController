@@ -48,7 +48,9 @@ public class Goal extends GCAction
             ActionBoard.play.perform(data);
         }
 
-        data.team[side].score += set;
+        if (set <= 0 || !data.sentIllegalMessages[side]) {
+            data.team[side].score += set;
+        }
         if (set == 1) {
             if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
                 data.kickingTeamBeforeGoal = data.kickingTeam;

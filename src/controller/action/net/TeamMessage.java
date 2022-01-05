@@ -42,7 +42,9 @@ public class TeamMessage extends GCAction
             if (data.team[side].messageBudget > 0) {
                 --data.team[side].messageBudget;
             } else {
-                // TODO: set score fixed to 0
+                data.team[side].score = 0;
+                data.sentIllegalMessages[side] = true;
+                // TODO: Add a state to the log here? Otherwise it is impossible to find out later what happened here. But it doesn't make sense to undo to this state.
             }
         }
     }

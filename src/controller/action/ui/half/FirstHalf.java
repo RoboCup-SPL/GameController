@@ -88,6 +88,10 @@ public class FirstHalf extends GCAction
         data.ejected[0] = data.ejected[1];
         data.ejected[1] = ejected;
 
+        boolean sentIllegalMessages = data.sentIllegalMessages[0];
+        data.sentIllegalMessages[0] = data.sentIllegalMessages[1];
+        data.sentIllegalMessages[1] = sentIllegalMessages;
+
         tmp = data.robotHardwarePenaltyBudget[0];
         data.robotHardwarePenaltyBudget[0] = data.robotHardwarePenaltyBudget[1];
         data.robotHardwarePenaltyBudget[1] = tmp;
