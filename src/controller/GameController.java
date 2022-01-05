@@ -3,10 +3,10 @@ package controller;
 import common.ApplicationLock;
 import common.Log;
 import common.net.logging.Logger;
-import common.net.SPLStandardMessageReceiver;
 import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.Sender;
+import controller.net.SPLStandardMessageReceiverGC;
 import controller.net.TrueDataSender;
 import controller.ui.GUI;
 import controller.ui.KeyboardListener;
@@ -263,9 +263,9 @@ public class GameController {
         }
 
         //SPLStandardMessageReceiver
-        SPLStandardMessageReceiver splStandardMessageReceiver = null;
+        SPLStandardMessageReceiverGC splStandardMessageReceiver = null;
         try {
-            splStandardMessageReceiver = new SPLStandardMessageReceiver();
+            splStandardMessageReceiver = new SPLStandardMessageReceiverGC();
             splStandardMessageReceiver.start();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
