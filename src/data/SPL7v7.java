@@ -23,5 +23,9 @@ public class SPL7v7 extends SPL
         allowedHardwarePenaltiesPerHalf = 2;
         /** Number of hardware penalties per game before the robot is ejected. */
         allowedHardwarePenaltiesPerGame = 3;
+        /** Number of team messages a team is allowed to send per game. */
+        overallMessageBudget = 1680;
+        /** Number of team messages that are added to the budget per minute of extra time.  */
+        additionalMessageBudgetPerMinute = 84;
     }
 }

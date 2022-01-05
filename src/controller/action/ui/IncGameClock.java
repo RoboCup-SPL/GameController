@@ -6,6 +6,8 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
+import data.Rules;
+import data.TeamInfo;
 
 public class IncGameClock extends GCAction
 {
@@ -20,6 +22,9 @@ public class IncGameClock extends GCAction
         data.timeBeforeCurrentGameState -= 1000*60;
         if (data.gameState != GameControlData.STATE_PLAYING && data.timeBeforeStoppageOfPlay != 0) {
             data.timeBeforeStoppageOfPlay -= 1000 * 60;
+        }
+        for (TeamInfo teamInfo : data.team) {
+            teamInfo.messageBudget += Rules.league.additionalMessageBudgetPerMinute;
         }
         Log.state(data, "Increase Game Clock");
     }

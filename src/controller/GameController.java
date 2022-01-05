@@ -322,6 +322,9 @@ public class GameController {
             data.kickingTeam = (byte) input.outTeam[0];
             data.competitionPhase = input.outFulltime ? GameControlData.COMPETITION_PHASE_PLAYOFF : GameControlData.COMPETITION_PHASE_ROUNDROBIN;
             data.competitionType = Rules.league.competitionType;
+            for (int i = 0; i < 2; i++) {
+                data.team[i].messageBudget = Rules.league.overallMessageBudget;
+            }
         }
 
         for (int i = 0; i < 2; i++) {

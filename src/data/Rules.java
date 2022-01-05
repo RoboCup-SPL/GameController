@@ -114,4 +114,8 @@ public abstract class Rules
     public int allowedHardwarePenaltiesPerHalf;
     /** Number of hardware penalties per game before the robot is ejected. */
     public int allowedHardwarePenaltiesPerGame;
+    /** Number of team messages a team is allowed to send per game. */
+    public short overallMessageBudget;
+    /** Number of team messages that are added to the budget per minute of extra time.  */
+    public short additionalMessageBudgetPerMinute;
 }

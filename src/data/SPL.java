@@ -93,5 +93,9 @@ public class SPL extends Rules
         allowedHardwarePenaltiesPerHalf = Integer.MAX_VALUE;
         /** Number of hardware penalties per game before the robot is ejected. */
         allowedHardwarePenaltiesPerGame = Integer.MAX_VALUE;
+        /** Number of team messages a team is allowed to send per game. */
+        overallMessageBudget = 1200;
+        /** Number of team messages that are added to the budget per minute of extra time.  */
+        additionalMessageBudgetPerMinute = 60;
     }
 }
