@@ -1,6 +1,7 @@
 package controller.action;
 
 import controller.action.clock.ClockTick;
+import controller.action.net.TeamMessage;
 import controller.action.ui.CancelUndo;
 import controller.action.ui.ClockPause;
 import controller.action.ui.ClockReset;
@@ -63,6 +64,7 @@ public class ActionBoard
     public static CancelUndo cancelUndo;
     public static final int MAX_NUM_UNDOS_AT_ONCE = 8;
 
+    public static TeamMessage[] teamMessage = new TeamMessage[2];
     public static Goal[] goalDec = new Goal[2];
     public static Goal[] goalInc = new Goal[2];
     public static KickOff[] kickOff = new KickOff[2];
@@ -98,7 +100,6 @@ public class ActionBoard
     public static FoulPenaltyArea foulPenaltyArea;
 
 
-
     /**
      * This must be called before using actions from this class. It creates
      * all the actions instances.
@@ -118,6 +119,7 @@ public class ActionBoard
         robot = new Robot[2][Rules.league.teamSize];
 
         for (int i=0; i<2; i++) {
+            teamMessage[i] = new TeamMessage(i);
             goalDec[i] = new Goal(i, -1);
             goalInc[i] = new Goal(i, 1);
             kickOff[i] = new KickOff(i);
