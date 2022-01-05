@@ -63,6 +63,7 @@ public class Parser
         "Playing",
         "Ready",
         "Set",
+        "Message Budget Exceeded by",
     };
 
 
@@ -112,6 +113,7 @@ public class Parser
                     int undos = Integer.valueOf(splitted[1]);
                     for (int j=0; j<undos; j++) {
                         // This has to do with Log.setNextMessage (which leads to two messages for one state in the log file).
+                        // The other thing is that "Message Budget Exceeded by" is not an undoable state, so it is skipped.
                         if (i-2-j > 0
                                 && ((log.lines.get(i-2-j).endsWith("Ready")
                                         || log.lines.get(i-2-j).endsWith("2nd Half")
@@ -123,10 +125,13 @@ public class Parser
                                         || log.lines.get(i-2-j-1).contains("Global Game Stuck")
                                         || log.lines.get(i-2-j-1).contains("Penalty Kick for"))
                                     || log.lines.get(i-2-j).endsWith("Initial")
-                                    && log.lines.get(i-2-j-1).contains("Timeout"))) {
+                                    && log.lines.get(i-2-j-1).contains("Timeout")
+                                    || log.lines.get(i-2-j).contains("Message Budget Exceeded by"))) {
                             ++undos;
                         }
-                        log.lines.set(i-2-j, UNDONE_PREFIX+log.lines.get(i-2-j));
+                        if (!log.lines.get(i-2-j).contains("Message Budget Exceeded by")) {
+                            log.lines.set(i-2-j, UNDONE_PREFIX+log.lines.get(i-2-j));
+                        }
                     }
                 }
             } else if (action.contains(" vs ")) {

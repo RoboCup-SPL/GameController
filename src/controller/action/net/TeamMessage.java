@@ -1,9 +1,11 @@
 package controller.action.net;
 
+import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
+import data.Rules;
 
 
 /**
@@ -41,10 +43,10 @@ public class TeamMessage extends GCAction
                 && data.gameState != GameControlData.STATE_FINISHED) {
             if (data.team[side].messageBudget > 0) {
                 --data.team[side].messageBudget;
-            } else {
+            } else if (!data.sentIllegalMessages[side]) {
                 data.team[side].score = 0;
                 data.sentIllegalMessages[side] = true;
-                // TODO: Add a state to the log here? Otherwise it is impossible to find out later what happened here. But it doesn't make sense to undo to this state.
+                Log.toFile("Message Budget Exceeded by "+Rules.league.teamColorName[data.team[side].teamColor]);
             }
         }
     }
