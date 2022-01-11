@@ -109,6 +109,7 @@ public class GUI extends JFrame implements GCGUI
     private static final int TIME_SUB_FONT_SIZE = 40;
     private static final int TIMEOUT_FONT_SIZE = 14;
     private static final int STATE_FONT_SIZE = 12;
+    private static final int COUNTER_FONT_SIZE = 12;
     private static final String WINDOW_TITLE = "GameController";
     private static final String ICONS_PATH = "config/icons/";
     private static final String BACKGROUND_EXT = ".png";
@@ -118,6 +119,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String KICKING = "Kicking";
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PENALTIES = "Penalties";
+    private static final String MESSAGE_BUDGET = "Messages";
     private static final String SHOT = "Shot";
     private static final String SHOTS = "Shots";
     private static final String EJECTED = "Ejected";
@@ -184,6 +186,7 @@ public class GUI extends JFrame implements GCGUI
     private Font timeSubFont;
     private Font timeoutFont;
     private Font stateFont;
+    private Font counterFont;
     private ImageIcon clockImgReset;
     private ImageIcon clockImgPlay;
     private ImageIcon clockImgPause;
@@ -203,6 +206,7 @@ public class GUI extends JFrame implements GCGUI
     private JRadioButton[] kickOff;
     private ButtonGroup kickOffGroup;
     private JLabel[] penalties;
+    private JLabel[] messageBudget;
     private JPanel[] robots;
     private JToggleButton[][] robot;
     private JLabel[][] robotLabel;
@@ -302,6 +306,7 @@ public class GUI extends JFrame implements GCGUI
         kickOff = new JRadioButton[3];
         kickOffGroup = new ButtonGroup();
         penalties = new JLabel[2];
+        messageBudget = new JLabel[2];
         timeOut = new JToggleButton[2];
         stuck = new JButton[2];
         for (int i=0; i<2; i++) {
@@ -322,7 +327,7 @@ public class GUI extends JFrame implements GCGUI
             goals[i] = new JLabel("0");
             goals[i].setHorizontalAlignment(JLabel.CENTER);
             penalties[i] = new JLabel(PENALTIES+": 0");
-            penalties[i].setHorizontalAlignment(JLabel.CENTER);
+            messageBudget[i] = new JLabel(MESSAGE_BUDGET+": 0");
             timeOut[i] = new ToggleButton(TIMEOUT);
             stuck[i] = new Button(STUCK);
         }
@@ -475,8 +480,10 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.71, .05, .12, .04, kickOff[1]);
         layout.add(.21, .09, .08, .07, goals[0]);
         layout.add(.71, .09, .08, .07, goals[1]);
-        layout.add(.17, .16, .12, .04, penalties[0]);
-        layout.add(.71, .16, .12, .04, penalties[1]);
+        layout.add(.19, .16, .10, .02, penalties[0]);
+        layout.add(.71, .16, .10, .02, penalties[1]);
+        layout.add(.19, .18, .10, .02, messageBudget[0]);
+        layout.add(.71, .18, .10, .02, messageBudget[1]);
         layout.add(.01, .21, .28, .55, robots[0]);
         layout.add(.71, .21, .28, .55, robots[1]);
         layout.add(.01, .05, .08, .065, timeOut[0]);
@@ -729,6 +736,7 @@ public class GUI extends JFrame implements GCGUI
         updateGoal(data);
         updateKickoff(data);
         updateNumOfPenalties(data);
+        updateMessageBudget(data);
         updateRefereeTimeout(data);
         updateTimeOut(data);
         /*
@@ -976,6 +984,19 @@ public class GUI extends JFrame implements GCGUI
                 penalties[i].setText((i == 0 && (data.gameState == GameControlData.STATE_SET
                         || data.gameState == GameControlData.STATE_PLAYING) ? SHOT : SHOTS)+": "+data.team[i].penaltyShot);
             }
+        }
+    }
+
+    /**
+     * Updates the remaining message budget.
+     *
+     * @param data     The current data (model) the GUI should view.
+     */
+    private void updateMessageBudget(AdvancedData data)
+    {
+        for (int i=0; i<2; i++) {
+            messageBudget[i].setText(MESSAGE_BUDGET+": "+data.team[i].messageBudget);
+            messageBudget[i].setForeground(data.sentIllegalMessages[i] ? Color.RED : null);
         }
     }
 
@@ -1250,6 +1271,7 @@ public class GUI extends JFrame implements GCGUI
         timeSubFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIME_SUB_FONT_SIZE*(size)));
         timeoutFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIMEOUT_FONT_SIZE*(size)));
         stateFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STATE_FONT_SIZE*(size)));
+        counterFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(COUNTER_FONT_SIZE*(size)));
 
         for (int i=0; i<2; i++) {
             name[i].setFont(titleFont);
@@ -1257,7 +1279,8 @@ public class GUI extends JFrame implements GCGUI
             goalDec[i].setFont(timeSubFont);
             kickOff[i].setFont(standardFont);
             goals[i].setFont(goalsFont);
-            penalties[i].setFont(standardFont);
+            penalties[i].setFont(counterFont);
+            messageBudget[i].setFont(counterFont);
             for (int j=0; j<robot[i].length; j++) {
                 robotLabel[i][j].setFont(titleFont);
             }
