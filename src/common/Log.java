@@ -191,6 +191,12 @@ public class Log
         }
         AdvancedData state = (AdvancedData) lastState.clone();
 
+        // Do not undo states that have to do with the team message budget.
+        for (int i=0; i<2; ++i) {
+            state.team[i].messageBudget = data.team[i].messageBudget;
+            state.sentIllegalMessages[i] = data.sentIllegalMessages[i];
+        }
+
         // Write state to EventHandler if application is GameController
         try {
             final Class<?> eventHandlerClass = Class.forName("controller.EventHandler");
