@@ -266,7 +266,6 @@ public class GameController {
         SPLStandardMessageReceiverGC splStandardMessageReceiver = null;
         try {
             splStandardMessageReceiver = new SPLStandardMessageReceiverGC();
-            splStandardMessageReceiver.start();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up SPLStandardMessageReceiver.",
@@ -396,6 +395,9 @@ public class GameController {
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);
+
+        // SPLStandardMessageReceiver may only be started after EventHandler.getInstance().data has been set and ActionBoard has been created because it can trigger actions.
+        splStandardMessageReceiver.start();
 
         //input dispose
         input.dispose();
