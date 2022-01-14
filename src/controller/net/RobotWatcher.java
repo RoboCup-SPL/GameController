@@ -45,14 +45,14 @@ public class RobotWatcher
     public static synchronized void update(GameControlReturnData gameControlReturnData)
     {
         int team, number;
-        if (gameControlReturnData.team == EventHandler.getInstance().data.team[0].teamNumber) {
+        if (gameControlReturnData.teamNum == EventHandler.getInstance().data.team[0].teamNumber) {
             team = 0;
-        } else if (gameControlReturnData.team == EventHandler.getInstance().data.team[1].teamNumber) {
+        } else if (gameControlReturnData.teamNum == EventHandler.getInstance().data.team[1].teamNumber) {
             team = 1;
         } else {
             return;
         }
-        number = gameControlReturnData.player;
+        number = gameControlReturnData.playerNum;
         if (number <= 0 || number > Rules.league.teamSize) {
             return;
         }
