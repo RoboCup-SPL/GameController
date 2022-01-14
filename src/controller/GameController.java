@@ -4,7 +4,7 @@ import common.ApplicationLock;
 import common.Log;
 import common.net.logging.Logger;
 import controller.action.ActionBoard;
-import controller.net.GameControlReturnDataReceiver;
+import controller.net.GameControlReturnDataReceiverGC;
 import controller.net.Sender;
 import controller.net.SPLStandardMessageReceiverGC;
 import controller.net.TrueDataSender;
@@ -337,27 +337,29 @@ public class GameController {
         }
 
         InetAddress broadcastAddress = localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast();
+        GameControlReturnDataReceiverGC gameControlReturnDataReceiver = null;
+        Sender sender = null;
+        TrueDataSender trueDataSender = null;
         try {
             // TrueDataSender
-            TrueDataSender.initialize(localAddress.getAddress());
-            TrueDataSender.getInstance().start();
+            trueDataSender = new TrueDataSender(localAddress.getAddress());
+            trueDataSender.start();
 
             //sender
             if (limitedBroadcast) {
                 broadcastAddress = InetAddress.getByName("255.255.255.255");
             }
-            Sender.initialize(broadcastAddress);
-            Sender sender = Sender.getInstance();
+            sender = new Sender(broadcastAddress, trueDataSender);
             sender.send(data);
             sender.start();
 
             //event-handler
+            EventHandler.getInstance().setSender(sender);
             EventHandler.getInstance().data = data;
 
             //receiver
-            GameControlReturnDataReceiver.initialize(localAddress.getAddress());
-            GameControlReturnDataReceiver receiver = GameControlReturnDataReceiver.getInstance();
-            receiver.start();
+            gameControlReturnDataReceiver = new GameControlReturnDataReceiverGC(localAddress.getAddress(), trueDataSender);
+            gameControlReturnDataReceiver.start();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -421,15 +423,15 @@ public class GameController {
         } catch (IOException e) {
             Log.error("Error while trying to release the application lock.");
         }
-        Sender.getInstance().interrupt();
-        TrueDataSender.getInstance().interrupt();
-        GameControlReturnDataReceiver.getInstance().interrupt();
+        sender.interrupt();
+        trueDataSender.interrupt();
+        gameControlReturnDataReceiver.interrupt();
         splStandardMessageReceiver.interrupt();
         Thread.interrupted(); // clean interrupted status
         try {
-            Sender.getInstance().join();
-            TrueDataSender.getInstance().join();
-            GameControlReturnDataReceiver.getInstance().join();
+            sender.join();
+            trueDataSender.join();
+            gameControlReturnDataReceiver.join();
         } catch (InterruptedException e) {
             Log.error("Waiting for threads to shutdown was interrupted.");
         }

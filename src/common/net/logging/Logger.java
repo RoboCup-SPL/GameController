@@ -2,6 +2,7 @@ package common.net.logging;
 
 import common.Log;
 import common.net.SPLStandardMessagePackage;
+import common.net.GameControlReturnDataPackage;
 import data.GameControlData;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -125,6 +126,15 @@ public class Logger {
      */
     public void log(final SPLStandardMessagePackage p) {
         log(SPLStandardMessagePackage.class, p);
+    }
+
+    /**
+     * Logs the given GameControlReturnData package.
+     *
+     * @param p package
+     */
+    public void log(final GameControlReturnDataPackage p) {
+        log(GameControlReturnDataPackage.class, p);
     }
 
     /**

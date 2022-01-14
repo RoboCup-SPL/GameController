@@ -20,15 +20,8 @@ import java.net.*;
  * the sender will hold a deep copy of {@link GameControlData} (have a closer
  * look to the copy-constructor
  * {@link GameControlData#GameControlData(data.GameControlData)}).
- *
- * This class is a singleton!
  */
 public class Sender extends Thread {
-
-    /**
-     * The instance of the singleton.
-     */
-    private static Sender instance;
 
     /**
      * The packet number that is increased with each packet sent.
@@ -46,6 +39,11 @@ public class Sender extends Thread {
     private final InetAddress group;
 
     /**
+     * The true data sender to pass the game-state to.
+     */
+    private final TrueDataSender trueDataSender;
+
+    /**
      * The current deep copy of the game-state.
      */
     private AdvancedData data;
@@ -53,45 +51,15 @@ public class Sender extends Thread {
     /**
      * Creates a new Sender.
      *
+     * @param broadcastAddress the broadcast address to use
+     * @param trueDataSender the true data sender to pass the game-state to
      * @throws SocketException if an error occurs while creating the socket
      * @throws UnknownHostException if the used inet-address is not valid
      */
-    private Sender(final InetAddress broadcastAddress) throws SocketException, UnknownHostException {
-        instance = this;
-
+    public Sender(final InetAddress broadcastAddress, final TrueDataSender trueDataSender) throws SocketException, UnknownHostException {
         this.datagramSocket = new DatagramSocket();
         this.group = broadcastAddress;
-    }
-
-    /**
-     * Initialises the Sender. This needs to be called before
-     * {@link #getInstance()} is available.
-     *
-     * @param broadcastAddress the broadcast address to use
-     * @throws SocketException if an error occurs while creating the socket
-     * @throws UnknownHostException if the used inet-address is not valid
-     * @throws IllegalStateException if the sender is already initialized
-     */
-    public synchronized static void initialize(final InetAddress broadcastAddress) throws SocketException, UnknownHostException {
-        if (null != instance) {
-            throw new IllegalStateException("sender is already initialized");
-        } else {
-            instance = new Sender(broadcastAddress);
-        }
-    }
-
-    /**
-     * Returns the instance of the singleton.
-     *
-     * @return The instance of the Sender
-     * @throws IllegalStateException if the Sender is not initialized yet
-     */
-    public synchronized static Sender getInstance() {
-        if (null == instance) {
-            throw new IllegalStateException("sender is not initialized yet");
-        } else {
-            return instance;
-        }
+        this.trueDataSender = trueDataSender;
     }
 
     /**
@@ -133,7 +101,7 @@ public class Sender extends Thread {
         this.data = (AdvancedData) data.clone();
 
         // Hand data over to the TrueDataSender
-        TrueDataSender.getInstance().send(data);
+        trueDataSender.send(data);
     }
 
     @Override

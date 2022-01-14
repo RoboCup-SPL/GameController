@@ -1,8 +1,8 @@
 package data;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
 
 /**
  * This class is what robots send to the GameController.
@@ -11,8 +11,10 @@ import java.nio.ByteOrder;
  *
  * @author Michel Bartsch
  */
-public class GameControlReturnData
-{
+public class GameControlReturnData implements Serializable {
+
+    private static final long serialVersionUID = -6438146236177558310L;
+
     /** The header to identify the structure. */
     public static final String GAMECONTROLLER_RETURN_STRUCT_HEADER = "RGrt";
     /** The version of the data structure. */

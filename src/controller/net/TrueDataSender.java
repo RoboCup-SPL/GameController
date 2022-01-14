@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A singleton class which sends a GameControlData struct containing true data
+ * A class which sends a GameControlData struct containing true data
  * (i.e. the actual state and time even after a change from Set to Playing in a
  * SPL game) to select receivers which requested this data by sending a
  * TrueDataRequest.
@@ -25,8 +25,6 @@ import java.util.Set;
  * @author Felix Thielke
  */
 public class TrueDataSender extends Thread {
-
-    private static TrueDataSender instance;
 
     private class TrueDataRequestReceiver extends Thread {
 
@@ -80,42 +78,13 @@ public class TrueDataSender extends Thread {
     /**
      * Creates a new TrueDataSender.
      *
-     * @throws SocketException if an error occurs while creating the socket
-     */
-    private TrueDataSender(final InetAddress requestAddress) throws SocketException {
-        sendSocket = new DatagramSocket();
-        requestReceiver = new TrueDataRequestReceiver(requestAddress);
-    }
-
-    /**
-     * Initialises the TrueDataSender. This needs to be called before
-     * {@link #getInstance()} is available.
-     *
      * @param requestAddress the InetAddress on which to listen for
      * TrueDataRequests
      * @throws SocketException if an error occurs while creating the socket
-     * @throws IllegalStateException if the sender is already initialized
      */
-    public synchronized static void initialize(final InetAddress requestAddress) throws SocketException {
-        if (null != instance) {
-            throw new IllegalStateException("TrueDataSender is already initialized");
-        } else {
-            instance = new TrueDataSender(requestAddress);
-        }
-    }
-
-    /**
-     * Returns the instance of the singleton.
-     *
-     * @return The instance of the TrueDataSender
-     * @throws IllegalStateException if the Sender is not initialized yet
-     */
-    public synchronized static TrueDataSender getInstance() {
-        if (null == instance) {
-            throw new IllegalStateException("TrueDataSender is not initialized yet");
-        } else {
-            return instance;
-        }
+    public TrueDataSender(final InetAddress requestAddress) throws SocketException {
+        sendSocket = new DatagramSocket();
+        requestReceiver = new TrueDataRequestReceiver(requestAddress);
     }
 
     /**

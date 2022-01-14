@@ -26,7 +26,7 @@ public class EventHandler
     /** This GUI`s update method will be called. */
     private GCGUI gui;
     /** The sender has a send method to update the data to send */
-    private Sender sender = Sender.getInstance();
+    private Sender sender;
     /**
      * This is the current data. You should write into data only in actions
      * and than use the data giving as parameters. The data is not private,
@@ -69,6 +69,16 @@ public class EventHandler
     public void setGUI(GCGUI gui)
     {
         this.gui = gui;
+    }
+
+    /**
+     * Sets the sender.
+     *
+     * @param sender  The sender.
+     */
+    public void setSender(Sender sender)
+    {
+        this.sender = sender;
     }
 
     /**
