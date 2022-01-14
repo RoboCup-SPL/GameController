@@ -29,7 +29,7 @@ public class SPLStandardMessage implements Serializable {
 
     public String header;   // header to identify the structure
     public byte version;    // version of the data structure
-    public byte playerNum;  // 1-6
+    public byte playerNum;  // 1-7
     public byte teamNum;    // the number of the team (as provided by the organizers)
     public boolean fallen;  // whether the robot is fallen
 
@@ -130,8 +130,8 @@ public class SPLStandardMessage implements Serializable {
                     versionValid = true;
 
                     playerNum = buffer.get();
-                    if (playerNum < 1 || playerNum > 6) {
-                        errors.add("player number not within [1,6]; is: " + playerNum);
+                    if (playerNum < 1 || playerNum > 7) {
+                        errors.add("player number not within [1,7]; is: " + playerNum);
                     } else {
                         playerNumValid = true;
                     }
