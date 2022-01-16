@@ -1,6 +1,7 @@
 package teamcomm.net.logging;
 
 import common.Log;
+import common.net.GameControlReturnDataPackage;
 import common.net.SPLStandardMessagePackage;
 import data.GameControlData;
 import java.io.BufferedInputStream;
@@ -15,6 +16,7 @@ import javax.swing.event.EventListenerList;
 import teamcomm.data.GameState;
 import teamcomm.data.event.GameControlDataEvent;
 import teamcomm.data.event.GameControlDataTimeoutEvent;
+import teamcomm.net.GameControlReturnDataReceiverTCM;
 import teamcomm.net.SPLStandardMessageReceiverTCM;
 
 /**
@@ -179,6 +181,8 @@ class LogReplayTask implements Runnable {
         if (obj.object != null) {
             if (obj.object instanceof SPLStandardMessagePackage) {
                 SPLStandardMessageReceiverTCM.getInstance().addToPackageQueue((SPLStandardMessagePackage) obj.object);
+            } else if (obj.object instanceof GameControlReturnDataPackage) {
+                GameControlReturnDataReceiverTCM.getInstance().addToPackageQueue((GameControlReturnDataPackage) obj.object);
             } else if (obj.object instanceof GameControlData) {
                 GameState.getInstance().gameControlDataChanged(new GameControlDataEvent(this, (GameControlData) obj.object));
             }

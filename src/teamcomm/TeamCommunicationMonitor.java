@@ -13,6 +13,7 @@ import teamcomm.data.GameState;
 import teamcomm.gui.MainWindow;
 import teamcomm.gui.View3DGSV;
 import teamcomm.net.GameControlDataReceiver;
+import teamcomm.net.GameControlReturnDataReceiverTCM;
 import teamcomm.net.SPLStandardMessageReceiverTCM;
 import teamcomm.net.logging.LogReplayer;
 
@@ -40,6 +41,7 @@ public class TeamCommunicationMonitor {
     public static void main(final String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         GameControlDataReceiver gcDataReceiver = null;
+        GameControlReturnDataReceiverTCM gcReturnDataReceiver = null;
         SPLStandardMessageReceiverTCM receiver = null;
 
         parseArgs(args);
@@ -104,6 +106,7 @@ public class TeamCommunicationMonitor {
         gcDataReceiver.addListener(GameState.getInstance());
 
         // Initialize listeners for robots
+        gcReturnDataReceiver = GameControlReturnDataReceiverTCM.getInstance();
         receiver = SPLStandardMessageReceiverTCM.getInstance();
 
         // Initialize robot view part of the GUI
@@ -120,6 +123,7 @@ public class TeamCommunicationMonitor {
 
         // Start threads
         gcDataReceiver.start();
+        gcReturnDataReceiver.start();
         receiver.start();
 
         // If a log file was specified on the command line, start replaying it
@@ -173,6 +177,7 @@ public class TeamCommunicationMonitor {
         // Shutdown threads and clean up
         GameState.getInstance().shutdown();
         receiver.interrupt();
+        gcReturnDataReceiver.interrupt();
         gcDataReceiver.interrupt();
         if (robotView != null) {
             robotView.terminate();
@@ -186,6 +191,7 @@ public class TeamCommunicationMonitor {
         // Try to join receiver threads
         try {
             gcDataReceiver.join(1000);
+            gcReturnDataReceiver.join(1000);
             receiver.join(1000);
         } catch (InterruptedException ex) {
         }

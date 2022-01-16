@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.swing.event.EventListenerList;
 import teamcomm.data.GameState;
+import teamcomm.net.GameControlReturnDataReceiverTCM;
 import teamcomm.net.SPLStandardMessageReceiverTCM;
 
 /**
@@ -54,8 +55,9 @@ public class LogReplayer {
             }
         }
 
-        // Drain package queue of SPLStandardMessageReceiver
+        // Drain package queue of SPLStandardMessageReceiver and GameControlReturnDataReceiver
         SPLStandardMessageReceiverTCM.getInstance().clearPackageQueue();
+        GameControlReturnDataReceiverTCM.getInstance().clearPackageQueue();
 
         // Reset GameState
         GameState.getInstance().reset();
@@ -116,8 +118,9 @@ public class LogReplayer {
                 listener.logReplayEnded();
             }
 
-            // Drain package queue of SPLStandardMessageReceiver
+            // Drain package queue of SPLStandardMessageReceiver and GameControlReturnDataReceiver
             SPLStandardMessageReceiverTCM.getInstance().clearPackageQueue();
+            GameControlReturnDataReceiverTCM.getInstance().clearPackageQueue();
 
             // Reset GameState
             GameState.getInstance().reset();
