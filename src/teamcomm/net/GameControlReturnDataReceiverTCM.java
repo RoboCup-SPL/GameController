@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import javax.swing.JOptionPane;
+import teamcomm.data.GameState;
 import teamcomm.net.logging.LogReplayer;
 
 /**
@@ -55,7 +56,7 @@ public class GameControlReturnDataReceiverTCM extends GameControlReturnDataRecei
             return;
         }
 
-        // TODO: GameState.getInstance().receiveMessage(p.host, message);
+        GameState.getInstance().receiveMessage(p.host, message);
     }
 
 }

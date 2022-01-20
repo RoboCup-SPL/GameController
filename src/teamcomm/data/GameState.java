@@ -3,6 +3,7 @@ package teamcomm.data;
 import common.ApplicationLock;
 import common.net.logging.Logger;
 import data.GameControlData;
+import data.GameControlReturnData;
 import data.Rules;
 import data.SPLStandardMessage;
 import data.TeamInfo;
@@ -373,6 +374,32 @@ public class GameState implements GameControlDataEventListener {
 
         // send events
         sendEvents(changed);
+    }
+
+    /**
+     * Handles a GameController return message that was received from a robot.
+     *
+     * @param address IP address of the sender
+     * @param message received message
+     */
+    public void receiveMessage(final String address, final GameControlReturnData message) {
+        // Only update if there is an active GameController.
+        if (lastGameControlData == null) {
+            return;
+        }
+
+        RobotState r;
+        synchronized (robotsByAddress) {
+            r = robotsByAddress.get(address);
+        }
+
+        // Only update if the robot is already known (for now).
+        if (r == null) {
+            return;
+        }
+
+        // let the robot state handle the message
+        // TODO: r.registerMessage(message);
     }
 
     private void sendEvents(final int changed) {
