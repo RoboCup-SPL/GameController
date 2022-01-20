@@ -3,6 +3,7 @@ package controller.net;
 import common.net.GameControlReturnDataPackage;
 import common.net.GameControlReturnDataReceiver;
 import data.GameControlReturnData;
+import data.Rules;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -13,7 +14,7 @@ public class GameControlReturnDataReceiverGC extends GameControlReturnDataReceiv
     private TrueDataSender trueDataSender;
 
     public GameControlReturnDataReceiverGC(final InetAddress address, final TrueDataSender trueDataSender) throws SocketException, UnknownHostException {
-        super(address);
+        super(Rules.league.dropBroadcastMessages ? address : null);
         this.trueDataSender = trueDataSender;
     }
 

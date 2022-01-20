@@ -4,7 +4,6 @@ import common.Log;
 import common.net.logging.Logger;
 import data.GameControlData;
 import data.GameControlReturnData;
-import data.Rules;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -38,10 +37,7 @@ public class GameControlReturnDataReceiver extends Thread {
         /**
          * Creates a new Receiver.
          *
-         * @param address the InetAddress to listen on.<br />
-         * Only applied if
-         * {@link Rules#dropBroadcastMessages rule.dropBroadcastMessages} is set to
-         * true.
+         * @param address the InetAddress to listen on. If null, listens on any address.
          * @throws SocketException the an error occurs while creating the socket
          * @throws UnknownHostException if (internally chosen) inet-address is not
          * valid or no network device is bound to an address matching the regex
@@ -53,13 +49,9 @@ public class GameControlReturnDataReceiver extends Thread {
             datagramSocket = new DatagramSocket(null);
             datagramSocket.setReuseAddress(true);
             datagramSocket.setSoTimeout(500);
-            if (Rules.league.dropBroadcastMessages) {
-                datagramSocket.bind(new InetSocketAddress(address,
-                        GameControlData.GAMECONTROLLER_RETURNDATA_PORT));
-            } else {
-                datagramSocket
-                        .bind(new InetSocketAddress(GameControlData.GAMECONTROLLER_RETURNDATA_PORT));
-            }
+            datagramSocket.bind(address != null
+                    ? new InetSocketAddress(address, GameControlData.GAMECONTROLLER_RETURNDATA_PORT)
+                    : new InetSocketAddress(GameControlData.GAMECONTROLLER_RETURNDATA_PORT));
         }
 
         @Override
@@ -90,10 +82,7 @@ public class GameControlReturnDataReceiver extends Thread {
     /**
      * Creates a new Receiver.
      *
-     * @param address the InetAddress to listen on.<br />
-     * Only applied if
-     * {@link Rules#dropBroadcastMessages rule.dropBroadcastMessages} is set to
-     * true.
+     * @param address the InetAddress to listen on. If null, listens on any address.
      * @throws SocketException the an error occurs while creating the socket
      * @throws UnknownHostException if (internally chosen) inet-address is not
      * valid or no network device is bound to an address matching the regex
