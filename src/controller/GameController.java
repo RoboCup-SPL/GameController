@@ -383,7 +383,7 @@ public class GameController {
         }
         Log.toFile("League = " + Rules.league.leagueName);
         Log.toFile("Competition phase = " + (data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF ? "playoff" : "round robin"));
-        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_7V7 ? "7v7 competition" : (data.competitionType == GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING ? "dynamic ball handling challenge" : "normal")));
+        Log.toFile("Competition type = "  + (data.competitionType == GameControlData.COMPETITION_TYPE_7V7 ? "7v7 competition" : (data.competitionType == GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING ? "dynamic ball handling challenge" : (data.competitionType == GameControlData.COMPETITION_TYPE_CHALLENGE_SHIELD ? "challenge shield" : "normal"))));
         Log.toFile("Using broadcast address " + broadcastAddress);
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));
 

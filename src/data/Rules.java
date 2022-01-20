@@ -108,7 +108,7 @@ public abstract class Rules
     public boolean lostTime;
     /** If true, the game controller should drop broadcast-messages */
     public boolean dropBroadcastMessages;
-    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_7V7, COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) */
+    /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_CHALLENGE_SHIELD, etc) */
     public byte competitionType;
     /** Number of hardware penalties per half before the robot is ejected. */
     public int allowedHardwarePenaltiesPerHalf;

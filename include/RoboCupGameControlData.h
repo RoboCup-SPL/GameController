@@ -27,8 +27,9 @@
 #define COMPETITION_PHASE_PLAYOFF    1
 
 #define COMPETITION_TYPE_NORMAL                0
-#define COMPETITION_TYPE_7V7                   1
-#define COMPETITION_TYPE_DYNAMIC_BALL_HANDLING 2
+#define COMPETITION_TYPE_CHALLENGE_SHIELD      1
+#define COMPETITION_TYPE_7V7                   2
+#define COMPETITION_TYPE_DYNAMIC_BALL_HANDLING 3
 
 #define GAME_PHASE_NORMAL       0
 #define GAME_PHASE_PENALTYSHOOT 1
@@ -87,7 +88,7 @@ struct RoboCupGameControlData
   uint8_t packetNumber;     // number incremented with each packet sent (with wraparound)
   uint8_t playersPerTeam;   // the number of players on a team
   uint8_t competitionPhase; // phase of the competition (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
-  uint8_t competitionType;  // type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_7V7, COMPETITION_TYPE_DYNAMIC_BALL_HANDLING)
+  uint8_t competitionType;  // type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_CHALLENGE_SHIELD, etc)
   uint8_t gamePhase;        // phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
   uint8_t state;            // state of the game (STATE_READY, STATE_PLAYING, etc)
   uint8_t setPlay;          // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)

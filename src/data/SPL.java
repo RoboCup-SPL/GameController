@@ -87,7 +87,7 @@ public class SPL extends Rules
         lostTime = true;
         /** If true, the game controller should drop broadcast-messages */
         dropBroadcastMessages = true;
-        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_7V7, COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) */
+        /** The type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_CHALLENGE_SHIELD, etc) */
         competitionType = GameControlData.COMPETITION_TYPE_NORMAL;
         /** Number of hardware penalties per half before the robot is ejected. */
         allowedHardwarePenaltiesPerHalf = Integer.MAX_VALUE;

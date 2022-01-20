@@ -213,6 +213,7 @@ in 2019 in the following ways:
 - The macro `MAX_NUM_PLAYERS` has been increased to 7 to accommodate for the 7v7 challenge.
     This also affects the size of the `TeamInfo` and therefore `RoboCupGameControlData` structs.
 - The macro `COMPETITION_TYPE_MIXEDTEAM` has been removed.
+- The macro `COMPETITION_TYPE_CHALLENGE_SHIELD` has been added.
 - The macro `COMPETITION_TYPE_7V7` has been added.
 - The macro `COMPETITION_TYPE_DYNAMIC_BALL_HANDLING` has been added.
 - The macro `SET_PLAY_GOAL_FREE_KICK` has been renamed to `SET_PLAY_GOAL_KICK`.
