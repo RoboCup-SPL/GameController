@@ -27,6 +27,7 @@ import javax.swing.JRadioButton;
 
 import data.GameControlData;
 import data.Rules;
+import data.SPLDynamicBallHandling;
 import data.SPLPenaltyShootout;
 import data.Teams;
 
@@ -252,8 +253,8 @@ public class StartInput extends JFrame implements Serializable
                             }
                         }
                     }
-                    nofulltime.setVisible(!onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout));
-                    fulltime.setVisible(!onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout));
+                    nofulltime.setVisible(!onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout || Rules.league instanceof SPLDynamicBallHandling));
+                    fulltime.setVisible(!onlyTeamsAndColors && !(Rules.league instanceof SPLPenaltyShootout || Rules.league instanceof SPLDynamicBallHandling));
                     nofulltime.setText(FULLTIME_LABEL_NO);
                     fulltime.setText(FULLTIME_LABEL_YES);
                     if (gameType == GameType.PRELIMINARY) {

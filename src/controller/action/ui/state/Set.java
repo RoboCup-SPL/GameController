@@ -87,6 +87,8 @@ public class Set extends GCAction {
     public boolean isLegal(AdvancedData data) {
         return (data.gameState == GameControlData.STATE_READY)
                 || (data.gameState == GameControlData.STATE_SET)
+                || ((data.gameState == GameControlData.STATE_INITIAL)
+                && (data.competitionType == GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING))
                 || ((data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT)
                 && ((data.gameState != GameControlData.STATE_PLAYING)
                 || (Rules.league.penaltyShotRetries))

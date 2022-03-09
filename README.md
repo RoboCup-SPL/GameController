@@ -35,7 +35,7 @@ Usage: `java -jar GameController.jar {options}`
                                     delayed game state switches in the SPL
     (-i | --interface) <interface>  set network interface (default is a
                                     connected IPv4 interface)
-    (-l | --league) (spl | spl_gore | spl_penalty_shootout | spl_7v7)
+    (-l | --league) (spl | spl_penalty_shootout | spl_7v7 | spl_dynamic_ball_handling)
                                     select league (default is spl)
     (-w | --window)                 select window mode (default is fullscreen)
     (-g | --game-type) (undefined | preliminary | playoff)

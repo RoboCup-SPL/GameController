@@ -62,7 +62,8 @@ public class Ready extends GCAction
               && !data.timeOutActive[0]
               && !data.timeOutActive[1]
               && !data.refereeTimeout
-              && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
+              && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
+              && (data.competitionType != GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING))
             || (data.gameState == GameControlData.STATE_READY)
             || data.testmode;
     }
