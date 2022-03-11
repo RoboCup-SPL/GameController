@@ -27,7 +27,7 @@ import util.Unsigned;
 public class MessageQueue {
 
     private static final String CONFIG_FILE = "resources/bhumanpath.cfg";
-    private static final String MESSAGEIDS_H = "Tools/MessageQueue/MessageIDs.h";
+    private static final String MESSAGEIDS_H = "Libs/Streaming/MessageIDs.h";
     private static final String MESSAGEIDS_H_PLUGIN = "resources/MessageIDs.h";
 
     private final String robotIdentifier;
