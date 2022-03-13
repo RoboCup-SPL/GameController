@@ -57,6 +57,15 @@ public class GameControlReturnData implements Serializable {
     // +ve y-axis is 90 degrees counter clockwise from the +ve x-axis
     public float[] ball = new float[2];
 
+    public boolean valid = false;
+    public boolean headerValid = false;
+    public boolean versionValid = false;
+    public boolean playerNumValid = false;
+    public boolean teamNumValid = false;
+    public boolean fallenValid = false;
+    public boolean poseValid = false;
+    public boolean ballValid = false;
+
     /**
      * Packing this Java class to the C-structure to be send.
      * @return Byte array representing the C-structure.
@@ -90,35 +99,49 @@ public class GameControlReturnData implements Serializable {
     {
         try {
             buffer.order(ByteOrder.LITTLE_ENDIAN);
-
             byte[] header = new byte[4];
-            buffer.get(header, 0, 4);
+            buffer.get(header);
             this.header = new String(header);
-            if (!this.header.equals(GAMECONTROLLER_RETURN_STRUCT_HEADER)) {
-                return false;
-            } else {
+            if (this.header.equals(GAMECONTROLLER_RETURN_STRUCT_HEADER)) {
+                headerValid = true;
+
                 version = buffer.get();
-                switch (version) {
-                case GAMECONTROLLER_RETURN_STRUCT_VERSION:
+                if (version == GAMECONTROLLER_RETURN_STRUCT_VERSION) {
+                    versionValid = true;
+
                     playerNum = buffer.get();
+                    playerNumValid = playerNum >= 1 && playerNum <= 7;
+
                     teamNum = buffer.get();
-                    fallen = buffer.get() != 0;
+                    teamNumValid = teamNum > 0;
+
+                    final byte fallenState = buffer.get();
+                    fallen = fallenState != 0;
+                    fallenValid = fallenState == 0 || fallenState == 1;
+
                     pose[0] = buffer.getFloat();
                     pose[1] = buffer.getFloat();
                     pose[2] = buffer.getFloat();
+                    if (!Float.isNaN(pose[0]) && !Float.isNaN(pose[1]) && !Float.isNaN(pose[2])) {
+                        poseValid = true;
+                    }
+
                     ballAge = buffer.getFloat();
+
                     ball[0] = buffer.getFloat();
                     ball[1] = buffer.getFloat();
-                    return true;
-
-                default:
-                    break;
+                    if (!Float.isNaN(ballAge) && !Float.isNaN(ball[0]) && !Float.isNaN(ball[1])) {
+                        ballValid = true;
+                    }
                 }
-
-                return false;
             }
         } catch (RuntimeException e) {
+            valid = false;
             return false;
         }
+
+        valid = headerValid && versionValid && playerNumValid && teamNumValid && fallenValid && poseValid && ballValid;
+
+        return valid;
     }
 }

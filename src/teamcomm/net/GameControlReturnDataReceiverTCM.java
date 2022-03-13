@@ -52,7 +52,8 @@ public class GameControlReturnDataReceiverTCM extends GameControlReturnDataRecei
     @Override
     protected void handleMessage(final GameControlReturnDataPackage p) {
         final GameControlReturnData message = new GameControlReturnData();
-        if (!message.fromByteArray(ByteBuffer.wrap(p.message))) {
+        message.fromByteArray(ByteBuffer.wrap(p.message));
+        if (!(message.headerValid && message.versionValid && message.playerNumValid && message.teamNumValid)) {
             return;
         }
 

@@ -383,23 +383,44 @@ public class GameState implements GameControlDataEventListener {
      * @param message received message
      */
     public void receiveMessage(final String address, final GameControlReturnData message) {
-        // Only update if there is an active GameController.
+        // only handle if there is an active GameController
         if (lastGameControlData == null) {
             return;
         }
 
+        int changed = 0;
         RobotState r;
         synchronized (robotsByAddress) {
-            r = robotsByAddress.get(address);
-        }
+            // only handle if the player belongs to one of the playing teams
+            if (message.teamNum != teamNumbers[TEAM_LEFT] && message.teamNum != teamNumbers[TEAM_RIGHT]) {
+                return;
+            }
 
-        // Only update if the robot is already known (for now).
-        if (r == null) {
-            return;
+            r = robotsByAddress.get(address);
+            if (r == null) {
+                r = new RobotState(address, message.teamNum);
+
+                robotsByAddress.put(address, r);
+            }
+
+            Collection<RobotState> set = robots.get((int) message.teamNum);
+            if (set == null) {
+                set = new HashSet<>();
+                robots.put((int) message.teamNum, set);
+            }
+            if (set.add(r)) {
+                if (teamNumbers[TEAM_LEFT] == message.teamNum) {
+                    changed |= CHANGED_LEFT;
+                } else if (teamNumbers[TEAM_RIGHT] == message.teamNum) {
+                    changed |= CHANGED_RIGHT;
+                }
+            }
         }
 
         // let the robot state handle the message
-        // TODO: r.registerMessage(message);
+
+        // send events
+        sendEvents(changed);
     }
 
     private void sendEvents(final int changed) {
