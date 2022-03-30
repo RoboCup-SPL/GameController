@@ -59,6 +59,7 @@ public class GameController {
             + "\n  (-w | --window)                 select window mode (default is fullscreen)"
             + "\n  (-g | --game-type) %s%sselect game type (default is undefined)"
             + "\n  (-b | --limited-broadcast)      use 255.255.255.255 as broadcast address"
+            + "\n  (-m | --multicast)              also join multicast groups for simulated team communication"
             + "\n  --load <path>                   load initial state from a file"
             + "\n  --save <path>                   save state to a file on exit"
             + "\n  --team1 <team name or number>   select first team (default is 0)"
@@ -76,6 +77,8 @@ public class GameController {
     private static final String COMMAND_SECOND_TEAM = "--team2";
     private static final String COMMAND_GLOBAL_BROADCAST = "--limited-broadcast";
     private static final String COMMAND_GLOBAL_BROADCAST_SHORT = "-b";
+    private static final String COMMAND_MULTICAST = "--multicast";
+    private static final String COMMAND_MULTICAST_SHORT = "-m";
     private static final String COMMAND_LOAD = "--load";
     private static final String COMMAND_SAVE = "--save";
     private static final String COMMAND_TEST = "--test";
@@ -98,6 +101,7 @@ public class GameController {
         boolean testMode = false;
         boolean limitedBroadcast = false;
         String loadPath = null, savePath = null;
+        boolean multicast = false;
 
         parsing:
         for (int i = 0; i < args.length; i++) {
@@ -153,6 +157,9 @@ public class GameController {
                 continue parsing;
             } else if (args[i].equalsIgnoreCase(COMMAND_GLOBAL_BROADCAST_SHORT) || args[i].equalsIgnoreCase(COMMAND_GLOBAL_BROADCAST)) {
                 limitedBroadcast = true;
+                continue parsing;
+            } else if (args[i].equalsIgnoreCase(COMMAND_MULTICAST_SHORT) || args[i].equalsIgnoreCase(COMMAND_MULTICAST)) {
+                multicast = true;
                 continue parsing;
             } else if (args.length > i + 1 && args[i].equalsIgnoreCase(COMMAND_LOAD)) {
                 loadPath = args[++i];
@@ -265,7 +272,7 @@ public class GameController {
         //SPLStandardMessageReceiver
         SPLStandardMessageReceiverGC splStandardMessageReceiver = null;
         try {
-            splStandardMessageReceiver = new SPLStandardMessageReceiverGC();
+            splStandardMessageReceiver = new SPLStandardMessageReceiverGC(multicast);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up SPLStandardMessageReceiver.",

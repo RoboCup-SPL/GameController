@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class SPLStandardMessageReceiverGC extends SPLStandardMessageReceiver {
 
-    public SPLStandardMessageReceiverGC() throws IOException {
-        super();
+    public SPLStandardMessageReceiverGC(final boolean multicast) throws IOException {
+        super(multicast);
     }
 
     @Override

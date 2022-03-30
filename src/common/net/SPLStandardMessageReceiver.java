@@ -32,12 +32,14 @@ public class SPLStandardMessageReceiver extends Thread {
     private class ReceiverThread extends Thread {
 
         private final AbstractSelector selector;
+        private final boolean multicast;
         private int openChannels = 0;
 
-        public ReceiverThread() throws IOException {
+        public ReceiverThread(final boolean multicast) throws IOException {
             setName("SPLStandardMessageReceiver");
 
             selector = SelectorProvider.provider().openSelector();
+            this.multicast = multicast;
         }
 
         private void openChannel(final int team) throws IOException {
@@ -46,25 +48,28 @@ public class SPLStandardMessageReceiver extends Thread {
             channel.configureBlocking(false);
             channel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
             channel.bind(new InetSocketAddress("0.0.0.0", getTeamport(team)));
-            try (final MulticastSocket ms = new MulticastSocket()) {
-                // Join multicast group on all network interfaces (for compatibility with SimRobot)
-                final Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
-                final byte[] localaddr = InetAddress.getLocalHost().getAddress();
-                localaddr[0] = (byte) 239;
+            if (multicast) {
+                try (final MulticastSocket ms = new MulticastSocket()) {
+                    // Join multicast group on all network interfaces (for compatibility with SimRobot)
+                    final Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+                    final byte[] localaddr = InetAddress.getLocalHost().getAddress();
+                    localaddr[0] = (byte) 239;
 
-                final NetworkInterface defNI = ms.getNetworkInterface();
-                channel.setOption(StandardSocketOptions.IP_MULTICAST_IF, defNI);
-                channel.join(InetAddress.getByName("239.0.0.1"), defNI);
-                channel.join(InetAddress.getByAddress(localaddr), defNI);
+                    final NetworkInterface defNI = ms.getNetworkInterface();
+                    channel.setOption(StandardSocketOptions.IP_MULTICAST_IF, defNI);
+                    channel.join(InetAddress.getByName("239.0.0.1"), defNI);
+                    channel.join(InetAddress.getByAddress(localaddr), defNI);
 
-                while (nis.hasMoreElements()) {
-                    final NetworkInterface ni = nis.nextElement();
-                    channel.join(InetAddress.getByName("239.0.0.1"), ni);
-                    channel.join(InetAddress.getByAddress(localaddr), ni);
+                    while (nis.hasMoreElements()) {
+                        final NetworkInterface ni = nis.nextElement();
+                        channel.join(InetAddress.getByName("239.0.0.1"), ni);
+                        channel.join(InetAddress.getByAddress(localaddr), ni);
+                    }
+                } catch (IOException ex) {
+                    // Ignore, because this is only for testing and does not work everywhere
                 }
-            } catch (IOException ex) {
-                // Ignore, because this is only for testing and does not work everywhere
             }
+
             // Register channel with selector
             channel.register(selector, SelectionKey.OP_READ, team);
         }
@@ -84,7 +89,7 @@ public class SPLStandardMessageReceiver extends Thread {
                             final InetSocketAddress address = (InetSocketAddress) channel.receive(buffer);
 
                             if (address != null && processPackets()) {
-                                if (address.getAddress().getAddress()[0] != 10) {
+                                if (multicast && address.getAddress().getAddress()[0] != 10) {
                                     queue.add(new SPLStandardMessagePackage("10.0." + team + "." + buffer.get(5), team, buffer.array()));
                                 } else {
                                     queue.add(new SPLStandardMessagePackage(address.getAddress().getHostAddress(), team, buffer.array()));
@@ -121,12 +126,13 @@ public class SPLStandardMessageReceiver extends Thread {
     /**
      * Constructor.
      *
+     * @param multicast Also open multicast ports
      * @throws IOException if a problem occurs while creating the receiver
      * threads
      */
-    public SPLStandardMessageReceiver() throws IOException {
+    public SPLStandardMessageReceiver(final boolean multicast) throws IOException {
         // Create receiver thread
-        receiver = new ReceiverThread();
+        receiver = new ReceiverThread(multicast);
     }
 
     protected boolean processPackets() {
