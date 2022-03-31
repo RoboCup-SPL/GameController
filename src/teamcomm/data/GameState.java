@@ -418,6 +418,7 @@ public class GameState implements GameControlDataEventListener {
         }
 
         // let the robot state handle the message
+        r.registerMessage(message);
 
         // send events
         sendEvents(changed);
