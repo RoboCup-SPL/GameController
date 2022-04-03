@@ -119,6 +119,8 @@ public class GameControllerInfo extends Static {
             Text.drawText("" + teamLeft.score, -0.3f, 0, 0.3f, getColor(teamLeft.teamColor));
             Text.drawText(":", 0, 0, 0.3f);
             Text.drawText("" + teamRight.score, 0.3f, 0, 0.3f, getColor(teamRight.teamColor));
+            Text.drawText("" + teamLeft.messageBudget, -4.3f, 0.9f, 0.3f);
+            Text.drawText("" + teamRight.messageBudget, 4.3f, 0.9f, 0.3f);
             gl.glPopMatrix();
         }
     }
