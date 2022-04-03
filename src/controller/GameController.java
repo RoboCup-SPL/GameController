@@ -425,11 +425,6 @@ public class GameController {
                 Log.error("Error while trying to save the game state.");
             }
         }
-        try {
-            applicationLock.release();
-        } catch (IOException e) {
-            Log.error("Error while trying to release the application lock.");
-        }
         sender.interrupt();
         trueDataSender.interrupt();
         gameControlReturnDataReceiver.interrupt();
@@ -442,11 +437,6 @@ public class GameController {
         } catch (InterruptedException e) {
             Log.error("Waiting for threads to shutdown was interrupted.");
         }
-        try {
-            Log.close();
-        } catch (IOException e) {
-            Log.error("Error while trying to close the log.");
-        }
         Logger.getInstance().closeLogfile();
 
         gui.dispose();
@@ -455,8 +445,21 @@ public class GameController {
         try {
             splStandardMessageReceiver.join(1000);
         } catch (InterruptedException ex) {
+            Log.error("Waiting for threads to shutdown was interrupted.");
         }
-        System.exit(0);
 
+        try {
+            applicationLock.release();
+        } catch (IOException e) {
+            Log.error("Error while trying to release the application lock.");
+        }
+
+        try {
+            Log.close();
+        } catch (IOException e) {
+            System.err.println("Error while trying to close the log.");
+        }
+
+        System.exit(0);
     }
 }
