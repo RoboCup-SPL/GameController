@@ -89,7 +89,7 @@ public class SPLStandardMessageReceiver extends Thread {
                             final InetSocketAddress address = (InetSocketAddress) channel.receive(buffer);
 
                             if (address != null && processPackets()) {
-                                if (multicast && address.getAddress().getAddress()[0] != 10) {
+                                if (multicast) {
                                     queue.add(new SPLStandardMessagePackage("10.0." + team + "." + buffer.get(5), team, buffer.array()));
                                 } else {
                                     queue.add(new SPLStandardMessagePackage(address.getAddress().getHostAddress(), team, buffer.array()));
