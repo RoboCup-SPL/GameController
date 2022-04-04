@@ -269,19 +269,6 @@ public class GameController {
             System.exit(-1);
         }
 
-        //SPLStandardMessageReceiver
-        SPLStandardMessageReceiverGC splStandardMessageReceiver = null;
-        try {
-            splStandardMessageReceiver = new SPLStandardMessageReceiverGC(multicast);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    "Error while setting up SPLStandardMessageReceiver.",
-                    "Error on configured port",
-                    JOptionPane.ERROR_MESSAGE);
-            Log.error("fatal: " + e.getMessage());
-            System.exit(-1);
-        }
-
         AdvancedData data = null;
         if (loadPath != null) {
             try (final ObjectInputStream stream = new ObjectInputStream(new FileInputStream(loadPath))) {
@@ -371,6 +358,19 @@ public class GameController {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up GameController on port: " + GameControlData.GAMECONTROLLER_RETURNDATA_PORT + ".",
+                    "Error on configured port",
+                    JOptionPane.ERROR_MESSAGE);
+            Log.error("fatal: " + e.getMessage());
+            System.exit(-1);
+        }
+
+        //SPLStandardMessageReceiver (EventHandler.getInstance().data must have been set for this)
+        SPLStandardMessageReceiverGC splStandardMessageReceiver = null;
+        try {
+            splStandardMessageReceiver = new SPLStandardMessageReceiverGC(multicast);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error while setting up SPLStandardMessageReceiver.",
                     "Error on configured port",
                     JOptionPane.ERROR_MESSAGE);
             Log.error("fatal: " + e.getMessage());

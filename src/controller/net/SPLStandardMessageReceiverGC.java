@@ -10,7 +10,7 @@ import java.io.IOException;
 public class SPLStandardMessageReceiverGC extends SPLStandardMessageReceiver {
 
     public SPLStandardMessageReceiverGC(final boolean multicast) throws IOException {
-        super(multicast);
+        super(multicast, new int[]{EventHandler.getInstance().data.team[0].teamNumber, EventHandler.getInstance().data.team[1].teamNumber});
     }
 
     @Override

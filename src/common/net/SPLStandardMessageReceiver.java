@@ -33,13 +33,15 @@ public class SPLStandardMessageReceiver extends Thread {
 
         private final AbstractSelector selector;
         private final boolean multicast;
+        private final int[] teams;
         private int openChannels = 0;
 
-        public ReceiverThread(final boolean multicast) throws IOException {
+        public ReceiverThread(final boolean multicast, final int[] teams) throws IOException {
             setName("SPLStandardMessageReceiver");
 
             selector = SelectorProvider.provider().openSelector();
             this.multicast = multicast;
+            this.teams = teams;
         }
 
         private void openChannel(final int team) throws IOException {
@@ -79,7 +81,7 @@ public class SPLStandardMessageReceiver extends Thread {
             ByteBuffer buffer = ByteBuffer.allocate(SPLStandardMessage.SIZE);
             while (!isInterrupted()) {
                 try {
-                    if (selector.select(openChannels < MAX_TEAMNUMBER ? 50 : 500) > 0) {
+                    if (selector.select(openChannels < (teams == null ? MAX_TEAMNUMBER : teams.length) ? 50 : 500) > 0) {
                         final Iterator<SelectionKey> it = selector.selectedKeys().iterator();
 
                         while (it.hasNext()) {
@@ -101,12 +103,13 @@ public class SPLStandardMessageReceiver extends Thread {
                         }
                     }
 
-                    if (openChannels < MAX_TEAMNUMBER) {
-                        openChannels++;
+                    if (openChannels < (teams == null ? MAX_TEAMNUMBER : teams.length)) {
                         try {
-                            openChannel(openChannels);
+                            openChannel(teams == null ? (openChannels + 1) : teams[openChannels]);
                         } catch (IOException e) {
-                            Log.error("could not open UDP socket for team " + openChannels + ": " + e.getMessage());
+                            Log.error("could not open UDP socket for team " + (teams == null ? (openChannels + 1) : teams[openChannels]) + ": " + e.getMessage());
+                        } finally {
+                            openChannels++;
                         }
                     }
                 } catch (SocketTimeoutException e) {
@@ -127,12 +130,13 @@ public class SPLStandardMessageReceiver extends Thread {
      * Constructor.
      *
      * @param multicast Also open multicast ports
+     * @param teams Optional list of team numbers to watch. If null, all 100 ports are watched.
      * @throws IOException if a problem occurs while creating the receiver
      * threads
      */
-    public SPLStandardMessageReceiver(final boolean multicast) throws IOException {
+    public SPLStandardMessageReceiver(final boolean multicast, final int[] teams) throws IOException {
         // Create receiver thread
-        receiver = new ReceiverThread(multicast);
+        receiver = new ReceiverThread(multicast, teams);
     }
 
     protected boolean processPackets() {

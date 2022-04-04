@@ -25,7 +25,7 @@ public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
     private static SPLStandardMessageReceiverTCM instance;
 
     public SPLStandardMessageReceiverTCM() throws IOException {
-        super(true);
+        super(true, null);
     }
 
     /**
