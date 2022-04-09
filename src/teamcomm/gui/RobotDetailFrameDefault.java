@@ -105,10 +105,9 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
             sb.append("Player no: ").append(robot.getPlayerNumber());
         }
         sb.append("<br/>")
-                .append("Messages: ").append(robot.getTeamMessageCount())
+                .append("Team Messages: ").append(robot.getTeamMessageCount())
                 .append("<br/>");
-        final double mps = robot.getTeamMessagesPerSecond();
-        sb.append("Per second: ").append(df.format(mps));
+        sb.append("Per second: ").append(df.format(robot.getTeamMessagesPerSecond()));
         sb.append("<br/>");
         if (!msg.valid) {
             sb.append("<font color='red'>");
@@ -117,6 +116,12 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
         if (!msg.valid) {
             sb.append("</font>");
         }
+        sb.append("<br/>")
+                .append("GameController Return Messages: ").append(robot.getGCRDMessageCount())
+                .append("<br/>");
+        sb.append("Per second: ").append(df.format(robot.getGCRDMessagesPerSecond()));
+        sb.append("<br/>");
+        sb.append("Illegal: ").append(robot.getIllegalGCRDMessageCount()).append(" (").append(Math.round(robot.getIllegalGCRDMessageRatio() * 100.0)).append("%)");
         sb.append("</html>");
         topLabel.setText(sb.toString());
 
