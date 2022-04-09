@@ -34,10 +34,14 @@ public class RobotState {
 
     private final String address;
     private SPLStandardMessage lastMessage;
-    private long lastMessageTimestamp;
-    private final LinkedList<Long> recentMessageTimestamps = new LinkedList<>();
-    private int messageCount = 0;
-    private int illegalMessageCount = 0;
+    private long lastTeamMessageTimestamp;
+    private long lastGCRDMessageTimestamp;
+    private final LinkedList<Long> recentTeamMessageTimestamps = new LinkedList<>();
+    private final LinkedList<Long> recentGCRDMessageTimestamps = new LinkedList<>();
+    private int teamMessageCount = 0;
+    private int gcrdMessageCount = 0;
+    private int illegalTeamMessageCount = 0;
+    private int illegalGCRDMessageCount = 0;
     private final int teamNumber;
     private Integer playerNumber = null;
     private byte penalty = PlayerInfo.PENALTY_NONE;
@@ -64,17 +68,17 @@ public class RobotState {
      */
     public void registerMessage(final SPLStandardMessage message) {
         if (!message.valid) {
-            illegalMessageCount++;
+            illegalTeamMessageCount++;
         }
         lastMessage = message;
         if (message.playerNumValid) {
             playerNumber = (int) message.playerNum;
         }
-        lastMessageTimestamp = System.currentTimeMillis();
-        synchronized (recentMessageTimestamps) {
-            recentMessageTimestamps.addFirst(lastMessageTimestamp);
+        lastTeamMessageTimestamp = System.currentTimeMillis();
+        synchronized (recentTeamMessageTimestamps) {
+            recentTeamMessageTimestamps.addFirst(lastTeamMessageTimestamp);
         }
-        messageCount++;
+        teamMessageCount++;
 
         for (final RobotStateEventListener listener : listeners.getListeners(RobotStateEventListener.class)) {
             listener.robotStateChanged(new RobotStateEvent(this));
@@ -89,7 +93,7 @@ public class RobotState {
      */
     public void registerMessage(final GameControlReturnData message) {
         if (!message.valid) {
-            illegalMessageCount++;
+            illegalGCRDMessageCount++;
         }
         if (message.playerNumValid) {
             playerNumber = (int) message.playerNum;
@@ -127,11 +131,11 @@ public class RobotState {
                 lastMessage.ball = message.ball;
             }
         }
-        lastMessageTimestamp = System.currentTimeMillis();
-        synchronized (recentMessageTimestamps) {
-            recentMessageTimestamps.addFirst(lastMessageTimestamp);
+        lastGCRDMessageTimestamp = System.currentTimeMillis();
+        synchronized (recentGCRDMessageTimestamps) {
+            recentGCRDMessageTimestamps.addFirst(lastGCRDMessageTimestamp);
         }
-        messageCount++;
+        gcrdMessageCount++;
 
         for (final RobotStateEventListener listener : listeners.getListeners(RobotStateEventListener.class)) {
             listener.robotStateChanged(new RobotStateEvent(this));
@@ -158,19 +162,36 @@ public class RobotState {
     }
 
     /**
-     * Returns the average number of messages per second.
+     * Returns the average number of team messages per second.
      *
      * @return number of messages per second
      */
-    public double getMessagesPerSecond() {
-        synchronized (recentMessageTimestamps) {
-            final ListIterator<Long> it = recentMessageTimestamps.listIterator(recentMessageTimestamps.size());
+    public double getTeamMessagesPerSecond() {
+        synchronized (recentTeamMessageTimestamps) {
+            final ListIterator<Long> it = recentTeamMessageTimestamps.listIterator(recentTeamMessageTimestamps.size());
 
-            while (it.hasPrevious() && lastMessageTimestamp - it.previous() > AVERAGE_CALCULATION_TIME) {
+            while (it.hasPrevious() && lastTeamMessageTimestamp - it.previous() > AVERAGE_CALCULATION_TIME) {
                 it.remove();
             }
 
-            return recentMessageTimestamps.size() > 0 ? ((recentMessageTimestamps.size() - 1) * 1000.0 / Math.max(1000, lastMessageTimestamp - recentMessageTimestamps.getLast())) : 0;
+            return recentTeamMessageTimestamps.size() > 0 ? ((recentTeamMessageTimestamps.size() - 1) * 1000.0 / Math.max(1000, lastTeamMessageTimestamp - recentTeamMessageTimestamps.getLast())) : 0;
+        }
+    }
+
+    /**
+     * Returns the average number of GameController return messages per second.
+     *
+     * @return number of messages per second
+     */
+    public double getGCRDMessagesPerSecond() {
+        synchronized (recentGCRDMessageTimestamps) {
+            final ListIterator<Long> it = recentGCRDMessageTimestamps.listIterator(recentGCRDMessageTimestamps.size());
+
+            while (it.hasPrevious() && lastGCRDMessageTimestamp - it.previous() > AVERAGE_CALCULATION_TIME) {
+                it.remove();
+            }
+
+            return recentGCRDMessageTimestamps.size() > 0 ? ((recentGCRDMessageTimestamps.size() - 1) * 1000.0 / Math.max(1000, lastGCRDMessageTimestamp - recentGCRDMessageTimestamps.getLast())) : 0;
         }
     }
 
@@ -197,7 +218,7 @@ public class RobotState {
      * @return connection status
      */
     public ConnectionStatus getConnectionStatus() {
-        final long timeSinceLastMessage = System.currentTimeMillis() - lastMessageTimestamp;
+        final long timeSinceLastMessage = System.currentTimeMillis() - Math.max(lastTeamMessageTimestamp, lastGCRDMessageTimestamp);
         for (final ConnectionStatus c : ConnectionStatus.values()) {
             if (timeSinceLastMessage >= c.threshold) {
                 return c;
@@ -208,30 +229,57 @@ public class RobotState {
     }
 
     /**
-     * Returns the total count of received messages.
+     * Returns the total count of received team messages.
      *
      * @return total message count
      */
-    public int getMessageCount() {
-        return messageCount;
+    public int getTeamMessageCount() {
+        return teamMessageCount;
     }
 
     /**
-     * Returns the total count of illegal messages.
+     * Returns the total count of illegal team messages.
      *
      * @return illegal message count
      */
-    public int getIllegalMessageCount() {
-        return illegalMessageCount;
+    public int getIllegalTeamMessageCount() {
+        return illegalTeamMessageCount;
     }
 
     /**
-     * Returns the ratio of illegal messages to the total count of messages.
+     * Returns the ratio of illegal team messages to the total count of team messages.
      *
      * @return ratio
      */
-    public double getIllegalMessageRatio() {
-        return (double) illegalMessageCount / (double) messageCount;
+    public double getIllegalTeamMessageRatio() {
+        return (double) illegalTeamMessageCount / (double) teamMessageCount;
+    }
+
+    /**
+     * Returns the total count of received GameController return messages.
+     *
+     * @return total message count
+     */
+    public int getGCRDMessageCount() {
+        return gcrdMessageCount;
+    }
+
+    /**
+     * Returns the total count of illegal GameController return messages.
+     *
+     * @return illegal message count
+     */
+    public int getIllegalGCRDMessageCount() {
+        return illegalGCRDMessageCount;
+    }
+
+    /**
+     * Returns the ratio of illegal GameController return messages to the total count of GameController return messages.
+     *
+     * @return ratio
+     */
+    public double getIllegalGCRDMessageRatio() {
+        return (double) illegalGCRDMessageCount / (double) gcrdMessageCount;
     }
 
     /**

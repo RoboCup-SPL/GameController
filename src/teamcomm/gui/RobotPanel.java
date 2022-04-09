@@ -40,8 +40,6 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
      */
     public static final int PANEL_HEIGHT = 105;
 
-    public static final double MPS_LEGAL_THRESHOLD = 1.1;
-
     private final RobotState robot;
     private final RobotDetailFrame detailFrame;
 
@@ -176,7 +174,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
      * Updates the panel with information of the given robot.
      */
     private void update() {
-        final DecimalFormat df = new DecimalFormat("#.#####");
+        final DecimalFormat df = new DecimalFormat("#.##");
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -188,21 +186,15 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
                     ((JLabel) foregroundPanel.getComponent(0)).setForeground(defaultColor);
                     ((JLabel) foregroundPanel.getComponent(0)).setText("Player no: " + robot.getPlayerNumber());
                 }
-                ((JLabel) foregroundPanel.getComponent(1)).setText("Messages: " + robot.getMessageCount());
+                ((JLabel) foregroundPanel.getComponent(1)).setText("Messages: " + robot.getTeamMessageCount() + " / " + robot.getGCRDMessageCount());
 
-                final double mps = robot.getMessagesPerSecond();
-                if (mps >= MPS_LEGAL_THRESHOLD) {
-                    ((JLabel) foregroundPanel.getComponent(2)).setForeground(Color.red);
-                } else {
-                    ((JLabel) foregroundPanel.getComponent(2)).setForeground(defaultColor);
-                }
-                ((JLabel) foregroundPanel.getComponent(2)).setText("Per second: " + df.format(mps));
+                ((JLabel) foregroundPanel.getComponent(2)).setText("Per second: " + df.format(robot.getTeamMessagesPerSecond()) + " / " + df.format(robot.getGCRDMessagesPerSecond()));
                 if (robot.getLastMessage() == null || !robot.getLastMessage().valid) {
                     ((JLabel) foregroundPanel.getComponent(3)).setForeground(Color.red);
                 } else {
                     ((JLabel) foregroundPanel.getComponent(3)).setForeground(defaultColor);
                 }
-                ((JLabel) foregroundPanel.getComponent(3)).setText("Illegal: " + robot.getIllegalMessageCount() + " (" + Math.round(robot.getIllegalMessageRatio() * 100.0) + "%)");
+                ((JLabel) foregroundPanel.getComponent(3)).setText("Illegal: " + robot.getIllegalTeamMessageCount() + " (" + Math.round(robot.getIllegalTeamMessageRatio() * 100.0) + "%) / " + robot.getIllegalGCRDMessageCount() + " (" + Math.round(robot.getIllegalGCRDMessageCount() * 100.0) + "%)");
             }
         });
     }

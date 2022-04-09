@@ -105,21 +105,15 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
             sb.append("Player no: ").append(robot.getPlayerNumber());
         }
         sb.append("<br/>")
-                .append("Messages: ").append(robot.getMessageCount())
+                .append("Messages: ").append(robot.getTeamMessageCount())
                 .append("<br/>");
-        final double mps = robot.getMessagesPerSecond();
-        if (mps > RobotPanel.MPS_LEGAL_THRESHOLD) {
-            sb.append("<font color='red'>");
-        }
+        final double mps = robot.getTeamMessagesPerSecond();
         sb.append("Per second: ").append(df.format(mps));
-        if (mps > RobotPanel.MPS_LEGAL_THRESHOLD) {
-            sb.append("</font>");
-        }
         sb.append("<br/>");
         if (!msg.valid) {
             sb.append("<font color='red'>");
         }
-        sb.append("Illegal: ").append(robot.getIllegalMessageCount()).append(" (").append(Math.round(robot.getIllegalMessageRatio() * 100.0)).append("%)");
+        sb.append("Illegal: ").append(robot.getIllegalTeamMessageCount()).append(" (").append(Math.round(robot.getIllegalTeamMessageRatio() * 100.0)).append("%)");
         if (!msg.valid) {
             sb.append("</font>");
         }
