@@ -16,7 +16,7 @@ public class SPL extends Rules
         /** The league's directory name with its teams and icons. */
         leagueDirectory = "spl";
         /** How many robots are in a team. */
-        teamSize = 6; // 5 players + 1 sub
+        teamSize = 5; // no substitute
         /** How many robots of each team may play at one time. */
         robotsPlaying = 5;
         /** The Java Colors the left and the right team starts with. */
