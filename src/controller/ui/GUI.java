@@ -165,7 +165,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String PEN_LOCAL_GAME_STUCK = "Local Game Stuck";
     private static final String PEN_POSITION = "Illegal Position";
-    private static final String PEN_FOUL_PENALTY_AREA = "Foul<br/>(Penalty Kick)";
+    private static final String PEN_FOUL_PENALTY_AREA = "Penalty Kick";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
