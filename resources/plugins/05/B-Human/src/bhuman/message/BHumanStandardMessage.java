@@ -17,9 +17,27 @@ public class BHumanStandardMessage {
     public static final String BHUMAN_STANDARD_MESSAGE_STRUCT_HEADER = "BHUM";
     public static final short BHUMAN_STANDARD_MESSAGE_STRUCT_VERSION = 15;
 
+    public enum SetPlay__Type {
+        none,
+        backPassKickOff,
+        directKickOff,
+        passKickOff,
+        diamondKickOff,
+        arrowKickOff,
+        yKickOff,
+        theOneTrueOwnPenaltyKick,
+        theOneTrueOpponentPenaltyKick,
+        passFreeKick,
+        cornerKick,
+        placeholder,
+        UNKNOWN
+    }
+
     public enum Role__Type {
         none,
-        active,
+        playBall,
+        freeKickWall,
+        closestToTeammatesBall,
         goalkeeper,
         defender,
         midfielder,
@@ -39,21 +57,6 @@ public class BHumanStandardMessage {
         forward,
         forwardL,
         forwardR,
-        UNKNOWN
-    }
-
-    public enum SetPlay__Type {
-        none,
-        backPassKickOff,
-        directKickOff,
-        passKickOff,
-        diamondKickOff,
-        yKickOff,
-        theOneTrueOwnPenaltyKick,
-        theOneTrueOpponentPenaltyKick,
-        passFreeKick,
-        cornerKick,
-        placeholder,
         UNKNOWN
     }
 
@@ -84,134 +87,6 @@ public class BHumanStandardMessage {
             acceptedSetPlay = SetPlay__Type.values()[Math.min((int) bitStream.readBits(8), SetPlay__Type.values().length - 1)];
             position = Tactic__Position__Type.values()[Math.min((int) bitStream.readBits(4), Tactic__Position__Type.values().length - 1)];
             role = Role__Type.values()[Math.min((int) bitStream.readBits(3), Role__Type.values().length - 1)];
-        }
-    }
-
-    public static class RobotStatus {
-        public boolean isUpright;
-        public boolean hasGroundContact;
-        public Timestamp timeWhenLastUpright;
-        public byte[] sequenceNumbers = new byte[7];
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            isUpright = bitStream.readBoolean();
-            hasGroundContact = bitStream.readBoolean();
-            timeWhenLastUpright = bitStream.readTimestamp(__timestampBase, 8, 6, -1, false);
-            final int _sequenceNumbersSize = 7;
-            for (int i = 0; i < _sequenceNumbersSize; ++i) {
-                byte _sequenceNumbers;
-                _sequenceNumbers = bitStream.readSignedChar(-1, 14, 4);
-                sequenceNumbers[i] = _sequenceNumbers;
-            }
-        }
-    }
-
-    public enum RobotPose__LocalizationQuality {
-        superb,
-        okay,
-        poor,
-        UNKNOWN
-    }
-
-    public static class RobotPose {
-        public Angle rotation;
-        public Eigen.Vector2f translation = new Eigen.Vector2f();
-        public RobotPose__LocalizationQuality quality;
-        public Eigen.ColumnMatrix<Float> covariance = new Eigen.ColumnMatrix<Float>();
-        public Timestamp timestampLastJump;
-
-        @SuppressWarnings("unchecked")
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            rotation = bitStream.readAngle(8);
-            translation.x = bitStream.readFloat(-32768, 32767, 16);
-            translation.y = bitStream.readFloat(-32768, 32767, 16);
-            quality = RobotPose__LocalizationQuality.values()[Math.min((int) bitStream.readBits(2), RobotPose__LocalizationQuality.values().length - 1)];
-            covariance.cols = new Eigen.Vector[3];
-            for (int i = 0; i < 3; ++i) {
-                covariance.cols[i] = new Eigen.Vector<>();
-                covariance.cols[i].elems = new Float[3];
-                for (int j = 0; j < i; ++j) {
-                    covariance.cols[i].elems[j] = covariance.cols[j].elems[i];
-                }
-                for (int j = i; j < 3; ++j) {
-                    float _covariance;
-                    _covariance = bitStream.readFloat(0, 0, 0);
-                    covariance.cols[i].elems[j] = _covariance;
-                }
-            }
-            timestampLastJump = bitStream.readTimestamp(__timestampBase, 8, 7, -1, true);
-        }
-    }
-
-    public static class Whistle {
-        public float confidenceOfLastWhistleDetection;
-        public short channelsUsedForWhistleDetection;
-        public Timestamp lastTimeWhistleDetected;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            confidenceOfLastWhistleDetection = bitStream.readFloat(0, 2.55, 8);
-            channelsUsedForWhistleDetection = bitStream.readUnsignedChar(0, 4, 3);
-            lastTimeWhistleDetected = bitStream.readTimestamp(__timestampBase, 16, 0, -1, true);
-        }
-    }
-
-    public enum Obstacle__Type {
-        goalpost,
-        unknown,
-        someRobot,
-        opponent,
-        teammate,
-        fallenSomeRobot,
-        fallenOpponent,
-        fallenTeammate,
-        UNKNOWN
-    }
-
-    public static class Obstacle {
-        public Eigen.ColumnMatrix<Float> covariance = new Eigen.ColumnMatrix<Float>();
-        public Eigen.Vector2f center = new Eigen.Vector2f();
-        public Eigen.Vector2f left = new Eigen.Vector2f();
-        public Eigen.Vector2f right = new Eigen.Vector2f();
-        public Timestamp lastSeen;
-        public Obstacle__Type type;
-
-        @SuppressWarnings("unchecked")
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            covariance.cols = new Eigen.Vector[2];
-            for (int i = 0; i < 2; ++i) {
-                covariance.cols[i] = new Eigen.Vector<>();
-                covariance.cols[i].elems = new Float[2];
-                for (int j = 0; j < i; ++j) {
-                    covariance.cols[i].elems[j] = covariance.cols[j].elems[i];
-                }
-                for (int j = i; j < 2; ++j) {
-                    float _covariance;
-                    _covariance = bitStream.readFloat(0, 0, 0);
-                    covariance.cols[i].elems[j] = _covariance;
-                }
-            }
-            center.x = bitStream.readFloat(-32768, 32767, 16);
-            center.y = bitStream.readFloat(-32768, 32767, 16);
-            left.x = bitStream.readFloat(-32768, 32767, 14);
-            left.y = bitStream.readFloat(-32768, 32767, 14);
-            right.x = bitStream.readFloat(-32768, 32767, 14);
-            right.y = bitStream.readFloat(-32768, 32767, 14);
-            lastSeen = bitStream.readTimestamp(__timestampBase, 8, 6, -1, false);
-            type = Obstacle__Type.values()[Math.min((int) bitStream.readBits(3), Obstacle__Type.values().length - 1)];
-        }
-    }
-
-    public static class ObstacleModel {
-        public List<Obstacle> obstacles;
-
-        public void read(final BitStream bitStream, final long __timestampBase) {
-            final int _obstaclesSize = (int) (bitStream.readBits(3));
-            obstacles = new ArrayList<>(_obstaclesSize);
-            for (int i = 0; i < _obstaclesSize; ++i) {
-                Obstacle _obstacles = new Obstacle();
-                _obstacles.read(bitStream, __timestampBase);
-                obstacles.add(_obstacles);
-            }
         }
     }
 
@@ -283,11 +158,137 @@ public class BHumanStandardMessage {
         }
     }
 
+    public static class Whistle {
+        public float confidenceOfLastWhistleDetection;
+        public short channelsUsedForWhistleDetection;
+        public Timestamp lastTimeWhistleDetected;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            confidenceOfLastWhistleDetection = bitStream.readFloat(0, 2.55, 8);
+            channelsUsedForWhistleDetection = bitStream.readUnsignedChar(0, 4, 3);
+            lastTimeWhistleDetected = bitStream.readTimestamp(__timestampBase, 16, 0, -1, true);
+        }
+    }
+
     public static class FrameInfo {
         public Timestamp time;
 
         public void read(final BitStream bitStream, final long __timestampBase) {
             time = bitStream.readTimestamp(__timestampBase, 8, 0, -1, false);
+        }
+    }
+
+    public enum Obstacle__Type {
+        goalpost,
+        unknown,
+        someRobot,
+        opponent,
+        teammate,
+        fallenSomeRobot,
+        fallenOpponent,
+        fallenTeammate,
+        UNKNOWN
+    }
+
+    public static class Obstacle {
+        public Eigen.ColumnMatrix<Float> covariance = new Eigen.ColumnMatrix<Float>();
+        public Eigen.Vector2f center = new Eigen.Vector2f();
+        public Eigen.Vector2f left = new Eigen.Vector2f();
+        public Eigen.Vector2f right = new Eigen.Vector2f();
+        public Timestamp lastSeen;
+        public Obstacle__Type type;
+
+        @SuppressWarnings("unchecked")
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            covariance.cols = new Eigen.Vector[2];
+            for (int i = 0; i < 2; ++i) {
+                covariance.cols[i] = new Eigen.Vector<>();
+                covariance.cols[i].elems = new Float[2];
+                for (int j = 0; j < i; ++j) {
+                    covariance.cols[i].elems[j] = covariance.cols[j].elems[i];
+                }
+                for (int j = i; j < 2; ++j) {
+                    float _covariance;
+                    _covariance = bitStream.readFloat(0, 0, 0);
+                    covariance.cols[i].elems[j] = _covariance;
+                }
+            }
+            center.x = bitStream.readFloat(-32768, 32767, 16);
+            center.y = bitStream.readFloat(-32768, 32767, 16);
+            left.x = bitStream.readFloat(-32768, 32767, 14);
+            left.y = bitStream.readFloat(-32768, 32767, 14);
+            right.x = bitStream.readFloat(-32768, 32767, 14);
+            right.y = bitStream.readFloat(-32768, 32767, 14);
+            lastSeen = bitStream.readTimestamp(__timestampBase, 8, 6, -1, false);
+            type = Obstacle__Type.values()[Math.min((int) bitStream.readBits(3), Obstacle__Type.values().length - 1)];
+        }
+    }
+
+    public static class ObstacleModel {
+        public List<Obstacle> obstacles;
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            final int _obstaclesSize = (int) (bitStream.readBits(3));
+            obstacles = new ArrayList<>(_obstaclesSize);
+            for (int i = 0; i < _obstaclesSize; ++i) {
+                Obstacle _obstacles = new Obstacle();
+                _obstacles.read(bitStream, __timestampBase);
+                obstacles.add(_obstacles);
+            }
+        }
+    }
+
+    public enum RobotPose__LocalizationQuality {
+        superb,
+        okay,
+        poor,
+        UNKNOWN
+    }
+
+    public static class RobotPose {
+        public Angle rotation;
+        public Eigen.Vector2f translation = new Eigen.Vector2f();
+        public RobotPose__LocalizationQuality quality;
+        public Eigen.ColumnMatrix<Float> covariance = new Eigen.ColumnMatrix<Float>();
+        public Timestamp timestampLastJump;
+
+        @SuppressWarnings("unchecked")
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            rotation = bitStream.readAngle(8);
+            translation.x = bitStream.readFloat(-32768, 32767, 16);
+            translation.y = bitStream.readFloat(-32768, 32767, 16);
+            quality = RobotPose__LocalizationQuality.values()[Math.min((int) bitStream.readBits(2), RobotPose__LocalizationQuality.values().length - 1)];
+            covariance.cols = new Eigen.Vector[3];
+            for (int i = 0; i < 3; ++i) {
+                covariance.cols[i] = new Eigen.Vector<>();
+                covariance.cols[i].elems = new Float[3];
+                for (int j = 0; j < i; ++j) {
+                    covariance.cols[i].elems[j] = covariance.cols[j].elems[i];
+                }
+                for (int j = i; j < 3; ++j) {
+                    float _covariance;
+                    _covariance = bitStream.readFloat(0, 0, 0);
+                    covariance.cols[i].elems[j] = _covariance;
+                }
+            }
+            timestampLastJump = bitStream.readTimestamp(__timestampBase, 8, 7, -1, true);
+        }
+    }
+
+    public static class RobotStatus {
+        public boolean isUpright;
+        public Timestamp timeWhenLastUpright;
+        public byte[] sequenceNumbers = new byte[7];
+
+        public void read(final BitStream bitStream, final long __timestampBase) {
+            isUpright = bitStream.readBoolean();
+            timeWhenLastUpright = bitStream.readTimestamp(__timestampBase, 8, 6, -1, false);
+            final int _sequenceNumbersSize = 7;
+            for (int i = 0; i < _sequenceNumbersSize; ++i) {
+                byte _sequenceNumbers;
+                _sequenceNumbers = bitStream.readSignedChar(-1, 14, 4);
+                sequenceNumbers[i] = _sequenceNumbers;
+            }
         }
     }
 
