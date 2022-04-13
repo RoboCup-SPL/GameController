@@ -24,8 +24,28 @@ public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
 
     private static SPLStandardMessageReceiverTCM instance;
 
-    public SPLStandardMessageReceiverTCM() throws IOException {
-        super(true, null);
+    public SPLStandardMessageReceiverTCM(final boolean multicast) throws IOException {
+        super(multicast, null);
+    }
+
+    /**
+     * Creates the only instance of the SPLStandardMessageReceiver.
+     * @param multicast Should it also listen to multicast packets? This also means
+     *                  that ip adresses are computed based on the player number.
+     *
+     * @return instance
+     */
+    public static SPLStandardMessageReceiverTCM createInstance(final boolean multicast) {
+        try {
+            instance = new SPLStandardMessageReceiverTCM(multicast);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null,
+                    "Error while setting up packet listeners: " + ex.getMessage(),
+                    "IOException",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
+        return instance;
     }
 
     /**
@@ -34,17 +54,6 @@ public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
      * @return instance
      */
     public static SPLStandardMessageReceiverTCM getInstance() {
-        if (instance == null) {
-            try {
-                instance = new SPLStandardMessageReceiverTCM();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null,
-                        "Error while setting up packet listeners: " + ex.getMessage(),
-                        "IOException",
-                        JOptionPane.ERROR_MESSAGE);
-                System.exit(-1);
-            }
-        }
         return instance;
     }
 

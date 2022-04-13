@@ -27,6 +27,7 @@ public class TeamCommunicationMonitor {
     private static boolean silentMode = false;
     private static boolean gsvMode = false;
     private static boolean forceWindowed = false;
+    private static boolean multicast = false;
     private static boolean forceEnablePlugins = false;
     private static File replayedLogAtStartup = null;
 
@@ -107,7 +108,7 @@ public class TeamCommunicationMonitor {
 
         // Initialize listeners for robots
         gcReturnDataReceiver = GameControlReturnDataReceiverTCM.getInstance();
-        receiver = SPLStandardMessageReceiverTCM.getInstance();
+        receiver = SPLStandardMessageReceiverTCM.createInstance(multicast);
 
         // Initialize robot view part of the GUI
         System.setProperty("newt.window.icons", "null,null");
@@ -211,6 +212,8 @@ public class TeamCommunicationMonitor {
     private static final String ARG_GSV = "--gsv";
     private static final String ARG_WINDOWED = "--windowed";
     private static final String ARG_WINDOWED_SHORT = "-w";
+    private static final String ARG_MULTICAST = "--multicast";
+    private static final String ARG_MULTICAST_SHORT = "-m";
     private static final String ARG_FORCEPLUGINS = "--forceplugins";
     private static final String ARG_FORCEPLUGINS_SHORT = "-p";
 
@@ -226,6 +229,7 @@ public class TeamCommunicationMonitor {
                             + "\n  (-rl | --replaylog) <path>      immediately replay the given log file"
                             + "\n  (--gsv)                         start as GameStateVisualizer"
                             + "\n  (-w | --windowed)               GSV: force windowed mode"
+                            + "\n  (-m | --multicast)              also join multicast groups for simulated team communication"
                             + "\n  (-p | --forceplugins)           GSV: force usage of plugins");
                     System.exit(0);
                 case ARG_LEAGUE_SHORT:
@@ -248,6 +252,10 @@ public class TeamCommunicationMonitor {
                 case ARG_WINDOWED_SHORT:
                 case ARG_WINDOWED:
                     forceWindowed = true;
+                    break;
+                case ARG_MULTICAST_SHORT:
+                case ARG_MULTICAST:
+                    multicast = true;
                     break;
                 case ARG_FORCEPLUGINS_SHORT:
                 case ARG_FORCEPLUGINS:
