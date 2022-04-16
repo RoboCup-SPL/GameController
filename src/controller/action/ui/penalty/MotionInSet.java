@@ -41,8 +41,7 @@ public class MotionInSet extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gamePhase == GameControlData.GAME_PHASE_NORMAL
-                && data.gameState == GameControlData.STATE_SET)
+        return data.gameState == GameControlData.STATE_SET
                 || data.testmode;
     }
 }
