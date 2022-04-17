@@ -56,7 +56,7 @@ public class GameController {
             + "\n  (-t | --test)                   use test-mode - currently only disabling the delayed game state switches in the SPL"
             + "\n  (-i | --interface) <interface>  set network interface (default is a connected IPv4 interface)"
             + "\n  (-l | --league) %s%sselect league (default is spl)"
-            + "\n  (-w | --window)                 select window mode (default is fullscreen)"
+            + "\n  (-f | --fullscreen)             select fullscreen mode (default is window)"
             + "\n  (-g | --game-type) %s%sselect game type (default is undefined)"
             + "\n  (-b | --limited-broadcast)      use 255.255.255.255 as broadcast address"
             + "\n  (-m | --multicast)              also join multicast groups for simulated team communication"
@@ -69,8 +69,8 @@ public class GameController {
     private static final String COMMAND_INTERFACE_SHORT = "-i";
     private static final String COMMAND_LEAGUE = "--league";
     private static final String COMMAND_LEAGUE_SHORT = "-l";
-    private static final String COMMAND_WINDOW = "--window";
-    private static final String COMMAND_WINDOW_SHORT = "-w";
+    private static final String COMMAND_FULLSCREEN = "--fullscreen";
+    private static final String COMMAND_FULLSCREEN_SHORT = "-f";
     private static final String COMMAND_GAME_TYPE = "--game-type";
     private static final String COMMAND_GAME_TYPE_SHORT = "-g";
     private static final String COMMAND_FIRST_TEAM = "--team1";
@@ -95,7 +95,7 @@ public class GameController {
 
         //commands
         String interfaceName = "";
-        boolean windowMode = false;
+        boolean windowMode = true;
         GameType gameType = GameType.UNDEFINED;
         int[] teams = {0, 0};
         boolean testMode = false;
@@ -120,8 +120,8 @@ public class GameController {
                         continue parsing;
                     }
                 }
-            } else if (args[i].equalsIgnoreCase(COMMAND_WINDOW_SHORT) || args[i].equalsIgnoreCase(COMMAND_WINDOW)) {
-                windowMode = true;
+            } else if (args[i].equalsIgnoreCase(COMMAND_FULLSCREEN_SHORT) || args[i].equalsIgnoreCase(COMMAND_FULLSCREEN)) {
+                windowMode = false;
                 continue parsing;
             } else if ((args.length > i + 1)
                     && ((args[i].equalsIgnoreCase(COMMAND_GAME_TYPE))
