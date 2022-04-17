@@ -37,7 +37,7 @@ Usage: `java -jar GameController.jar {options}`
                                     connected IPv4 interface)
     (-l | --league) (spl | spl_penalty_shootout | spl_7v7 | spl_dynamic_ball_handling)
                                     select league (default is spl)
-    (-w | --window)                 select window mode (default is fullscreen)
+    (-f | --fullscreen)             select fullscreen mode (default is window)
     (-g | --game-type) (undefined | preliminary | playoff)
                                     select game type (default is undefined)
     (-b | --limited-broadcast)      use 255.255.255.255 as broadcast address
