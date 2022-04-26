@@ -4,7 +4,9 @@ import common.net.SPLStandardMessageReceiver;
 import common.net.SPLStandardMessagePackage;
 import controller.action.ActionBoard;
 import controller.EventHandler;
+import data.SPLStandardMessage;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 
 public class SPLStandardMessageReceiverGC extends SPLStandardMessageReceiver {
@@ -23,6 +25,14 @@ public class SPLStandardMessageReceiverGC extends SPLStandardMessageReceiver {
         } else {
             return;
         }
+
+        // Check at least for valid header and version because we don't know what other things may be going on on these ports.
+        final SPLStandardMessage message = new SPLStandardMessage();
+        message.fromByteArray(ByteBuffer.wrap(p.message));
+        if (!(message.headerValid && message.versionValid)) {
+            return;
+        }
+
         ActionBoard.teamMessage[team].actionPerformed(null);
     }
 }
