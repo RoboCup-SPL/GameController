@@ -83,7 +83,8 @@ public class TimeOut extends GCAction
                 && !data.timeOutActive[side == 0 ? 1 : 0]
                 && !(data.gamePhase == GameControlData.GAME_PHASE_TIMEOUT)
                 && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT
-                    || data.gameState == GameControlData.STATE_INITIAL))
+                    || data.gameState == GameControlData.STATE_INITIAL)
+                && (data.competitionType != GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING))
             || data.testmode;
     }
 }

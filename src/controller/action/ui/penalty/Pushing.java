@@ -25,8 +25,12 @@ public class Pushing extends Penalty
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         player.penalty = PlayerInfo.PENALTY_SPL_PLAYER_PUSHING;
-        handleRepeatedPenalty(data, side, number);
-        data.whenPenalized[side][number] = data.getTime();
+        if (data.competitionType == AdvancedData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) {
+            data.ejected[side][number] = true;
+        } else {
+            handleRepeatedPenalty(data, side, number);
+            data.whenPenalized[side][number] = data.getTime();
+        }
 
         Log.state(data, "Player Pushing "+
                     Rules.league.teamColorName[data.team[side].teamColor]

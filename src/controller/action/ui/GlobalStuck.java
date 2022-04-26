@@ -56,7 +56,8 @@ public class GlobalStuck extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ((data.gameState == GameControlData.STATE_PLAYING)
-                  && (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) <= 0))
-              || data.testmode;
+                    && (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) <= 0))
+                && (data.competitionType != GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING)
+                || data.testmode;
     }
 }

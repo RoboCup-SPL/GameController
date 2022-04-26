@@ -49,7 +49,8 @@ public class Position extends Penalty
         return ((data.gameState == GameControlData.STATE_READY
                     || data.gameState == GameControlData.STATE_SET
                     || data.gameState == GameControlData.STATE_PLAYING)
-                && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT))
-            || data.testmode;
+                    && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
+                    && (data.competitionType != GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING))
+                || data.testmode;
     }
 }

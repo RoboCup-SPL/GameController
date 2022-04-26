@@ -57,6 +57,7 @@ public class SecondHalf extends GCAction
                         && (data.gamePhase == GameControlData.GAME_PHASE_NORMAL))
                    || ((data.gamePhase == GameControlData.GAME_PHASE_NORMAL)
                         && (data.gameState == GameControlData.STATE_FINISHED)))
+                && (data.competitionType != GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING)
                 || data.testmode;
     }
 }

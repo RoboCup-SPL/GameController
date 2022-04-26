@@ -85,9 +85,10 @@ public class Goal extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ((set == 1)
-              && (data.gameState == GameControlData.STATE_PLAYING)
-              && ( (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
-                || (data.kickingTeam == data.team[side].teamNumber)) )
-            || data.testmode;
+                    && (data.gameState == GameControlData.STATE_PLAYING)
+                    && ((data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
+                        || (data.kickingTeam == data.team[side].teamNumber)))
+                && (data.competitionType != GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING)
+                || data.testmode;
     }
 }
