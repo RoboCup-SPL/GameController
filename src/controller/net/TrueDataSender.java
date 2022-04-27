@@ -113,7 +113,7 @@ public class TrueDataSender extends Thread {
     public void run() {
         requestReceiver.start();
         while (!isInterrupted()) {
-            if (!whitelist.isEmpty() && data != null) {
+            if (data != null) {
                 final byte[] arr;
                 synchronized (dataMutex) {
                     data.updateTimes(true);

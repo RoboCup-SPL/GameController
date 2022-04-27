@@ -111,7 +111,6 @@ public class Sender extends Thread {
             if (data != null) {
                 data.updateTimes(false);
                 data.packetNumber = packetNumber;
-                Logger.getInstance().log(data);
                 byte[] arr = data.toByteArray().array();
                 DatagramPacket packet = new DatagramPacket(arr, arr.length, group, GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
 
