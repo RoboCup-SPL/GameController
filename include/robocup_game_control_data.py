@@ -9,7 +9,7 @@ Example of listening to the GameController, and accessing the data using this li
     # Setup UDP client
     client = socket.socket(
         socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
-    client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # SO_REUSEADDR instead of SO_REUSEPORT to work while TCM is running
     client.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     client.bind(('', GAMECONTROLLER_DATA_PORT))
 
