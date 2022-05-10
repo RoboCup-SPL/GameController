@@ -21,9 +21,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * This class is used to receive a packet send by a robot on port
  * {@link GameControlData#GAMECONTROLLER_RETURNDATA_PORT} via UDP over
- * broadcast. If a package was received, this class will invoke
- * {@link RobotWatcher#update(data.GameControlReturnData)} to update the robots
- * online status.
+ * broadcast.
  */
 public class GameControlReturnDataReceiver extends Thread {
 

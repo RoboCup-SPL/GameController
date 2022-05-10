@@ -25,8 +25,11 @@ public class GameControlReturnDataReceiverGC extends GameControlReturnDataReceiv
         } catch (UnknownHostException e) {
         }
         GameControlReturnData player = new GameControlReturnData();
-        if (player.fromByteArray(ByteBuffer.wrap(p.message))) {
-            RobotWatcher.update(player);
+        player.fromByteArray(ByteBuffer.wrap(p.message));
+        if (!(player.headerValid && player.versionValid && player.playerNumValid && player.teamNumValid)) {
+            return;
         }
+
+        RobotWatcher.update(player);
     }
 }
