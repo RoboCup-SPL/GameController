@@ -23,8 +23,10 @@ public class IncGameClock extends GCAction
         if (data.gameState != GameControlData.STATE_PLAYING && data.timeBeforeStoppageOfPlay != 0) {
             data.timeBeforeStoppageOfPlay -= 1000 * 60;
         }
-        for (TeamInfo teamInfo : data.team) {
-            teamInfo.messageBudget += Rules.league.additionalMessageBudgetPerMinute;
+        for (int i=0; i<2; i++) {
+            if (!data.sentIllegalMessages[i]) {
+                data.team[i].messageBudget += Rules.league.additionalMessageBudgetPerMinute;
+            }
         }
         Log.state(data, "Increase Game Clock");
     }
