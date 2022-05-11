@@ -25,9 +25,13 @@ public class Inactive extends Penalty
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
         player.penalty = PlayerInfo.PENALTY_SPL_INACTIVE_PLAYER;
-        data.robotPenaltyCount[side][number] = 0;
-        handleHardwarePenalty(data, side, number);
-        data.whenPenalized[side][number] = data.getTime();
+        if (data.competitionType == AdvancedData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) {
+            data.ejected[side][number] = true;
+        } else {
+            data.robotPenaltyCount[side][number] = 0;
+            handleHardwarePenalty(data, side, number);
+            data.whenPenalized[side][number] = data.getTime();
+        }
         Log.state(data, "Inactive Player "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));

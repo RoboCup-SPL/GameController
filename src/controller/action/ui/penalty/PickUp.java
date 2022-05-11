@@ -24,7 +24,9 @@ public class PickUp extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (player.penalty == PlayerInfo.PENALTY_NONE) {
+        if (data.competitionType == AdvancedData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) {
+            data.ejected[side][number] = true;
+        } else if (player.penalty == PlayerInfo.PENALTY_NONE) {
             if (data.gameState == AdvancedData.STATE_INITIAL) {
                 data.whenPenalized[side][number] = 0;
             } else {

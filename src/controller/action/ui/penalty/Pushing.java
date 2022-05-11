@@ -1,6 +1,7 @@
 package controller.action.ui.penalty;
 
 import common.Log;
+import controller.action.ActionBoard;
 import data.AdvancedData;
 import data.GameControlData;
 import data.PlayerInfo;
@@ -27,6 +28,13 @@ public class Pushing extends Penalty
         player.penalty = PlayerInfo.PENALTY_SPL_PLAYER_PUSHING;
         if (data.competitionType == AdvancedData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) {
             data.ejected[side][number] = true;
+            if (side == 0) {
+                Log.setNextMessage("Player Pushing "+
+                            Rules.league.teamColorName[data.team[side].teamColor]
+                            + " " + (number+1));
+                ActionBoard.finish.perform(data);
+                return;
+            }
         } else {
             handleRepeatedPenalty(data, side, number);
             data.whenPenalized[side][number] = data.getTime();
