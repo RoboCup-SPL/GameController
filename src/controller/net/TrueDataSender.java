@@ -1,9 +1,11 @@
 package controller.net;
 
 import common.Log;
+import common.net.GameControlReturnDataPackage;
 import common.net.logging.Logger;
 import data.AdvancedData;
 import data.GameControlData;
+import data.GameControlReturnData;
 import data.TrueDataRequest;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -12,6 +14,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.Set;
@@ -106,6 +109,25 @@ public class TrueDataSender extends Thread {
     public void send(final AdvancedData data) {
         synchronized (dataMutex) {
             this.data = (AdvancedData) data.clone();
+        }
+    }
+
+    public void handleGameControlReturnData(final GameControlReturnDataPackage data) {
+        try {
+            final InetAddress address = InetAddress.getByName(data.host);
+
+            putOnBlacklist(address);
+
+            synchronized (whitelist) {
+                for (final InetAddress receiver : whitelist) {
+                    try {
+                        sendSocket.send(new DatagramPacket(data.message, data.message.length, receiver, GameControlReturnData.GAMECONTROLLER_RETURNDATA_FORWARD_PORT));
+                    } catch (IOException e) {
+                        Log.error("Error while forwarding game controller return data");
+                    }
+                }
+            }
+        } catch (UnknownHostException e) {
         }
     }
 

@@ -15,6 +15,9 @@ public class GameControlReturnData implements Serializable {
 
     private static final long serialVersionUID = -6438146236177558310L;
 
+    public static final int GAMECONTROLLER_RETURNDATA_PORT = 3939; // port to receive return-packets on
+    public static final int GAMECONTROLLER_RETURNDATA_FORWARD_PORT = GAMECONTROLLER_RETURNDATA_PORT + 1; // port on which return-packets are forwarded (from GC to TCMs)
+
     /** The header to identify the structure. */
     public static final String GAMECONTROLLER_RETURN_STRUCT_HEADER = "RGrt";
     /** The version of the data structure. */

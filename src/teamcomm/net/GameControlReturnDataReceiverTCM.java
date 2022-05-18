@@ -21,7 +21,7 @@ public class GameControlReturnDataReceiverTCM extends GameControlReturnDataRecei
     private static GameControlReturnDataReceiverTCM instance;
 
     private GameControlReturnDataReceiverTCM() throws IOException {
-        super(null);
+        super();
     }
 
     /**

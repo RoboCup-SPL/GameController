@@ -20,10 +20,8 @@ public class GameControlReturnDataReceiverGC extends GameControlReturnDataReceiv
 
     @Override
     protected void handleMessage(final GameControlReturnDataPackage p) {
-        try {
-            trueDataSender.putOnBlacklist(InetAddress.getByName(p.host));
-        } catch (UnknownHostException e) {
-        }
+        trueDataSender.handleGameControlReturnData(p);
+
         GameControlReturnData player = new GameControlReturnData();
         player.fromByteArray(ByteBuffer.wrap(p.message));
         if (!(player.headerValid && player.versionValid && player.playerNumValid && player.teamNumValid)) {
