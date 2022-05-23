@@ -118,10 +118,20 @@ public class TrueDataSender extends Thread {
 
             putOnBlacklist(address);
 
+            final byte[] addressAsBytes = address.getAddress();
+
+            if (addressAsBytes.length != 4) {
+                return;
+            }
+
+            final byte[] message = new byte[addressAsBytes.length + data.message.length];
+            System.arraycopy(addressAsBytes, 0, message, 0, addressAsBytes.length);
+            System.arraycopy(data.message, 0, message, addressAsBytes.length, data.message.length);
+
             synchronized (whitelist) {
                 for (final InetAddress receiver : whitelist) {
                     try {
-                        sendSocket.send(new DatagramPacket(data.message, data.message.length, receiver, GameControlReturnData.GAMECONTROLLER_RETURNDATA_FORWARD_PORT));
+                        sendSocket.send(new DatagramPacket(message, message.length, receiver, GameControlReturnData.GAMECONTROLLER_RETURNDATA_FORWARD_PORT));
                     } catch (IOException e) {
                         Log.error("Error while forwarding game controller return data");
                     }

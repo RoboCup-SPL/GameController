@@ -12,6 +12,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -32,6 +33,12 @@ public class GameControlReturnDataReceiver extends Thread {
         private final DatagramSocket datagramSocket;
 
         /**
+         * Whether this receiver receives messages forwarded by the GameController
+         * (instead of directly from the robots).
+         */
+        private final boolean forwarded;
+
+        /**
          * Creates a new Receiver.
          *
          * @param address the InetAddress to listen on. If null, listens on any address.
@@ -43,6 +50,8 @@ public class GameControlReturnDataReceiver extends Thread {
          */
         public ReceiverThread(final InetAddress address, boolean forwarded) throws SocketException, UnknownHostException {
             setName("GameControlReturnDataReceiver");
+
+            this.forwarded = forwarded;
 
             final int port = forwarded ? GameControlReturnData.GAMECONTROLLER_RETURNDATA_FORWARD_PORT : GameControlReturnData.GAMECONTROLLER_RETURNDATA_PORT;
 
@@ -64,7 +73,12 @@ public class GameControlReturnDataReceiver extends Thread {
                     datagramSocket.receive(packet);
 
                     if (processPackets()) {
-                        queue.add(new GameControlReturnDataPackage(packet.getAddress().getHostAddress(), buffer));
+                        if (!forwarded) {
+                            queue.add(new GameControlReturnDataPackage(packet.getAddress().getHostAddress(), buffer));
+                        } else {
+                            final String originalHost = InetAddress.getByAddress(Arrays.copyOfRange(buffer, 0, 4)).getHostAddress();
+                            queue.add(new GameControlReturnDataPackage(originalHost, Arrays.copyOfRange(buffer, 4, buffer.length)));
+                        }
                     }
                 } catch (SocketTimeoutException e) { // ignore, because we set a timeout
                 } catch (IOException e) {
