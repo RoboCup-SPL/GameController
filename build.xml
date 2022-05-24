@@ -97,8 +97,9 @@
                 <include name="**/*.jar"/>
             </fileset>
         </copy>
-        <copy file="README.md" tofile="${jar.dir}/README.txt"/>
-        <copy file="TCM.md" tofile="${jar.dir}/TCM.txt"/>
+        <copy file="LICENSE" tofile="${jar.dir}/LICENSE"/>
+        <copy file="README.md" tofile="${jar.dir}/README.md"/>
+        <copy file="TCM.md" tofile="${jar.dir}/TCM.md"/>
     </target>
 
     <target name="run" depends="jar">
