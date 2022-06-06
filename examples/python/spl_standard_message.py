@@ -1,5 +1,6 @@
+from construct import Array, Byte, Const, Default, Float32l, Int16ul, Struct
 
-SPL_STANDARD_MESSAGE_STRUCT_HEADER = "SPL "
+SPL_STANDARD_MESSAGE_STRUCT_HEADER = b'SPL '
 SPL_STANDARD_MESSAGE_STRUCT_VERSION = 7
 
 # Minimal MTU a network can set is 576 byte.
