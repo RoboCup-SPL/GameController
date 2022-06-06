@@ -20,7 +20,6 @@ Example of sending return data to the GameController::
         container = Container(
             teamNum=5,
             playerNum=5,
-            fallen=0,
         )
         data = RoboCupGameControlReturnData.build(container)
 
@@ -40,7 +39,7 @@ RoboCupGameControlReturnData = Struct(
     'version' / Const(GAMECONTROLLER_RETURN_STRUCT_VERSION, Byte),  # has to be set to GAMECONTROLLER_RETURN_STRUCT_VERSION
     'playerNum' / Default(Byte, 0),  # player number starts with 1
     'teamNum' / Default(Byte, 0),  # team number
-    'fallen' / Default(Byte, 255),  # 1 means that the robot is fallen, 0 means that the robot can play
+    'fallen' / Default(Byte, 0),  # 1 means that the robot is fallen, 0 means that the robot can play
     # position and orientation of robot
     # coordinates in millimeters
     # 0,0 is in center of field
