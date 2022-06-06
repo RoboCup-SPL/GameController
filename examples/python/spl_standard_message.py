@@ -1,3 +1,53 @@
+"""
+Library to perform conversion between binary udp data and a meaningful python object
+
+Example of receiving data from teammate robots::
+
+    from spl_standard_message import SPLStandardMessage
+    import socket
+
+    teamNum = 2  # Change this to your team's number
+
+    # Setup UDP client
+    client = socket.socket(
+        socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
+    client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    client.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    client.bind(('', 10000 + teamNum))  # Port number is specified in SPL rulebook
+
+    # Receive data
+    data, _ = client.recvfrom(1024)
+
+    # Parse it
+    parsed = SPLStandardMessage.parse(data)
+
+    # Accessing data
+    print('playerNum: ', parsed.playerNum)
+
+Example of sending data to teammate robots::
+
+    import socket
+    from construct import Container
+    from spl_standard_message import SPLStandardMessage
+
+    teamNum = 2  # Change this to your team's number
+
+    # Setup UDP client
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) as client:
+        client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        client.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+        # Create sample binary data packet
+        container = Container(
+            teamNum=teamNum,
+            playerNum=5,
+        )
+        data = SPLStandardMessage.build(container)
+
+        # Broadcast data to team communication port
+        client.sendto(data, ('', 10000 + teamNum))  # Port number is specified in SPL rulebook
+"""
+
 from construct import Array, Byte, Const, Default, Float32l, Int16ul, Struct
 
 SPL_STANDARD_MESSAGE_STRUCT_HEADER = b'SPL '
