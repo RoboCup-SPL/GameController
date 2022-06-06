@@ -49,8 +49,7 @@ RoboCupGameControlReturnData = Struct(
     # angle in radians, 0 along the +x axis, increasing counter clockwise
     'pose' / Default(Array(3, Float32l), [0, 0, 0]),  # x,y,theta
     # ball information
-    # seconds since this robot last saw the ball. -1.f if we haven't seen it
-    'ballAge' / Default(Float32l, -1),
+    'ballAge' / Default(Float32l, -1),  # seconds since this robot last saw the ball. -1.f if we haven't seen it
     # position of ball relative to the robot
     # coordinates in millimeters
     # 0,0 is in center of the robot
