@@ -10,7 +10,7 @@ Example of sending return data to the GameController::
 
     # Setup UDP client
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) as client:
-        # Listen to single GC packet to determine it's address
+        # Listen to single GC packet to determine its address
         client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         client.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         client.bind(('', GAMECONTROLLER_DATA_PORT))
