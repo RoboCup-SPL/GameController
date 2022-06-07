@@ -7,7 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/resources/plugins/05/B-Human/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/bin" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
-      <excludeFolder url="file://$MODULE_DIR$/include" />
+      <excludeFolder url="file://$MODULE_DIR$/examples" />
       <excludeFolder url="file://$MODULE_DIR$/resources/plugins/24" />
     </content>
     <orderEntry type="inheritedJdk" />

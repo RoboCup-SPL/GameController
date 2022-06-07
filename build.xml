@@ -1,15 +1,15 @@
 <?xml version = '1.0' encoding = 'utf-8'?>
 <!DOCTYPE project>
 <project default="jar">
-    <property name="src.dir"     value="src"/>
-    <property name="include.dir" value="include"/>
-    <property name="deps.dir"    value="deps"/>
-    <property name="build.dir"   value="build"/>
-    <property name="classes.dir" value="${build.dir}"/>
-    <property name="jar.dir"     value="bin"/>
-    <property name="doc.dir"     value="${build.dir}/doc"/>
+    <property name="src.dir"        value="src"/>
+    <property name="examples.dir"   value="examples"/>
+    <property name="deps.dir"       value="deps"/>
+    <property name="build.dir"      value="build"/>
+    <property name="classes.dir"    value="${build.dir}"/>
+    <property name="jar.dir"        value="bin"/>
+    <property name="doc.dir"        value="${build.dir}/doc"/>
     <property name="resources.dir"  value="resources" />
-    <property name="plugins.dir"  value="plugins" />
+    <property name="plugins.dir"    value="plugins" />
     <property name="common_classes" value="common/ data/" />
 
     <target name="clean">
@@ -89,8 +89,8 @@
                 <include name="**/resources/**" />
             </fileset>
         </copy>
-        <copy todir="${jar.dir}/include" overwrite="true">
-            <fileset dir="${include.dir}" />
+        <copy todir="${jar.dir}/examples" overwrite="true">
+            <fileset dir="${examples.dir}" />
         </copy>
         <copy todir="${jar.dir}/deps" overwrite="true">
             <fileset dir="${deps.dir}">
