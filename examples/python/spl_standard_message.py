@@ -71,7 +71,7 @@ SPLStandardMessage = Struct(
     'version' / Const(SPL_STANDARD_MESSAGE_STRUCT_VERSION, Byte),  # has to be set to SPL_STANDARD_MESSAGE_STRUCT_VERSION
     'playerNum' / Default(Byte, 0),  # [MANDATORY FIELD] 1-7
     'teamNum' / Default(Byte, 0),  # [MANDATORY FIELD] the number of the team (as provided by the organizers)
-    'fallen' / Default(Byte, 0),  # [MANDATORY FIELD] 1 means that the robot is fallen, 0 means that the robot can play
+    'fallen' / Default(Byte, 255),  # [MANDATORY FIELD] 1 means that the robot is fallen, 0 means that the robot can play
     # [MANDATORY FIELD]
     # position and orientation of robot
     # coordinates in millimeters
