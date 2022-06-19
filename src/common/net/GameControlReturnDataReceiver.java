@@ -66,7 +66,7 @@ public class GameControlReturnDataReceiver extends Thread {
         @Override
         public void run() {
             while (!isInterrupted()) {
-                final byte[] buffer = new byte[GameControlReturnData.SIZE];
+                final byte[] buffer = new byte[GameControlReturnData.SIZE + (forwarded ? 4 : 0)];
                 final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
                 try {
