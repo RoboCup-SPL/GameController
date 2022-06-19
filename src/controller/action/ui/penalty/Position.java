@@ -24,14 +24,19 @@ public class Position extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (data.gameState == GameControlData.STATE_SET) {
-            player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_POSITION_IN_SET;
-            data.robotPenaltyCount[side][number] = 0;
-        } else {
+        if (data.competitionType == AdvancedData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING) {
             player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_POSITION;
-            handleRepeatedPenalty(data, side, number);
+            data.ejected[side][number] = true;
+        } else {
+            if (data.gameState == GameControlData.STATE_SET) {
+                player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_POSITION_IN_SET;
+                data.robotPenaltyCount[side][number] = 0;
+            } else {
+                player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_POSITION;
+                handleRepeatedPenalty(data, side, number);
+            }
+            data.whenPenalized[side][number] = data.getTime();
         }
-        data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Illegal Position "+
                 Rules.league.teamColorName[data.team[side].teamColor]
                 + " " + (number+1));
@@ -50,7 +55,8 @@ public class Position extends Penalty
                     || data.gameState == GameControlData.STATE_SET
                     || data.gameState == GameControlData.STATE_PLAYING)
                     && (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT)
-                    && (data.competitionType != GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING))
+                    && (data.competitionType != GameControlData.COMPETITION_TYPE_DYNAMIC_BALL_HANDLING
+                        || data.gameState == GameControlData.STATE_PLAYING))
                 || data.testmode;
     }
 }
