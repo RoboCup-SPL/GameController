@@ -132,7 +132,7 @@ public class StartInput extends JFrame implements Serializable
                 }
             }
             teamColorChange[i] = new JButton(TEAM_COLOR_CHANGE);
-            reloadTeamColor(i);
+            reloadTeamColor(i, i == 1);
             teamContainer[i] = new ImagePanel(getImage(i, colorNames[i][0]));
             teamContainer[i].setPreferredSize(new Dimension(WINDOW_WIDTH/2-STANDARD_SPACE, TEAMS_HEIGHT));
             teamContainer[i].setOpaque(true);
@@ -154,9 +154,11 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e)
                 {
                     switchTeamColor(0);
+                    reloadTeamColor(1, true);
                     updateBackgrounds();
                     teamIconLabel[0].repaint();
                     teamIconLabel[1].repaint();
+                    startEnabling();
                 }
             }
         );
@@ -166,9 +168,11 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e)
                 {
                     switchTeamColor(1);
+                    reloadTeamColor(0, true);
                     updateBackgrounds();
                     teamIconLabel[0].repaint();
                     teamIconLabel[1].repaint();
+                    startEnabling();
                 }
             }
         );
@@ -183,7 +187,8 @@ public class StartInput extends JFrame implements Serializable
                         return;
                     }
                     outTeam[0] = Integer.parseInt(((String)selected).split(" \\(")[1].split("\\)")[0]);
-                    reloadTeamColor(0);
+                    reloadTeamColor(0, false);
+                    reloadTeamColor(1, true);
                     updateBackgrounds();
                     setTeamIcon(0, outTeam[0]);
                     teamIconLabel[0].setIcon(teamIcon[0]);
@@ -203,7 +208,8 @@ public class StartInput extends JFrame implements Serializable
                         return;
                     }
                     outTeam[1] = Integer.parseInt(((String)selected).split(" \\(")[1].split("\\)")[0]);
-                    reloadTeamColor(1);
+                    reloadTeamColor(0, false);
+                    reloadTeamColor(1, true);
                     updateBackgrounds();
                     setTeamIcon(1, outTeam[1]);
                     teamIconLabel[1].setIcon(teamIcon[1]);
@@ -408,6 +414,7 @@ public class StartInput extends JFrame implements Serializable
     private void startEnabling()
     {
         start.setEnabled(outTeam[0] != outTeam[1] &&
+                outTeamColor[0] != outTeamColor[1] &&
                 (fulltime.isSelected() || nofulltime.isSelected() || !fulltime.isVisible()));
     }
 
@@ -446,7 +453,7 @@ public class StartInput extends JFrame implements Serializable
         teamColorChange[team].setBackground(Rules.league.teamColor[fromColorName(colorNames[team][0])]);
     }
 
-    private void reloadTeamColor(final int team)
+    private void reloadTeamColor(final int team, final boolean checkOther)
     {
         colorNames[team] = Teams.getColors(outTeam[team]).clone();
         if (colorNames[team] == null || colorNames[team].length == 0) {
@@ -454,16 +461,8 @@ public class StartInput extends JFrame implements Serializable
         } else if (colorNames[team].length == 1) {
             colorNames[team] = new String[]{colorNames[team][0], !"red".equals(colorNames[team][0]) ? "red" : "blue"};
         }
-        if (team == 1) {
-            String[] otherColors = Teams.getColors(outTeam[0]);
-            if ((otherColors == null || otherColors.length == 0)) {
-                otherColors = new String[]{"blue"};
-            }
-            if (colorNames[team][0].equals(otherColors[0])) {
-                switchTeamColor(1);
-            } else {
-                updateTeamColorIndicator(team);
-            }
+        if (checkOther && colorNames[team][0].equals(colorNames[1 - team][0])) {
+            switchTeamColor(team);
         } else {
             updateTeamColorIndicator(team);
         }
