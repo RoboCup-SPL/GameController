@@ -12,7 +12,7 @@ public class SPLDynamicBallHandling extends SPL
         /** The league's name this rules are for. */
         leagueName = "SPL Dynamic Ball Handling";
         /** The league's directory name with its teams and icons. */
-        leagueDirectory = "spl";
+        leagueDirectory = "spl_dbhc";
         /** How many robots are in a team. */
         teamSize = 3;
         /** How many robots of each team may play at one time. */

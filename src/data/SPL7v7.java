@@ -12,7 +12,7 @@ public class SPL7v7 extends SPL
         /** The league's name this rules are for. */
         leagueName = "SPL 7v7";
         /** The league's directory name with its teams and icons. */
-        leagueDirectory = "spl";
+        leagueDirectory = "spl_7v7";
         /** How many robots are in a team. */
         teamSize = 7;
         /** How many robots of each team may play at one time. */
