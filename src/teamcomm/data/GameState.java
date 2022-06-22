@@ -239,7 +239,7 @@ public class GameState implements GameControlDataEventListener {
         // Open a new logfile for the current GameController state if the
         // state changed from or to initial/finished
         final StringBuilder logfileName = new StringBuilder();
-        if (Rules.league.competitionType == GameControlData.COMPETITION_TYPE_7V7) {
+        if (e.data.competitionType == GameControlData.COMPETITION_TYPE_7V7) {
             logfileName.append("7v7_");
         }
         if (e.data.firstHalf == GameControlData.C_TRUE) {
