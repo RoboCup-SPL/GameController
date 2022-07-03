@@ -145,6 +145,7 @@ public class GameController {
                     if (teams[arrayIndex] >= 0 && teams[arrayIndex] < names.length && names[teams[arrayIndex]] != null) {
                         continue parsing;
                     }
+                    System.out.printf("Error while processing option %s: team %s is not available.\n", arrayIndex == 0 ? COMMAND_FIRST_TEAM : COMMAND_SECOND_TEAM, args[i]);
                 } catch (NumberFormatException e) {
                     for (int j = 0; j < names.length; ++j) {
                         if (names[j] != null && names[j].equalsIgnoreCase(args[i])) {
