@@ -946,6 +946,7 @@ public class GUI extends JFrame implements GCGUI
     {
         for (int i=0; i<2; i++) {
             goals[i].setText(""+data.team[i].score);
+            goals[i].setForeground(data.sentIllegalMessages[i] ? Color.MAGENTA : null);
             goalInc[i].setEnabled(ActionBoard.goalInc[i].isLegal(data));
             goalDec[i].setVisible(ActionBoard.goalDec[i].isLegal(data));
         }
@@ -996,7 +997,7 @@ public class GUI extends JFrame implements GCGUI
     {
         for (int i=0; i<2; i++) {
             messageBudget[i].setText(MESSAGE_BUDGET+": "+data.team[i].messageBudget);
-            messageBudget[i].setForeground(data.sentIllegalMessages[i] ? Color.RED : null);
+            messageBudget[i].setForeground(data.sentIllegalMessages[i] ? Color.MAGENTA : null);
         }
     }
 
