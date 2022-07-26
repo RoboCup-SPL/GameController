@@ -252,3 +252,51 @@ There are still a number of issues left:
 
 - On Windows, Swing windows are only displayed correctly scaled on HiDPI displays if
   Java 9 is used.
+
+
+## 7. Debugging
+
+The `build.xml` doesn't come with a target for debugging, but in NetBeans (and
+probably Eclipse, too) it can be generated automatically. The result could look
+like this:
+```xml
+<target depends="-jdk-init,jar" name="debug-nb">
+    <nbjpdastart addressproperty="jpda.address" name="GameController" transport="dt_socket"/>
+    <java fork="true" jar="${jar.dir}/GameController.jar" dir="${jar.dir}">
+        <jvmarg value="-Xdebug"/>
+        <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+    </java>
+</target>
+```
+
+The `dir="${jar.dir}"` attribute isn't generated automatically, but is important
+so that the GameController finds the resource files.
+
+`${jpda.address}` probably only works in NetBeans; with Eclipse, one would
+probably set a fixed number in `build.xml` and somewhere in the IDE.
+
+Now the debugger should work, but the GameController is normally built without
+debug symbols. To activate these, the attributes `debug="true" debuglevel="lines,vars,source"`
+must be added to the `javac`-element in the compile target in `build.xml`.
+
+Once the GC has been built with debug symbols, it should be possible to use
+breakpoints, watches etc. in the IDE.
+
+### Debugging Other Projects in This Repository
+
+Since all projects in this repository share a codebase and build script, the
+process for them is nearly the same as for the GameController. The only
+difference is that the generated debug target must call the corresponding
+`jar` file instead of `GameController.jar`.
+
+### Debugging TCM Plugins
+
+Since the TCM loads the team plugins at runtime, they can't be debugged in
+isolation. However, it can be debugged as part of the TCM by using the above
+method and adding `debug="true" debuglevel="lines,vars,source"` to the
+`javac`-element of the plugin's `build.xml`. Now breakpoints can be set in
+the plugin code and should be stopped at when executing the TCM's debug target.
+It is important to rebuild the TCM after the plugin has been built with debug
+symbols enabled, so that the plugin's `jar` file is copied to the resource
+directory of the TCM. It is unclear whether breakpoints have to be set before
+this copying takes place.
