@@ -4,17 +4,9 @@
 #include <stdint.h>
 
 #define SPL_STANDARD_MESSAGE_STRUCT_HEADER  "SPL "
-#define SPL_STANDARD_MESSAGE_STRUCT_VERSION 7
+#define SPL_STANDARD_MESSAGE_STRUCT_VERSION 8
 
-/*
- * Minimal MTU a network can set is 576 byte.
- * We have to subtract the IP header of 60 bytes and the UDP data 8 bytes.
- * So we have 576 - 60 - 8 = 508 safe size. From this we have to subtract the prefix to the data - 34 bytes.
- * So we have in the end 508 - 34 = 474 bytes free payload.
- *
- * See also https://stackoverflow.com/a/23915324
- */
-#define SPL_STANDARD_MESSAGE_DATA_SIZE      474
+#define SPL_STANDARD_MESSAGE_DATA_SIZE      128
 
 /*
  * Important remarks about units:

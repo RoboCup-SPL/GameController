@@ -14,8 +14,8 @@ public class SPLStandardMessage implements Serializable {
      * Some constants from the C-structure.
      */
     public static final String SPL_STANDARD_MESSAGE_STRUCT_HEADER = "SPL ";
-    public static final byte SPL_STANDARD_MESSAGE_STRUCT_VERSION = 7;
-    public static final short SPL_STANDARD_MESSAGE_DATA_SIZE = 474;
+    public static final byte SPL_STANDARD_MESSAGE_STRUCT_VERSION = 8;
+    public static final short SPL_STANDARD_MESSAGE_DATA_SIZE = 128;
     public static final int SIZE = 4 // header size
             + 1 // byte for the version
             + 1 // player number
