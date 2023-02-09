@@ -48,10 +48,10 @@ Example of sending data to teammate robots::
         client.sendto(data, ('', 10000 + teamNum))  # Port number is specified in SPL rulebook
 """
 
-from construct import Array, Byte, Const, Default, Float32l, Int16ul, Struct
+from construct import Array, Byte, Const, Default, Float32l, Int8ul, Struct
 
 SPL_STANDARD_MESSAGE_STRUCT_HEADER = b'SPL '
-SPL_STANDARD_MESSAGE_STRUCT_VERSION = 8
+SPL_STANDARD_MESSAGE_STRUCT_VERSION = 9
 
 SPL_STANDARD_MESSAGE_DATA_SIZE = 128
 
@@ -64,7 +64,7 @@ SPL_STANDARD_MESSAGE_DATA_SIZE = 128
 SPLStandardMessage = Struct(
     'header' / Const(SPL_STANDARD_MESSAGE_STRUCT_HEADER),  # "SPL "
     'version' / Const(SPL_STANDARD_MESSAGE_STRUCT_VERSION, Byte),  # has to be set to SPL_STANDARD_MESSAGE_STRUCT_VERSION
-    'playerNum' / Default(Byte, 0),  # [MANDATORY FIELD] 1-7
+    'playerNum' / Default(Byte, 0),  # [MANDATORY FIELD] 1-20
     'teamNum' / Default(Byte, 0),  # [MANDATORY FIELD] the number of the team (as provided by the organizers)
     'fallen' / Default(Byte, 255),  # [MANDATORY FIELD] 1 means that the robot is fallen, 0 means that the robot can play
     # [MANDATORY FIELD]
@@ -84,7 +84,7 @@ SPLStandardMessage = Struct(
     # +ve y-axis is 90 degrees counter clockwise from the +ve x-axis
     'ball' / Default(Array(2, Float32l), [0, 0]),
     # number of bytes that is actually used by the data array
-    'numOfDataBytes' / Default(Int16ul, 0),
+    'numOfDataBytes' / Default(Int8ul, 0),
     # buffer for arbitrary data, teams do not need to send more than specified in numOfDataBytes
     'data' / Default(Array(SPL_STANDARD_MESSAGE_DATA_SIZE, Byte), [0]*SPL_STANDARD_MESSAGE_DATA_SIZE)
 )

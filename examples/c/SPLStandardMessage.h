@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #define SPL_STANDARD_MESSAGE_STRUCT_HEADER  "SPL "
-#define SPL_STANDARD_MESSAGE_STRUCT_VERSION 8
+#define SPL_STANDARD_MESSAGE_STRUCT_VERSION 9
 
 #define SPL_STANDARD_MESSAGE_DATA_SIZE      128
 
@@ -22,7 +22,7 @@ struct SPLStandardMessage
 {
   char header[4];        // "SPL "
   uint8_t version;       // has to be set to SPL_STANDARD_MESSAGE_STRUCT_VERSION
-  uint8_t playerNum;     // [MANDATORY FIELD] 1-7
+  uint8_t playerNum;     // [MANDATORY FIELD] 1-20
   uint8_t teamNum;       // [MANDATORY FIELD] the number of the team (as provided by the organizers)
   uint8_t fallen;        // [MANDATORY FIELD] 1 means that the robot is fallen, 0 means that the robot can play
 
@@ -46,7 +46,7 @@ struct SPLStandardMessage
   float ball[2];
 
   // number of bytes that is actually used by the data array
-  uint16_t numOfDataBytes;
+  uint8_t numOfDataBytes;
 
   // buffer for arbitrary data, teams do not need to send more than specified in numOfDataBytes
   uint8_t data[SPL_STANDARD_MESSAGE_DATA_SIZE];

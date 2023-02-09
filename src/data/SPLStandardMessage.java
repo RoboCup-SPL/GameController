@@ -14,7 +14,7 @@ public class SPLStandardMessage implements Serializable {
      * Some constants from the C-structure.
      */
     public static final String SPL_STANDARD_MESSAGE_STRUCT_HEADER = "SPL ";
-    public static final byte SPL_STANDARD_MESSAGE_STRUCT_VERSION = 8;
+    public static final byte SPL_STANDARD_MESSAGE_STRUCT_VERSION = 9;
     public static final short SPL_STANDARD_MESSAGE_DATA_SIZE = 128;
     public static final int SIZE = 4 // header size
             + 1 // byte for the version
@@ -24,12 +24,12 @@ public class SPLStandardMessage implements Serializable {
             + 12 // pose
             + 4 // ball age
             + 8 // ball position
-            + 2 // actual size of data
+            + 1 // actual size of data
             + SPL_STANDARD_MESSAGE_DATA_SIZE; // data
 
     public String header;   // header to identify the structure
     public byte version;    // version of the data structure
-    public byte playerNum;  // 1-7
+    public byte playerNum;  // 1-20
     public byte teamNum;    // the number of the team (as provided by the organizers)
     public boolean fallen;  // whether the robot is fallen
 
@@ -52,7 +52,7 @@ public class SPLStandardMessage implements Serializable {
     public float[] ball = new float[2];
 
     // buffer for arbitrary data
-    public int nominalDataBytes;
+    public short nominalDataBytes;
     public byte[] data;
 
     public boolean valid = false;
@@ -106,7 +106,7 @@ public class SPLStandardMessage implements Serializable {
         buffer.putFloat(ballAge);
         buffer.putFloat(ball[0]);
         buffer.putFloat(ball[1]);
-        buffer.putShort((short) data.length);
+        buffer.put((byte) data.length);
         buffer.put(data);
 
         return buffer.array();
@@ -130,8 +130,8 @@ public class SPLStandardMessage implements Serializable {
                     versionValid = true;
 
                     playerNum = buffer.get();
-                    if (playerNum < 1 || playerNum > 7) {
-                        errors.add("player number not within [1,7]; is: " + playerNum);
+                    if (playerNum < 1 || playerNum > 20) {
+                        errors.add("player number not within [1,20]; is: " + playerNum);
                     } else {
                         playerNumValid = true;
                     }
@@ -172,7 +172,10 @@ public class SPLStandardMessage implements Serializable {
                         ballValid = true;
                     }
 
-                    nominalDataBytes = buffer.getShort();
+                    nominalDataBytes = buffer.get();
+                    if (nominalDataBytes < 0) {
+                        nominalDataBytes += (1 << Byte.SIZE);
+                    }
                     boolean dValid = true;
                     if (nominalDataBytes > SPL_STANDARD_MESSAGE_DATA_SIZE) {
                         errors.add("custom data size too large; allowed up to " + SPL_STANDARD_MESSAGE_DATA_SIZE + ", is: " + nominalDataBytes);
