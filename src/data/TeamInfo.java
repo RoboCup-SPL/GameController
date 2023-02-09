@@ -19,7 +19,7 @@ public class TeamInfo implements Serializable {
      * How many players a team may have. Actually that many players in each team
      * need to be sent, even if playersPerTeam in GameControlData is less.
      */
-    public static final byte MAX_NUM_PLAYERS = 7;
+    public static final byte MAX_NUM_PLAYERS = 20;
 
     /**
      * The size in bytes this class has packed.
@@ -28,7 +28,11 @@ public class TeamInfo implements Serializable {
             = 1
             + // teamNumber
             1
-            + // teamColor
+            + // fieldPlayerColor
+            1
+            + // goalkeeperColor
+            1
+            + // goalkeeper
             1
             + // score
             1
@@ -41,7 +45,9 @@ public class TeamInfo implements Serializable {
 
     //this is streamed
     public byte teamNumber;                                         // unique team number
-    public byte teamColor;                                          // color of the team
+    public byte fieldPlayerColor;                                   // color of the field players
+    public byte goalkeeperColor;                                    // color of the goalkeeper
+    public byte goalkeeper = 1;                                     // player number of the goalkeeper (1-MAX_NUM_PLAYERS)
     public byte score;                                              // team's score
     public byte penaltyShot = 0;                                    // penalty shot counter
     public short singleShots = 0;                                   // bits represent penalty shot success
@@ -68,7 +74,9 @@ public class TeamInfo implements Serializable {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(teamNumber);
-        buffer.put(teamColor);
+        buffer.put(fieldPlayerColor);
+        buffer.put(goalkeeperColor);
+        buffer.put(goalkeeper);
         buffer.put(decreaseScore ? (byte) (score - 1) : score);
         buffer.put(penaltyShot);
         buffer.putShort(singleShots);
@@ -88,7 +96,9 @@ public class TeamInfo implements Serializable {
     public void fromByteArray(ByteBuffer buffer) {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         teamNumber = buffer.get();
-        teamColor = buffer.get();
+        fieldPlayerColor = buffer.get();
+        goalkeeperColor = buffer.get();
+        goalkeeper = buffer.get();
         score = buffer.get();
         penaltyShot = buffer.get();
         singleShots = buffer.getShort();
@@ -98,7 +108,7 @@ public class TeamInfo implements Serializable {
         }
     }
 
-    public String getTeamColorName() {
+    public static String getTeamColorName(byte teamColor) {
         switch (teamColor) {
             case GameControlData.TEAM_BLUE:
                 return "blue";
@@ -128,10 +138,11 @@ public class TeamInfo implements Serializable {
     @Override
     public String toString() {
         String out = "--------------------------------------\n";
-        String temp = getTeamColorName();
 
         out += "         teamNumber: " + teamNumber + "\n";
-        out += "          teamColor: " + temp + "\n";
+        out += "   fieldPlayerColor: " + getTeamColorName(fieldPlayerColor) + "\n";
+        out += "    goalkeeperColor: " + getTeamColorName(goalkeeperColor) + "\n";
+        out += "         goalkeeper: " + goalkeeper + "\n";
         out += "              score: " + score + "\n";
         out += "        penaltyShot: " + penaltyShot + "\n";
         out += "        singleShots: " + Integer.toBinaryString(singleShots) + "\n";

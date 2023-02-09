@@ -14,7 +14,6 @@ public abstract class Rules
     public static final Rules[] LEAGUES = {
         new SPL(),
         new SPLPenaltyShootout(),
-        new SPL7v7(),
         new SPLDynamicBallHandling()
     };
 

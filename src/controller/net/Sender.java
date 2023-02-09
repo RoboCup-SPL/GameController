@@ -77,9 +77,6 @@ public class Sender extends Thread {
                 || (data.gameState == GameControlData.STATE_FINISHED && this.data.gameState != GameControlData.STATE_FINISHED)) {
             final StringBuilder logfileName = new StringBuilder();
             final String[] teamNames = Teams.getNames(false);
-            if (data.competitionType == GameControlData.COMPETITION_TYPE_7V7) {
-                logfileName.append("7v7_");
-            }
             if (data.firstHalf == GameControlData.C_TRUE) {
                 logfileName.append(data.team[0].teamNumber < teamNames.length && teamNames[data.team[0].teamNumber] != null ? teamNames[data.team[0].teamNumber] : "Unknown").append("_").append(data.team[1].teamNumber < teamNames.length && teamNames[data.team[1].teamNumber] != null ? teamNames[data.team[1].teamNumber] : "Unknown");
             } else {
