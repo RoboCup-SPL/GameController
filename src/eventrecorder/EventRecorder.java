@@ -107,7 +107,7 @@ public class EventRecorder {
                 while (insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace - 1).text))
                     --insertPlace;
 
-                history.execute(new EntryCreateAction(new LogEntry(capitalize(data.team[0].getTeamColorName()) + " " + data.team[0].score + " : " + data.team[1].score + " " + capitalize(data.team[1].getTeamColorName()), SECONDS_FORMAT.format(data.secsRemaining * 1000), LogType.Manually), insertPlace, false));
+                history.execute(new EntryCreateAction(new LogEntry(capitalize(TeamInfo.getTeamColorName(data.team[0].fieldPlayerColor)) + " " + data.team[0].score + " : " + data.team[1].score + " " + capitalize(TeamInfo.getTeamColorName(data.team[1].fieldPlayerColor)), SECONDS_FORMAT.format(data.secsRemaining * 1000), LogType.Manually), insertPlace, false));
             }
 
             // If Gamestate is changed, add a LogEntry:
@@ -202,7 +202,7 @@ public class EventRecorder {
                             String penaltyString = data.team[i].player[p].penalty == 0 ? "Back In Game" :
                                 capitalize(PlayerInfo.getPenaltyName(data.team[i].player[p].penalty));
 
-                            String totalString = data.team[i].getTeamColorName().toUpperCase()+" "+(p+1)+": "+
+                            String totalString = TeamInfo.getTeamColorName(data.team[i].fieldPlayerColor).toUpperCase()+" "+(p+1)+": "+
                                     penaltyString;
 
                             // Insert before empty logEntries:

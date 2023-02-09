@@ -421,8 +421,8 @@ public class View3DGSV extends View3D {
 
             // Score
             textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].fieldPlayerColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].fieldPlayerColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].fieldPlayerColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].fieldPlayerColor]);
             textRenderers[RENDERER_SCORE].endRendering();
 
             // Penalty shots
@@ -431,7 +431,7 @@ public class View3DGSV extends View3D {
                 final GLU glu = GLU.createGLU(gl);
                 final GLUquadric q = glu.gluNewQuadric();
                 for (int i = 0; i < 2; i++) {
-                    gl.glColor4fv(Rules.league.teamColor[data.team[i].teamColor].getComponents(new float[4]), 0);
+                    gl.glColor4fv(Rules.league.teamColor[data.team[i].fieldPlayerColor].getComponents(new float[4]), 0);
                     if (i == 0) {
                         gl.glPushMatrix();
                         gl.glTranslatef(window.getWidth() * 11 / 12, window.getWidth() / 6 + window.getHeight() * 20 / 1080, 0);

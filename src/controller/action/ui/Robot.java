@@ -73,7 +73,7 @@ public class Robot extends GCAction
             player.penalty = PlayerInfo.PENALTY_NONE;
             data.penaltyShootOutPlayers[side][data.team[side].teamNumber == data.kickingTeam ? 0 : 1] = number;
 
-            Log.state(data, "Selected Player " + Rules.league.teamColorName[data.team[side].teamColor] + " "
+            Log.state(data, "Selected Player " + Rules.league.teamColorName[data.team[side].fieldPlayerColor] + " "
                     + (number + 1) + " as " + (data.team[side].teamNumber == data.kickingTeam ? "taker" : "keeper"));
         } else if (player.penalty == PlayerInfo.PENALTY_SUBSTITUTE && data.gamePhase != AdvancedData.GAME_PHASE_PENALTYSHOOT) {
             wantLastUIEvent = EventHandler.getInstance().lastUIEvent != this;
@@ -94,11 +94,11 @@ public class Robot extends GCAction
             player.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
             data.robotPenaltyCount[side][number] = 0;
             data.whenPenalized[side][number] = data.getTime();
-            Log.state(data, "Substituted " + Rules.league.teamColorName[data.team[side].teamColor] + " " + (number + 1) + " by " + (substituteNumber + 1));
+            Log.state(data, "Substituted " + Rules.league.teamColorName[data.team[side].fieldPlayerColor] + " " + (number + 1) + " by " + (substituteNumber + 1));
         } else if (player.penalty != PlayerInfo.PENALTY_NONE) {
             player.penalty = PlayerInfo.PENALTY_NONE;
             Log.state(data, ("Unpenalised ")+
-                    Rules.league.teamColorName[data.team[side].teamColor]
+                    Rules.league.teamColorName[data.team[side].fieldPlayerColor]
                     + " " + (number+1));
         }
         EventHandler.getInstance().noLastUIEvent = !wantLastUIEvent;

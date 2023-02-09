@@ -42,7 +42,7 @@ public class GlobalStuck extends GCAction
     {
         data.kickingTeam = data.team[1 - side].teamNumber;
         data.kickOffReason = AdvancedData.KICKOFF_GAMESTUCK;
-        Log.setNextMessage("Global Game Stuck, Kickoff "+Rules.league.teamColorName[data.team[data.kickingTeam == data.team[0].teamNumber ? 0 : 1].teamColor]);
+        Log.setNextMessage("Global Game Stuck, Kickoff "+Rules.league.teamColorName[data.team[data.kickingTeam == data.team[0].teamNumber ? 0 : 1].fieldPlayerColor]);
         ActionBoard.ready.perform(data);
     }
 

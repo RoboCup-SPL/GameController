@@ -38,7 +38,7 @@ public class Position extends Penalty
             data.whenPenalized[side][number] = data.getTime();
         }
         Log.state(data, "Illegal Position "+
-                Rules.league.teamColorName[data.team[side].teamColor]
+                Rules.league.teamColorName[data.team[side].fieldPlayerColor]
                 + " " + (number+1));
     }
 

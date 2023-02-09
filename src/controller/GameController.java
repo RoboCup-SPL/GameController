@@ -323,7 +323,7 @@ public class GameController {
 
         for (int i = 0; i < 2; i++) {
             data.team[i].teamNumber = (byte) input.outTeam[i];
-            data.team[i].teamColor = input.outTeamColor[i];
+            data.team[i].fieldPlayerColor = data.team[i].goalkeeperColor = input.outTeamColor[i];
         }
 
         if (testMode) {
@@ -398,9 +398,9 @@ public class GameController {
         //ui
         ActionBoard.init();
         Log.state(data, Teams.getNames(false)[data.team[0].teamNumber]
-                + " (" + Rules.league.teamColorName[data.team[0].teamColor]
+                + " (" + Rules.league.teamColorName[data.team[0].fieldPlayerColor]
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
-                + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
+                + " (" + Rules.league.teamColorName[data.team[1].fieldPlayerColor] + ")");
         GUI gui = new GUI(input.outFullscreen, data.competitionPhase == GameControlData.COMPETITION_PHASE_PLAYOFF ? "Play-off Game" : "Preliminaries Game", data);
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);

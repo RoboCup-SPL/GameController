@@ -116,9 +116,9 @@ public class GameControllerInfo extends Static {
             // Display scores
             final TeamInfo teamLeft = data.team[GameState.getInstance().isMirrored() ? 1 : 0];
             final TeamInfo teamRight = data.team[GameState.getInstance().isMirrored() ? 0 : 1];
-            Text.drawText("" + teamLeft.score, -0.3f, 0, 0.3f, getColor(teamLeft.teamColor));
+            Text.drawText("" + teamLeft.score, -0.3f, 0, 0.3f, getColor(teamLeft.fieldPlayerColor));
             Text.drawText(":", 0, 0, 0.3f);
-            Text.drawText("" + teamRight.score, 0.3f, 0, 0.3f, getColor(teamRight.teamColor));
+            Text.drawText("" + teamRight.score, 0.3f, 0, 0.3f, getColor(teamRight.fieldPlayerColor));
             Text.drawText("" + teamLeft.messageBudget, -4.3f, 0.9f, 0.3f);
             Text.drawText("" + teamRight.messageBudget, 4.3f, 0.9f, 0.3f);
             gl.glPopMatrix();

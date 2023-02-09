@@ -49,7 +49,7 @@ public class TimeOut extends GCAction
             } else if (data.gameState == GameControlData.STATE_SET) {
                 data.team[data.kickingTeam == data.team[0].teamNumber ? 0 : 1].penaltyShot--;
             }
-            Log.setNextMessage("Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.setNextMessage("Timeout "+Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
             data.gameState = -1; // something impossible to force execution of next call
             data.setPlay = GameControlData.SET_PLAY_NONE;
             ActionBoard.initial.perform(data);
@@ -58,7 +58,7 @@ public class TimeOut extends GCAction
             data.previousGamePhase = GameControlData.GAME_PHASE_TIMEOUT;
             data.timeOutActive[side] = false;
             data.kickOffReason = AdvancedData.KICKOFF_TIMEOUT;
-            Log.setNextMessage("End of Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.setNextMessage("End of Timeout "+Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
             if (data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
                 ActionBoard.ready.perform(data);
             }

@@ -46,7 +46,7 @@ public class TeamMessage extends GCAction
             } else if (!data.sentIllegalMessages[side]) {
                 data.team[side].score = 0;
                 data.sentIllegalMessages[side] = true;
-                Log.toFile("Message Budget Exceeded by "+Rules.league.teamColorName[data.team[side].teamColor]);
+                Log.toFile("Message Budget Exceeded by "+Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
             }
         }
     }

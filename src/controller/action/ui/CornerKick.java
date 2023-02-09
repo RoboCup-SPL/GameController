@@ -43,7 +43,7 @@ public class CornerKick extends GCAction
         data.whenCurrentSetPlayBegan = data.getTime();
         data.setPlay = GameControlData.SET_PLAY_CORNER_KICK;
         data.kickingTeam = data.team[side].teamNumber;
-        Log.state(data, "Corner Kick for " + Rules.league.teamColorName[data.team[side].teamColor]);
+        Log.state(data, "Corner Kick for " + Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
     }
 
     /**

@@ -211,8 +211,8 @@ public class GameState implements GameControlDataEventListener {
             }
         }
 
-        teamColors.put((int) e.data.team[0].teamNumber, (int) e.data.team[0].teamColor);
-        teamColors.put((int) e.data.team[1].teamNumber, (int) e.data.team[1].teamColor);
+        teamColors.put((int) e.data.team[0].teamNumber, (int) e.data.team[0].fieldPlayerColor);
+        teamColors.put((int) e.data.team[1].teamNumber, (int) e.data.team[1].fieldPlayerColor);
 
         // Update penalties
         for (final TeamInfo team : e.data.team) {

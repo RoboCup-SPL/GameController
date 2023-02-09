@@ -30,7 +30,7 @@ public class Foul extends Pushing
         data.setPlay = GameControlData.SET_PLAY_PUSHING_FREE_KICK;
         data.kickingTeam = data.team[1 - side].teamNumber;
 
-        Log.state(data, "Pushing Free Kick for "+Rules.league.teamColorName[data.team[1 - side].teamColor]);
+        Log.state(data, "Pushing Free Kick for "+Rules.league.teamColorName[data.team[1 - side].fieldPlayerColor]);
     }
 
     /**

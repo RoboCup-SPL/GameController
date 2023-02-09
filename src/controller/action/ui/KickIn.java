@@ -43,7 +43,7 @@ public class KickIn extends GCAction
         data.whenCurrentSetPlayBegan = data.getTime();
         data.setPlay = GameControlData.SET_PLAY_KICK_IN;
         data.kickingTeam = data.team[side].teamNumber;
-        Log.state(data, "Kick In for " + Rules.league.teamColorName[data.team[side].teamColor]);
+        Log.state(data, "Kick In for " + Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
     }
 
     /**

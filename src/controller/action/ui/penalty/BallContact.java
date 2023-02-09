@@ -28,7 +28,7 @@ public class BallContact extends Penalty
         handleRepeatedPenalty(data, side, number);
         data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Illegal Ball Contact "+
-                Rules.league.teamColorName[data.team[side].teamColor]
+                Rules.league.teamColorName[data.team[side].fieldPlayerColor]
                 + " " + (number+1));
     }
 

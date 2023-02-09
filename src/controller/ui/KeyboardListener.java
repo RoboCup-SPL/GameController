@@ -74,28 +74,28 @@ public class KeyboardListener implements KeyEventDispatcher
                     // TODO: This Key-Mappings do not work properly with 10 Colors
                     case KeyEvent.VK_B:
                         for (int i = 0; i < ActionBoard.kickIn.length; ++i) {
-                            if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_BLUE) {
+                            if (EventHandler.getInstance().data.team[i].fieldPlayerColor == GameControlData.TEAM_BLUE) {
                                 event = ActionBoard.kickIn[i];
                             }
                         }
                         break;
                     case KeyEvent.VK_R:
                         for (int i = 0; i < ActionBoard.kickIn.length; ++i) {
-                            if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_RED) {
+                            if (EventHandler.getInstance().data.team[i].fieldPlayerColor == GameControlData.TEAM_RED) {
                                 event = ActionBoard.kickIn[i];
                             }
                         }
                         break;
                     case KeyEvent.VK_Y:
                         for (int i = 0; i < ActionBoard.kickIn.length; ++i) {
-                            if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_YELLOW) {
+                            if (EventHandler.getInstance().data.team[i].fieldPlayerColor == GameControlData.TEAM_YELLOW) {
                                 event = ActionBoard.kickIn[i];
                             }
                         }
                         break;
                     case KeyEvent.VK_K:
                         for (int i = 0; i < ActionBoard.kickIn.length; ++i) {
-                            if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_BLACK) {
+                            if (EventHandler.getInstance().data.team[i].fieldPlayerColor == GameControlData.TEAM_BLACK) {
                                 event = ActionBoard.kickIn[i];
                             }
                         }

@@ -33,7 +33,7 @@ public class Inactive extends Penalty
             data.whenPenalized[side][number] = data.getTime();
         }
         Log.state(data, "Inactive Player "+
-                Rules.league.teamColorName[data.team[side].teamColor]
+                Rules.league.teamColorName[data.team[side].fieldPlayerColor]
                 + " " + (number+1));
     }
 

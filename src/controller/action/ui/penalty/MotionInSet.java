@@ -28,7 +28,7 @@ public class MotionInSet extends Penalty
         data.robotPenaltyCount[side][number] = 0;
         data.whenPenalized[side][number] = data.getTime();
         Log.state(data, "Illegal Motion in Set "+
-                Rules.league.teamColorName[data.team[side].teamColor]
+                Rules.league.teamColorName[data.team[side].fieldPlayerColor]
                 + " " + (number+1));
     }
 

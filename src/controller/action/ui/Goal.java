@@ -56,7 +56,7 @@ public class Goal extends GCAction
                 data.kickingTeamBeforeGoal = data.kickingTeam;
                 data.kickingTeam = data.team[1 - side].teamNumber;
                 data.kickOffReason = AdvancedData.KICKOFF_GOAL;
-                Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
+                Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
                 if(data.team[side].score >= data.team[1-side].score + 10) {
                     // mercy rule
                     ActionBoard.secondHalf.perform(data);
@@ -67,11 +67,11 @@ public class Goal extends GCAction
             } else {
                 data.team[side].singleShots += (1<<(data.team[side].penaltyShot-1));
                 data.kickOffReason = AdvancedData.KICKOFF_PENALTYSHOOT;
-                Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
+                Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
                 ActionBoard.finish.perform(data);
             }
         } else {
-            Log.state(data, "Goal decrease for "+Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.state(data, "Goal decrease for "+Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
         }
     }
 

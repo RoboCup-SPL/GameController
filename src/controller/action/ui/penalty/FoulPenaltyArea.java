@@ -32,7 +32,7 @@ public class FoulPenaltyArea extends Pushing
         data.kickingTeam = data.team[1 - side].teamNumber;
         data.kickOffReason = AdvancedData.KICKOFF_PENALTYSHOOT;
 
-        Log.setNextMessage("Penalty Kick for " + Rules.league.teamColorName[data.team[1 - side].teamColor]);
+        Log.setNextMessage("Penalty Kick for " + Rules.league.teamColorName[data.team[1 - side].fieldPlayerColor]);
         ActionBoard.ready.perform(data);
     }
 

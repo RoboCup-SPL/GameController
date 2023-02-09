@@ -312,10 +312,10 @@ public class GUI extends JFrame implements GCGUI
         for (int i=0; i<2; i++) {
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
             name[i].setHorizontalAlignment(JLabel.CENTER);
-            if(data.team[i].teamColor == GameControlData.TEAM_WHITE) {
+            if(data.team[i].fieldPlayerColor == GameControlData.TEAM_WHITE) {
                 name[i].setForeground(Color.BLACK);
             } else {
-                name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
+                name[i].setForeground(Rules.league.teamColor[data.team[i].fieldPlayerColor]);
             }
             goalInc[i] = new Button("+");
             goalDec[i] = new Button("-");
@@ -890,12 +890,12 @@ public class GUI extends JFrame implements GCGUI
     private void updateColor(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-            if(data.team[i].teamColor == GameControlData.TEAM_WHITE) {
+            if(data.team[i].fieldPlayerColor == GameControlData.TEAM_WHITE) {
                 name[i].setForeground(Color.BLACK);
             } else {
-                name[i].setForeground(Rules.league.teamColor[data.team[i].teamColor]);
+                name[i].setForeground(Rules.league.teamColor[data.team[i].fieldPlayerColor]);
             }
-            side[i].setImage(backgroundSide[i][data.team[i].teamColor].getImage());
+            side[i].setImage(backgroundSide[i][data.team[i].fieldPlayerColor].getImage());
         }
     }
 
@@ -1020,17 +1020,17 @@ public class GUI extends JFrame implements GCGUI
                                 && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET;
                         if (seconds == 0) {
                             if (pickup) {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_PICKUP+")");
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].fieldPlayerColor]+" "+(j+1)+" ("+PEN_PICKUP+")");
                                 highlight(robot[i][j], true);
                             } else if (data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].fieldPlayerColor]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
                                 highlight(robot[i][j], false);
                             } else {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds));
+                                robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].fieldPlayerColor]+" "+(j+1)+": "+formatTime(seconds));
                                 highlight(robot[i][j], robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                             }
                         }  else {
-                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
+                            robotLabel[i][j].setText(Rules.league.teamColorName[data.team[i].fieldPlayerColor]+" "+(j+1)+": "+formatTime(seconds)+(pickup ? " (P)" : ""));
                             robotTime[i][j].setValue(1000 * seconds / data.getPenaltyDuration(i, j));
                             highlight(robot[i][j], (seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT) || illegalMotion);
                         }
@@ -1041,7 +1041,7 @@ public class GUI extends JFrame implements GCGUI
                         highlight(robot[i][j], false);
                     }
                 } else {
-                    String label = Rules.league.teamColorName[data.team[i].teamColor]+" "+(j+1);
+                    String label = Rules.league.teamColorName[data.team[i].fieldPlayerColor]+" "+(j+1);
                     if (Rules.league.allowedHardwarePenaltiesPerGame < Integer.MAX_VALUE || Rules.league.allowedHardwarePenaltiesPerHalf < Integer.MAX_VALUE) {
                         label += " ("+data.robotHardwarePenaltyBudget[i][j]+")";
                     }

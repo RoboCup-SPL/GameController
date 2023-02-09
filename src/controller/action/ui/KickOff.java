@@ -50,7 +50,7 @@ public class KickOff extends GCAction
             data.leftSideKickoff = (side == 0);
         }
         Log.state(data, "Kickoff "+
-                Rules.league.teamColorName[data.team[side].teamColor]);
+                Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
     }
 
     /**

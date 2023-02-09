@@ -44,7 +44,7 @@ public class GoalKick extends GCAction
         data.whenCurrentSetPlayBegan = data.getTime();
         data.setPlay = GameControlData.SET_PLAY_GOAL_KICK;
         data.kickingTeam = data.team[side].teamNumber;
-        Log.state(data, "Goal Kick for "+Rules.league.teamColorName[data.team[side].teamColor]);
+        Log.state(data, "Goal Kick for "+Rules.league.teamColorName[data.team[side].fieldPlayerColor]);
     }
 
     /**

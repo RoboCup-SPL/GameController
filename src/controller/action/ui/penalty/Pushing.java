@@ -30,7 +30,7 @@ public class Pushing extends Penalty
             data.ejected[side][number] = true;
             if (side == 0) {
                 Log.setNextMessage("Player Pushing "+
-                            Rules.league.teamColorName[data.team[side].teamColor]
+                            Rules.league.teamColorName[data.team[side].fieldPlayerColor]
                             + " " + (number+1));
                 ActionBoard.finish.perform(data);
                 return;
@@ -41,7 +41,7 @@ public class Pushing extends Penalty
         }
 
         Log.state(data, "Player Pushing "+
-                    Rules.league.teamColorName[data.team[side].teamColor]
+                    Rules.league.teamColorName[data.team[side].fieldPlayerColor]
                     + " " + (number+1));
     }
 
