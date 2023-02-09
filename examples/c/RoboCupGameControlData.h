@@ -71,15 +71,15 @@ struct RobotInfo
 
 struct TeamInfo
 {
-  uint8_t teamNumber;                 // unique team number
-  uint8_t fieldPlayerColour;          // colour of the field players
-  uint8_t goalkeeperColour;           // colour of the goalkeeper
-  uint8_t goalkeeper;                 // player number of the goalkeeper (1-MAX_NUM_PLAYERS)
-  uint8_t score;                      // team's score
-  uint8_t penaltyShot;                // penalty shot counter
-  uint16_t singleShots;               // bits represent penalty shot success
-  uint16_t messageBudget;             // number of team messages the team is allowed to send for the remainder of the game
-  RobotInfo players[MAX_NUM_PLAYERS]; // the team's players
+  uint8_t teamNumber;                        // unique team number
+  uint8_t fieldPlayerColour;                 // colour of the field players
+  uint8_t goalkeeperColour;                  // colour of the goalkeeper
+  uint8_t goalkeeper;                        // player number of the goalkeeper (1-MAX_NUM_PLAYERS)
+  uint8_t score;                             // team's score
+  uint8_t penaltyShot;                       // penalty shot counter
+  uint16_t singleShots;                      // bits represent penalty shot success
+  uint16_t messageBudget;                    // number of team messages the team is allowed to send for the remainder of the game
+  struct RobotInfo players[MAX_NUM_PLAYERS]; // the team's players
 };
 
 struct RoboCupGameControlData
@@ -97,7 +97,7 @@ struct RoboCupGameControlData
   uint8_t kickingTeam;      // the team number of the next team to kick off, free kick etc
   int16_t secsRemaining;    // estimate of number of seconds remaining in the half
   int16_t secondaryTime;    // number of seconds shown as secondary time (remaining ready, until free ball, etc)
-  TeamInfo teams[2];
+  struct TeamInfo teams[2];
 };
 
 // data structure header
