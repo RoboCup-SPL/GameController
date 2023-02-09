@@ -1,11 +1,9 @@
 package bhuman.gui;
 
 import bhuman.message.BHumanMessage;
-import bhuman.message.Message;
 import bhuman.message.data.Angle;
 import bhuman.message.data.Eigen;
 import bhuman.message.data.Timestamp;
-import bhuman.message.messages.RobotHealth;
 import data.SPLStandardMessage;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -38,7 +36,6 @@ public class BHumanDetailFrame extends RobotDetailFrame {
     private final Node rootNode = new Node("Robot");
     private final Node splNode = new Node("SPLStandardMessage");
     private final Node bhumanNode = new Node("BHumanStandardMessage");
-    private final Node messagequeueNode = new Node("MessageQueue");
     private final DefaultTreeModel model = new DefaultTreeModel(rootNode);
 
     private long baseTimestamp = 0;
@@ -91,7 +88,6 @@ public class BHumanDetailFrame extends RobotDetailFrame {
     protected void init(final RobotState robot) {
         rootNode.insert(splNode, 0);
         rootNode.insert(bhumanNode, 1);
-        rootNode.insert(messagequeueNode, 2);
         final JTree tree = new JTree(rootNode);
         tree.setModel(model);
         tree.setSelectionModel(null);
@@ -159,58 +155,6 @@ public class BHumanDetailFrame extends RobotDetailFrame {
         baseTimestamp = bmsg.message.bhuman != null ? bmsg.message.bhuman.timestamp : 0;
         updateNode(bhumanNode, "BHumanStandardMessage", bmsg.message.bhuman);
 
-        if (bmsg.message.queue == null) {
-            removeNodes(messagequeueNode);
-        } else {
-            final Set<String> names = bmsg.message.queue.getMessageNames();
-            for (final String name : names) {
-                Node node = null;
-                int nodePosition = 0;
-                for (final Enumeration en = messagequeueNode.children(); en.hasMoreElements();) {
-                    final Node n = (Node) en.nextElement();
-                    final int compare = String.class.cast(n.getUserObject()).compareTo(name);
-                    if (compare == 0) {
-                        node = n;
-                        break;
-                    } else if (compare > 0) {
-                        break;
-                    }
-                    nodePosition++;
-                }
-                if (node == null) {
-                    node = new Node(name);
-                    messagequeueNode.insert(node, nodePosition);
-                    model.nodesWereInserted(messagequeueNode, new int[]{nodePosition});
-                }
-                try {
-                    final Class<? extends Message> type = Class.forName("bhuman.message.messages." + name).asSubclass(Message.class);
-                    if (type != null) {
-                        final Message message = bmsg.message.queue.getGenericMessage(type);
-                        if (message != null) {
-                            updateNode(node, name, message);
-                        }
-                    }
-                } catch (ClassNotFoundException ex) {
-                }
-            }
-            index = 0;
-            for (final Enumeration en = messagequeueNode.children(); en.hasMoreElements();) {
-                final Node n = (Node) en.nextElement();
-                if (!names.contains(String.class.cast(n.getUserObject()))) {
-                    messagequeueNode.remove(index);
-                    model.nodesWereRemoved(messagequeueNode, new int[]{index}, new Node[]{n});
-                } else {
-                    index++;
-                }
-            }
-
-            final RobotHealth health = bmsg.message.queue.getCachedMessage(RobotHealth.class);
-            if (health != null && !health.robotName.isEmpty()) {
-                rootNode.setUserObject(health.robotName);
-                model.nodeChanged(rootNode);
-                setTitle(health.robotName);
-            }
-        }
     }
 
     private void updateNode(final Node node, final String name, final Object obj) {

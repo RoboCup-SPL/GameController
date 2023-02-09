@@ -12,22 +12,13 @@ import java.nio.ByteOrder;
  */
 public class BHumanMessageParts {
 
-    private static final String BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER = "BHUA";
-    private static final short BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION = 0;
-
     /**
      * The B-Human standard information transferred in this message.
      */
     public final BHumanStandardMessage bhuman;
 
-    /**
-     * The MessageQueue transferred in this message.
-     */
-    public final MessageQueue queue;
-
     public BHumanMessageParts(final SPLStandardMessage origin, final ByteBuffer data) {
         BHumanStandardMessage bhum = null;
-        MessageQueue q = null;
 
         data.rewind();
         data.order(ByteOrder.LITTLE_ENDIAN);
@@ -52,22 +43,6 @@ public class BHumanMessageParts {
             }
         }
 
-        if (data.hasRemaining()) {
-            String header = new NativeReaders.SimpleStringReader(4).read(data);
-            short version = NativeReaders.ucharReader.read(data);
-            if (header.equals(BHUMAN_ARBITRARY_MESSAGE_STRUCT_HEADER)) {
-                if (version == BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION) {
-                    q = new MessageQueue(origin, data);
-                } else {
-                    Log.error("Wrong B-Human arbitrary message struct version: was " + version + ", expected " + BHUMAN_ARBITRARY_MESSAGE_STRUCT_VERSION);
-                }
-            } else {
-                data.position(data.position() - 5);
-                Log.error("Wrong B-Human arbitrary message struct header");
-            }
-        }
-
         this.bhuman = bhum;
-        this.queue = q;
     }
 }
