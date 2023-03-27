@@ -4,7 +4,7 @@ import bhuman.message.BHumanMessage;
 import bhuman.message.data.Angle;
 import bhuman.message.data.Eigen;
 import bhuman.message.data.Timestamp;
-import data.SPLStandardMessage;
+import data.SPLTeamMessage;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -33,9 +33,7 @@ public class BHumanDetailFrame extends RobotDetailFrame {
 
     private static final long serialVersionUID = -6514911326043029354L;
 
-    private final Node rootNode = new Node("Robot");
-    private final Node splNode = new Node("SPLStandardMessage");
-    private final Node bhumanNode = new Node("BHumanStandardMessage");
+    private final Node rootNode = new Node("BHumanMessage");
     private final DefaultTreeModel model = new DefaultTreeModel(rootNode);
 
     private long baseTimestamp = 0;
@@ -86,8 +84,6 @@ public class BHumanDetailFrame extends RobotDetailFrame {
 
     @Override
     protected void init(final RobotState robot) {
-        rootNode.insert(splNode, 0);
-        rootNode.insert(bhumanNode, 1);
         final JTree tree = new JTree(rootNode);
         tree.setModel(model);
         tree.setSelectionModel(null);
@@ -120,40 +116,14 @@ public class BHumanDetailFrame extends RobotDetailFrame {
      * Updates the frame with information of the given robot.
      */
     private void update(final RobotState robot) {
-        final SPLStandardMessage msg = robot.getLastMessage();
-        if (msg == null) {
-            return;
-        }
-
-        int index = 0;
-        for (final Field field : SPLStandardMessage.class.getFields()) {
-            if (!Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
-                final Node node;
-                if (splNode.getChildCount() > index) {
-                    node = (Node) splNode.getChildAt(index);
-                } else {
-                    node = new Node();
-                    splNode.insert(node, index);
-                    model.nodesWereInserted(splNode, new int[]{index});
-                }
-                index++;
-                try {
-                    updateNode(node, field.getName(), field.get(msg));
-                } catch (IllegalArgumentException | IllegalAccessException ex) {
-                }
-                if (field.getName().equals("nominalDataBytes")) {
-                    break;
-                }
-            }
-        }
-
-        if (!BHumanMessage.class.isInstance(msg)) {
+        final SPLTeamMessage msg = robot.getLastTeamMessage();
+        if (msg == null || !BHumanMessage.class.isInstance(msg)) {
             return;
         }
         final BHumanMessage bmsg = (BHumanMessage) msg;
 
-        baseTimestamp = bmsg.message.bhuman != null ? bmsg.message.bhuman.timestamp : 0;
-        updateNode(bhumanNode, "BHumanStandardMessage", bmsg.message.bhuman);
+        baseTimestamp = bmsg.timestamp;
+        updateNode(rootNode, "BHumanMessage", bmsg);
 
     }
 

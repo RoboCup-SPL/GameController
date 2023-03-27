@@ -1,7 +1,6 @@
 package bhuman.drawings;
 
 import bhuman.message.BHumanMessage;
-import bhuman.message.BHumanMessageParts;
 import com.jogamp.opengl.GL2;
 import data.PlayerInfo;
 import data.Rules;
@@ -24,20 +23,19 @@ public class WhistleHeard extends PerPlayer {
 
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
-        if (rs.getLastMessage() != null
-                && rs.getLastMessage().valid
-                && rs.getLastMessage() instanceof BHumanMessage) {
-            final BHumanMessage msg = (BHumanMessage) rs.getLastMessage();
-            if (msg.message.bhuman != null
-                    && msg.message.bhuman.theWhistle.confidenceOfLastWhistleDetection > 0
-                    && msg.message.bhuman.theWhistle.channelsUsedForWhistleDetection > 0
-                    && (msg.message.bhuman.timestamp - msg.message.bhuman.theWhistle.lastTimeWhistleDetected.timestamp) <= 1100) {
+        if (rs.getLastTeamMessage() != null
+                && rs.getLastTeamMessage().valid
+                && rs.getLastTeamMessage() instanceof BHumanMessage) {
+            final BHumanMessage msg = (BHumanMessage) rs.getLastTeamMessage();
+            if (msg.theWhistle.confidenceOfLastWhistleDetection > 0
+                    && msg.theWhistle.channelsUsedForWhistleDetection > 0
+                    && msg.theFrameInfo.time.getTimeSince(msg.theWhistle.lastTimeWhistleDetected.timestamp) <= 1100) {
                 gl.glPushMatrix();
 
                 if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
-                    gl.glTranslatef(-msg.playerNum, -3.5f, 1.f);
+                    gl.glTranslatef(-msg.playerNumber, -3.5f, 1.f);
                 } else {
-                    gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1.f);
+                    gl.glTranslatef(msg.theRobotPose.translation.x / 1000.f, msg.theRobotPose.translation.y / 1000.f, 1.f);
                 }
 
                 camera.turnTowardsCamera(gl);
