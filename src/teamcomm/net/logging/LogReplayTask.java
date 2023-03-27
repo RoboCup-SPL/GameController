@@ -2,7 +2,7 @@ package teamcomm.net.logging;
 
 import common.Log;
 import common.net.GameControlReturnDataPackage;
-import common.net.SPLStandardMessagePackage;
+import common.net.SPLTeamMessagePackage;
 import data.GameControlData;
 import java.io.BufferedInputStream;
 import java.io.EOFException;
@@ -17,7 +17,7 @@ import teamcomm.data.GameState;
 import teamcomm.data.event.GameControlDataEvent;
 import teamcomm.data.event.GameControlDataTimeoutEvent;
 import teamcomm.net.GameControlReturnDataReceiverTCM;
-import teamcomm.net.SPLStandardMessageReceiverTCM;
+import teamcomm.net.SPLTeamMessageReceiverTCM;
 
 /**
  * Task handling the replaying of a log file.
@@ -179,8 +179,8 @@ class LogReplayTask implements Runnable {
 
     private void handleObject(final LoggedObject obj) {
         if (obj.object != null) {
-            if (obj.object instanceof SPLStandardMessagePackage) {
-                SPLStandardMessageReceiverTCM.getInstance().addToPackageQueue((SPLStandardMessagePackage) obj.object);
+            if (obj.object instanceof SPLTeamMessagePackage) {
+                SPLTeamMessageReceiverTCM.getInstance().addToPackageQueue((SPLTeamMessagePackage) obj.object);
             } else if (obj.object instanceof GameControlReturnDataPackage) {
                 GameControlReturnDataReceiverTCM.getInstance().addToPackageQueue((GameControlReturnDataPackage) obj.object);
             } else if (obj.object instanceof GameControlData) {

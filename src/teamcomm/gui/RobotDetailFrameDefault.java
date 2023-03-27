@@ -1,7 +1,8 @@
 package teamcomm.gui;
 
 import common.Log;
-import data.SPLStandardMessage;
+import data.GameControlReturnData;
+import data.SPLTeamMessage;
 import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -84,8 +85,9 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
      * Updates the frame with information of the given robot.
      */
     private void update(final RobotState robot) {
-        final SPLStandardMessage msg = robot.getLastMessage();
-        if (msg == null) {
+        final GameControlReturnData returnMessage = robot.getLastGCRDMessage();
+        final SPLTeamMessage teamMessage = robot.getLastTeamMessage();
+        if (returnMessage == null && teamMessage == null) {
             return;
         }
 
@@ -93,14 +95,14 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
 
         // Top label
         final StringBuilder sb = new StringBuilder("<html>");
-        if (!msg.teamNumValid || msg.teamNum != robot.getTeamNumber()) {
-            sb.append("<font color='red'>Invalid team no: ").append(msg.teamNum).append(" on port ").append(robot.getTeamNumber()).append("</font>");
+        if (returnMessage != null && (!returnMessage.teamNumValid || returnMessage.teamNum != robot.getTeamNumber())) {
+            sb.append("<font color='red'>Invalid team no: ").append(returnMessage.teamNum).append(" on \"port\" ").append(robot.getTeamNumber()).append("</font>");
         } else {
             sb.append(GameState.getInstance().getTeamName(robot.getTeamNumber(), true, true));
         }
         sb.append("<br/>");
-        if (robot.getPlayerNumber() == null || !msg.playerNumValid) {
-            sb.append("<font color='red'>Player no: ").append(msg.playerNum).append("</font>");
+        if (robot.getPlayerNumber() == null || (returnMessage != null && !returnMessage.playerNumValid)) {
+            sb.append("<font color='red'>Player no: ").append(returnMessage != null ? returnMessage.playerNum : "unknown").append("</font>");
         } else {
             sb.append("Player no: ").append(robot.getPlayerNumber());
         }
@@ -109,11 +111,11 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
                 .append("<br/>");
         sb.append("Per second: ").append(df.format(robot.getTeamMessagesPerSecond()));
         sb.append("<br/>");
-        if (!msg.valid) {
+        if (teamMessage != null && !teamMessage.valid) {
             sb.append("<font color='red'>");
         }
         sb.append("Illegal: ").append(robot.getIllegalTeamMessageCount()).append(" (").append(Math.round(robot.getIllegalTeamMessageRatio() * 100.0)).append("%)");
-        if (!msg.valid) {
+        if (teamMessage != null && !teamMessage.valid) {
             sb.append("</font>");
         }
         sb.append("<br/>")
@@ -121,67 +123,78 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
                 .append("<br/>");
         sb.append("Per second: ").append(df.format(robot.getGCRDMessagesPerSecond()));
         sb.append("<br/>");
+        if (returnMessage != null && !returnMessage.valid) {
+            sb.append("<font color='red'>");
+        }
         sb.append("Illegal: ").append(robot.getIllegalGCRDMessageCount()).append(" (").append(Math.round(robot.getIllegalGCRDMessageRatio() * 100.0)).append("%)");
+        if (returnMessage != null && !returnMessage.valid) {
+            sb.append("</font>");
+        }
         sb.append("</html>");
         topLabel.setText(sb.toString());
 
         // Left label
         sb.setLength(6);
-        if (msg.dataValid) {
-            sb.append("Additional data: ").append(msg.data.length).append("B (").append(msg.data.length * 100 / SPLStandardMessage.SPL_STANDARD_MESSAGE_DATA_SIZE).append("%)");
-        } else {
-            sb.append("<font color='red'>Additional data: ").append(msg.nominalDataBytes).append("B</font>");
+
+        if (teamMessage != null) {
+            if (teamMessage.valid) {
+                sb.append("Additional data: ").append(teamMessage.data.length).append("B (").append(teamMessage.data.length * 100 / SPLTeamMessage.MAX_SIZE).append("%)");
+            } else {
+                sb.append("<font color='red'>Additional data: ").append(teamMessage.data.length).append("B</font>");
+            }
         }
 
         boolean additionalLine = false;
 
-        if (!msg.headerValid) {
-            if (!additionalLine) {
-                sb.append("<br/>");
-                additionalLine = true;
+        if (returnMessage != null) {
+            if (!returnMessage.headerValid) {
+                if (!additionalLine) {
+                    sb.append("<br/>");
+                    additionalLine = true;
+                }
+                sb.append("<br/><font color='red'>Invalid header: ").append(returnMessage.header).append("</font>");
             }
-            sb.append("<br/><font color='red'>Invalid header: ").append(msg.header).append("</font>");
-        }
 
-        if (!msg.versionValid) {
-            if (!additionalLine) {
-                sb.append("<br/>");
-                additionalLine = true;
+            if (!returnMessage.versionValid) {
+                if (!additionalLine) {
+                    sb.append("<br/>");
+                    additionalLine = true;
+                }
+                sb.append("<br/><font color='red'>Invalid version: ").append(returnMessage.version).append("</font>");
             }
-            sb.append("<br/><font color='red'>Invalid version: ").append(msg.version).append("</font>");
-        }
 
-        if (!msg.fallenValid) {
-            if (!additionalLine) {
-                sb.append("<br/>");
-                additionalLine = true;
+            if (!returnMessage.fallenValid) {
+                if (!additionalLine) {
+                    sb.append("<br/>");
+                    additionalLine = true;
+                }
+                sb.append("<br/><font color='red'>Invalid fallen state</font>");
             }
-            sb.append("<br/><font color='red'>Invalid fallen state</font>");
-        }
 
-        if (!msg.poseValid) {
-            if (!additionalLine) {
-                sb.append("<br/>");
-                additionalLine = true;
+            if (!returnMessage.poseValid) {
+                if (!additionalLine) {
+                    sb.append("<br/>");
+                    additionalLine = true;
+                }
+                sb.append("<br/><font color='red'>Invalid pose: x").append(df.format(returnMessage.pose[0])).append(" y").append(df.format(returnMessage.pose[1])).append(" t").append(df.format(returnMessage.pose[2])).append("</font>");
             }
-            sb.append("<br/><font color='red'>Invalid pose: x").append(df.format(msg.pose[0])).append(" y").append(df.format(msg.pose[1])).append(" t").append(df.format(msg.pose[2])).append("</font>");
-        }
 
-        if (!msg.ballValid) {
-            if (!additionalLine) {
-                sb.append("<br/>");
+            if (!returnMessage.ballValid) {
+                if (!additionalLine) {
+                    sb.append("<br/>");
+                }
+                sb.append("<br/><font color='red'>Invalid ball data: age ").append(returnMessage.ballAge).append(" x").append(returnMessage.ball[0]).append(" y").append(returnMessage.ball[1]).append("</font>");
             }
-            sb.append("<br/><font color='red'>Invalid ball data: age ").append(msg.ballAge).append(" x").append(msg.ball[0]).append(" y").append(msg.ball[1]).append("</font>");
         }
         sb.append("</html>");
         ((JLabel) infoContainer.getComponent(0)).setText(sb.toString());
 
         final String[] data;
-        if (msg instanceof AdvancedMessage) {
+        if (teamMessage instanceof AdvancedMessage) {
             try {
-                data = ((AdvancedMessage) msg).display();
+                data = ((AdvancedMessage) teamMessage).display();
             } catch (final Throwable e) {
-                Log.error(e.getClass().getSimpleName() + " was thrown while displaying custom message data from " + msg.getClass().getSimpleName() + ": " + e.getMessage());
+                Log.error(e.getClass().getSimpleName() + " was thrown while displaying custom message data from " + teamMessage.getClass().getSimpleName() + ": " + e.getMessage());
                 return;
             }
         } else {

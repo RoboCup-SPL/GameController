@@ -2,7 +2,7 @@ package teamcomm.data;
 
 import data.PlayerInfo;
 import data.GameControlReturnData;
-import data.SPLStandardMessage;
+import data.SPLTeamMessage;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import javax.swing.event.EventListenerList;
@@ -33,7 +33,8 @@ public class RobotState {
     private static final int AVERAGE_CALCULATION_TIME = 10000;
 
     private final String address;
-    private SPLStandardMessage lastMessage;
+    private SPLTeamMessage lastTeamMessage;
+    private GameControlReturnData lastGCRDMessage;
     private long lastTeamMessageTimestamp;
     private long lastGCRDMessageTimestamp;
     private final LinkedList<Long> recentTeamMessageTimestamps = new LinkedList<>();
@@ -62,18 +63,15 @@ public class RobotState {
     }
 
     /**
-     * Handles a SPL standard message received by the robot this object corresponds to.
+     * Handles a SPL team message received by the robot this object corresponds to.
      *
-     * @param message received SPL standard message or null if the message was invalid
+     * @param message received SPL team message or null if the message was invalid
      */
-    public void registerMessage(final SPLStandardMessage message) {
+    public void registerMessage(final SPLTeamMessage message) {
         if (!message.valid) {
             illegalTeamMessageCount++;
         }
-        lastMessage = message;
-        if (message.playerNumValid) {
-            playerNumber = (int) message.playerNum;
-        }
+        lastTeamMessage = message;
         lastTeamMessageTimestamp = System.currentTimeMillis();
         synchronized (recentTeamMessageTimestamps) {
             recentTeamMessageTimestamps.addFirst(lastTeamMessageTimestamp);
@@ -98,39 +96,7 @@ public class RobotState {
         if (message.playerNumValid) {
             playerNumber = (int) message.playerNum;
         }
-        if (lastMessage == null) {
-            lastMessage = new SPLStandardMessage();
-            lastMessage.header = SPLStandardMessage.SPL_STANDARD_MESSAGE_STRUCT_HEADER;
-            lastMessage.version = SPLStandardMessage.SPL_STANDARD_MESSAGE_STRUCT_VERSION;
-            lastMessage.playerNum = message.playerNum;
-            lastMessage.teamNum = message.teamNum;
-            lastMessage.fallen = message.fallen;
-            lastMessage.pose = message.pose;
-            lastMessage.ballAge = message.ballAge;
-            lastMessage.ball = message.ball;
-            lastMessage.data = new byte[0];
-            lastMessage.nominalDataBytes = 0;
-            lastMessage.valid = true;
-            lastMessage.headerValid = true;
-            lastMessage.versionValid = true;
-            lastMessage.playerNumValid = true;
-            lastMessage.teamNumValid = true;
-            lastMessage.fallenValid = message.fallenValid;
-            lastMessage.poseValid = message.poseValid;
-            lastMessage.ballValid = message.ballValid;
-            lastMessage.dataValid = true;
-        } else {
-            if (message.fallenValid) {
-                lastMessage.fallen = message.fallen;
-            }
-            if (message.poseValid) {
-                lastMessage.pose = message.pose;
-            }
-            if (message.ballValid) {
-                lastMessage.ballAge = message.ballAge;
-                lastMessage.ball = message.ball;
-            }
-        }
+        lastGCRDMessage = message;
         lastGCRDMessageTimestamp = System.currentTimeMillis();
         synchronized (recentGCRDMessageTimestamps) {
             recentGCRDMessageTimestamps.addFirst(lastGCRDMessageTimestamp);
@@ -153,12 +119,21 @@ public class RobotState {
     }
 
     /**
-     * Returns the most recent legal message received from this robot.
+     * Returns the most recent legal team message received from this robot.
      *
      * @return message
      */
-    public SPLStandardMessage getLastMessage() {
-        return lastMessage;
+    public SPLTeamMessage getLastTeamMessage() {
+        return lastTeamMessage;
+    }
+
+    /**
+     * Returns the most recent legal GameController return message received from this robot.
+     *
+     * @return message
+     */
+    public GameControlReturnData getLastGCRDMessage() {
+        return lastGCRDMessage;
     }
 
     /**

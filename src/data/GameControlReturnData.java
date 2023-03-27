@@ -36,8 +36,8 @@ public class GameControlReturnData implements Serializable {
             8; // ball position
 
     //this is streamed
-    String header;          // header to identify the structure
-    byte version;           // version of the data structure
+    public String header;   // header to identify the structure
+    public byte version;    // version of the data structure
     public byte playerNum;  // player number
     public byte teamNum;    // unique team number
     public boolean fallen;  // whether the robot is fallen

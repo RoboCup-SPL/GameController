@@ -5,7 +5,7 @@ import common.net.logging.Logger;
 import data.GameControlData;
 import data.GameControlReturnData;
 import data.Rules;
-import data.SPLStandardMessage;
+import data.SPLTeamMessage;
 import data.TeamInfo;
 import data.Teams;
 import java.io.IOException;
@@ -311,7 +311,7 @@ public class GameState implements GameControlDataEventListener {
      * was received
      * @param message received message
      */
-    public void receiveMessage(final String address, final int teamNumber, final SPLStandardMessage message) {
+    public void receiveMessage(final String address, final int teamNumber, final SPLTeamMessage message) {
         int changed = 0;
 
         // update the team info if no GameController info is available

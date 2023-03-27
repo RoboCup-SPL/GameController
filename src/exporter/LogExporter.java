@@ -1,10 +1,10 @@
 package exporter;
 
-import common.net.SPLStandardMessagePackage;
+import common.net.GameControlReturnDataPackage;
 import data.GameControlData;
+import data.GameControlReturnData;
 import data.TeamInfo;
 import data.PlayerInfo;
-import data.SPLStandardMessage;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.io.EOFException;
@@ -42,10 +42,10 @@ public class LogExporter
           final long timestamp = stream.readLong();
           if (stream.readBoolean()) {
             final Object obj = stream.readObject();
-            if (obj instanceof SPLStandardMessagePackage) {
-              final SPLStandardMessage msg = new SPLStandardMessage();
-              msg.fromByteArray(ByteBuffer.wrap(((SPLStandardMessagePackage) obj).message));
-              // Event is a SPLStandardMessage -> process message and prepare output
+            if (obj instanceof GameControlReturnDataPackage) {
+              final GameControlReturnData msg = new GameControlReturnData();
+              msg.fromByteArray(ByteBuffer.wrap(((GameControlReturnDataPackage) obj).message));
+              // Event is a GameControlReturnData packet -> process message and prepare output
               if(gcd != null && currentGameState != 'X') {
                 int teamNum = msg.teamNum;
                 int playerNum = msg.playerNum;

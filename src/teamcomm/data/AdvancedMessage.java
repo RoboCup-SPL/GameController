@@ -1,13 +1,13 @@
 package teamcomm.data;
 
-import data.SPLStandardMessage;
+import data.SPLTeamMessage;
 
 /**
- * Abstract base class for plugin-based extensions to the SPLStandardMessage.
+ * Abstract base class for plugin-based extensions to the SPLTeamMessage.
  *
  * @author Felix Thielke
  */
-public abstract class AdvancedMessage extends SPLStandardMessage {
+public abstract class AdvancedMessage extends SPLTeamMessage {
 
     private static final long serialVersionUID = 5893551586737053344L;
 

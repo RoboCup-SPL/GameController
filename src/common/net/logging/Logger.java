@@ -1,7 +1,7 @@
 package common.net.logging;
 
 import common.Log;
-import common.net.SPLStandardMessagePackage;
+import common.net.SPLTeamMessagePackage;
 import common.net.GameControlReturnDataPackage;
 import data.GameControlData;
 import java.io.File;
@@ -46,7 +46,7 @@ public class Logger {
         if (!enabled) {
             enabled = true;
             createLogfile();
-            System.out.println("Enabled logging of SPLStandardMessages");
+            System.out.println("Enabled logging of SPLTeamMessages");
         }
     }
 
@@ -54,7 +54,7 @@ public class Logger {
         if (enabled) {
             enabled = false;
             closeLogfile();
-            System.out.println("Disabled logging of SPLStandardMessages");
+            System.out.println("Disabled logging of SPLTeamMessages");
         }
     }
 
@@ -120,12 +120,12 @@ public class Logger {
     }
 
     /**
-     * Logs the given SPLStandardMessage package.
+     * Logs the given SPLTeamMessage package.
      *
      * @param p package
      */
-    public void log(final SPLStandardMessagePackage p) {
-        log(SPLStandardMessagePackage.class, p);
+    public void log(final SPLTeamMessagePackage p) {
+        log(SPLTeamMessagePackage.class, p);
     }
 
     /**

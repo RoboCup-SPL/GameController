@@ -1,9 +1,9 @@
 package teamcomm.net;
 
 import common.Log;
-import common.net.SPLStandardMessagePackage;
-import common.net.SPLStandardMessageReceiver;
-import data.SPLStandardMessage;
+import common.net.SPLTeamMessagePackage;
+import common.net.SPLTeamMessageReceiver;
+import data.SPLTeamMessage;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
@@ -20,24 +20,24 @@ import teamcomm.net.logging.LogReplayer;
  *
  * @author Felix Thielke
  */
-public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
+public class SPLTeamMessageReceiverTCM extends SPLTeamMessageReceiver {
 
-    private static SPLStandardMessageReceiverTCM instance;
+    private static SPLTeamMessageReceiverTCM instance;
 
-    public SPLStandardMessageReceiverTCM(final boolean multicast) throws IOException {
+    public SPLTeamMessageReceiverTCM(final boolean multicast) throws IOException {
         super(multicast, null);
     }
 
     /**
-     * Creates the only instance of the SPLStandardMessageReceiver.
+     * Creates the only instance of the SPLTeamMessageReceiver.
      * @param multicast Should it also listen to multicast packets? This also means
      *                  that ip adresses are computed based on the player number.
      *
      * @return instance
      */
-    public static SPLStandardMessageReceiverTCM createInstance(final boolean multicast) {
+    public static SPLTeamMessageReceiverTCM createInstance(final boolean multicast) {
         try {
-            instance = new SPLStandardMessageReceiverTCM(multicast);
+            instance = new SPLTeamMessageReceiverTCM(multicast);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null,
                     "Error while setting up packet listeners: " + ex.getMessage(),
@@ -49,11 +49,11 @@ public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
     }
 
     /**
-     * Returns the only instance of the SPLStandardMessageReceiver.
+     * Returns the only instance of the SPLTeamMessageReceiver.
      *
      * @return instance
      */
-    public static SPLStandardMessageReceiverTCM getInstance() {
+    public static SPLTeamMessageReceiverTCM getInstance() {
         return instance;
     }
 
@@ -63,29 +63,25 @@ public class SPLStandardMessageReceiverTCM extends SPLStandardMessageReceiver {
     }
 
     @Override
-    protected void handleMessage(final SPLStandardMessagePackage p) {
-        final SPLStandardMessage message;
-        final Class<? extends SPLStandardMessage> c = PluginLoader.getInstance().getMessageClass(p.team);
+    protected void handleMessage(final SPLTeamMessagePackage p) {
+        final SPLTeamMessage message;
+        final Class<? extends SPLTeamMessage> c = PluginLoader.getInstance().getMessageClass(p.team);
 
         try {
             message = c.getDeclaredConstructor().newInstance();
             message.fromByteArray(ByteBuffer.wrap(p.message));
-            if (message.teamNumValid && message.teamNum != p.team) {
-                message.teamNumValid = false;
-                message.valid = false;
-            }
 
-            SPLStandardMessage m = message;
+            SPLTeamMessage m = message;
             if (message instanceof AdvancedMessage) {
                 if (message.valid) {
                     try {
                         ((AdvancedMessage) message).init();
                     } catch (final Throwable e) {
-                        m = SPLStandardMessage.createFrom(message);
+                        m = SPLTeamMessage.createFrom(message);
                         Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom message class " + c.getSimpleName() + ": " + e.getMessage());
                     }
                 } else {
-                    m = SPLStandardMessage.createFrom(message);
+                    m = SPLTeamMessage.createFrom(message);
                 }
             }
 

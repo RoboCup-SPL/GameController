@@ -2,10 +2,10 @@ package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
 import data.GameControlData;
+import data.GameControlReturnData;
 import data.PlayerInfo;
 import data.Rules;
 import data.SPL;
-import data.SPLStandardMessage;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
@@ -53,7 +53,7 @@ public class Player extends PerPlayer {
 
     @Override
     public void draw(final GL2 gl, final RobotState player, final Camera camera) {
-        final SPLStandardMessage msg = player.getLastMessage();
+        final GameControlReturnData msg = player.getLastGCRDMessage();
         if (msg != null && msg.poseValid) {
             gl.glPushMatrix();
 

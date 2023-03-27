@@ -6,7 +6,7 @@ import common.net.logging.Logger;
 import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiverGC;
 import controller.net.Sender;
-import controller.net.SPLStandardMessageReceiverGC;
+import controller.net.SPLTeamMessageReceiverGC;
 import controller.net.TrueDataSender;
 import controller.ui.GUI;
 import controller.ui.KeyboardListener;
@@ -365,13 +365,13 @@ public class GameController {
             System.exit(-1);
         }
 
-        //SPLStandardMessageReceiver (EventHandler.getInstance().data must have been set for this)
-        SPLStandardMessageReceiverGC splStandardMessageReceiver = null;
+        //SPLTeamMessageReceiver (EventHandler.getInstance().data must have been set for this)
+        SPLTeamMessageReceiverGC splTeamMessageReceiver = null;
         try {
-            splStandardMessageReceiver = new SPLStandardMessageReceiverGC(multicast);
+            splTeamMessageReceiver = new SPLTeamMessageReceiverGC(multicast);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
-                    "Error while setting up SPLStandardMessageReceiver.",
+                    "Error while setting up SPLTeamMessageReceiver.",
                     "Error on configured port",
                     JOptionPane.ERROR_MESSAGE);
             Log.error("fatal: " + e.getMessage());
@@ -406,8 +406,8 @@ public class GameController {
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);
 
-        // SPLStandardMessageReceiver may only be started after EventHandler.getInstance().data has been set and ActionBoard has been created because it can trigger actions.
-        splStandardMessageReceiver.start();
+        // SPLTeamMessageReceiver may only be started after EventHandler.getInstance().data has been set and ActionBoard has been created because it can trigger actions.
+        splTeamMessageReceiver.start();
 
         //input dispose
         input.dispose();
@@ -429,7 +429,7 @@ public class GameController {
         sender.interrupt();
         trueDataSender.interrupt();
         gameControlReturnDataReceiver.interrupt();
-        splStandardMessageReceiver.interrupt();
+        splTeamMessageReceiver.interrupt();
         Thread.interrupted(); // clean interrupted status
         try {
             sender.join();
@@ -442,9 +442,9 @@ public class GameController {
 
         gui.dispose();
 
-        // Try to join SPLStandardMessageReceiver
+        // Try to join SPLTeamMessageReceiver
         try {
-            splStandardMessageReceiver.join(1000);
+            splTeamMessageReceiver.join(1000);
         } catch (InterruptedException ex) {
             Log.error("Waiting for threads to shutdown was interrupted.");
         }

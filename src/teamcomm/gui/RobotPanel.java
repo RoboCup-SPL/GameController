@@ -179,9 +179,9 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if (robot.getPlayerNumber() == null || (robot.getLastMessage() != null && !robot.getLastMessage().playerNumValid)) {
+                if (robot.getPlayerNumber() == null || (robot.getLastGCRDMessage() != null && !robot.getLastGCRDMessage().playerNumValid)) {
                     ((JLabel) foregroundPanel.getComponent(0)).setForeground(Color.red);
-                    ((JLabel) foregroundPanel.getComponent(0)).setText("Player no: " + (robot.getLastMessage() != null ? robot.getLastMessage().playerNum : "invalid"));
+                    ((JLabel) foregroundPanel.getComponent(0)).setText("Player no: " + (robot.getLastGCRDMessage() != null ? robot.getLastGCRDMessage().playerNum : "unknown"));
                 } else {
                     ((JLabel) foregroundPanel.getComponent(0)).setForeground(defaultColor);
                     ((JLabel) foregroundPanel.getComponent(0)).setText("Player no: " + robot.getPlayerNumber());
@@ -189,7 +189,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
                 ((JLabel) foregroundPanel.getComponent(1)).setText("Messages: " + robot.getTeamMessageCount() + " / " + robot.getGCRDMessageCount());
 
                 ((JLabel) foregroundPanel.getComponent(2)).setText("Per second: " + df.format(robot.getTeamMessagesPerSecond()) + " / " + df.format(robot.getGCRDMessagesPerSecond()));
-                if (robot.getLastMessage() == null || !robot.getLastMessage().valid) {
+                if ((robot.getLastTeamMessage() != null && !robot.getLastTeamMessage().valid) || (robot.getLastGCRDMessage() != null && !robot.getLastGCRDMessage().valid)) {
                     ((JLabel) foregroundPanel.getComponent(3)).setForeground(Color.red);
                 } else {
                     ((JLabel) foregroundPanel.getComponent(3)).setForeground(defaultColor);
