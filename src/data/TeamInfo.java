@@ -146,7 +146,7 @@ public class TeamInfo implements Serializable {
         out += "              score: " + score + "\n";
         out += "        penaltyShot: " + penaltyShot + "\n";
         out += "        singleShots: " + Integer.toBinaryString(singleShots) + "\n";
-        out += "      messageBudget: " + Integer.toBinaryString(messageBudget) + "\n";
+        out += "      messageBudget: " + messageBudget + "\n";
 
         for (int i = 0; i < player.length; i++) {
             out += "Player #" + (i + 1) + "\n" + player[i].toString();
