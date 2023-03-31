@@ -113,7 +113,7 @@ public class GameControlReturnData implements Serializable {
                     versionValid = true;
 
                     playerNum = buffer.get();
-                    playerNumValid = playerNum >= 1 && playerNum <= 7;
+                    playerNumValid = playerNum >= 1 && playerNum <= TeamInfo.MAX_NUM_PLAYERS;
 
                     teamNum = buffer.get();
                     teamNumValid = teamNum > 0;
