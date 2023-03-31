@@ -27,8 +27,8 @@ public class PlayerTarget extends PerPlayerWithTeam {
             if (rs.getPenalty() == PlayerInfo.PENALTY_NONE) {
                 final float walkingToX = msg.theBehaviorStatus.walkingTo.x / 1000.f;
                 final float walkingToY = msg.theBehaviorStatus.walkingTo.y / 1000.f;
-                final float shootingToX = msg.theBehaviorStatus.shootingTo.x / 1000.f;
-                final float shootingToY = msg.theBehaviorStatus.shootingTo.y / 1000.f;
+                final float shootingToX = msg.theBehaviorStatus.shootingTo.isEmpty() ? 0 : msg.theBehaviorStatus.shootingTo.get(0).x / 1000.f;
+                final float shootingToY = msg.theBehaviorStatus.shootingTo.isEmpty() ? 0 : msg.theBehaviorStatus.shootingTo.get(0).y / 1000.f;
 
                 gl.glColor3f(0, 0, 1);
                 gl.glNormal3f(0, 0, 1);
