@@ -218,6 +218,7 @@ public class GameController {
             if (networkInterface == null || !networkInterface.isUp()) {
                 Enumeration<NetworkInterface> nifs = NetworkInterface.getNetworkInterfaces();
                 if (interfaceName.isEmpty()) {
+                    outer:
                     while (nifs.hasMoreElements()) {
                         NetworkInterface nif = nifs.nextElement();
                         if (!nif.isUp() || nif.isLoopback()) {
@@ -230,6 +231,9 @@ public class GameController {
                             } else if (ifAddress.getAddress() instanceof Inet4Address) {
                                 networkInterface = nif;
                                 localAddress = ifAddress;
+                                if (System.getProperty("os.name").contains("Windows")){
+                                    break outer;
+                                }
                             }
                         }
                     }
