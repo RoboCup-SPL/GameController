@@ -156,7 +156,7 @@
           <element id="dir-copy" path="$PROJECT_DIR$/resources/scene" />
         </element>
         <element id="directory" name=".">
-          <element id="LICENSE" path="$PROJECT_DIR$/LICENSE"/>
+          <element id="file-copy" path="$PROJECT_DIR$/LICENSE"/>
           <element id="file-copy" path="$PROJECT_DIR$/README.md" />
           <element id="file-copy" path="$PROJECT_DIR$/TCM.md" />
         </element>
