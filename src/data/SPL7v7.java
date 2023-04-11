@@ -1,13 +1,11 @@
 package data;
 
-import java.awt.Color;
-
 /**
  * This class sets attributes given by the spl rules for 7 players.
  *
  * @author Arne Hasselbring
  */
-public class SPL7v7 extends Rules
+public class SPL7v7 extends SPL
 {
     SPL7v7()
     {
