@@ -97,7 +97,7 @@ public class SPLTeamMessageReceiver extends Thread {
                                 buffer.get(data, 0, data.length);
                                 if (multicast) {
                                     // This works only for teams who have the player number in the second byte of the team message.
-                                    queue.add(new SPLTeamMessagePackage("10.0." + team + "." + buffer.get(1), team, data));
+                                    queue.add(new SPLTeamMessagePackage("10.0." + team + "." + (buffer.get(1) & 15), team, data));
                                 } else {
                                     queue.add(new SPLTeamMessagePackage(address.getAddress().getHostAddress(), team, data));
                                 }
