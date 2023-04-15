@@ -2,6 +2,7 @@ package bhuman.drawings;
 
 import bhuman.message.BHumanMessage;
 import com.jogamp.opengl.GL2;
+import data.GameControlReturnData;
 import data.PlayerInfo;
 import data.Rules;
 import data.SPL;
@@ -25,18 +26,21 @@ public class WhistleHeard extends PerPlayer {
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
         if (rs.getLastTeamMessage() != null
                 && rs.getLastTeamMessage().valid
-                && rs.getLastTeamMessage() instanceof BHumanMessage) {
-            final BHumanMessage msg = (BHumanMessage) rs.getLastTeamMessage();
-            if (!msg.theWhistle.recentWhistle.isEmpty()
-                    && msg.theWhistle.listening
-                    && msg.theWhistle.recentWhistle.get(0).confidenceOfLastWhistleDetection > 0
-                    && msg.theFrameInfo.time.getTimeSince(msg.theWhistle.recentWhistle.get(0).lastTimeWhistleDetected.timestamp) <= 1100) {
+                && rs.getLastTeamMessage() instanceof BHumanMessage
+                && rs.getLastGCRDMessage() != null
+                && rs.getLastGCRDMessage().valid) {
+            final BHumanMessage bhMsg = (BHumanMessage) rs.getLastTeamMessage();
+            final GameControlReturnData gcMsg = rs.getLastGCRDMessage();
+            if (!bhMsg.theWhistle.recentWhistle.isEmpty()
+                    && bhMsg.theWhistle.listening
+                    && bhMsg.theWhistle.recentWhistle.get(0).confidenceOfLastWhistleDetection > 0
+                    && bhMsg.theFrameInfo.time.getTimeSince(bhMsg.theWhistle.recentWhistle.get(0).lastTimeWhistleDetected.timestamp) <= 1100) {
                 gl.glPushMatrix();
 
                 if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
-                    gl.glTranslatef(-msg.playerNumber, -3.5f, 1.f);
+                    gl.glTranslatef(-bhMsg.playerNumber, -3.5f, 1.f);
                 } else {
-                    gl.glTranslatef(msg.theRobotPose.translation.x / 1000.f, msg.theRobotPose.translation.y / 1000.f, 1.f);
+                    gl.glTranslatef(gcMsg.pose[0] / 1000.f, gcMsg.pose[1] / 1000.f, 1.f);
                 }
 
                 camera.turnTowardsCamera(gl);
