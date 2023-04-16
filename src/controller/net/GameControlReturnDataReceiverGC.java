@@ -13,8 +13,9 @@ public class GameControlReturnDataReceiverGC extends GameControlReturnDataReceiv
 
     private TrueDataSender trueDataSender;
 
-    public GameControlReturnDataReceiverGC(final InetAddress address, final TrueDataSender trueDataSender) throws SocketException, UnknownHostException {
-        super(Rules.league.dropBroadcastMessages ? address : null);
+    public GameControlReturnDataReceiverGC(final InetAddress address, final TrueDataSender trueDataSender,
+                                           final boolean generateIP) throws SocketException, UnknownHostException {
+        super(Rules.league.dropBroadcastMessages ? address : null, generateIP);
         this.trueDataSender = trueDataSender;
     }
 

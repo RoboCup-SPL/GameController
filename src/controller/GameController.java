@@ -353,7 +353,7 @@ public class GameController {
             EventHandler.getInstance().data = data;
 
             //receiver
-            gameControlReturnDataReceiver = new GameControlReturnDataReceiverGC(localAddress.getAddress(), trueDataSender);
+            gameControlReturnDataReceiver = new GameControlReturnDataReceiverGC(localAddress.getAddress(), trueDataSender, multicast);
             gameControlReturnDataReceiver.start();
 
         } catch (Exception e) {

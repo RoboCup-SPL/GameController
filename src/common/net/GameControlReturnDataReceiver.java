@@ -73,11 +73,14 @@ public class GameControlReturnDataReceiver extends Thread {
                     datagramSocket.receive(packet);
 
                     if (processPackets()) {
-                        if (!forwarded) {
-                            queue.add(new GameControlReturnDataPackage(packet.getAddress().getHostAddress(), buffer));
-                        } else {
+                        if (forwarded) {
                             final String originalHost = InetAddress.getByAddress(Arrays.copyOfRange(buffer, 0, 4)).getHostAddress();
                             queue.add(new GameControlReturnDataPackage(originalHost, Arrays.copyOfRange(buffer, 4, buffer.length)));
+                        } else if (generateIP) {
+                            queue.add(new GameControlReturnDataPackage("10.0." + (int) buffer[6] + "." + (int) (buffer[5] & 15),
+                                    buffer));
+                        } else {
+                            queue.add(new GameControlReturnDataPackage(packet.getAddress().getHostAddress(), buffer));
                         }
                     }
                 } catch (SocketTimeoutException e) { // ignore, because we set a timeout
@@ -92,19 +95,22 @@ public class GameControlReturnDataReceiver extends Thread {
 
     private final ReceiverThread receiver;
     private final LinkedBlockingQueue<GameControlReturnDataPackage> queue = new LinkedBlockingQueue<>();
+    private final boolean generateIP;
 
     /**
      * Creates a new Receiver.
      *
      * @param address the InetAddress to listen on. If null, listens on any address.
+     * @param generateIP Generate a sender IP based on data in return packet.
      * @throws SocketException if an error occurs while creating the socket
      * @throws UnknownHostException if (internally chosen) inet-address is not
      * valid or no network device is bound to an address matching the regex
      * (ignoring loopback interfaces)
      */
-    public GameControlReturnDataReceiver(final InetAddress address) throws SocketException, UnknownHostException {
+    public GameControlReturnDataReceiver(final InetAddress address, boolean generateIP) throws SocketException, UnknownHostException {
         // Create receiver thread
         receiver = new ReceiverThread(address, false);
+        this.generateIP = generateIP;
     }
 
     /**
@@ -118,6 +124,7 @@ public class GameControlReturnDataReceiver extends Thread {
     public GameControlReturnDataReceiver() throws SocketException, UnknownHostException {
         // Create receiver thread
         receiver = new ReceiverThread(null, true);
+        generateIP = false;
     }
 
     protected boolean processPackets() {
