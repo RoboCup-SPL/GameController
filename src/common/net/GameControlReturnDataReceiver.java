@@ -77,7 +77,7 @@ public class GameControlReturnDataReceiver extends Thread {
                             final String originalHost = InetAddress.getByAddress(Arrays.copyOfRange(buffer, 0, 4)).getHostAddress();
                             queue.add(new GameControlReturnDataPackage(originalHost, Arrays.copyOfRange(buffer, 4, buffer.length)));
                         } else if (generateIP) {
-                            queue.add(new GameControlReturnDataPackage("10.0." + (int) buffer[6] + "." + (int) (buffer[5] & 15),
+                            queue.add(new GameControlReturnDataPackage("10.0." + (int) buffer[6] + "." + (int) buffer[5],
                                     buffer));
                         } else {
                             queue.add(new GameControlReturnDataPackage(packet.getAddress().getHostAddress(), buffer));
