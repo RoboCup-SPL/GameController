@@ -33,6 +33,7 @@ public class BallVelocity extends PerPlayer {
                 gl.glTranslatef(gcMsg.pose[0] / 1000.0f, gcMsg.pose[1] / 1000.f, 0);
                 gl.glRotatef((float) Math.toDegrees(gcMsg.pose[2]), 0, 0, 1);
                 gl.glTranslatef(gcMsg.ball[0] / 1000.0f, gcMsg.ball[1] / 1000.f, 0);
+                gl.glRotatef((float) Math.toDegrees(bhMsg.theRobotPose.rotation.radians - gcMsg.pose[2]), 0, 0, 1);
 
                 gl.glBegin(GL2.GL_LINES);
                 gl.glColor3f(1, 0, 0);

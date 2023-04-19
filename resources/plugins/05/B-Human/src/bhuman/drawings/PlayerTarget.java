@@ -28,10 +28,18 @@ public class PlayerTarget extends PerPlayerWithTeam {
             final BHumanMessage bhMsg = (BHumanMessage) rs.getLastTeamMessage();
             final GameControlReturnData gcMsg = rs.getLastGCRDMessage();
             if (rs.getPenalty() == PlayerInfo.PENALTY_NONE) {
-                final float walkingToX = bhMsg.theBehaviorStatus.walkingTo.x / 1000.f;
-                final float walkingToY = bhMsg.theBehaviorStatus.walkingTo.y / 1000.f;
-                final float shootingToX = bhMsg.theBehaviorStatus.shootingTo.isEmpty() ? 0 : bhMsg.theBehaviorStatus.shootingTo.get(0).x / 1000.f;
-                final float shootingToY = bhMsg.theBehaviorStatus.shootingTo.isEmpty() ? 0 : bhMsg.theBehaviorStatus.shootingTo.get(0).y / 1000.f;
+                final float bhWalkingToX = bhMsg.theBehaviorStatus.walkingTo.x / 1000.f;
+                final float bhWalkingToY = bhMsg.theBehaviorStatus.walkingTo.y / 1000.f;
+                final float bhSin = (float) Math.sin(bhMsg.theRobotPose.rotation.radians);
+                final float bhCos = (float) Math.cos(bhMsg.theRobotPose.rotation.radians);
+                final float tmpWalkingToX = bhWalkingToX * bhCos - bhWalkingToY * bhSin
+                        + (bhMsg.theRobotPose.translation.x - gcMsg.pose[0]) / 1000.f;
+                final float tmpWalkingToY = bhWalkingToX * bhSin + bhWalkingToY * bhCos
+                        + (bhMsg.theRobotPose.translation.y - gcMsg.pose[1]) / 1000.f;
+                final float gcSin = (float) Math.sin(-gcMsg.pose[2]);
+                final float gcCos = (float) Math.cos(-gcMsg.pose[2]);
+                final float gcWalkingToX = tmpWalkingToX * gcCos - tmpWalkingToY * gcSin;
+                final float gcWalkingToY = tmpWalkingToX * gcSin + tmpWalkingToY * gcCos;
 
                 gl.glColor3f(0, 0, 1);
                 gl.glNormal3f(0, 0, 1);
@@ -42,11 +50,11 @@ public class PlayerTarget extends PerPlayerWithTeam {
 
                 gl.glBegin(GL2.GL_LINES);
                 gl.glVertex2f(0, 0);
-                gl.glVertex2f(walkingToX, walkingToY);
+                gl.glVertex2f(gcWalkingToX, gcWalkingToY);
                 gl.glEnd();
 
                 gl.glPushMatrix();
-                gl.glTranslatef(walkingToX, walkingToY, 0);
+                gl.glTranslatef(gcWalkingToX, gcWalkingToY, 0);
                 gl.glRotatef(-(float) Math.toDegrees(gcMsg.pose[2]), 0, 0, 1);
                 gl.glBegin(GL2.GL_LINES);
                 gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
@@ -56,23 +64,34 @@ public class PlayerTarget extends PerPlayerWithTeam {
                 gl.glEnd();
                 gl.glPopMatrix();
 
-                gl.glColor3f(1, 0, 0);
+                if (!bhMsg.theBehaviorStatus.shootingTo.isEmpty()) {
+                    final float bhShootingToX = bhMsg.theBehaviorStatus.shootingTo.get(0).x / 1000.f;
+                    final float bhShootingToY = bhMsg.theBehaviorStatus.shootingTo.get(0).y / 1000.f;
+                    final float tmpShootingToX = bhShootingToX * bhCos - bhShootingToY * bhSin
+                            + (bhMsg.theRobotPose.translation.x - gcMsg.pose[0]) / 1000.f;
+                    final float tmpShootingToY = bhShootingToX * bhSin + bhShootingToY * bhCos
+                            + (bhMsg.theRobotPose.translation.y - gcMsg.pose[1]) / 1000.f;
+                    final float gcShootingToX = tmpShootingToX * gcCos - tmpShootingToY * gcSin;
+                    final float gcShootingToY = tmpShootingToX * gcSin + tmpShootingToY * gcCos;
 
-                gl.glBegin(GL2.GL_LINES);
-                gl.glVertex2f(0, 0);
-                gl.glVertex2f(shootingToX, shootingToY);
-                gl.glEnd();
+                    gl.glColor3f(1, 0, 0);
 
-                gl.glPushMatrix();
-                gl.glTranslatef(shootingToX, shootingToY, 0);
-                gl.glRotatef(-(float) Math.toDegrees(gcMsg.pose[2]), 0, 0, 1);
-                gl.glBegin(GL2.GL_LINES);
-                gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
-                gl.glVertex2f(CROSS_RADIUS, CROSS_RADIUS);
-                gl.glVertex2f(-CROSS_RADIUS, CROSS_RADIUS);
-                gl.glVertex2f(CROSS_RADIUS, -CROSS_RADIUS);
-                gl.glEnd();
-                gl.glPopMatrix();
+                    gl.glBegin(GL2.GL_LINES);
+                    gl.glVertex2f(0, 0);
+                    gl.glVertex2f(gcShootingToX, gcShootingToY);
+                    gl.glEnd();
+
+                    gl.glPushMatrix();
+                    gl.glTranslatef(gcShootingToX, gcShootingToY, 0);
+                    gl.glRotatef(-(float) Math.toDegrees(gcMsg.pose[2]), 0, 0, 1);
+                    gl.glBegin(GL2.GL_LINES);
+                    gl.glVertex2f(-CROSS_RADIUS, -CROSS_RADIUS);
+                    gl.glVertex2f(CROSS_RADIUS, CROSS_RADIUS);
+                    gl.glVertex2f(-CROSS_RADIUS, CROSS_RADIUS);
+                    gl.glVertex2f(CROSS_RADIUS, -CROSS_RADIUS);
+                    gl.glEnd();
+                    gl.glPopMatrix();
+                }
 
                 gl.glPopMatrix();
 
