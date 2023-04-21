@@ -145,6 +145,9 @@ public class EventRecorder {
                         case GameControlData.SET_PLAY_KICK_IN:
                             setPlayString = "Kick In Complete";
                             break;
+                        case GameControlData.SET_PLAY_PENALTY_KICK:
+                            setPlayString = "Penalty Kick Complete";
+                            break;
                         default:
                             setPlayString = "";
                             break;
@@ -173,6 +176,9 @@ public class EventRecorder {
                             break;
                         case GameControlData.SET_PLAY_KICK_IN:
                             setPlayString = "Kick In for team: ";
+                            break;
+                        case GameControlData.SET_PLAY_PENALTY_KICK:
+                            setPlayString = "Penalty Kick for team: ";
                             break;
                         default:
                             setPlayString = "";
