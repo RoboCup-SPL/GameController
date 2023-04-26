@@ -31,7 +31,7 @@ public class PlayerNumber extends PerPlayer {
             }
 
             camera.turnTowardsCamera(gl);
-            Text.drawText("" + msg.playerNum, 0, 0, 0.3f, Rules.league.teamColor[GameState.getInstance().getTeamColor(player.getTeamNumber())].getRGBColorComponents(null));
+            Text.drawText("" + msg.playerNum, 0, 0, 0.3f, Rules.league.teamColor[GameState.getInstance().getTeamColor(player.getTeamNumber(), player.getPlayerNumber())].getRGBColorComponents(null));
 
             gl.glPopMatrix();
         }

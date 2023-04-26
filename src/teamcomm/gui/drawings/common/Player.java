@@ -70,7 +70,7 @@ public class Player extends PerPlayer {
                 }
             }
 
-            gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, getModelName(GameState.getInstance().getTeamColor(player.getTeamNumber()))));
+            gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, getModelName(GameState.getInstance().getTeamColor(player.getTeamNumber(), player.getPlayerNumber()))));
 
             gl.glPopMatrix();
         }

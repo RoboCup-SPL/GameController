@@ -60,7 +60,6 @@ public class GameState implements GameControlDataEventListener {
     private GameControlData lastGameControlData;
 
     private final int[] teamNumbers = new int[]{0, 0};
-    private final Map<Integer, Integer> teamColors = new HashMap<>();
 
     private boolean mirrored = false;
 
@@ -210,9 +209,6 @@ public class GameState implements GameControlDataEventListener {
                 }
             }
         }
-
-        teamColors.put((int) e.data.team[0].teamNumber, (int) e.data.team[0].fieldPlayerColor);
-        teamColors.put((int) e.data.team[1].teamNumber, (int) e.data.team[1].fieldPlayerColor);
 
         // Update penalties
         for (final TeamInfo team : e.data.team) {
@@ -492,12 +488,12 @@ public class GameState implements GameControlDataEventListener {
      * by the game controller or given by the GameController configuration.
      *
      * @param teamNumber number of the team
+     * @param playerNumber number of the player
      * @return the team color
      * @see TeamInfo#teamColor
      */
-    public int getTeamColor(final int teamNumber) {
-        Integer color = teamColors.get(teamNumber);
-        if (color == null) {
+    public int getTeamColor(final int teamNumber, final int playerNumber) {
+        if (lastGameControlData == null || (lastGameControlData.teams[0].teamNumber != teamNumber && lastGameControlData.teams[1].teamNumber)) {
             String[] colorStrings = null;
             try {
                 colorStrings = Teams.getColors(teamNumber);
@@ -531,8 +527,8 @@ public class GameState implements GameControlDataEventListener {
                 return GameControlData.TEAM_WHITE;
             }
         }
-
-        return color;
+        final int index = lastGameControlData.teams[0].teamNumber == teamNumber ? 0 : 1;
+        return lastGameControlData.teams[index].goalkeeper == playerNumber ? lastGameControlData.teams[index].goalkeeperColor : lastGameControlData.teams[index].fieldPlayerColor;
     }
 
     /**
