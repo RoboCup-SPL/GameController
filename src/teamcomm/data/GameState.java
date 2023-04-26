@@ -493,7 +493,7 @@ public class GameState implements GameControlDataEventListener {
      * @see TeamInfo#teamColor
      */
     public int getTeamColor(final int teamNumber, final int playerNumber) {
-        if (lastGameControlData == null || (lastGameControlData.teams[0].teamNumber != teamNumber && lastGameControlData.teams[1].teamNumber)) {
+        if (lastGameControlData == null || (lastGameControlData.team[0].teamNumber != teamNumber && lastGameControlData.team[1].teamNumber != teamNumber)) {
             String[] colorStrings = null;
             try {
                 colorStrings = Teams.getColors(teamNumber);
@@ -527,8 +527,8 @@ public class GameState implements GameControlDataEventListener {
                 return GameControlData.TEAM_WHITE;
             }
         }
-        final int index = lastGameControlData.teams[0].teamNumber == teamNumber ? 0 : 1;
-        return lastGameControlData.teams[index].goalkeeper == playerNumber ? lastGameControlData.teams[index].goalkeeperColor : lastGameControlData.teams[index].fieldPlayerColor;
+        final int index = lastGameControlData.team[0].teamNumber == teamNumber ? 0 : 1;
+        return lastGameControlData.team[index].goalkeeper == playerNumber ? lastGameControlData.team[index].goalkeeperColor : lastGameControlData.team[index].fieldPlayerColor;
     }
 
     /**
