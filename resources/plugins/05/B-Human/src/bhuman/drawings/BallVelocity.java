@@ -16,7 +16,7 @@ import teamcomm.gui.drawings.PerPlayer;
 public class BallVelocity extends PerPlayer {
 
     private static final float BALL_RADIUS = 0.0325f;
-    private static final long MAX_BALLAGE = 5000;
+    private static final float MAX_BALLAGE = 5.f;
 
     @Override
     public void draw(final GL2 gl, final RobotState rs, final Camera camera) {
@@ -27,7 +27,7 @@ public class BallVelocity extends PerPlayer {
                 && rs.getLastGCRDMessage().valid) {
             final BHumanMessage bhMsg = (BHumanMessage) rs.getLastTeamMessage();
             final GameControlReturnData gcMsg = rs.getLastGCRDMessage();
-            if (bhMsg.theFrameInfo.time.getTimeSince(bhMsg.theBallModel.timeWhenLastSeen.timestamp) < MAX_BALLAGE && rs.getPenalty() == PlayerInfo.PENALTY_NONE) {
+            if (gcMsg.ballAge != -1.f && gcMsg.ballAge < MAX_BALLAGE && rs.getPenalty() == PlayerInfo.PENALTY_NONE) {
                 gl.glPushMatrix();
 
                 gl.glTranslatef(gcMsg.pose[0] / 1000.0f, gcMsg.pose[1] / 1000.f, 0);
