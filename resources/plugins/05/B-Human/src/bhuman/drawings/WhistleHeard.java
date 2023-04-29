@@ -33,27 +33,30 @@ public class WhistleHeard extends PerPlayer {
             final GameControlReturnData gcMsg = rs.getLastGCRDMessage();
             if (!bhMsg.theWhistle.recentWhistle.isEmpty()
                     && bhMsg.theWhistle.listening
-                    && bhMsg.theWhistle.recentWhistle.get(0).confidenceOfLastWhistleDetection > 0
-                    && bhMsg.theFrameInfo.time.getTimeSince(bhMsg.theWhistle.recentWhistle.get(0).lastTimeWhistleDetected.timestamp) <= 1100) {
-                gl.glPushMatrix();
+                    && bhMsg.theWhistle.recentWhistle.get(0).confidenceOfLastWhistleDetection > 0) {
+                final long timeWhenWhistled = rs.getLastTeamMessageTimestamp() -
+                        bhMsg.theFrameInfo.time.getTimeSince(bhMsg.theWhistle.recentWhistle.get(0).lastTimeWhistleDetected.timestamp);
+                if (Math.abs(System.currentTimeMillis() - timeWhenWhistled) <= 2000) {
+                    gl.glPushMatrix();
 
-                if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
-                    gl.glTranslatef(-bhMsg.playerNumber, -3.5f, 1.f);
-                } else {
-                    gl.glTranslatef(gcMsg.pose[0] / 1000.f, gcMsg.pose[1] / 1000.f, 1.f);
-                }
+                    if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
+                        gl.glTranslatef(-bhMsg.playerNumber, -3.5f, 1.f);
+                    } else {
+                        gl.glTranslatef(gcMsg.pose[0] / 1000.f, gcMsg.pose[1] / 1000.f, 1.f);
+                    }
 
-                camera.turnTowardsCamera(gl);
-                try {
-                    final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/whistle.png").getAbsoluteFile();
-                    Image.drawImage(gl, TextureLoader.getInstance().loadTexture(gl, f), 0, 0, 0.2f);
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null,
-                            "Error loading texture: " + ex.getMessage(),
-                            ex.getClass().getSimpleName(),
-                            JOptionPane.ERROR_MESSAGE);
+                    camera.turnTowardsCamera(gl);
+                    try {
+                        final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber())) + "/resources/whistle.png").getAbsoluteFile();
+                        Image.drawImage(gl, TextureLoader.getInstance().loadTexture(gl, f), 0, 0, 0.2f);
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error loading texture: " + ex.getMessage(),
+                                ex.getClass().getSimpleName(),
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                    gl.glPopMatrix();
                 }
-                gl.glPopMatrix();
             }
         }
     }

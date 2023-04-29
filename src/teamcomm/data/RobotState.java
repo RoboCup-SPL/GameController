@@ -222,6 +222,15 @@ public class RobotState {
     }
 
     /**
+     * Returns the time when the last team message was received.
+     *
+     * @return The time in ms.
+     */
+    public long getLastTeamMessageTimestamp() {
+        return lastTeamMessageTimestamp;
+    }
+
+    /**
      * Returns the ratio of illegal team messages to the total count of team messages.
      *
      * @return ratio
