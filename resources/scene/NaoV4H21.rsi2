@@ -152,8 +152,8 @@
   <Surface name="nao-gray" diffuseColor="rgb(75%, 75%, 75%)" ambientColor="rgb(30%, 30%, 30%)" specularColor="rgb(40%, 40%, 40%)" shininess="20"/>
 
   <Surface name="nao-black" diffuseColor="rgb(0%, 0%, 0%)" ambientColor="rgb(0%, 0%, 0%)"/>
-  <Surface name="nao-blue" diffuseColor="rgb(0%, 100%, 100%)" ambientColor="rgb(12%, 12%, 20%)"/>
-  <Surface name="nao-red" diffuseColor="rgb(100%, 0%, 100%)" ambientColor="rgb(20%, 12%, 12%)"/>
+  <Surface name="nao-blue" diffuseColor="rgb(0%, 50%, 100%)" ambientColor="rgb(12%, 12%, 20%)"/>
+  <Surface name="nao-red" diffuseColor="rgb(100%, 0%, 0%)" ambientColor="rgb(20%, 12%, 12%)"/>
   <Surface name="nao-yellow" diffuseColor="rgb(100%, 100%, 0%)" ambientColor="rgb(20%, 12%, 12%)"/>
   <Surface name="nao-white" diffuseColor="rgb(100%, 100%, 100%)" ambientColor="rgb(40%, 40%, 40%)"/>
   <Surface name="nao-green" diffuseColor="rgb(0%, 50%, 0%)" ambientColor="rgb(12%, 20%, 12%)"/>
