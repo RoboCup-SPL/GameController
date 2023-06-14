@@ -1,8 +1,13 @@
-# RoboCup SPL GameController
+# RoboCup SPL GameController Support Tools
 
-This is the GameController developed by team B-Human for the RoboCup SPL. Please note that the Humanoid League currently uses a
+This is the GameController developed by team B-Human for the RoboCup SPL. It
+was used in the RoboCup SPL from 2013 to 2022. Since 2023,
+[a new version](https://github.com/RoboCup-SPL/GameController3) is being used.
+This repository is still useful because it contains the Team Communication
+Monitor and Game State Visualizer.
+
+Please note that the Humanoid League currently uses a
 [fork](https://github.com/RoboCup-Humanoid-TC/GameController).
-
 
 The sources mentioned in some sections of this document are available at
 [https://github.com/RoboCup-SPL/GameController](https://github.com/RoboCup-SPL/GameController).
