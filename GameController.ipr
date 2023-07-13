@@ -69,23 +69,6 @@
         </element>
       </root>
     </artifact>
-    <artifact type="jar" build-on-make="true" name="LogAnalyzer:jar">
-      <output-path>$PROJECT_DIR$/bin</output-path>
-      <root id="archive" name="LogAnalyzer.jar">
-        <element id="directory" name="common">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
-        </element>
-        <element id="directory" name="data">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
-        </element>
-        <element id="directory" name="analyzer">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/analyzer" />
-        </element>
-        <element id="directory" name="META-INF">
-          <element id="file-copy" path="$PROJECT_DIR$/src/analyzer/MANIFEST.MF" />
-        </element>
-      </root>
-    </artifact>
     <artifact type="jar" build-on-make="true" name="LogExporter:jar">
       <output-path>$PROJECT_DIR$/bin</output-path>
       <root id="archive" name="LogExporter.jar">

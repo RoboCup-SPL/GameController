@@ -40,12 +40,6 @@
                 <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
             </manifest>
         </jar>
-        <jar destfile="${jar.dir}/LogAnalyzer.jar" basedir="${classes.dir}" includes="${common_classes} analyzer/">
-            <manifest>
-                <attribute name="Main-Class" value="analyzer.LogAnalyzer"/>
-                <attribute name="Author" value="Michel Bartsch, Thomas Roefer" />
-            </manifest>
-        </jar>
         <jar destfile="${jar.dir}/LogExporter.jar" basedir="${classes.dir}" includes="${common_classes} exporter/">
             <manifest>
                 <attribute name="Main-Class" value="exporter.LogExporter"/>
@@ -104,10 +98,6 @@
 
     <target name="run" depends="jar">
         <java jar="${jar.dir}/GameController.jar" dir="${jar.dir}" fork="true"/>
-    </target>
-
-    <target name="run_analyzer" depends="jar">
-        <java jar="${jar.dir}/LogAnalyzer.jar" dir="${jar.dir}" fork="true"/>
     </target>
 
     <target name="run_teamcomm" depends="jar">
