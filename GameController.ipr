@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ArtifactManager">
-    <artifact type="jar" build-on-make="true" name="GameController:jar">
-      <output-path>$PROJECT_DIR$/bin/</output-path>
-      <root id="archive" name="GameController.jar">
-        <element id="directory" name="common">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
-        </element>
-        <element id="directory" name="data">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
-        </element>
-        <element id="directory" name="controller">
-          <element id="dir-copy" path="$PROJECT_DIR$/build/controller" />
-        </element>
-        <element id="directory" name="META-INF">
-          <element id="file-copy" path="$PROJECT_DIR$/src/controller/MANIFEST.MF" />
-        </element>
-      </root>
-    </artifact>
     <artifact type="jar" build-on-make="true" name="GameControllerTester:jar">
       <output-path>$PROJECT_DIR$/bin</output-path>
       <root id="archive" name="GameControllerTester.jar">

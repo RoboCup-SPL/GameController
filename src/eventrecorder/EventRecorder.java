@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 
 import javax.swing.JOptionPane;
 
-import controller.GameController;
 import data.GameControlData;
 import data.PlayerInfo;
 import data.TeamInfo;
