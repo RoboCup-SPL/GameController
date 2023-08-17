@@ -1,7 +1,7 @@
 package common;
 
 import data.AdvancedData;
-import java.io.File;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -23,16 +23,16 @@ import java.util.LinkedList;
 public class Log
 {
     /** The instance of the singleton. */
-    private static Log instance = new Log();
+    private static final Log instance = new Log();
 
     /** The file to write into. */
     private FileWriter file;
     /** The error-file to write into. */
     private FileWriter errorFile;
     /** The file to write into. */
-    private String errorPath = "error.txt";
+    private final String errorPath = "error.txt";
     /** The timeline. */
-    private LinkedList<AdvancedData> states = new LinkedList<AdvancedData>();
+    private final LinkedList<AdvancedData> states = new LinkedList<>();
     /** If != null, the next log entry will use this message. */
     private String message = null;
 
@@ -55,7 +55,7 @@ public class Log
             throw new IllegalStateException("logger already initialized");
         }
         try{
-            instance.file = new FileWriter(new File(path));
+            instance.file = new FileWriter(path);
         } catch (IOException e) {
             error("cannot write to logfile "+path);
         }
@@ -63,11 +63,11 @@ public class Log
         // Write version number if application is GameController
         try {
             toFile((String)Class.forName("controller.GameController").getField("version").get(null));
-        } catch (ClassNotFoundException ex) {
-        } catch (NoSuchFieldException ex) {
-        } catch (SecurityException ex) {
-        } catch (IllegalArgumentException ex) {
-        } catch (IllegalAccessException ex) {
+        } catch (ClassNotFoundException
+                 | NoSuchFieldException
+                 | SecurityException
+                 | IllegalArgumentException
+                 | IllegalAccessException ex) {
         }
     }
 
@@ -201,13 +201,13 @@ public class Log
         try {
             final Class<?> eventHandlerClass = Class.forName("controller.EventHandler");
             eventHandlerClass.getField("data").set(eventHandlerClass.getMethod("getInstance").invoke(null), state);
-        } catch (ClassNotFoundException ex) {
-        } catch (NoSuchFieldException ex) {
-        } catch (SecurityException ex) {
-        } catch (IllegalArgumentException ex) {
-        } catch (IllegalAccessException ex) {
-        } catch (NoSuchMethodException ex) {
-        } catch (InvocationTargetException ex) {
+        } catch (ClassNotFoundException
+                 | NoSuchFieldException
+                 | SecurityException
+                 | IllegalArgumentException
+                 | IllegalAccessException
+                 | NoSuchMethodException
+                 | InvocationTargetException ex) {
         }
         return state.message;
     }
@@ -246,7 +246,7 @@ public class Log
         System.err.println(s);
         try{
             if (instance.errorFile == null) {
-                instance.errorFile = new FileWriter(new File(instance.errorPath));
+                instance.errorFile = new FileWriter(instance.errorPath);
             }
             instance.errorFile.write(timestampFormat.format(new Date(System.currentTimeMillis()))+": "+s+"\n");
             instance.errorFile.flush();

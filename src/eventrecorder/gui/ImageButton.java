@@ -11,7 +11,7 @@ import javax.swing.JButton;
  */
 public class ImageButton extends JButton{
     private static final long serialVersionUID = -2848062138312840891L;
-    ImageIcon enabledIcon;
+    final ImageIcon enabledIcon;
     ImageIcon disabledIcon;
 
     public ImageButton(String tooltip, String path, int width, int height){

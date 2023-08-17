@@ -9,7 +9,7 @@ import eventrecorder.EventRecorder;
  */
 
 public class ActionHistory {
-    public CircularLiFoBuffer<Action> actions  = new CircularLiFoBuffer<Action>(1000);
+    public final CircularLiFoBuffer<Action> actions  = new CircularLiFoBuffer<>(1000);
 
     public boolean execute(Action action){
         if(action.executeAction()){
@@ -71,7 +71,7 @@ public class ActionHistory {
     /**
      * Notify the GUI that a LogEntry is changed.
      *
-     * @param e
+     * @param a
      */
 
     private void notifyGUI(Action a){

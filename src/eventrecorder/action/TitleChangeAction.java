@@ -10,10 +10,10 @@ import eventrecorder.data.LogEntry;
  */
 
 public class TitleChangeAction extends Action{
-    String savedTitle;
-    String savedAdditional;
-    String newTitle;
-    String newAdditional;
+    final String savedTitle;
+    final String savedAdditional;
+    final String newTitle;
+    final String newAdditional;
 
     public TitleChangeAction(LogEntry entry, String newTitle, String newAdditional, String savedTitle, String savedAdditional) {
         super(entry, true);

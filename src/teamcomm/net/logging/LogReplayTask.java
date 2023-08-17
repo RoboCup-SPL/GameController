@@ -7,9 +7,9 @@ import data.GameControlData;
 import java.io.BufferedInputStream;
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.nio.file.Files;
 import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.event.EventListenerList;
@@ -60,7 +60,7 @@ class LogReplayTask implements Runnable {
 
     public LogReplayTask(final File logfile, final EventListenerList listeners) throws IOException {
         this.listeners = listeners;
-        stream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(logfile)));
+        stream = new ObjectInputStream(new BufferedInputStream(Files.newInputStream(logfile.toPath())));
         next();
     }
 
@@ -187,10 +187,8 @@ class LogReplayTask implements Runnable {
                 GameState.getInstance().gameControlDataChanged(new GameControlDataEvent(this, (GameControlData) obj.object));
             }
         } else {
-            switch (obj.typeid) {
-                case 1:
-                    GameState.getInstance().gameControlDataTimeout(new GameControlDataTimeoutEvent(this));
-                    break;
+            if (obj.typeid == 1) {
+                GameState.getInstance().gameControlDataTimeout(new GameControlDataTimeoutEvent(this));
             }
         }
     }

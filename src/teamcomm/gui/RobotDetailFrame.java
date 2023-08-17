@@ -31,27 +31,24 @@ public abstract class RobotDetailFrame extends JFrame implements RobotStateEvent
 
         final RobotStateEventListener listener = this;
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                anchor.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (e.getClickCount() == 2) {
-                            if (!isVisible()) {
-                                setLocationRelativeTo(anchor);
-                            }
-                            setVisible(true);
-                            robotStateChanged(new RobotStateEvent(robot));
-                            connectionStatusChanged(new RobotStateEvent(robot));
+        SwingUtilities.invokeLater(() -> {
+            setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            anchor.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        if (!isVisible()) {
+                            setLocationRelativeTo(anchor);
                         }
+                        setVisible(true);
+                        robotStateChanged(new RobotStateEvent(robot));
+                        connectionStatusChanged(new RobotStateEvent(robot));
                     }
-                });
+                }
+            });
 
-                init(robot);
-                robot.addListener(listener);
-            }
+            init(robot);
+            robot.addListener(listener);
         });
     }
 

@@ -28,16 +28,6 @@ public class LogEntry {
     }
 
     /**
-     * Creates a new LogEntry with the values of the given LogEntry.
-     *
-     * @param e LogEntry
-     */
-
-    public LogEntry(LogEntry e){
-        set(e);
-    }
-
-    /**
      * Sets the values of this LogEntry to the value of e.
      *
      * @param e The LogEntry containing the values.

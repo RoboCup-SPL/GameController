@@ -9,16 +9,16 @@ import eventrecorder.data.LogEntry;
  */
 
 public class EntryChangeTimeAction extends Action{
-    private String newTime;
-    private String savedTime;
-    private boolean wasFirstTimeSet;
+    private final String newTime;
+    private final String savedTime;
+    private final boolean wasFirstTimeSet;
 
     /**
      * Creates a new ChangeAction.
      *
-     * @param entry         LogEntry in the DataModel.
-     * @param newLogEntry   Copy of the LogEntry with new values.
-     * @param savedLogEntry Copy of the LogEntry with old values.
+     * @param entry     LogEntry in the DataModel.
+     * @param newTime   New time value.
+     * @param savedTime Previous time value to support undo.
      */
 
     public EntryChangeTimeAction(LogEntry entry, String newTime, String savedTime){

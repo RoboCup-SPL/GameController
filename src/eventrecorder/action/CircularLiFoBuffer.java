@@ -7,7 +7,7 @@ package eventrecorder.action;
  */
 
 public class CircularLiFoBuffer<T> {
-    T[] array;
+    final T[] array;
     int pos = -1;
     int elements = 0;
     int pops = 0;

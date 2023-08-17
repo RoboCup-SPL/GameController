@@ -6,11 +6,7 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -75,12 +71,7 @@ public class View3DCanvas extends View3D {
         };
         canvas.addMouseListener(listener);
         canvas.addMouseMotionListener(listener);
-        canvas.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(final MouseWheelEvent e) {
-                camera.addRadius((float) (-e.getPreciseWheelRotation() * 0.05));
-            }
-        });
+        canvas.addMouseWheelListener(e -> camera.addRadius((float) (-e.getPreciseWheelRotation() * 0.05)));
 
         // Start rendering
         animator = new FPSAnimator(autoDrawable, ANIMATION_FPS);
@@ -123,12 +114,7 @@ public class View3DCanvas extends View3D {
         // Create menu items for drawings
         for (final Drawing d : drawings) {
             final JCheckBoxMenuItem m = new JCheckBoxMenuItem(d.getClass().getSimpleName(), d.isActive());
-            m.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(final ItemEvent e) {
-                    d.setActive(e.getStateChange() == ItemEvent.SELECTED);
-                }
-            });
+            m.addItemListener(e -> d.setActive(e.getStateChange() == ItemEvent.SELECTED));
             final JMenu submenu = submenus.get(d.getTeamNumber());
             if (submenu != null) {
                 submenu.add(m);
@@ -169,7 +155,7 @@ public class View3DCanvas extends View3D {
                     if (teamNumbers[1] != PluginLoader.TEAMNUMBER_COMMON) {
                         drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
                     }
-                    Collections.sort(drawings, drawingComparator);
+                    drawings.sort(drawingComparator);
                     updateDrawingsMenu();
                 }
             }

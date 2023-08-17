@@ -35,7 +35,7 @@ import teamcomm.gui.drawings.TextureLoader.Texture;
 
 /**
  * Class for parsing ros2 scene files. Instances of this class correspond to
- * named scene elements and can be instantiated to RoSi2Drawabled which may be
+ * named scene elements and can be instantiated to RoSi2Drawable which may be
  * drawn in a OpenGL context.
  *
  * @author Felix Thielke
@@ -200,7 +200,7 @@ public class RoSi2Element {
         return instantiate(gl, vars, null);
     }
 
-    private RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars, final List<RoSi2Drawable> refChilds) throws RoSi2ParseException {
+    private RoSi2Drawable instantiate(final GL2 gl, final Map<String, String> vars, final List<RoSi2Drawable> refChildren) throws RoSi2ParseException {
         // The instantiation is constant unless it references a variable
         boolean constant = true;
 
@@ -223,7 +223,7 @@ public class RoSi2Element {
         }
 
         // Instantiate all child elements
-        final List<RoSi2Drawable> childInstances = (refChilds != null) ? new LinkedList<>(refChilds) : new LinkedList<RoSi2Drawable>();
+        final List<RoSi2Drawable> childInstances = (refChildren != null) ? new LinkedList<>(refChildren) : new LinkedList<>();
         for (final RoSi2Element child : children) {
             final RoSi2Drawable childInst = child.instantiate(gl, varBindings, null);
             if (childInst != null) {
@@ -335,7 +335,7 @@ public class RoSi2Element {
                     final ParsePosition p = new ParsePosition(pos);
                     final Number n = fmt.parse(str, p);
                     if (n == null) {
-                        throw new RoSi2ParseException("Vertex coordinate is not a number: " + str.substring(pos, pos + 1));
+                        throw new RoSi2ParseException("Vertex coordinate is not a number: " + str.charAt(pos));
                     }
                     pos = p.getIndex();
                     vertex[i++] = n.doubleValue();
@@ -724,7 +724,7 @@ public class RoSi2Element {
         final StringBuilder value = new StringBuilder(raw.length());
         int varEnd = 0;
         while (varStart >= 0) {
-            value.append(raw.substring(varEnd, varStart));
+            value.append(raw, varEnd, varStart);
             if (varStart + 1 == raw.length()) {
                 varEnd = varStart;
                 break;
@@ -750,7 +750,7 @@ public class RoSi2Element {
 
             final String binding = varBindings.get(varName);
             if (binding == null) {
-                value.append(raw.substring(varStart, varEnd));
+                value.append(raw, varStart, varEnd);
             } else {
                 value.append(binding);
             }
@@ -1271,9 +1271,9 @@ public class RoSi2Element {
                     final Normals.Normal n = new Normals.Normal(u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z, u.x * v.y - u.y * v.x, 1);
                     double len = Math.sqrt(n.x * n.x + n.y * n.y + n.z * n.z);
                     len = len == 0 ? 1.f : 1.f / len;
-                    n.x *= len;
-                    n.y *= len;
-                    n.z *= len;
+                    n.x *= (float) len;
+                    n.y *= (float) len;
+                    n.z *= (float) len;
 
                     ns.get(i1).add(n);
                     ns.get(i2).add(n);
@@ -1408,11 +1408,11 @@ public class RoSi2Element {
             /**
              * The x-component of the point.
              */
-            public float x;
+            public final float x;
             /**
              * The y-component of the point.
              */
-            public float y;
+            public final float y;
 
             /**
              * Constructs a point of a texture
@@ -1424,7 +1424,7 @@ public class RoSi2Element {
                 this.x = x;
                 this.y = y;
             }
-        };
+        }
 
         public final List<TexCoord> coords;
 
@@ -1563,7 +1563,7 @@ public class RoSi2Element {
      * @throws teamcomm.gui.drawings.RoSi2Element.RoSi2ParseException if the
      * file could not be parsed as a ros2 file
      * @throws javax.xml.stream.XMLStreamException if the file could not be
-     * parsed as a XML file
+     * parsed as an XML file
      * @throws java.io.FileNotFoundException if the file could not be found
      * @throws java.io.IOException on other IO errors
      */
@@ -1617,7 +1617,7 @@ public class RoSi2Element {
                         } else {
                             // Create and add element
                             final String name = getXmlAttribute(e, "name", false);
-                            final RoSi2Element elem = new RoSi2Element(inputFileStack.getFirst().path, tag, name, (Iterator<Attribute>) e.getAttributes(), namedElements);
+                            final RoSi2Element elem = new RoSi2Element(inputFileStack.getFirst().path, tag, name, e.getAttributes(), namedElements);
                             if (name != null && !withinSceneElement) {
                                 namedElements.put(tag + '#' + name, elem);
                             }

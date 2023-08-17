@@ -42,8 +42,8 @@ public class TeamCommunicationMonitor {
     public static void main(final String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         GameControlDataReceiver gcDataReceiver = null;
-        GameControlReturnDataReceiverTCM gcReturnDataReceiver = null;
-        SPLTeamMessageReceiverTCM receiver = null;
+        GameControlReturnDataReceiverTCM gcReturnDataReceiver;
+        SPLTeamMessageReceiverTCM receiver;
 
         parseArgs(args);
 
@@ -149,7 +149,7 @@ public class TeamCommunicationMonitor {
                             if (!forceEnablePlugins) {
                                 PluginLoader.getInstance().disablePlugins();
                             }
-                        } else if (!gsvMode) {
+                        } else {
                             if (gsvView != null) {
                                 gsvView.terminate();
                                 gsvView = null;

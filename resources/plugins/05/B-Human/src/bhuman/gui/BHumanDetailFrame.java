@@ -8,10 +8,8 @@ import data.SPLTeamMessage;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -102,12 +100,9 @@ public class BHumanDetailFrame extends RobotDetailFrame {
     @Override
     public void robotStateChanged(final RobotStateEvent e) {
         if (isVisible()) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    update((RobotState) e.getSource());
-                    repaint();
-                }
+            SwingUtilities.invokeLater(() -> {
+                update((RobotState) e.getSource());
+                repaint();
             });
         }
     }
@@ -117,7 +112,7 @@ public class BHumanDetailFrame extends RobotDetailFrame {
      */
     private void update(final RobotState robot) {
         final SPLTeamMessage msg = robot.getLastTeamMessage();
-        if (msg == null || !BHumanMessage.class.isInstance(msg)) {
+        if (!BHumanMessage.class.isInstance(msg)) {
             return;
         }
         final BHumanMessage bmsg = (BHumanMessage) msg;

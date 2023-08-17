@@ -1,8 +1,8 @@
 package bhuman.message.data;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import util.Unsigned;
@@ -286,15 +286,7 @@ public abstract class NativeReaders {
             final int size = stream.getInt();
             final byte[] bytes = new byte[size];
             stream.get(bytes);
-            try {
-                return new String(bytes, "ISO-8859-1");
-            } catch (UnsupportedEncodingException ex) {
-                try {
-                    return new String(bytes, "US-ASCII");
-                } catch (UnsupportedEncodingException e) {
-                    return new String(bytes);
-                }
-            }
+            return new String(bytes, StandardCharsets.ISO_8859_1);
         }
 
     }
@@ -319,15 +311,7 @@ public abstract class NativeReaders {
         public String read(final ByteBuffer stream) {
             final byte[] bytes = new byte[count];
             stream.get(bytes);
-            try {
-                return new String(bytes, "ISO-8859-1");
-            } catch (UnsupportedEncodingException ex) {
-                try {
-                    return new String(bytes, "US-ASCII");
-                } catch (UnsupportedEncodingException e) {
-                    return new String(bytes);
-                }
-            }
+            return new String(bytes, StandardCharsets.ISO_8859_1);
         }
 
     }

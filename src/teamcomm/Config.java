@@ -4,12 +4,12 @@ import common.Log;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
@@ -35,7 +35,7 @@ public class Config {
     @SuppressWarnings("unchecked")
     private Config() {
         HashMap<String, Serializable> m = new HashMap<>();
-        try (final ObjectInputStream stream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(CONFIG_FILE)))) {
+        try (final ObjectInputStream stream = new ObjectInputStream(new BufferedInputStream(Files.newInputStream(Paths.get(CONFIG_FILE))))) {
             final Object o = stream.readObject();
             if (m.getClass().isInstance(o)) {
                 m = (HashMap<String, Serializable>) o;
@@ -55,7 +55,7 @@ public class Config {
 
     public void flush() {
         if (!map.isEmpty()) {
-            try (final ObjectOutputStream stream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(CONFIG_FILE)))) {
+            try (final ObjectOutputStream stream = new ObjectOutputStream(new BufferedOutputStream(Files.newOutputStream(Paths.get(CONFIG_FILE))))) {
                 stream.writeObject(map);
                 stream.flush();
             } catch (IOException ex) {

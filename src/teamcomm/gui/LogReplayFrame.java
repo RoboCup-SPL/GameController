@@ -2,8 +2,6 @@ package teamcomm.gui;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.Box;
@@ -56,90 +54,66 @@ public class LogReplayFrame extends JFrame implements LogReplayEventListener {
         this.parent = parent;
         final LogReplayFrame frame = this;
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setDefaultCloseOperation(HIDE_ON_CLOSE);
-                addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        LogReplayer.getInstance().close();
-                    }
-                });
+        SwingUtilities.invokeLater(() -> {
+            setDefaultCloseOperation(HIDE_ON_CLOSE);
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    LogReplayer.getInstance().close();
+                }
+            });
 
-                final JPanel contentPane = new JPanel();
-                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-                contentPane.setBorder(new EmptyBorder(5, 5, 10, 5));
-                setContentPane(contentPane);
+            final JPanel contentPane = new JPanel();
+            contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+            contentPane.setBorder(new EmptyBorder(5, 5, 10, 5));
+            setContentPane(contentPane);
 
-                final JPanel infoPanel = new JPanel();
-                infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
-                infoPanel.setBorder(new EmptyBorder(5, 8, 5, 8));
-                stateLabel.setHorizontalAlignment(SwingConstants.LEFT);
-                infoPanel.add(stateLabel);
-                infoPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                timeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-                infoPanel.add(timeLabel);
-                contentPane.add(infoPanel);
+            final JPanel infoPanel = new JPanel();
+            infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
+            infoPanel.setBorder(new EmptyBorder(5, 8, 5, 8));
+            stateLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            infoPanel.add(stateLabel);
+            infoPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+            timeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            infoPanel.add(timeLabel);
+            contentPane.add(infoPanel);
 
-                contentPane.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(0, 32767)));
+            contentPane.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(0, 32767)));
 
-                final JPanel controlsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-                fastRewindButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (lastSpeed < 0) {
-                            LogReplayer.getInstance().setPlaybackSpeed(Math.max(lastSpeed * 2, -MAX_REPLAY_SPEED));
-                        } else {
-                            LogReplayer.getInstance().setPlaybackSpeed(-2);
-                        }
-                    }
-                });
-                controlsPanel.add(fastRewindButton);
-                controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                rewindButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        LogReplayer.getInstance().setPlaybackSpeed(-1);
-                    }
-                });
-                controlsPanel.add(rewindButton);
-                controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                pauseButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        LogReplayer.getInstance().setPlaybackSpeed(0);
-                    }
-                });
-                controlsPanel.add(pauseButton);
-                controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                playButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        LogReplayer.getInstance().setPlaybackSpeed(1);
-                    }
-                });
-                controlsPanel.add(playButton);
-                controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
-                fastForwardButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (lastSpeed > 0) {
-                            LogReplayer.getInstance().setPlaybackSpeed(Math.min(lastSpeed * 2, MAX_REPLAY_SPEED));
-                        } else {
-                            LogReplayer.getInstance().setPlaybackSpeed(2);
-                        }
-                    }
-                });
-                controlsPanel.add(fastForwardButton);
-                contentPane.add(controlsPanel);
+            final JPanel controlsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+            fastRewindButton.addActionListener(e -> {
+                if (lastSpeed < 0) {
+                    LogReplayer.getInstance().setPlaybackSpeed(Math.max(lastSpeed * 2, -MAX_REPLAY_SPEED));
+                } else {
+                    LogReplayer.getInstance().setPlaybackSpeed(-2);
+                }
+            });
+            controlsPanel.add(fastRewindButton);
+            controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+            rewindButton.addActionListener(e -> LogReplayer.getInstance().setPlaybackSpeed(-1));
+            controlsPanel.add(rewindButton);
+            controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+            pauseButton.addActionListener(e -> LogReplayer.getInstance().setPlaybackSpeed(0));
+            controlsPanel.add(pauseButton);
+            controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+            playButton.addActionListener(e -> LogReplayer.getInstance().setPlaybackSpeed(1));
+            controlsPanel.add(playButton);
+            controlsPanel.add(new Box.Filler(new Dimension(), new Dimension(), new Dimension(32767, 0)));
+            fastForwardButton.addActionListener(e -> {
+                if (lastSpeed > 0) {
+                    LogReplayer.getInstance().setPlaybackSpeed(Math.min(lastSpeed * 2, MAX_REPLAY_SPEED));
+                } else {
+                    LogReplayer.getInstance().setPlaybackSpeed(2);
+                }
+            });
+            controlsPanel.add(fastForwardButton);
+            contentPane.add(controlsPanel);
 
-                setAlwaysOnTop(true);
-                setResizable(false);
-                pack();
+            setAlwaysOnTop(true);
+            setResizable(false);
+            pack();
 
-                LogReplayer.getInstance().addListener(frame);
-            }
+            LogReplayer.getInstance().addListener(frame);
         });
     }
 

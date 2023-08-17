@@ -15,12 +15,12 @@ public interface GameControlDataEventListener extends EventListener {
      *
      * @param e event
      */
-    public void gameControlDataChanged(final GameControlDataEvent e);
+    void gameControlDataChanged(final GameControlDataEvent e);
 
     /**
      * Called when no data was received from the GameController for some time.
      *
      * @param e event
      */
-    public void gameControlDataTimeout(final GameControlDataTimeoutEvent e);
+    void gameControlDataTimeout(final GameControlDataTimeoutEvent e);
 }

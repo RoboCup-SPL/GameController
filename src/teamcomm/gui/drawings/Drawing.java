@@ -23,7 +23,7 @@ public abstract class Drawing {
      */
     public void setActive(final boolean active) {
         this.active = active;
-        Config.getInstance().set("DrawingActive_" + getClass().getName() + (getTeamNumber() < 0 ? "" : "_" + getTeamNumber()), (Boolean) active);
+        Config.getInstance().set("DrawingActive_" + getClass().getName() + (getTeamNumber() < 0 ? "" : "_" + getTeamNumber()), active);
     }
 
     /**

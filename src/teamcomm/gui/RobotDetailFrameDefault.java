@@ -71,12 +71,9 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
     @Override
     public void robotStateChanged(final RobotStateEvent e) {
         if (isVisible()) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    update((RobotState) e.getSource());
-                    repaint();
-                }
+            SwingUtilities.invokeLater(() -> {
+                update((RobotState) e.getSource());
+                repaint();
             });
         }
     }
@@ -227,7 +224,7 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
                         contentInCurrentRow = false;
                         sb.setLength(6);
                     }
-                } else if (row.length() > 0) {
+                } else if (!row.isEmpty()) {
                     sb.append(row);
                     contentInCurrentRow = true;
                 }

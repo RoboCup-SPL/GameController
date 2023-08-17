@@ -3,7 +3,6 @@ package teamcomm;
 import common.Log;
 import data.SPLTeamMessage;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -101,7 +100,6 @@ public class PluginLoader {
             try {
                 return c.getConstructor(RobotState.class, JPanel.class).newInstance(robot, anchor);
             } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                e.printStackTrace();
                 Log.error(e.getClass().getSimpleName() + " was thrown while initializing custom RobotDetailFrame " + c.getName() + ": " + e.getMessage());
             }
         }
@@ -127,7 +125,7 @@ public class PluginLoader {
     public Collection<Drawing> getDrawings(final int teamNumber) {
         final Collection<Drawing> ds = pluginsDisabled && teamNumber != TEAMNUMBER_COMMON ? null : drawings.get(teamNumber);
 
-        return ds != null ? ds : new ArrayList<Drawing>(0);
+        return ds != null ? ds : new ArrayList<>(0);
     }
 
     /**
@@ -161,14 +159,11 @@ public class PluginLoader {
         }
 
         // Find dirs that correspond to team numbers
-        final File[] pluginDirs = pluginDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(final File dir, final String name) {
-                try {
-                    return teamNumbers.contains(Integer.parseInt(name));
-                } catch (NumberFormatException e) {
-                    return false;
-                }
+        final File[] pluginDirs = pluginDir.listFiles((dir, name) -> {
+            try {
+                return teamNumbers.contains(Integer.parseInt(name));
+            } catch (NumberFormatException e) {
+                return false;
             }
         });
 
@@ -211,7 +206,7 @@ public class PluginLoader {
                 while (entries.hasMoreElements()) {
                     final JarEntry entry = entries.nextElement();
                     if (entry.getName().endsWith(".class")) {
-                        classNames.add(entry.getName().substring(0, entry.getName().length() - 6).replaceAll("/", "\\."));
+                        classNames.add(entry.getName().substring(0, entry.getName().length() - 6).replaceAll("/", "."));
                     }
                 }
             }
@@ -241,11 +236,7 @@ public class PluginLoader {
                     } else if (PerPlayer.class.isAssignableFrom(cls) || PerPlayerWithTeam.class.isAssignableFrom(cls) || Static.class.isAssignableFrom(cls)) {
                         // Class is a drawing: add it to the team drawings
                         // if it does not yet exist
-                        Collection<Drawing> drawingsForTeam = drawings.get(teamNumber);
-                        if (drawingsForTeam == null) {
-                            drawingsForTeam = new LinkedList<>();
-                            drawings.put(teamNumber, drawingsForTeam);
-                        }
+                        Collection<Drawing> drawingsForTeam = drawings.computeIfAbsent(teamNumber, k -> new LinkedList<>());
                         for (final Drawing d : drawingsForTeam) {
                             if (cls.isInstance(d)) {
                                 continue classLoop;

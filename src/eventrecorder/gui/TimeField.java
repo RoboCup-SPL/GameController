@@ -26,7 +26,7 @@ import eventrecorder.data.LogType;
 
 public class TimeField extends JTextField {
     private static final long serialVersionUID = 1446285867560827423L;
-    private LogEntry entry;
+    private final LogEntry entry;
     private String savedTime = null;
 
     public TimeField(LogEntry entry) {

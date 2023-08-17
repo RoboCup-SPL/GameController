@@ -14,5 +14,5 @@ public interface SimpleStreamReader<T> extends StreamReader<T> {
      *
      * @return size in bytes
      */
-    public int getStreamedSize();
+    int getStreamedSize();
 }

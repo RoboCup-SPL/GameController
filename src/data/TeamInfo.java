@@ -52,7 +52,7 @@ public class TeamInfo implements Serializable {
     public byte penaltyShot = 0;                                    // penalty shot counter
     public short singleShots = 0;                                   // bits represent penalty shot success
     public short messageBudget = 0;                                 // number of team messages the team is allowed to send for the remainder of the game
-    public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
+    public final PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
 
     /**
      * Creates a new TeamInfo.
@@ -103,8 +103,8 @@ public class TeamInfo implements Serializable {
         penaltyShot = buffer.get();
         singleShots = buffer.getShort();
         messageBudget = buffer.getShort();
-        for (int i = 0; i < player.length; i++) {
-            player[i].fromByteArray(buffer);
+        for (PlayerInfo info : player) {
+            info.fromByteArray(buffer);
         }
     }
 
@@ -137,20 +137,20 @@ public class TeamInfo implements Serializable {
 
     @Override
     public String toString() {
-        String out = "--------------------------------------\n";
+        StringBuilder out = new StringBuilder("--------------------------------------\n");
 
-        out += "         teamNumber: " + teamNumber + "\n";
-        out += "   fieldPlayerColor: " + getTeamColorName(fieldPlayerColor) + "\n";
-        out += "    goalkeeperColor: " + getTeamColorName(goalkeeperColor) + "\n";
-        out += "         goalkeeper: " + goalkeeper + "\n";
-        out += "              score: " + score + "\n";
-        out += "        penaltyShot: " + penaltyShot + "\n";
-        out += "        singleShots: " + Integer.toBinaryString(singleShots) + "\n";
-        out += "      messageBudget: " + messageBudget + "\n";
+        out.append("         teamNumber: ").append(teamNumber).append("\n");
+        out.append("   fieldPlayerColor: ").append(getTeamColorName(fieldPlayerColor)).append("\n");
+        out.append("    goalkeeperColor: ").append(getTeamColorName(goalkeeperColor)).append("\n");
+        out.append("         goalkeeper: ").append(goalkeeper).append("\n");
+        out.append("              score: ").append(score).append("\n");
+        out.append("        penaltyShot: ").append(penaltyShot).append("\n");
+        out.append("        singleShots: ").append(Integer.toBinaryString(singleShots)).append("\n");
+        out.append("      messageBudget: ").append(messageBudget).append("\n");
 
         for (int i = 0; i < player.length; i++) {
-            out += "Player #" + (i + 1) + "\n" + player[i].toString();
+            out.append("Player #").append(i + 1).append("\n").append(player[i].toString());
         }
-        return out;
+        return out.toString();
     }
 }

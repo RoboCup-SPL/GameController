@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 /**
  * This class extends the GameControlData that is send to the robots. It
@@ -62,43 +63,43 @@ public class AdvancedData extends GameControlData implements Cloneable {
     /**
      * When was each player penalized last (ms, 0 = never)?
      */
-    public long[][] whenPenalized = new long[2][Rules.league.teamSize];
+    public final long[][] whenPenalized = new long[2][Rules.league.teamSize];
 
     /**
      * How often was each team penalized?
      */
-    public int[] penaltyCount = new int[2];
+    public final int[] penaltyCount = new int[2];
 
     /**
      * How often was each team penalized at before the robot got penalized?
      */
-    public int[][] robotPenaltyCount = new int[2][Rules.league.teamSize];
+    public final int[][] robotPenaltyCount = new int[2][Rules.league.teamSize];
 
     /**
      * How many hardware penalties can each robot get until it is ejected?
      */
-    public int[][] robotHardwarePenaltyBudget = new int[2][Rules.league.teamSize];
+    public final int[][] robotHardwarePenaltyBudget = new int[2][Rules.league.teamSize];
 
     /**
      * Which players are already ejected?
      */
-    public boolean[][] ejected = new boolean[2][Rules.league.teamSize];
+    public final boolean[][] ejected = new boolean[2][Rules.league.teamSize];
 
     /**
      * Did the team send too many messages so that its score is set to 0 forever?
      */
-    public boolean[] sentIllegalMessages = {false, false};
+    public final boolean[] sentIllegalMessages = {false, false};
 
     /**
      * If true, the referee set a timeout
      */
-    public boolean refereeTimeout = false;
+    public final boolean refereeTimeout = false;
 
     /**
      * If true, this team is currently taking a timeOut, 0:left side, 1:right
      * side.
      */
-    public boolean[] timeOutActive = {false, false};
+    public final boolean[] timeOutActive = {false, false};
 
     /**
      * TimeOut counters for each team, 0:left side, 1:right side.
@@ -118,12 +119,12 @@ public class AdvancedData extends GameControlData implements Cloneable {
     /**
      * If true, the clock has manually been paused in the testmode.
      */
-    public boolean manPause = false;
+    public final boolean manPause = false;
 
     /**
      * If true, the clock has manually been started in the testmode.
      */
-    public boolean manPlay = false;
+    public final boolean manPlay = false;
 
     /**
      * When was the last manual intervention to the clock?
@@ -141,14 +142,14 @@ public class AdvancedData extends GameControlData implements Cloneable {
     public long manRemainingGameTimeOffset;
 
     /**
-     * Used to backup the game phase during a timeout.
+     * Used to back up the game phase during a timeout.
      */
-    public byte previousGamePhase = GAME_PHASE_NORMAL;
+    public final byte previousGamePhase = GAME_PHASE_NORMAL;
 
     /**
      * The kicking team before the last goal.
      */
-    public byte kickingTeamBeforeGoal = 0;
+    public final byte kickingTeamBeforeGoal = 0;
 
     public static final byte KICKOFF_HALF = 0;
     public static final byte KICKOFF_TIMEOUT = 1;
@@ -353,9 +354,7 @@ public class AdvancedData extends GameControlData implements Cloneable {
      */
     public void resetPenaltyTimes() {
         for (long[] players : whenPenalized) {
-            for (int i = 0; i < players.length; ++i) {
-                players[i] = 0;
-            }
+            Arrays.fill(players, 0);
         }
     }
 

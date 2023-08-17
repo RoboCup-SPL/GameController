@@ -10,7 +10,7 @@ import util.Unsigned;
  */
 public class BitStream {
 
-    private ByteBuffer source;
+    private final ByteBuffer source;
     private short currentByte;
     private long offset = 0;
 
@@ -25,7 +25,7 @@ public class BitStream {
                 currentByte = Unsigned.toUnsigned(source.get());
             }
             if((currentByte & (1 << (offset % 8))) != 0) {
-                result |= (1 << i);
+                result |= (1L << i);
             }
         }
         return result;

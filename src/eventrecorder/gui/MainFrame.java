@@ -6,20 +6,18 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -44,6 +42,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
+import common.Log;
 import eventrecorder.EventRecorder;
 import eventrecorder.action.Action;
 import eventrecorder.action.EntryCreateAction;
@@ -82,32 +81,30 @@ public class MainFrame extends JFrame {
     public static final int CURRENT_TIME_SMALL_STEP = 5;
     public static final int CURRENT_TIME_BIG_STEP = 60;
 
-    private Preferences prefs;
+    private final Preferences prefs;
 
-    private LogEntryTable entryTable;
+    private final LogEntryTable entryTable;
 
-    private JPanel statusPanel = new JPanel();
+    private final JPanel statusPanel = new JPanel();
 
-    private ImageButton undoButton;
-    private ImageButton redoButton;
-    private JLabel currentTimeLabel;
+    private final ImageButton undoButton;
+    private final ImageButton redoButton;
+    private final JLabel currentTimeLabel;
 
-    private ImageToggleButton startButton;
-    private ImageButton resetButton;
+    private final ImageToggleButton startButton;
+    private final ImageButton resetButton;
 
-    private Timer timer = new Timer();
+    private final JTextArea additionalField;
 
-    private JTextArea additionalField;
-
-    private JTextField titleField;
+    private final JTextField titleField;
 
     private boolean activeGameController;
 
-    private JButton timePlusPlusButton;
-    private JButton timePlusButton;
+    private final JButton timePlusPlusButton;
+    private final JButton timePlusButton;
 
-    private JButton timeMinusMinusButton;
-    private JButton timeMinusButton;
+    private final JButton timeMinusMinusButton;
+    private final JButton timeMinusButton;
 
     /**
      * Creates the Main Window.
@@ -117,7 +114,7 @@ public class MainFrame extends JFrame {
         JComponent.setDefaultLocale(Locale.ENGLISH);
 
         // Enable fullscreen mode on macOS
-        getRootPane().putClientProperty("apple.awt.fullscreenable", Boolean.valueOf(true));
+        getRootPane().putClientProperty("apple.awt.fullscreenable", true);
 
         // Load preferences:
         prefs = Preferences.userRoot().node(this.getClass().getName());
@@ -165,34 +162,24 @@ public class MainFrame extends JFrame {
         JPanel main = new JPanel();
         main.setLayout(new BorderLayout());
 
-        // Contains title, additional and other informations:
+        // Contains title, additional and other information:
         JPanel head = new JPanel();
         head.setLayout(new BoxLayout(head,BoxLayout.Y_AXIS));
         try {
             String current = new java.io.File( "." ).getCanonicalPath();
             System.out.println(current);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.error(e.getMessage());
+            System.exit(1);
         }
         // Undo and Redo Line:
         JPanel topLine = new JPanel();
         topLine.setLayout(new BorderLayout());
         undoButton = new ImageButton("Make Undo ( Strg+Z )",ICONS_PATH+"undo.png",ICONS_PATH+"undo_disabled.png", EventRecorder.history.undoPossible(),24,24);
-        undoButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.history.undo();
-            }
-        });
+        undoButton.addActionListener(e -> EventRecorder.history.undo());
 
         redoButton = new ImageButton("Make Redo ( Strg+Y )",ICONS_PATH+"redo.png",ICONS_PATH+"redo_disabled.png", EventRecorder.history.redoPossible(),24,24);
-        redoButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.history.redo();
-            }
-        });
+        redoButton.addActionListener(e -> EventRecorder.history.redo());
 
         // Current Time Label:
         currentTimeLabel = new JLabel(TIME_FORMAT.format(EventRecorder.model.currentTime*1000));
@@ -201,31 +188,18 @@ public class MainFrame extends JFrame {
 
 
         ImageButton createNewButton = new ImageButton("New ( Strg+New )", ICONS_PATH+"plus_icon.png", 24,24);
-        createNewButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.history.execute(new EntryCreateAction(new LogEntry("","",LogType.Manually)));
-            }
-        });
+        createNewButton.addActionListener(e -> EventRecorder.history.execute(new EntryCreateAction(new LogEntry("","",LogType.Manually))));
 
         // Start/Stop and Reset-Button:
         startButton = new ImageToggleButton("Play and Pause ( Strg+Space )", ICONS_PATH+"pause_icon.png", ICONS_PATH+"play_icon.png", false,24,24);
-        startButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.model.isManuallyRunning = !EventRecorder.model.isManuallyRunning;
-            }
-        });
+        startButton.addActionListener(e -> EventRecorder.model.isManuallyRunning = !EventRecorder.model.isManuallyRunning);
 
         resetButton = new ImageButton("Reset", ICONS_PATH+"reset_icon.png", 24,24);
-        resetButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.model.currentTime = 600;
-                currentTimeLabel.setText((EventRecorder.model.currentTime < 0? "-":"")+TIME_FORMAT.format(Math.abs(EventRecorder.model.currentTime*1000)));
-                currentTimeLabel.revalidate();
-                currentTimeLabel.repaint();
-            }
+        resetButton.addActionListener(e -> {
+            EventRecorder.model.currentTime = 600;
+            currentTimeLabel.setText((EventRecorder.model.currentTime < 0? "-":"")+TIME_FORMAT.format(Math.abs(EventRecorder.model.currentTime*1000)));
+            currentTimeLabel.revalidate();
+            currentTimeLabel.repaint();
         });
 
         // Add Buttons to the Top Panel and Top Panel to the Main Panel:
@@ -242,41 +216,29 @@ public class MainFrame extends JFrame {
 
         timeMinusMinusButton = new JButton("--");
         timeMinusMinusButton.setToolTipText("Decrease by 60 seconds ( Strg+Shift+Minus )");
-        timeMinusMinusButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.model.currentTime -= CURRENT_TIME_BIG_STEP;
-                updateTimeAndButtons();
-            }
+        timeMinusMinusButton.addActionListener(e -> {
+            EventRecorder.model.currentTime -= CURRENT_TIME_BIG_STEP;
+            updateTimeAndButtons();
         });
         timeMinusButton = new JButton("-");
         timeMinusButton.setToolTipText("Decrease by 5 seconds ( Strg+Minus )");
-        timeMinusButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.model.currentTime -= CURRENT_TIME_SMALL_STEP;
-                updateTimeAndButtons();
-            }
+        timeMinusButton.addActionListener(e -> {
+            EventRecorder.model.currentTime -= CURRENT_TIME_SMALL_STEP;
+            updateTimeAndButtons();
         });
 
         timePlusButton = new JButton("+");
         timePlusButton.setToolTipText("Increase by 5 seconds ( Strg+Plus )");
-        timePlusButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.model.currentTime += CURRENT_TIME_SMALL_STEP;
-                updateTimeAndButtons();
-            }
+        timePlusButton.addActionListener(e -> {
+            EventRecorder.model.currentTime += CURRENT_TIME_SMALL_STEP;
+            updateTimeAndButtons();
         });
 
         timePlusPlusButton = new JButton("++");
         timePlusPlusButton.setToolTipText("Increase by 60 seconds ( Strg+Shift+Plus )");
-        timePlusPlusButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EventRecorder.model.currentTime += CURRENT_TIME_BIG_STEP;
-                updateTimeAndButtons();
-            }
+        timePlusPlusButton.addActionListener(e -> {
+            EventRecorder.model.currentTime += CURRENT_TIME_BIG_STEP;
+            updateTimeAndButtons();
         });
 
         JPanel currentTimePanel = new JPanel();
@@ -388,25 +350,11 @@ public class MainFrame extends JFrame {
         mainWrapper.add(statusPanel, BorderLayout.NORTH);
         mainWrapper.add(main, BorderLayout.CENTER);
 
-        /*String shortCutInfoString = "<html><body><b>Strg + Enter</b>: New Entry "
-                + "&nbsp;&nbsp;&nbsp; <b>Strg + Plus</b>: Increase Time"
-                + "&nbsp;&nbsp;&nbsp; <b>Strg + Minus</b>: Reduce Time"
-                + "&nbsp;&nbsp;&nbsp; <b>Strg + Space</b>: Start/Stop Timer"
-                + "</body></html>";
-
-        JPanel shortCutInfoPanel = new JPanel();
-        JLabel shortCutInfoLabel = new JLabel(shortCutInfoString);
-        shortCutInfoLabel.setFont(new Font(shortCutInfoLabel.getFont().getFontName(),Font.PLAIN, 11));
-        shortCutInfoPanel.add(shortCutInfoLabel);
-        shortCutInfoPanel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-        shortCutInfoPanel.setLayout(new BoxLayout(shortCutInfoPanel,BoxLayout.X_AXIS));
-
-        mainWrapper.add(shortCutInfoPanel,BorderLayout.SOUTH);*/
-
         add(mainWrapper);
         setVisible(true);
 
         // Update some running informations on the gui:
+        Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
@@ -421,102 +369,97 @@ public class MainFrame extends JFrame {
         KeyboardFocusManager keyManager;
 
         keyManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
+        keyManager.addKeyEventDispatcher(e -> {
+            if (e.getID() == KeyEvent.KEY_PRESSED) {
+                if (e.isControlDown()) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        EventRecorder.history
+                                .execute(new EntryCreateAction(new LogEntry("", "", LogType.Manually)));
+                        e.consume();
+                        return true;
 
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent e) {
-                if (e.getID() == KeyEvent.KEY_PRESSED) {
-                    if (e.isControlDown()) {
-                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                            EventRecorder.history
-                                    .execute(new EntryCreateAction(new LogEntry("", "", LogType.Manually)));
-                            e.consume();
-                            return true;
+                    } else if(e.getKeyCode() == KeyEvent.VK_Z){
+                        // Before undo, the action on focusLost has to be executed:
+                        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                        if(focusOwner instanceof TextField)
+                            ((TextField)focusOwner).executeChangeAction();
+                        if(focusOwner instanceof TimeField)
+                            ((TimeField)focusOwner).executeChangeAction();
 
-                        } else if(e.getKeyCode() == KeyEvent.VK_Z){
-                            // Before undo, the action on focusLost has to be executed:
-                            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-                            if(focusOwner instanceof TextField)
-                                ((TextField)focusOwner).executeChangeAction();
-                            if(focusOwner instanceof TimeField)
-                                ((TextField)focusOwner).executeChangeAction();
+                        // Undo:
+                        EventRecorder.history.undo();
+                        e.consume();
+                        return true;
+                    } else if(e.getKeyCode() == KeyEvent.VK_Y){
+                        // Before redo, the action on focusLost has to be executed:
+                        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                        if(focusOwner instanceof TextField)
+                            ((TextField)focusOwner).executeChangeAction();
+                        if(focusOwner instanceof TimeField)
+                            ((TimeField)focusOwner).executeChangeAction();
 
-                            // Undo:
-                            EventRecorder.history.undo();
-                            e.consume();
-                            return true;
-                        } else if(e.getKeyCode() == KeyEvent.VK_Y){
-                            // Before redo, the action on focusLost has to be executed:
-                            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-                            if(focusOwner instanceof TextField)
-                                ((TextField)focusOwner).executeChangeAction();
-                            if(focusOwner instanceof TimeField)
-                                ((TextField)focusOwner).executeChangeAction();
+                        // Redo:
+                        EventRecorder.history.redo();
+                        e.consume();
+                        return true;
+                    } else if(e.getKeyCode() == KeyEvent.VK_W){
+                        // Delete last typed word:
+                        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
-                            // Redo:
-                            EventRecorder.history.redo();
-                            e.consume();
-                            return true;
-                        } else if(e.getKeyCode() == KeyEvent.VK_W){
-                            // Delete last typed word:
-                            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                        StringBuilder text = null;
+                        if(focusOwner instanceof JTextField)
+                            text = new StringBuilder(((JTextField) focusOwner).getText());
+                        else if(focusOwner instanceof JTextArea)
+                            text = new StringBuilder(((JTextArea) focusOwner).getText());
 
-                            String text = null;
-                            if(focusOwner instanceof JTextField)
-                                text = ((JTextField)focusOwner).getText();
-                            if(focusOwner instanceof JTextArea)
-                                text = ((JTextArea)focusOwner).getText();
+                        String[] textParts = text.toString().split(" ");
 
-                            String[] textParts = text.split(" ");
-
-                            text = "";
-                            for(int i=0;i<textParts.length-1;i++){
-                                text += textParts[i]+" ";
-                            }
-
-                            if(focusOwner instanceof JTextField)
-                                ((JTextField)focusOwner).setText(text);
-                            if(focusOwner instanceof JTextArea)
-                                ((JTextArea)focusOwner).setText(text);
-
-                        } else if(e.getKeyCode() == KeyEvent.VK_PLUS){
-                            // Increase current time:
-                            if(!activeGameController){
-                                if(e.isShiftDown()){
-                                    EventRecorder.model.currentTime += CURRENT_TIME_BIG_STEP;
-                                } else {
-                                    EventRecorder.model.currentTime += CURRENT_TIME_SMALL_STEP;
-                                }
-                                updateTimeAndButtons();
-                            }
-                            e.consume();
-                            return true;
-                        } else if(e.getKeyCode() == KeyEvent.VK_MINUS){
-                            // Decrease current time:
-                            if(!activeGameController){
-                                if(e.isShiftDown()){
-                                    EventRecorder.model.currentTime -= CURRENT_TIME_BIG_STEP;
-                                } else {
-                                    EventRecorder.model.currentTime -= CURRENT_TIME_SMALL_STEP;
-                                }
-                                updateTimeAndButtons();
-                            }
-                            e.consume();
-                            return true;
-                        } else if(e.getKeyCode() == KeyEvent.VK_SPACE){
-                            // Increase current time:
-                            if(!activeGameController){
-                                EventRecorder.model.isManuallyRunning = !EventRecorder.model.isManuallyRunning;
-                            }
-                            e.consume();
-                            return true;
+                        text = new StringBuilder();
+                        for(int i=0;i<textParts.length-1;i++){
+                            text.append(textParts[i]).append(" ");
                         }
+
+                        if(focusOwner instanceof JTextField)
+                            ((JTextField)focusOwner).setText(text.toString());
+                        if(focusOwner instanceof JTextArea)
+                            ((JTextArea)focusOwner).setText(text.toString());
+
+                    } else if(e.getKeyCode() == KeyEvent.VK_PLUS){
+                        // Increase current time:
+                        if(!activeGameController){
+                            if(e.isShiftDown()){
+                                EventRecorder.model.currentTime += CURRENT_TIME_BIG_STEP;
+                            } else {
+                                EventRecorder.model.currentTime += CURRENT_TIME_SMALL_STEP;
+                            }
+                            updateTimeAndButtons();
+                        }
+                        e.consume();
+                        return true;
+                    } else if(e.getKeyCode() == KeyEvent.VK_MINUS){
+                        // Decrease current time:
+                        if(!activeGameController){
+                            if(e.isShiftDown()){
+                                EventRecorder.model.currentTime -= CURRENT_TIME_BIG_STEP;
+                            } else {
+                                EventRecorder.model.currentTime -= CURRENT_TIME_SMALL_STEP;
+                            }
+                            updateTimeAndButtons();
+                        }
+                        e.consume();
+                        return true;
+                    } else if(e.getKeyCode() == KeyEvent.VK_SPACE){
+                        // Increase current time:
+                        if(!activeGameController){
+                            EventRecorder.model.isManuallyRunning = !EventRecorder.model.isManuallyRunning;
+                        }
+                        e.consume();
+                        return true;
                     }
                 }
-
-                return false;
             }
 
+            return false;
         });
     }
 
@@ -565,11 +508,9 @@ public class MainFrame extends JFrame {
 
         if(result == JOptionPane.YES_OPTION){
             return saveAs();
-        } else if(result == JOptionPane.NO_OPTION){
-            return true;
+        } else {
+            return result == JOptionPane.NO_OPTION;
         }
-
-        return false;
     }
 
     /**
@@ -588,7 +529,7 @@ public class MainFrame extends JFrame {
             fileChooser.showSaveDialog(null);
             if(fileChooser.getSelectedFile() != null){
                 try {
-                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileChooser.getSelectedFile()), "UTF-8"));
+                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(fileChooser.getSelectedFile().toPath()), StandardCharsets.UTF_8));
                     out.write(MarkDownExporter.toMarkDown(EventRecorder.model));
                     out.close();
                     prefs.put("DEFAULT_SAVE_DIRECTORY", fileChooser.getSelectedFile().getParent());
@@ -613,7 +554,7 @@ public class MainFrame extends JFrame {
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
             Object value = UIManager.get(key);
-            if (value != null && value instanceof FontUIResource)
+            if (value instanceof FontUIResource)
                 UIManager.put(key, f);
         }
     }

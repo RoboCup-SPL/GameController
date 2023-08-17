@@ -30,35 +30,32 @@ public class MainWindow extends JFrame implements GameControlDataEventListener {
     public MainWindow() {
         super("GameControllerTester");
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setLocationByPlatform(true);
-                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(final WindowEvent e) {
-                        GameControllerTester.shutdown();
-                    }
-                });
-                setPreferredSize(new Dimension(400, 1000));
+        SwingUtilities.invokeLater(() -> {
+            setLocationByPlatform(true);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(final WindowEvent e) {
+                    GameControllerTester.shutdown();
+                }
+            });
+            setPreferredSize(new Dimension(400, 1000));
 
-                final JPanel contentPane = new JPanel();
-                setContentPane(contentPane);
-                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-                final JPanel gcInfoContainer = new JPanel();
-                gcInfoContainer.setLayout(new BoxLayout(gcInfoContainer, BoxLayout.X_AXIS));
-                gcInfoContainer.add(gcInfo);
-                contentPane.add(gcInfoContainer);
-                final JPanel teamInfoContainer = new JPanel();
-                teamInfoContainer.setLayout(new BoxLayout(teamInfoContainer, BoxLayout.X_AXIS));
-                teamInfoContainer.add(team0Info);
-                teamInfoContainer.add(team1Info);
-                contentPane.add(teamInfoContainer);
+            final JPanel contentPane = new JPanel();
+            setContentPane(contentPane);
+            contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+            final JPanel gcInfoContainer = new JPanel();
+            gcInfoContainer.setLayout(new BoxLayout(gcInfoContainer, BoxLayout.X_AXIS));
+            gcInfoContainer.add(gcInfo);
+            contentPane.add(gcInfoContainer);
+            final JPanel teamInfoContainer = new JPanel();
+            teamInfoContainer.setLayout(new BoxLayout(teamInfoContainer, BoxLayout.X_AXIS));
+            teamInfoContainer.add(team0Info);
+            teamInfoContainer.add(team1Info);
+            contentPane.add(teamInfoContainer);
 
-                pack();
-                setVisible(true);
-            }
+            pack();
+            setVisible(true);
         });
     }
 

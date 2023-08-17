@@ -9,14 +9,14 @@ import eventrecorder.data.LogEntry;
  */
 
 public abstract class Action {
-    protected LogEntry entry;
-    private boolean addToHistory;
+    protected final LogEntry entry;
+    private final boolean addToHistory;
 
     /**
      * Constructor.
      *
      * @param entry
-     * @param hidden    Should undo/redo be possible?
+     * @param addToHistory
      */
 
     public Action(LogEntry entry, boolean addToHistory){

@@ -1,6 +1,8 @@
 package bhuman.message.data;
 
 import common.Log;
+
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.EnumMap;
 
@@ -30,8 +32,12 @@ public class EnumMapReader<K extends Enum<K>, V> implements ProbablySimpleStream
     public boolean isSimpleStreamReader() {
         final StreamReader<V> reader;
         try {
-            reader = this.reader != null ? this.reader : readerclass.newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
+            reader = this.reader != null ? this.reader : readerclass.getConstructor().newInstance();
+        } catch (IllegalAccessException
+                 | InstantiationException
+                 | InvocationTargetException
+                 | NoSuchMethodException
+                 | NullPointerException ex) {
             Log.error("Cannot instantiate reader class " + readerclass.getName());
             return false;
         }
@@ -46,8 +52,12 @@ public class EnumMapReader<K extends Enum<K>, V> implements ProbablySimpleStream
 
         final StreamReader<V> reader;
         try {
-            reader = this.reader != null ? this.reader : readerclass.newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
+            reader = this.reader != null ? this.reader : readerclass.getConstructor().newInstance();
+        } catch (IllegalAccessException
+                 | InstantiationException
+                 | InvocationTargetException
+                 | NoSuchMethodException
+                 | NullPointerException ex) {
             Log.error("Cannot instantiate reader class " + readerclass.getName());
             return count;
         }
@@ -83,8 +93,12 @@ public class EnumMapReader<K extends Enum<K>, V> implements ProbablySimpleStream
                 map.put(key, reader.read(stream));
             } else {
                 try {
-                    map.put(key, readerclass.newInstance().read(stream));
-                } catch (InstantiationException | IllegalAccessException ex) {
+                    map.put(key, readerclass.getConstructor().newInstance().read(stream));
+                } catch (IllegalAccessException
+                         | InstantiationException
+                         | InvocationTargetException
+                         | NoSuchMethodException
+                         | NullPointerException ex) {
                     Log.error("Failed to instantiate reader class " + readerclass.getName());
                 }
             }

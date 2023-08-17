@@ -102,7 +102,7 @@ public class TeamLogoLoader {
         if (image == null) {
             return null;
         } else {
-            final double scaleFactor = Math.min((double) width / image.getWidth(null), (double) height / image.getHeight(null));;
+            final double scaleFactor = Math.min((double) width / image.getWidth(null), (double) height / image.getHeight(null));
             return new ImageIcon(image.getScaledInstance(
                     (int) (image.getWidth(null) * scaleFactor),
                     (int) (image.getHeight(null) * scaleFactor),
@@ -136,7 +136,7 @@ public class TeamLogoLoader {
             semiTransparentLogos.put(team, image);
         }
 
-        final double scaleFactor = Math.min((double) width / image.getWidth(null), (double) height / image.getHeight(null));;
+        final double scaleFactor = Math.min((double) width / image.getWidth(null), (double) height / image.getHeight(null));
         return new ImageIcon(image.getScaledInstance(
                 (int) (image.getWidth(null) * scaleFactor),
                 (int) (image.getHeight(null) * scaleFactor),

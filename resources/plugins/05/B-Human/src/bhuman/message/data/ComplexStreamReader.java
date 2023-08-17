@@ -17,5 +17,5 @@ public interface ComplexStreamReader<T> extends StreamReader<T> {
      * @param stream stream to read from
      * @return size in bytes
      */
-    public int getStreamedSize(final ByteBuffer stream);
+    int getStreamedSize(final ByteBuffer stream);
 }

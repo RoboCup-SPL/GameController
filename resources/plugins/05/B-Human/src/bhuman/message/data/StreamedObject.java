@@ -1,11 +1,8 @@
 package bhuman.message.data;
 
 import common.Log;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+
+import java.lang.reflect.*;
 import java.nio.ByteBuffer;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -83,7 +80,7 @@ public class StreamedObject<T extends StreamedObject> implements ProbablySimpleS
                 final Reader reader = field.getAnnotation(Reader.class);
                 final Primitive primitive = field.getAnnotation(Primitive.class);
                 if (reader != null) {
-                    return reader.value().newInstance();
+                    return reader.value().getConstructor().newInstance();
                 } else if (primitive != null) {
                     try {
                         final Field readerField = NativeReaders.class.getField(primitive.value().toLowerCase() + "Reader");
@@ -99,7 +96,7 @@ public class StreamedObject<T extends StreamedObject> implements ProbablySimpleS
                         if (nativeReader != null) {
                             return nativeReader;
                         } else if (StreamReader.class.isAssignableFrom(type)) {
-                            return (StreamReader<?>) type.newInstance();
+                            return (StreamReader<?>) type.getConstructor().newInstance();
                         } else if (Enum.class.isAssignableFrom(type)) {
                             return new EnumReader(type);
                         } else if (EnumMap.class.isAssignableFrom(type)) {
@@ -134,7 +131,7 @@ public class StreamedObject<T extends StreamedObject> implements ProbablySimpleS
                                         Log.error("field " + field.getName() + " in class " + getClass().getName() + " could not be read automatically");
                                     }
                                 }
-                                return new ListReader(componentReader, listCountSize);
+                                return new ListReader<>(componentReader, listCountSize);
                             } catch (ClassNotFoundException ex) {
                                 Log.error("field " + field.getName() + " in class " + getClass().getName() + " could not be read automatically because the type was not found");
                             }
@@ -156,7 +153,10 @@ public class StreamedObject<T extends StreamedObject> implements ProbablySimpleS
                     }
                 }
             }
-        } catch (IllegalAccessException | InstantiationException ex) {
+        } catch (IllegalAccessException
+                 | InstantiationException
+                 | InvocationTargetException
+                 | NoSuchMethodException ex) {
             Log.error("Could not get reader for field " + field.getName() + " of class " + getClass().getName());
         }
         return null;

@@ -48,7 +48,7 @@ public class GameControlReturnData implements Serializable {
     // +ve x-axis points towards the goal we are attempting to score on
     // +ve y-axis is 90 degrees counter clockwise from the +ve x-axis
     // angle in radians, 0 along the +x axis, increasing counter clockwise
-    public float[] pose = new float[3];      // x,y,theta
+    public final float[] pose = new float[3];      // x,y,theta
 
     // ball information
     public float ballAge;   // seconds since this robot last saw the ball. -1.f if we haven't seen it
@@ -58,7 +58,7 @@ public class GameControlReturnData implements Serializable {
     // 0,0 is in centre of the robot
     // +ve x-axis points forward from the robot
     // +ve y-axis is 90 degrees counter clockwise from the +ve x-axis
-    public float[] ball = new float[2];
+    public final float[] ball = new float[2];
 
     public boolean valid = false;
     public boolean headerValid = false;

@@ -1,6 +1,8 @@
 package bhuman.message.data;
 
 import common.Log;
+
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +73,12 @@ public class ListReader<T> implements ComplexStreamReader<List<T>> {
                 elems.add(reader.read(stream));
             } else {
                 try {
-                    elems.add(readerClass.newInstance().read(stream));
-                } catch (InstantiationException | IllegalAccessException ex) {
+                    elems.add(readerClass.getConstructor().newInstance().read(stream));
+                } catch (IllegalAccessException
+                         | InstantiationException
+                         | InvocationTargetException
+                         | NoSuchMethodException
+                         | NullPointerException ex) {
                 }
             }
         }
@@ -83,13 +89,13 @@ public class ListReader<T> implements ComplexStreamReader<List<T>> {
     public int getStreamedSize(final ByteBuffer stream) {
         final int count = getElementCount(stream);
         try {
-            if (reader != null && SimpleStreamReader.class.isInstance(reader)) {
+            if (SimpleStreamReader.class.isInstance(reader)) {
                 return listCountSize + count * ((SimpleStreamReader<T>) reader).getStreamedSize();
             } else if (readerClass != null && SimpleStreamReader.class.isAssignableFrom(readerClass)) {
-                return listCountSize + count * ((SimpleStreamReader<T>) readerClass.newInstance()).getStreamedSize();
+                return listCountSize + count * ((SimpleStreamReader<T>) readerClass.getConstructor().newInstance()).getStreamedSize();
             }
 
-            final ComplexStreamReader<T> reader = (ComplexStreamReader<T>) (this.reader != null ? this.reader : readerClass.newInstance());
+            final ComplexStreamReader<T> reader = (ComplexStreamReader<T>) (this.reader != null ? this.reader : readerClass.getConstructor().newInstance());
             if (ProbablySimpleStreamReader.class.isInstance(reader) && ProbablySimpleStreamReader.class.cast(reader).isSimpleStreamReader()) {
                 return listCountSize + count * reader.getStreamedSize(stream);
             }
@@ -110,7 +116,11 @@ public class ListReader<T> implements ComplexStreamReader<List<T>> {
             }
             stream.position(position);
             return size;
-        } catch (InstantiationException | IllegalAccessException ex) {
+        } catch (IllegalAccessException
+                 | InstantiationException
+                 | InvocationTargetException
+                 | NoSuchMethodException
+                 | NullPointerException ex) {
             Log.error("Failed to instantiate reader class " + readerClass.getName());
             return 0;
         }

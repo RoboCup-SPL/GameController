@@ -9,7 +9,6 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.AnimatorBase;
 import common.Log;
 import java.nio.FloatBuffer;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,20 +46,17 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
     private int width = 0;
     private int height = 0;
 
-    protected static final Comparator<Drawing> drawingComparator = new Comparator<Drawing>() {
-        @Override
-        public int compare(final Drawing o1, final Drawing o2) {
-            // opaque objects have priority over transparent objects
-            if (o1.hasAlpha() && !o2.hasAlpha()) {
-                return 1;
-            }
-            if (!o1.hasAlpha() && o2.hasAlpha()) {
-                return -1;
-            }
-
-            // higher priorities are drawn earlier
-            return o2.getPriority() - o1.getPriority();
+    protected static final Comparator<Drawing> drawingComparator = (o1, o2) -> {
+        // opaque objects have priority over transparent objects
+        if (o1.hasAlpha() && !o2.hasAlpha()) {
+            return 1;
         }
+        if (!o1.hasAlpha() && o2.hasAlpha()) {
+            return -1;
+        }
+
+        // higher priorities are drawn earlier
+        return o2.getPriority() - o1.getPriority();
     };
     protected final List<Drawing> drawings = new LinkedList<>();
 
@@ -137,7 +133,7 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
 
         // Setup common drawings
         drawings.addAll(PluginLoader.getInstance().getCommonDrawings());
-        Collections.sort(drawings, drawingComparator);
+        drawings.sort(drawingComparator);
         for (final Drawing d : drawings) {
             d.initialize(gl);
         }

@@ -34,6 +34,6 @@ public class Unsigned {
      * @return unsigned value
      */
     public static long toUnsigned(final int i) {
-        return i < 0 ? i + (1l << (long) Integer.SIZE) : i;
+        return i < 0 ? i + (1L << (long) Integer.SIZE) : i;
     }
 }

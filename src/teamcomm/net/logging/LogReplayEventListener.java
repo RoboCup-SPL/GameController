@@ -15,15 +15,15 @@ public interface LogReplayEventListener extends EventListener {
      *
      * @param e event
      */
-    public void logReplayStatus(LogReplayEvent e);
+    void logReplayStatus(LogReplayEvent e);
 
     /**
      * Called when a log file was opened.
      */
-    public void logReplayStarted();
+    void logReplayStarted();
 
     /**
      * Called when a log file was closed.
      */
-    public void logReplayEnded();
+    void logReplayEnded();
 }

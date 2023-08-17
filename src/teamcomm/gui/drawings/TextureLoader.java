@@ -87,11 +87,7 @@ public class TextureLoader {
      */
     public Texture loadTexture(final GL gl, final File filename) throws IOException {
         // Get the map for the given gl context
-        Map<String, Texture> map = textures.get(gl);
-        if (map == null) {
-            map = new HashMap<>();
-            textures.put(gl, map);
-        }
+        Map<String, Texture> map = textures.computeIfAbsent(gl, k -> new HashMap<>());
 
         // Check if the texture has already been loaded
         Texture tex = map.get(filename.getAbsolutePath());

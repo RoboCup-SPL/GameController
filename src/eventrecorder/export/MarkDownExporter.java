@@ -12,23 +12,23 @@ import eventrecorder.data.LogType;
 
 public class MarkDownExporter {
     public static String toMarkDown(DataModel model){
-        String result = "## " + model.title + "  \n" + model.additionalInfo+"  \n\n";
+        StringBuilder result = new StringBuilder("## " + model.title + "  \n" + model.additionalInfo + "  \n\n");
 
         for(LogEntry entry : model.logEntries){
             if("".equals(entry.time) && "".equals(entry.text))
                 continue;
 
             if(entry.type == LogType.Manually){
-                result += "- "+entry.time+": "+entry.text+"  \n";
+                result.append("- ").append(entry.time).append(": ").append(entry.text).append("  \n");
             } else if(entry.type == LogType.PlayerState || entry.type == LogType.SetPlayState){
-                result += "- *"+entry.time+": "+entry.text+"*  \n";
+                result.append("- *").append(entry.time).append(": ").append(entry.text).append("*  \n");
             } else if(entry.type == LogType.GameState){
-                result += "\n**"+entry.text+" ("+entry.time+")**  \n\n";
+                result.append("\n**").append(entry.text).append(" (").append(entry.time).append(")**  \n\n");
             }
         }
 
         //result += "*Logfile End*";
 
-        return result;
+        return result.toString();
     }
 }

@@ -4,7 +4,6 @@ import common.net.GameControlReturnDataPackage;
 import common.net.GameControlReturnDataReceiver;
 import data.GameControlReturnData;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import javax.swing.JOptionPane;
 import teamcomm.data.GameState;

@@ -1,6 +1,8 @@
 package bhuman.message.data;
 
 import common.Log;
+
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 
 /**
@@ -45,8 +47,12 @@ public class ArrayReader<T> implements ProbablySimpleStreamReader<T[]> {
                 array[i] = reader.read(stream);
             } else {
                 try {
-                    array[i] = readerClass.newInstance().read(stream);
-                } catch (InstantiationException | IllegalAccessException ex) {
+                    array[i] = readerClass.getConstructor().newInstance().read(stream);
+                } catch (IllegalAccessException
+                         | InstantiationException
+                         | InvocationTargetException
+                         | NoSuchMethodException
+                         | NullPointerException ex) {
                     Log.error("Failed to instantiate reader class " + readerClass.getName());
                 }
             }
@@ -57,13 +63,13 @@ public class ArrayReader<T> implements ProbablySimpleStreamReader<T[]> {
     @Override
     public int getStreamedSize(final ByteBuffer stream) {
         try {
-            if (reader != null && SimpleStreamReader.class.isInstance(reader)) {
+            if (SimpleStreamReader.class.isInstance(reader)) {
                 return array.length * ((SimpleStreamReader<T>) reader).getStreamedSize();
             } else if (readerClass != null && SimpleStreamReader.class.isAssignableFrom(readerClass)) {
-                return array.length * ((SimpleStreamReader<T>) readerClass.newInstance()).getStreamedSize();
+                return array.length * ((SimpleStreamReader<T>) readerClass.getConstructor().newInstance()).getStreamedSize();
             }
 
-            final ComplexStreamReader<T> reader = (ComplexStreamReader<T>) (this.reader != null ? this.reader : readerClass.newInstance());
+            final ComplexStreamReader<T> reader = (ComplexStreamReader<T>) (this.reader != null ? this.reader : readerClass.getConstructor().newInstance());
             if (ProbablySimpleStreamReader.class.isInstance(reader) && ProbablySimpleStreamReader.class.cast(reader).isSimpleStreamReader()) {
                 return array.length * reader.getStreamedSize(stream);
             }
@@ -83,7 +89,11 @@ public class ArrayReader<T> implements ProbablySimpleStreamReader<T[]> {
             }
             stream.position(position);
             return size;
-        } catch (InstantiationException | IllegalAccessException ex) {
+        } catch (IllegalAccessException
+                 | InstantiationException
+                 | InvocationTargetException
+                 | NoSuchMethodException
+                 | NullPointerException ex) {
             Log.error("Failed to instantiate reader class " + readerClass.getName());
             return 0;
         }
@@ -93,8 +103,12 @@ public class ArrayReader<T> implements ProbablySimpleStreamReader<T[]> {
     public boolean isSimpleStreamReader() {
         final StreamReader<T> reader;
         try {
-            reader = this.reader != null ? this.reader : readerClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
+            reader = this.reader != null ? this.reader : readerClass.getConstructor().newInstance();
+        } catch (IllegalAccessException
+                 | InstantiationException
+                 | InvocationTargetException
+                 | NoSuchMethodException
+                 | NullPointerException ex) {
             Log.error("Cannot instantiate reader class " + readerClass.getName());
             return false;
         }

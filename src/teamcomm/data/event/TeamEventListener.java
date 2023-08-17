@@ -15,5 +15,5 @@ public interface TeamEventListener extends EventListener {
      *
      * @param e event
      */
-    public void teamChanged(TeamEvent e);
+    void teamChanged(TeamEvent e);
 }

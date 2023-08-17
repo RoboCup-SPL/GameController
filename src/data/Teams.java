@@ -6,10 +6,11 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 
 /**
@@ -30,7 +31,7 @@ public class Teams {
         /**
          * The name of the team.
          */
-        public String name;
+        public final String name;
         /**
          * The icon of the team.
          */
@@ -38,7 +39,7 @@ public class Teams {
         /**
          * The first and secondary jersey colors of the team.
          */
-        public String[] colors;
+        public final String[] colors;
 
         /**
          * Create a new team information.
@@ -74,12 +75,12 @@ public class Teams {
     /**
      * The instance of the singleton.
      */
-    private static Teams instance = new Teams();
+    private static final Teams instance = new Teams();
 
     /**
      * The information read from the config files.
      */
-    private Info[][] teams;
+    private final Info[][] teams;
 
     /**
      * Creates a new Teams object.
@@ -91,13 +92,13 @@ public class Teams {
             int maxValue = 0;
             BufferedReader br = null;
             try {
-                InputStream inStream = new FileInputStream(PATH + dir + "/" + CONFIG);
+                InputStream inStream = Files.newInputStream(Paths.get(PATH + dir + "/" + CONFIG));
                 br = new BufferedReader(
                         new InputStreamReader(inStream, CHARSET));
                 String line;
                 while ((line = br.readLine()) != null) {
                     try {
-                        final int value = Integer.valueOf(line.split("=", 2)[0]);
+                        final int value = Integer.parseInt(line.split("=", 2)[0]);
                         if (value > maxValue) {
                             maxValue = value;
                         }
@@ -141,7 +142,7 @@ public class Teams {
     public static void readTeams() {
         BufferedReader br = null;
         try {
-            InputStream inStream = new FileInputStream(PATH + Rules.league.leagueDirectory + "/" + CONFIG);
+            InputStream inStream = Files.newInputStream(Paths.get(PATH + Rules.league.leagueDirectory + "/" + CONFIG));
             br = new BufferedReader(
                     new InputStreamReader(inStream, CHARSET));
             String line;
@@ -150,7 +151,7 @@ public class Teams {
                 if (entry.length == 2) {
                     int key = -1;
                     try {
-                        key = Integer.valueOf(entry[0]);
+                        key = Integer.parseInt(entry[0]);
                     } catch (NumberFormatException e) {
                     }
                     if (key >= 0) {

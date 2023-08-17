@@ -21,14 +21,11 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import teamcomm.PluginLoader;
@@ -94,100 +91,94 @@ public class View3DGSV extends View3D {
         autoDrawable.addGLEventListener(this);
 
         // Initialize
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (!forceWindowed) {
-                    // Display on external display if possible.
-                    final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-                    currentScreenDevice = devices[devices[0].equals(
-                            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()) ? devices.length - 1 : 0];
-                    final Rectangle bounds = currentScreenDevice.getDefaultConfiguration().getBounds();
-                    window.setLocation((int) bounds.getX(), (int) bounds.getY());
-                    canvas.setPreferredSize(bounds.getSize());
-                    window.setUndecorated(true);
-                    window.setResizable(false);
-                    currentScreenDevice.setFullScreenWindow(window);
-                } else {
-                    canvas.setPreferredSize(new Dimension(640, 480));
-                    window.setUndecorated(false);
+        SwingUtilities.invokeLater(() -> {
+            if (!forceWindowed) {
+                // Display on external display if possible.
+                final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+                currentScreenDevice = devices[devices[0].equals(
+                        GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()) ? devices.length - 1 : 0];
+                final Rectangle bounds = currentScreenDevice.getDefaultConfiguration().getBounds();
+                window.setLocation((int) bounds.getX(), (int) bounds.getY());
+                canvas.setPreferredSize(bounds.getSize());
+                window.setUndecorated(true);
+                window.setResizable(false);
+                currentScreenDevice.setFullScreenWindow(window);
+            } else {
+                canvas.setPreferredSize(new Dimension(640, 480));
+                window.setUndecorated(false);
+            }
+
+            // Setup keyboard / mouse interaction
+            canvas.addMouseWheelListener(me -> {
+                camera.addRadius((float) (-me.getPreciseWheelRotation() * 0.05));
+                camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
+            });
+            canvas.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(final KeyEvent ke) {
+                    switch (ke.getKeyCode()) {
+                        case KeyEvent.VK_ESCAPE:
+                            TeamCommunicationMonitor.shutdown();
+                            window.setVisible(false);
+                            break;
+                        case KeyEvent.VK_F2:
+                            TeamCommunicationMonitor.switchToTCM();
+                            window.setVisible(false);
+                            break;
+                        case KeyEvent.VK_UP:
+                        case KeyEvent.VK_PLUS:
+                            camera.addRadius(-0.05f * ((ke.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0 ? 2 : 1));
+                            camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
+                            break;
+                        case KeyEvent.VK_DOWN:
+                        case KeyEvent.VK_MINUS:
+                            camera.addRadius(0.05f * ((ke.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0 ? 2 : 1));
+                            camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
+                            break;
+                    }
                 }
 
-                // Setup keyboard / mouse interaction
-                canvas.addMouseWheelListener(new MouseWheelListener() {
-                    @Override
-                    public void mouseWheelMoved(final MouseWheelEvent me) {
-                        camera.addRadius((float) (-me.getPreciseWheelRotation() * 0.05));
-                        camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
-                    }
-                });
-                canvas.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyPressed(final KeyEvent ke) {
-                        switch (ke.getKeyCode()) {
-                            case KeyEvent.VK_ESCAPE:
-                                TeamCommunicationMonitor.shutdown();
-                                window.setVisible(false);
-                                break;
-                            case KeyEvent.VK_F2:
-                                TeamCommunicationMonitor.switchToTCM();
-                                window.setVisible(false);
-                                break;
-                            case KeyEvent.VK_UP:
-                            case KeyEvent.VK_PLUS:
-                                camera.addRadius(-0.05f * ((ke.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0 ? 2 : 1));
-                                camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
-                                break;
-                            case KeyEvent.VK_DOWN:
-                            case KeyEvent.VK_MINUS:
-                                camera.addRadius(0.05f * ((ke.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0 ? 2 : 1));
-                                camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void keyReleased(final KeyEvent ke) {
-                        if ((ke.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
-                            if (!forceWindowed && (ke.getKeyCode() == KeyEvent.VK_LEFT || ke.getKeyCode() == KeyEvent.VK_RIGHT)) {
-                                final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-                                if (devices.length > 1) {
-                                    int i;
-                                    for (i = 0; i < devices.length; i++) {
-                                        if (devices[i].equals(currentScreenDevice)) {
-                                            break;
-                                        }
+                @Override
+                public void keyReleased(final KeyEvent ke) {
+                    if ((ke.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
+                        if (!forceWindowed && (ke.getKeyCode() == KeyEvent.VK_LEFT || ke.getKeyCode() == KeyEvent.VK_RIGHT)) {
+                            final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+                            if (devices.length > 1) {
+                                int i;
+                                for (i = 0; i < devices.length; i++) {
+                                    if (devices[i].equals(currentScreenDevice)) {
+                                        break;
                                     }
-                                    animator.pause();
-                                    currentScreenDevice.setFullScreenWindow(null);
-                                    currentScreenDevice = devices[(i + (ke.getKeyCode() == KeyEvent.VK_LEFT ? -1 : 1) + devices.length) % devices.length];
-                                    final Rectangle bounds = currentScreenDevice.getDefaultConfiguration().getBounds();
-                                    window.setLocation((int) bounds.getX(), (int) bounds.getY());
-                                    canvas.setPreferredSize(bounds.getSize());
-                                    currentScreenDevice.setFullScreenWindow(window);
-                                    window.pack();
-                                    animator.resume();
                                 }
+                                animator.pause();
+                                currentScreenDevice.setFullScreenWindow(null);
+                                currentScreenDevice = devices[(i + (ke.getKeyCode() == KeyEvent.VK_LEFT ? -1 : 1) + devices.length) % devices.length];
+                                final Rectangle bounds = currentScreenDevice.getDefaultConfiguration().getBounds();
+                                window.setLocation((int) bounds.getX(), (int) bounds.getY());
+                                canvas.setPreferredSize(bounds.getSize());
+                                currentScreenDevice.setFullScreenWindow(window);
+                                window.pack();
+                                animator.resume();
                             }
                         }
                     }
-                });
-                window.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosing(final WindowEvent e) {
-                        TeamCommunicationMonitor.shutdown();
-                    }
-                });
+                }
+            });
+            window.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(final WindowEvent e) {
+                    TeamCommunicationMonitor.shutdown();
+                }
+            });
 
-                // Start rendering
-                animator = new FPSAnimator(autoDrawable, ANIMATION_FPS);
-                animator.start();
+            // Start rendering
+            animator = new FPSAnimator(autoDrawable, ANIMATION_FPS);
+            animator.start();
 
-                // Pack the window
-                window.add(canvas, BorderLayout.CENTER);
-                window.pack();
-                window.setVisible(true);
-            }
+            // Pack the window
+            window.add(canvas, BorderLayout.CENTER);
+            window.pack();
+            window.setVisible(true);
         });
     }
 
@@ -242,22 +233,19 @@ public class View3DGSV extends View3D {
         textRendererSizes[RENDERER_TIME] = 120 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_SCORE] = window.getWidth() / 6;
         for (int i = 0; i < textRenderers.length; i++) {
-            textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, 0, textRendererSizes[i]), true, true);
+            textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, Font.PLAIN, textRendererSizes[i]), true, true);
         }
     }
 
     @Override
     public void terminate() {
         super.terminate();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (final WindowListener wl : window.getWindowListeners()) {
-                    window.removeWindowListener(wl);
-                }
-                window.setVisible(false);
-                window.dispose();
+        SwingUtilities.invokeLater(() -> {
+            for (final WindowListener wl : window.getWindowListeners()) {
+                window.removeWindowListener(wl);
             }
+            window.setVisible(false);
+            window.dispose();
         });
     }
 
@@ -342,7 +330,7 @@ public class View3DGSV extends View3D {
 
             // Time
             textRenderers[RENDERER_TIME].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_TIME], formatTime((int) data.secsRemaining), (int) Math.round((window.getWidth() - textRenderers[RENDERER_TIME].getBounds("00:00").getWidth()) / 2 - (data.secsRemaining < 0 ? textRenderers[RENDERER_TIME].getCharWidth('-') : 0)), window.getHeight() - textRendererSizes[RENDERER_GAME_PHASE] - textRendererSizes[RENDERER_TIME], Color.black);
+            drawText(textRenderers[RENDERER_TIME], formatTime(data.secsRemaining), (int) Math.round((window.getWidth() - textRenderers[RENDERER_TIME].getBounds("00:00").getWidth()) / 2 - (data.secsRemaining < 0 ? textRenderers[RENDERER_TIME].getCharWidth('-') : 0)), window.getHeight() - textRendererSizes[RENDERER_GAME_PHASE] - textRendererSizes[RENDERER_TIME], Color.black);
             textRenderers[RENDERER_TIME].endRendering();
 
             // State
@@ -514,7 +502,7 @@ public class View3DGSV extends View3D {
                     if (teamNumbers[1] != PluginLoader.TEAMNUMBER_COMMON) {
                         drawings.addAll(PluginLoader.getInstance().getDrawings(teamNumbers[1]));
                     }
-                    Collections.sort(drawings, drawingComparator);
+                    drawings.sort(drawingComparator);
                 }
             }
         }

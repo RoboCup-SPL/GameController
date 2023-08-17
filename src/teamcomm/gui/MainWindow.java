@@ -4,11 +4,8 @@ import common.Log;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -64,13 +61,8 @@ public class MainWindow extends JFrame implements TeamEventListener {
     public MainWindow() {
         super("TeamCommunicationMonitor");
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // Initialize
-                initialize();
-            }
-        });
+        // Initialize
+        SwingUtilities.invokeLater(this::initialize);
     }
 
     /**
@@ -81,26 +73,23 @@ public class MainWindow extends JFrame implements TeamEventListener {
      * @param file log file to replay.
      */
     public void replayLogFile(final File file) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+        SwingUtilities.invokeLater(() -> {
+            try {
                 try {
-                    try {
-                        Config.getInstance().set("ReplayLogfileDir", file.getParentFile().getCanonicalPath());
-                    } catch (IOException ex) {
-                        Config.getInstance().set("ReplayLogfileDir", file.getParentFile().getAbsolutePath());
-                    }
-                    LogReplayer.getInstance().open(file);
+                    Config.getInstance().set("ReplayLogfileDir", file.getParentFile().getCanonicalPath());
                 } catch (IOException ex) {
-                    Log.error("Could not open log file for replay: " + file);
+                    Config.getInstance().set("ReplayLogfileDir", file.getParentFile().getAbsolutePath());
                 }
+                LogReplayer.getInstance().open(file);
+            } catch (IOException ex) {
+                Log.error("Could not open log file for replay: " + file);
             }
         });
     }
 
     private void initialize() {
         // Setup window
-        getRootPane().putClientProperty("apple.awt.fullscreenable", Boolean.valueOf(true));
+        getRootPane().putClientProperty("apple.awt.fullscreenable", true);
         setLocationByPlatform(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -155,58 +144,44 @@ public class MainWindow extends JFrame implements TeamEventListener {
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
         final JMenuItem resetItem = new JMenuItem("Reset");
-        resetItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameState.getInstance().reset();
-            }
-        });
+        resetItem.addActionListener(e -> GameState.getInstance().reset());
         resetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         fileMenu.add(resetItem);
 
         final JMenuItem replayItem = new JMenuItem("Replay log file");
         fileMenu.add(replayItem);
-        replayItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final String dir = (String) Config.getInstance().get("ReplayLogfileDir");
-                final JFileChooser fc = new JFileChooser(dir == null ? new File(new File(".").getAbsoluteFile(), "logs_teamcomm") : new File(dir));
-                if (fc.showOpenDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
+        replayItem.addActionListener(e -> {
+            final String dir = (String) Config.getInstance().get("ReplayLogfileDir");
+            final JFileChooser fc = new JFileChooser(dir == null ? new File(new File(".").getAbsoluteFile(), "logs_teamcomm") : new File(dir));
+            if (fc.showOpenDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
+                try {
                     try {
-                        try {
-                            Config.getInstance().set("ReplayLogfileDir", fc.getSelectedFile().getParentFile().getCanonicalPath());
-                        } catch (IOException ex) {
-                            Config.getInstance().set("ReplayLogfileDir", fc.getSelectedFile().getParentFile().getAbsolutePath());
-                        }
-                        LogReplayer.getInstance().open(fc.getSelectedFile());
+                        Config.getInstance().set("ReplayLogfileDir", fc.getSelectedFile().getParentFile().getCanonicalPath());
                     } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(null,
-                                "Error opening log file.",
-                                ex.getClass().getSimpleName(),
-                                JOptionPane.ERROR_MESSAGE);
+                        Config.getInstance().set("ReplayLogfileDir", fc.getSelectedFile().getParentFile().getAbsolutePath());
                     }
+                    LogReplayer.getInstance().open(fc.getSelectedFile());
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Error opening log file.",
+                            ex.getClass().getSimpleName(),
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
         replayItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 
         final JMenuItem switchItem = new JMenuItem("Switch to GameStateVisualizer");
-        switchItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                TeamCommunicationMonitor.switchToGSV();
-                setVisible(false);
-            }
+        switchItem.addActionListener(e -> {
+            TeamCommunicationMonitor.switchToGSV();
+            setVisible(false);
         });
         fileMenu.add(switchItem);
 
         final JMenuItem exitItem = new JMenuItem("Exit");
-        exitItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TeamCommunicationMonitor.shutdown();
-                setVisible(false);
-            }
+        exitItem.addActionListener(e -> {
+            TeamCommunicationMonitor.shutdown();
+            setVisible(false);
         });
         fileMenu.add(exitItem);
 
@@ -218,12 +193,7 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
         // Mirroring
         final JCheckBoxMenuItem mirrorOption = new JCheckBoxMenuItem("Mirror", GameState.getInstance().isMirrored());
-        mirrorOption.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(final ItemEvent e) {
-                GameState.getInstance().setMirrored(e.getStateChange() == ItemEvent.SELECTED);
-            }
-        });
+        mirrorOption.addItemListener(e -> GameState.getInstance().setMirrored(e.getStateChange() == ItemEvent.SELECTED));
         viewMenu.add(mirrorOption);
 
         // Drawings
@@ -242,43 +212,40 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
     @Override
     public void teamChanged(final TeamEvent e) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (e.side != GameState.TEAM_OTHER) {
-                    teamLogos[e.side].setIcon(TeamLogoLoader.getInstance().getTeamLogoPanelIcon(e.teamNumber));
-                }
-
-                int i = 0;
-                for (final RobotState r : e.players) {
-                    RobotPanel panel = robotPanels.get(r.getAddress());
-                    if (panel == null) {
-                        panel = new RobotPanel(r);
-                        robotPanels.put(r.getAddress(), panel);
-                    }
-
-                    if (teamPanels[e.side].getComponentCount() <= i + (e.side < 2 ? 1 : 0)) {
-                        teamPanels[e.side].add(panel);
-                        panel.revalidate();
-                    } else if (panel != teamPanels[e.side].getComponent(i + (e.side < 2 ? 1 : 0))) {
-                        teamPanels[e.side].remove(panel);
-                        teamPanels[e.side].add(panel, i + (e.side < 2 ? 1 : 0));
-                        panel.revalidate();
-                    }
-
-                    panel.setTeamLogoVisible(e.side == GameState.TEAM_OTHER);
-
-                    i++;
-                }
-
-                while (e.players.size() < teamPanels[e.side].getComponentCount() - (e.side < 2 ? 1 : 0)) {
-                    final RobotPanel panel = (RobotPanel) teamPanels[e.side].getComponent(teamPanels[e.side].getComponentCount() - 1);
-                    teamPanels[e.side].remove(teamPanels[e.side].getComponentCount() - 1);
-                    robotPanels.remove(panel.getRobotAddress());
-                    panel.dispose();
-                }
-                teamPanels[e.side].repaint();
+        SwingUtilities.invokeLater(() -> {
+            if (e.side != GameState.TEAM_OTHER) {
+                teamLogos[e.side].setIcon(TeamLogoLoader.getInstance().getTeamLogoPanelIcon(e.teamNumber));
             }
+
+            int i = 0;
+            for (final RobotState r : e.players) {
+                RobotPanel panel = robotPanels.get(r.getAddress());
+                if (panel == null) {
+                    panel = new RobotPanel(r);
+                    robotPanels.put(r.getAddress(), panel);
+                }
+
+                if (teamPanels[e.side].getComponentCount() <= i + (e.side < 2 ? 1 : 0)) {
+                    teamPanels[e.side].add(panel);
+                    panel.revalidate();
+                } else if (panel != teamPanels[e.side].getComponent(i + (e.side < 2 ? 1 : 0))) {
+                    teamPanels[e.side].remove(panel);
+                    teamPanels[e.side].add(panel, i + (e.side < 2 ? 1 : 0));
+                    panel.revalidate();
+                }
+
+                panel.setTeamLogoVisible(e.side == GameState.TEAM_OTHER);
+
+                i++;
+            }
+
+            while (e.players.size() < teamPanels[e.side].getComponentCount() - (e.side < 2 ? 1 : 0)) {
+                final RobotPanel panel = (RobotPanel) teamPanels[e.side].getComponent(teamPanels[e.side].getComponentCount() - 1);
+                teamPanels[e.side].remove(teamPanels[e.side].getComponentCount() - 1);
+                robotPanels.remove(panel.getRobotAddress());
+                panel.dispose();
+            }
+            teamPanels[e.side].repaint();
         });
     }
 }

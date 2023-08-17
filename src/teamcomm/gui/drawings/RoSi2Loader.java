@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -67,22 +66,13 @@ public class RoSi2Loader {
         if (modelFileMap != null) {
             final Map<String, Integer> modelMap = modelFileMap.get(filename);
             if (modelMap != null) {
-                final Iterator<String> iter = modelNameSet.iterator();
-                while (iter.hasNext()) {
-                    if (modelMap.containsKey(iter.next())) {
-                        iter.remove();
-                    }
-                }
+                modelNameSet.removeIf(modelMap::containsKey);
             }
         }
 
         // Add models to the set of models to load
         if (!modelNameSet.isEmpty()) {
-            Map<String, Set<String>> fileMap = modelsToLoad.get(gl);
-            if (fileMap == null) {
-                fileMap = new HashMap<>();
-                modelsToLoad.put(gl, fileMap);
-            }
+            Map<String, Set<String>> fileMap = modelsToLoad.computeIfAbsent(gl, k -> new HashMap<>());
             Set<String> nameSet = fileMap.get(filename);
             if (nameSet == null) {
                 fileMap.put(filename, modelNameSet);
@@ -115,11 +105,7 @@ public class RoSi2Loader {
      */
     public int loadModel(final GL2 gl, final String filename, final String modelname) {
         // Check if the model has already been loaded
-        Map<String, Map<String, Integer>> fileMap = models.get(gl);
-        if (fileMap == null) {
-            fileMap = new HashMap<>();
-            models.put(gl, fileMap);
-        }
+        Map<String, Map<String, Integer>> fileMap = models.computeIfAbsent(gl, k -> new HashMap<>());
         Map<String, Integer> modelMap = fileMap.get(filename);
         if (modelMap == null) {
             modelMap = new HashMap<>();
@@ -132,16 +118,8 @@ public class RoSi2Loader {
         }
 
         // Determine models to load from the same file
-        Map<String, Set<String>> loadFileMap = modelsToLoad.get(gl);
-        if (loadFileMap == null) {
-            loadFileMap = new HashMap<>();
-            modelsToLoad.put(gl, loadFileMap);
-        }
-        Set<String> nameSet = loadFileMap.get(filename);
-        if (nameSet == null) {
-            nameSet = new HashSet<>();
-            loadFileMap.put(filename, nameSet);
-        }
+        Map<String, Set<String>> loadFileMap = modelsToLoad.computeIfAbsent(gl, k -> new HashMap<>());
+        Set<String> nameSet = loadFileMap.computeIfAbsent(filename, k -> new HashSet<>());
         nameSet.add(modelname);
 
         // Load models

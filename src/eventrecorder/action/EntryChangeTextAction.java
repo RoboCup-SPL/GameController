@@ -9,15 +9,15 @@ import eventrecorder.data.LogEntry;
  */
 
 public class EntryChangeTextAction extends Action{
-    private String newText;
-    private String savedText;
+    private final String newText;
+    private final String savedText;
 
     /**
      * Creates a new ChangeAction.
      *
-     * @param entry         LogEntry in the DataModel.
-     * @param newLogEntry   Copy of the LogEntry with new values.
-     * @param savedLogEntry Copy of the LogEntry with old values.
+     * @param entry     LogEntry in the DataModel.
+     * @param newText   entry's text.
+     * @param savedText entry's previous text.
      */
 
     public EntryChangeTextAction(LogEntry entry, String newText, String savedText){

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class DataModel {
     public String title = "";
     public String additionalInfo = "";
-    public ArrayList<LogEntry> logEntries = new ArrayList<LogEntry>();
+    public final ArrayList<LogEntry> logEntries = new ArrayList<>();
 
     public int currentTime = 600;
     public boolean isManuallyRunning = false;

@@ -109,7 +109,7 @@ public class GameControlData implements Serializable {
     public byte kickingTeam;                                     // the next team to kick off
     public short secsRemaining = (short) Rules.league.halfTime;  // estimate of number of seconds remaining in the half
     public short secondaryTime = 0;                              // sub-time (remaining in ready state etc.) in seconds
-    public TeamInfo[] team = new TeamInfo[2];
+    public final TeamInfo[] team = new TeamInfo[2];
 
     /**
      * Creates a new GameControlData.

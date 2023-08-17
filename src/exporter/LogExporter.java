@@ -9,8 +9,9 @@ import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.io.EOFException;
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 ///...
 
 
@@ -32,10 +33,7 @@ public class LogExporter
       GameControlData gcd = null;  // Pointer to last packet from GameController
       char currentGameState = 'X'; // Current game state
 
-      ObjectInputStream stream = null;
-      try {
-        // Open file:
-        stream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(logfile)));
+      try (ObjectInputStream stream = new ObjectInputStream(new BufferedInputStream(Files.newInputStream(Paths.get(logfile))))) {
         // Print header to console:
         System.out.println("Timestamp;Game State;Team;Player;Penalized;Pose X;Pose Y");
         while(true) {
@@ -80,10 +78,10 @@ public class LogExporter
                 case GameControlData.STATE_SET: currentGameState = 'S'; break;
               }
             }
-          } else if (stream.readInt() == 1) {
-            // current event is a timeout of the GameController connection
-            // nothing to do here now...
-          }
+          } /*else if (stream.readInt() == 1) {
+            current event is a timeout of the GameController connection
+            nothing to do here now...
+          }*/
         }
       }
       catch (EOFException e) {
@@ -92,12 +90,6 @@ public class LogExporter
       }
       catch (IOException | ClassNotFoundException e) {
         System.out.println("Exception: " + e);
-      } finally {
-        try {
-          if(stream != null)
-            stream.close();
-        } catch (IOException ex) {
-        }
       }
   }
 }

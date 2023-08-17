@@ -4,8 +4,8 @@ import eventrecorder.data.LogEntry;
 import eventrecorder.data.LogType;
 
 public class EntryTypeChangeAction extends Action{
-    private LogType savedLogType;
-    private LogType newLogType;
+    private final LogType savedLogType;
+    private final LogType newLogType;
 
     public EntryTypeChangeAction(LogEntry entry, LogType newLogType, LogType savedLogType){
         this(entry, true, newLogType, savedLogType);

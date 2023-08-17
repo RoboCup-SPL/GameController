@@ -13,16 +13,16 @@ import java.nio.channels.FileLock;
  */
 public class ApplicationLock {
     /** The lockFile. */
-    private File lockFile = null;
+    private final File lockFile;
 
     /** The acquire. */
-    private FileLock lock = null;
+    private FileLock lock;
 
     /** The lockChannel. */
-    private FileChannel lockChannel = null;
+    private FileChannel lockChannel;
 
     /** The lockStream. */
-    private FileOutputStream lockStream = null;
+    private FileOutputStream lockStream;
 
     /**
      * Creates a new ApplicationLock instance.

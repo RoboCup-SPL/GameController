@@ -16,5 +16,5 @@ public interface StreamReader<T> {
      * @param stream stream to read from
      * @return object
      */
-    public T read(final ByteBuffer stream);
+    T read(final ByteBuffer stream);
 }

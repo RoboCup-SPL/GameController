@@ -5,10 +5,10 @@ import common.net.SPLTeamMessagePackage;
 import common.net.GameControlReturnDataPackage;
 import data.GameControlData;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -161,7 +161,7 @@ public class Logger {
                     // Open stream if needed
                     if (logger == null) {
                         try {
-                            logger = new ObjectOutputStream(new FileOutputStream(logFile));
+                            logger = new ObjectOutputStream(Files.newOutputStream(logFile.toPath()));
                         } catch (IOException ex) {
                             Log.error("error while opening logfile: " + ex.getMessage());
                             error = true;

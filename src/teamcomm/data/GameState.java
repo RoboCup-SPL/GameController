@@ -65,26 +65,22 @@ public class GameState implements GameControlDataEventListener {
 
     private final Map<Integer, Collection<RobotState>> robots = new HashMap<>();
 
-    private static final Comparator<RobotState> playerNumberComparator = new Comparator<RobotState>() {
-        @Override
-        public int compare(RobotState o1, RobotState o2) {
-            if (o1.getPlayerNumber() == null) {
-                if (o2.getPlayerNumber() == null) {
-                    return o1.hashCode() - o2.hashCode();
-                }
-                return -1;
-            } else if (o2.getPlayerNumber() == null) {
-                return 1;
+    private static final Comparator<RobotState> playerNumberComparator = (o1, o2) -> {
+        if (o1.getPlayerNumber() == null) {
+            if (o2.getPlayerNumber() == null) {
+                return o1.hashCode() - o2.hashCode();
             }
-            return o1.getPlayerNumber() - o2.getPlayerNumber();
+            return -1;
+        } else if (o2.getPlayerNumber() == null) {
+            return 1;
         }
+        return o1.getPlayerNumber() - o2.getPlayerNumber();
     };
 
     private final HashMap<String, RobotState> robotsByAddress = new HashMap<>();
 
     private final EventListenerList listeners = new EventListenerList();
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final ScheduledFuture<?> taskHandle;
 
     /**
@@ -97,65 +93,57 @@ public class GameState implements GameControlDataEventListener {
     }
 
     private GameState() {
-        taskHandle = scheduler.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                if (!(LogReplayer.getInstance().isReplaying() && LogReplayer.getInstance().isPaused())) {
-                    // Check if the GameController is running
-                    try {
-                        final ApplicationLock lock = new ApplicationLock("GameController");
-                        if (!lock.acquire()) {
-                            // Do not log messages if a GameController is running on the same system
-                            Logger.getInstance().disableLogging();
-                        } else {
-                            Logger.getInstance().enableLogging();
-                            lock.release();
-                        }
-                    } catch (IOException e) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        taskHandle = scheduler.scheduleAtFixedRate(() -> {
+            if (!(LogReplayer.getInstance().isReplaying() && LogReplayer.getInstance().isPaused())) {
+                // Check if the GameController is running
+                try {
+                    final ApplicationLock lock = new ApplicationLock("GameController");
+                    if (!lock.acquire()) {
+                        // Do not log messages if a GameController is running on the same system
+                        Logger.getInstance().disableLogging();
+                    } else {
+                        Logger.getInstance().enableLogging();
+                        lock.release();
                     }
+                } catch (IOException e) {
+                }
 
-                    // Update robots
-                    int changed = 0;
-                    synchronized (robotsByAddress) {
-                        final Iterator<RobotState> iter = robotsByAddress.values().iterator();
-                        while (iter.hasNext()) {
-                            final RobotState r = iter.next();
-                            if (r.updateConnectionStatus() == RobotState.ConnectionStatus.INACTIVE) {
-                                iter.remove();
-                            }
-                        }
+                // Update robots
+                int changed = 0;
+                synchronized (robotsByAddress) {
+                    robotsByAddress.values().removeIf(r -> r.updateConnectionStatus() == RobotState.ConnectionStatus.INACTIVE);
 
-                        for (final Entry<Integer, Collection<RobotState>> team : robots.entrySet()) {
-                            final Iterator<RobotState> it = team.getValue().iterator();
-                            while (it.hasNext()) {
-                                final RobotState r = it.next();
-                                if (!robotsByAddress.containsKey(r.getAddress())) {
-                                    it.remove();
+                    for (final Entry<Integer, Collection<RobotState>> team : robots.entrySet()) {
+                        final Iterator<RobotState> it = team.getValue().iterator();
+                        while (it.hasNext()) {
+                            final RobotState r = it.next();
+                            if (!robotsByAddress.containsKey(r.getAddress())) {
+                                it.remove();
 
-                                    synchronized (teamNumbers) {
-                                        if (team.getKey() == teamNumbers[TEAM_LEFT]) {
-                                            changed |= CHANGED_LEFT;
-                                            if (team.getValue().isEmpty() && lastGameControlData == null) {
-                                                teamNumbers[TEAM_LEFT] = 0;
-                                            }
-                                        } else if (team.getKey() == teamNumbers[TEAM_RIGHT]) {
-                                            changed |= CHANGED_RIGHT;
-                                            if (team.getValue().isEmpty() && lastGameControlData == null) {
-                                                teamNumbers[TEAM_RIGHT] = 0;
-                                            }
-                                        } else {
-                                            changed |= CHANGED_OTHER;
+                                synchronized (teamNumbers) {
+                                    if (team.getKey() == teamNumbers[TEAM_LEFT]) {
+                                        changed |= CHANGED_LEFT;
+                                        if (team.getValue().isEmpty() && lastGameControlData == null) {
+                                            teamNumbers[TEAM_LEFT] = 0;
                                         }
+                                    } else if (team.getKey() == teamNumbers[TEAM_RIGHT]) {
+                                        changed |= CHANGED_RIGHT;
+                                        if (team.getValue().isEmpty() && lastGameControlData == null) {
+                                            teamNumbers[TEAM_RIGHT] = 0;
+                                        }
+                                    } else {
+                                        changed |= CHANGED_OTHER;
                                     }
                                 }
                             }
                         }
                     }
-
-                    sendEvents(changed);
                 }
+
+                sendEvents(changed);
             }
-        }, RobotState.ConnectionStatus.HIGH_LATENCY.threshold * 2, RobotState.ConnectionStatus.HIGH_LATENCY.threshold / 2, TimeUnit.MILLISECONDS);
+        }, RobotState.ConnectionStatus.HIGH_LATENCY.threshold * 2L, RobotState.ConnectionStatus.HIGH_LATENCY.threshold / 2L, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -346,11 +334,7 @@ public class GameState implements GameControlDataEventListener {
                 robotsByAddress.put(address, r);
             }
 
-            Collection<RobotState> set = robots.get(teamNumber);
-            if (set == null) {
-                set = new HashSet<>();
-                robots.put(teamNumber, set);
-            }
+            Collection<RobotState> set = robots.computeIfAbsent(teamNumber, k -> new HashSet<>());
             if (set.add(r)) {
                 if (teamNumbers[TEAM_LEFT] == teamNumber) {
                     changed |= CHANGED_LEFT;
@@ -396,11 +380,7 @@ public class GameState implements GameControlDataEventListener {
                 robotsByAddress.put(address, r);
             }
 
-            Collection<RobotState> set = robots.get((int) message.teamNum);
-            if (set == null) {
-                set = new HashSet<>();
-                robots.put((int) message.teamNum, set);
-            }
+            Collection<RobotState> set = robots.computeIfAbsent((int) message.teamNum, k -> new HashSet<>());
             if (set.add(r)) {
                 if (teamNumbers[TEAM_LEFT] == message.teamNum) {
                     changed |= CHANGED_LEFT;
@@ -490,7 +470,7 @@ public class GameState implements GameControlDataEventListener {
      * @param teamNumber number of the team
      * @param playerNumber number of the player
      * @return the team color
-     * @see TeamInfo#teamColor
+     * @see TeamInfo#fieldPlayerColor and TeamInfo#goalkeeperColor
      */
     public int getTeamColor(final int teamNumber, final int playerNumber) {
         if (lastGameControlData == null || (lastGameControlData.team[0].teamNumber != teamNumber && lastGameControlData.team[1].teamNumber != teamNumber)) {

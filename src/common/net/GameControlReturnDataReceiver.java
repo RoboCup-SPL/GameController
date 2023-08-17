@@ -10,8 +10,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -44,11 +42,8 @@ public class GameControlReturnDataReceiver extends Thread {
          * @param address the InetAddress to listen on. If null, listens on any address.
          * @param forwarded whether this thread should received forwarded packets (from GC) instead of the original ones
          * @throws SocketException if an error occurs while creating the socket
-         * @throws UnknownHostException if (internally chosen) inet-address is not
-         * valid or no network device is bound to an address matching the regex
-         * (ignoring loopback interfaces)
          */
-        public ReceiverThread(final InetAddress address, boolean forwarded) throws SocketException, UnknownHostException {
+        public ReceiverThread(final InetAddress address, boolean forwarded) throws SocketException {
             setName("GameControlReturnDataReceiver");
 
             this.forwarded = forwarded;
@@ -103,11 +98,8 @@ public class GameControlReturnDataReceiver extends Thread {
      * @param address the InetAddress to listen on. If null, listens on any address.
      * @param generateIP Generate a sender IP based on data in return packet.
      * @throws SocketException if an error occurs while creating the socket
-     * @throws UnknownHostException if (internally chosen) inet-address is not
-     * valid or no network device is bound to an address matching the regex
-     * (ignoring loopback interfaces)
      */
-    public GameControlReturnDataReceiver(final InetAddress address, boolean generateIP) throws SocketException, UnknownHostException {
+    public GameControlReturnDataReceiver(final InetAddress address, boolean generateIP) throws SocketException {
         // Create receiver thread
         receiver = new ReceiverThread(address, false);
         this.generateIP = generateIP;
@@ -117,11 +109,8 @@ public class GameControlReturnDataReceiver extends Thread {
      * Creates a new Receiver for forwarded messages.
      *
      * @throws SocketException if an error occurs while creating the socket
-     * @throws UnknownHostException if (internally chosen) inet-address is not
-     * valid or no network device is bound to an address matching the regex
-     * (ignoring loopback interfaces)
      */
-    public GameControlReturnDataReceiver() throws SocketException, UnknownHostException {
+    public GameControlReturnDataReceiver() throws SocketException {
         // Create receiver thread
         receiver = new ReceiverThread(null, true);
         generateIP = false;

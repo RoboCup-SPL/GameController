@@ -44,14 +44,14 @@ public class EventRecorder {
     private static byte lastSetPlay = -1;
     private static byte lastKickingTeam = -1;
 
-    private static boolean[] logPenalty = new boolean[16];
+    private static final boolean[] logPenalty = new boolean[16];
     private static boolean logFreeKicks = true;
 
     public TeamInfo[] getLastTeamData() {
         return lastTeamData;
     }
 
-    public static void main(String args[]){
+    public static void main(String[] args){
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         model = new DataModel();
         history = new ActionHistory();
@@ -88,8 +88,8 @@ public class EventRecorder {
     }
 
 
-    public static void updateGameData(GameControlData data){
-        if(data != lastData && data != null){
+    public static void updateGameData(GameControlData data) {
+        if (data != lastData && data != null) {
             // Deactivate manually running:
             model.isManuallyRunning = false;
 
@@ -97,20 +97,21 @@ public class EventRecorder {
             model.currentTime = data.secsRemaining;
 
             //Log goals
-            if(lastData != null && data.gameState != GameControlData.STATE_INITIAL &&
-                (lastData.team[0].score != data.team[0].score || lastData.team[1].score != data.team[1].score)){
+            if (lastData != null && data.gameState != GameControlData.STATE_INITIAL &&
+                (lastData.team[0].score != data.team[0].score || lastData.team[1].score != data.team[1].score)) {
 
                 // Insert before empty logEntries:
                 int insertPlace = EventRecorder.model.logEntries.size();
 
-                while (insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace - 1).text))
+                while (insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace - 1).text)) {
                     --insertPlace;
+                }
 
                 history.execute(new EntryCreateAction(new LogEntry(capitalize(TeamInfo.getTeamColorName(data.team[0].fieldPlayerColor)) + " " + data.team[0].score + " : " + data.team[1].score + " " + capitalize(TeamInfo.getTeamColorName(data.team[1].fieldPlayerColor)), SECONDS_FORMAT.format(data.secsRemaining * 1000), LogType.Manually), insertPlace, false));
             }
 
             // If Gamestate is changed, add a LogEntry:
-            if(lastGameState != data.gameState){
+            if (lastGameState != data.gameState) {
                 lastGameState = data.gameState;
 
                 String gameStateString = GAME_STATE_NAMES[data.gameState];
@@ -121,16 +122,17 @@ public class EventRecorder {
                 // Insert before empty logEntries:
                 int insertPlace = EventRecorder.model.logEntries.size();
 
-                while(insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text))
+                while (insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace - 1).text)) {
                     --insertPlace;
+                }
 
-                history.execute(new EntryCreateAction(new LogEntry(gameStateString,SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.GameState), insertPlace, false));
+                history.execute(new EntryCreateAction(new LogEntry(gameStateString, SECONDS_FORMAT.format(data.secsRemaining * 1000),LogType.GameState), insertPlace, false));
             }
 
             //Log Free Kicks
-            if(logFreeKicks && (lastSetPlay != data.setPlay || lastKickingTeam != data.kickingTeam)) {
-                if(data.setPlay == GameControlData.SET_PLAY_NONE) {
-                    String setPlayString = "";
+            if (logFreeKicks && (lastSetPlay != data.setPlay || lastKickingTeam != data.kickingTeam)) {
+                if (data.setPlay == GameControlData.SET_PLAY_NONE) {
+                    String setPlayString;
                     switch (lastSetPlay) {
                         case GameControlData.SET_PLAY_GOAL_KICK:
                             setPlayString = "Goal Kick Complete";
@@ -155,14 +157,15 @@ public class EventRecorder {
                     // Insert before empty logEntries:
                     int insertPlace = EventRecorder.model.logEntries.size();
 
-                    while(insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text))
+                    while (insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text)) {
                         --insertPlace;
+                    }
 
-                    if(setPlayString != "")
-                        history.execute(new EntryCreateAction(new LogEntry(setPlayString, SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.SetPlayState), insertPlace, false));
-                }
-                else {
-                    String setPlayString = "";
+                    if (!setPlayString.isEmpty()) {
+                        history.execute(new EntryCreateAction(new LogEntry(setPlayString, SECONDS_FORMAT.format(data.secsRemaining * 1000), LogType.SetPlayState), insertPlace, false));
+                    }
+                } else {
+                    String setPlayString;
                     switch (data.setPlay) {
                         case GameControlData.SET_PLAY_GOAL_KICK:
                             setPlayString = "Goal Kick for team: ";
@@ -188,36 +191,35 @@ public class EventRecorder {
                     // Insert before empty logEntries:
                     int insertPlace = EventRecorder.model.logEntries.size();
 
-                    while(insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text))
+                    while (insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace - 1).text)) {
                         --insertPlace;
+                    }
 
-                    history.execute(new EntryCreateAction(new LogEntry(setPlayString, SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.SetPlayState), insertPlace, false));
+                    history.execute(new EntryCreateAction(new LogEntry(setPlayString, SECONDS_FORMAT.format(data.secsRemaining * 1000), LogType.SetPlayState), insertPlace, false));
                 }
                 lastSetPlay = data.setPlay;
                 lastKickingTeam = data.kickingTeam;
             }
 
             // Check for changed penalties:
-            if(lastTeamData != null) {
-                for(int i=0; i<data.team.length && i<lastTeamData.length; ++i) {
-                    for(int p=0; p<data.team[i].player.length && p<lastTeamData[i].player.length; ++p) {
-                        if(data.team[i].player[p].penalty != lastTeamData[i].player[p].penalty
+            if (lastTeamData != null) {
+                for (int i = 0; i < data.team.length && i < lastTeamData.length; ++i) {
+                    for (int p = 0; p < data.team[i].player.length && p < lastTeamData[i].player.length; ++p) {
+                        if (data.team[i].player[p].penalty != lastTeamData[i].player[p].penalty
                                 && logPenalty[data.team[i].player[p].penalty]) {
-
                             String penaltyString = data.team[i].player[p].penalty == 0 ? "Back In Game" :
                                 capitalize(PlayerInfo.getPenaltyName(data.team[i].player[p].penalty));
-
-                            String totalString = TeamInfo.getTeamColorName(data.team[i].fieldPlayerColor).toUpperCase()+" "+(p+1)+": "+
+                            String totalString = TeamInfo.getTeamColorName(data.team[i].fieldPlayerColor).toUpperCase() + " " + (p + 1) + ": " +
                                     penaltyString;
 
                             // Insert before empty logEntries:
                             int insertPlace = EventRecorder.model.logEntries.size();
 
-                            while(insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace-1).text))
+                            while (insertPlace > 0 && "".equals(EventRecorder.model.logEntries.get(insertPlace - 1).text)) {
                                 --insertPlace;
+                            }
 
-                            history.execute(new EntryCreateAction(new LogEntry(totalString,SECONDS_FORMAT.format(data.secsRemaining*1000),LogType.PlayerState), insertPlace, false));
-
+                            history.execute(new EntryCreateAction(new LogEntry(totalString, SECONDS_FORMAT.format(data.secsRemaining * 1000),LogType.PlayerState), insertPlace, false));
                         }
                     }
                 }
@@ -233,7 +235,7 @@ public class EventRecorder {
     }
 
     public static String capitalize(String string) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         String[] array = string.split(" ");
         for (String s : array) {
@@ -246,7 +248,7 @@ public class EventRecorder {
         return result.toString().trim();
     }
 
-    public static void cleanExit(){
+    public static void cleanExit() {
         gcDataReceiver.interrupt();
 
         // Try to join receiver threads

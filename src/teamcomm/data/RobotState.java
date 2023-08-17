@@ -16,7 +16,7 @@ import teamcomm.data.event.RobotStateEventListener;
  */
 public class RobotState {
 
-    public static enum ConnectionStatus {
+    public enum ConnectionStatus {
 
         INACTIVE(10000),
         OFFLINE(5000),
@@ -25,7 +25,7 @@ public class RobotState {
 
         public final int threshold;
 
-        private ConnectionStatus(final int threshold) {
+        ConnectionStatus(final int threshold) {
             this.threshold = threshold;
         }
     }
@@ -149,7 +149,7 @@ public class RobotState {
                 it.remove();
             }
 
-            return recentTeamMessageTimestamps.size() > 0 ? ((recentTeamMessageTimestamps.size() - 1) * 1000.0 / Math.max(1000, lastTeamMessageTimestamp - recentTeamMessageTimestamps.getLast())) : 0;
+            return !recentTeamMessageTimestamps.isEmpty() ? ((recentTeamMessageTimestamps.size() - 1) * 1000.0 / Math.max(1000, lastTeamMessageTimestamp - recentTeamMessageTimestamps.getLast())) : 0;
         }
     }
 
@@ -166,7 +166,7 @@ public class RobotState {
                 it.remove();
             }
 
-            return recentGCRDMessageTimestamps.size() > 0 ? ((recentGCRDMessageTimestamps.size() - 1) * 1000.0 / Math.max(1000, lastGCRDMessageTimestamp - recentGCRDMessageTimestamps.getLast())) : 0;
+            return !recentGCRDMessageTimestamps.isEmpty() ? ((recentGCRDMessageTimestamps.size() - 1) * 1000.0 / Math.max(1000, lastGCRDMessageTimestamp - recentGCRDMessageTimestamps.getLast())) : 0;
         }
     }
 

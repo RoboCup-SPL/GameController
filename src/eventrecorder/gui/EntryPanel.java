@@ -1,8 +1,6 @@
 package eventrecorder.gui;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -24,8 +22,8 @@ import eventrecorder.data.LogType;
 
 public class EntryPanel extends JPanel{
     private static final long serialVersionUID = -907777557585101050L;
-    private TimeField timeField;
-    private TextField textField;
+    private final TimeField timeField;
+    private final TextField textField;
 
     public EntryPanel(final LogEntry e){
         timeField = new TimeField(e);
@@ -41,24 +39,12 @@ public class EntryPanel extends JPanel{
         controlEntryPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
 
 
-        final JComboBox<LogType> logTypeChooser = new JComboBox<LogType>(new LogType[]{LogType.Manually, LogType.GameState, LogType.PlayerState, LogType.SetPlayState});
+        final JComboBox<LogType> logTypeChooser = new JComboBox<>(new LogType[]{LogType.Manually, LogType.GameState, LogType.PlayerState, LogType.SetPlayState});
         logTypeChooser.setSelectedItem(e.type);
-        logTypeChooser.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent aE) {
-                EventRecorder.history.execute(new EntryTypeChangeAction(e, (LogType)logTypeChooser.getSelectedItem(), e.type));
-            }
-
-        });
+        logTypeChooser.addActionListener(aE -> EventRecorder.history.execute(new EntryTypeChangeAction(e, (LogType)logTypeChooser.getSelectedItem(), e.type)));
 
         JButton deleteButton = new JButton("Delete");
-        deleteButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent aE) {
-                EventRecorder.history.execute(new EntryDeleteAction(e));
-            }
-        });
+        deleteButton.addActionListener(aE -> EventRecorder.history.execute(new EntryDeleteAction(e)));
 
         controlEntryPanel.add(logTypeChooser);
         controlEntryPanel.add(deleteButton);

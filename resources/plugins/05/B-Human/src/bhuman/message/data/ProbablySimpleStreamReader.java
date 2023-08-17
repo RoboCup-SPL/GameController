@@ -14,5 +14,5 @@ public interface ProbablySimpleStreamReader<T> extends ComplexStreamReader<T> {
      *
      * @return bool
      */
-    public boolean isSimpleStreamReader();
+    boolean isSimpleStreamReader();
 }

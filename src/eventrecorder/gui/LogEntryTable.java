@@ -42,8 +42,8 @@ public class LogEntryTable extends JPanel{
         ArrayList<LogEntry> entries = EventRecorder.model.logEntries;
         for(LogEntry e : entries){
             EntryPanel entryPanel = new EntryPanel(e);
-            entryPanel.getTimeField().addKeyListener(new TimeFieldKeyListener(this,e));
-            entryPanel.getTextField().addKeyListener(new TextFieldKeyListener(this,e));
+            entryPanel.getTimeField().addKeyListener(new TimeFieldKeyListener(this, e));
+            entryPanel.getTextField().addKeyListener(new TextFieldKeyListener(this, e));
             add(entryPanel);
         }
 
@@ -66,9 +66,9 @@ public class LogEntryTable extends JPanel{
      * @author Andre Muehlenbrock
      */
 
-    class TimeFieldKeyListener extends KeyAdapter {
-        private LogEntryTable table;
-        private LogEntry entry;
+    static class TimeFieldKeyListener extends KeyAdapter {
+        private final LogEntryTable table;
+        private final LogEntry entry;
 
         public TimeFieldKeyListener(LogEntryTable table, LogEntry entry){
             this.table = table;
@@ -142,9 +142,9 @@ public class LogEntryTable extends JPanel{
      * @author Andre Muehlenbrock
      */
 
-    class TextFieldKeyListener extends KeyAdapter {
-        private LogEntryTable table;
-        private LogEntry entry;
+    static class TextFieldKeyListener extends KeyAdapter {
+        private final LogEntryTable table;
+        private final LogEntry entry;
 
         public TextFieldKeyListener(LogEntryTable table, LogEntry entry){
             this.table = table;
@@ -244,8 +244,8 @@ public class LogEntryTable extends JPanel{
             entryPanel.repaint();
         } else if(action instanceof EntryCreateAction && !action.shouldBeAddedToHistory()){
             EntryPanel entryPanel = new EntryPanel(action.getAffectedLogEntry());
-            entryPanel.getTimeField().addKeyListener(new TimeFieldKeyListener(this,action.getAffectedLogEntry()));
-            entryPanel.getTextField().addKeyListener(new TextFieldKeyListener(this,action.getAffectedLogEntry()));
+            entryPanel.getTimeField().addKeyListener(new TimeFieldKeyListener(this, action.getAffectedLogEntry()));
+            entryPanel.getTextField().addKeyListener(new TextFieldKeyListener(this, action.getAffectedLogEntry()));
 
             int index = EventRecorder.model.logEntries.indexOf(action.getAffectedLogEntry());
 
@@ -255,7 +255,7 @@ public class LogEntryTable extends JPanel{
             createLogEntryTable();
             int newId = getIdByLogEntry(action.getAffectedLogEntry());
 
-            EntryPanel entryPanel = null;
+            EntryPanel entryPanel;
             // if the entry was added:
             if(newId != -1){
                 entryPanel = (EntryPanel)getComponent(newId);
@@ -263,7 +263,7 @@ public class LogEntryTable extends JPanel{
                 entryPanel.getTextField().requestFocus();
             } else { // if the entry was removed:
                 if(getComponents().length > 0){
-                    entryPanel = (EntryPanel)getComponent(id-1<0?0:id-1);
+                    entryPanel = (EntryPanel)getComponent(Math.max(id - 1, 0));
                     if(entryPanel != null){
                         entryPanel.getTextField().setCaretPosition(entryPanel.getTextField().getText().length());
                         entryPanel.getTextField().requestFocus();

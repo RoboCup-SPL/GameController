@@ -1,8 +1,6 @@
 package eventrecorder.gui;
 
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
@@ -15,7 +13,7 @@ import javax.swing.JToggleButton;
 
 public class ImageToggleButton extends JToggleButton{
     private static final long serialVersionUID = 1L;
-    private ImageIcon enabledIcon;
+    private final ImageIcon enabledIcon;
     private ImageIcon disabledIcon;
     private boolean isActivated;
 
@@ -38,14 +36,7 @@ public class ImageToggleButton extends JToggleButton{
 
         setToolTipText(tooltip);
 
-        addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setActivated(!isActivated);
-            }
-
-        });
+        addActionListener(e -> setActivated(!isActivated));
     }
 
     public void setActivated(boolean b) {

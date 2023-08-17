@@ -15,12 +15,12 @@ public interface RobotStateEventListener extends EventListener {
      *
      * @param e event
      */
-    public void robotStateChanged(RobotStateEvent e);
+    void robotStateChanged(RobotStateEvent e);
 
     /**
      * Called when the state of the robot which sent this event changes.
      *
      * @param e event
      */
-    public void connectionStatusChanged(RobotStateEvent e);
+    void connectionStatusChanged(RobotStateEvent e);
 }
