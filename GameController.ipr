@@ -161,6 +161,7 @@
         <root url="file://$PROJECT_DIR$/build" />
         <root url="jar://$PROJECT_DIR$/deps/gluegen-rt.jar!/" />
         <root url="jar://$PROJECT_DIR$/deps/jogl-all.jar!/" />
+        <root url="jar://$PROJECT_DIR$/deps/snakeyaml-2.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

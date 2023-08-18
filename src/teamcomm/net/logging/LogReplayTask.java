@@ -28,7 +28,7 @@ class LogReplayTask implements Runnable {
 
     public static final int PLAYBACK_TASK_DELAY = 50; // ms
 
-    private static class LoggedObject {
+    static class LoggedObject {
 
         public final long time;
         public final Object object;
@@ -60,7 +60,11 @@ class LogReplayTask implements Runnable {
 
     public LogReplayTask(final File logfile, final EventListenerList listeners) throws IOException {
         this.listeners = listeners;
-        stream = new ObjectInputStream(new BufferedInputStream(Files.newInputStream(logfile.toPath())));
+        if (logfile.getName().endsWith(".yaml")) {
+            LogYamlLoader.load(logfile, nextObjects);
+        } else {
+            stream = new ObjectInputStream(new BufferedInputStream(Files.newInputStream(logfile.toPath())));
+        }
         next();
     }
 

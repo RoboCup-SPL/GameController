@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: teamcomm.TeamCommunicationMonitor
 Author: Felix Thielke
-Class-Path: deps/gluegen-rt.jar deps/jogl-all.jar plugins/common.jar
+Class-Path: deps/gluegen-rt.jar deps/jogl-all.jar deps/snakeyaml-2.2.jar plugins/common.jar

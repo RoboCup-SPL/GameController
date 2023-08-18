@@ -49,7 +49,7 @@
             <manifest>
                 <attribute name="Main-Class" value="teamcomm.TeamCommunicationMonitor"/>
                 <attribute name="Author" value="Felix Thielke" />
-                <attribute name="Class-Path" value="deps/gluegen-rt.jar deps/jogl-all.jar plugins/common.jar" />
+                <attribute name="Class-Path" value="deps/gluegen-rt.jar deps/jogl-all.jar deps/snakeyaml-2.2.jar plugins/common.jar" />
             </manifest>
         </jar>
         <jar destfile="${jar.dir}/GameControllerTester.jar" basedir="${classes.dir}" includes="${common_classes} teamcomm/data/event/ teamcomm/net/GameControlDataReceiver.class tester/">

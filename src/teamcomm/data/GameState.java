@@ -217,6 +217,7 @@ public class GameState implements GameControlDataEventListener {
 
         if (LogReplayer.getInstance().isReplaying()) {
             lastGameControlData = e.data;
+            sendEvents(changed);
             return;
         }
 

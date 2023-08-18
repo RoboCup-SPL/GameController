@@ -101,11 +101,11 @@ public class MainWindow extends JFrame implements TeamEventListener {
 
         // Setup team panels
         final Box left = new Box(BoxLayout.Y_AXIS);
-        teamPanels[0].setLayout(new GridLayout(10, 1, 0, 5));
+        teamPanels[0].setLayout(new GridLayout(20, 1, 0, 5));
         left.add(teamPanels[0]);
         left.add(new Box.Filler(new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, 1000)));
         final Box right = new Box(BoxLayout.Y_AXIS);
-        teamPanels[1].setLayout(new GridLayout(10, 1, 0, 5));
+        teamPanels[1].setLayout(new GridLayout(20, 1, 0, 5));
         right.add(teamPanels[1]);
         right.add(new Box.Filler(new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, RobotPanel.PANEL_HEIGHT), new Dimension(RobotPanel.PANEL_WIDTH, 1000)));
         final Box bottom = new Box(BoxLayout.X_AXIS);
