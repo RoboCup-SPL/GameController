@@ -134,7 +134,7 @@ class LogYamlLoader extends Constructor {
         data.packetNumber = -1;
         final Yaml yaml = new Yaml(this);
         long baseTime = 0; // The first timestamp in the current section.
-        long recordedTime = 0; // The duration already record before the current section.
+        long recordedTime = 0; // The duration already recorded before the current section.
         boolean recording = false; // Are we currently recording data from the log file?
 
         final InputStream stream = Files.newInputStream(file.toPath());
