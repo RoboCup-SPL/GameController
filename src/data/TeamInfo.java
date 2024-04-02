@@ -66,18 +66,16 @@ public class TeamInfo implements Serializable {
     /**
      * Packing this Java class to the C-structure to be send.
      *
-     * @param decreaseScore Whether the score should be decreased by one before sending.
-     *
      * @return Byte array representing the C-structure.
      */
-    public byte[] toByteArray(boolean decreaseScore) {
+    public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(teamNumber);
         buffer.put(fieldPlayerColor);
         buffer.put(goalkeeperColor);
         buffer.put(goalkeeper);
-        buffer.put(decreaseScore ? (byte) (score - 1) : score);
+        buffer.put(score);
         buffer.put(penaltyShot);
         buffer.putShort(singleShots);
         buffer.putShort(messageBudget);

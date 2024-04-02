@@ -77,7 +77,7 @@ class LogYamlLoader extends Constructor {
     private final List<String> penalties = Arrays.asList(
             "noPenalty", "ballHolding", "playerPushing", "motionInSet", "fallenInactive", "illegalPosition",
             "leavingTheField", "pickedUp", "localGameStuck", "illegalPositionInSet", "playerStance",
-            "_11", "_12", "_13", "substitute"); // playingWithArmsHands = 1
+            "motionInInitial", "_12", "_13", "substitute"); // playingWithArmsHands = 1
 
     /** The current state of the GameController packet. */
     private final GameControlData data = new GameControlData();
@@ -160,7 +160,7 @@ class LogYamlLoader extends Constructor {
 
                             // Create a new instance for the queue.
                             final GameControlData copy = new GameControlData();
-                            copy.fromByteArray(ByteBuffer.wrap(data.getTrueDataAsByteArray().array()));
+                            copy.fromByteArray(ByteBuffer.wrap(data.toByteArray().array()));
                             message = copy;
                             break;
                         case "statusMessage":
@@ -211,7 +211,7 @@ class LogYamlLoader extends Constructor {
             if (params.get("competition") instanceof Map) {
                 @SuppressWarnings("unchecked")
                 final Map<String, Object> competition = (Map<String, Object>) params.get("competition");
-                data.competitionType = competition.get("challengeMode") == null ? COMPETITION_TYPE_NORMAL : COMPETITION_TYPE_DYNAMIC_BALL_HANDLING;
+                data.competitionType = competition.get("challengeMode") == null ? COMPETITION_TYPE_NORMAL : COMPETITION_TYPE_SHARED_AUTONOMY;
                 data.playersPerTeam = (byte)(int)(Integer) competition.get("playersPerTeam");
             }
             if (params.get("game") instanceof Map) {

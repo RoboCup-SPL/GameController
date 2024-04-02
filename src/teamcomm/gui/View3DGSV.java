@@ -9,7 +9,6 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.awt.TextRenderer;
-import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
 import java.awt.BorderLayout;
@@ -409,8 +408,8 @@ public class View3DGSV extends View3D {
 
             // Score
             textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].fieldPlayerColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].fieldPlayerColor]);
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), ("" + data.team[0].score).length() * textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].fieldPlayerColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].fieldPlayerColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].fieldPlayerColor == GameControlData.TEAM_WHITE ? GameControlData.TEAM_BLACK : data.team[1].fieldPlayerColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), ("" + data.team[0].score).length() * textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].fieldPlayerColor == GameControlData.TEAM_WHITE ? GameControlData.TEAM_BLACK : data.team[0].fieldPlayerColor]);
             textRenderers[RENDERER_SCORE].endRendering();
 
             // Penalty shots

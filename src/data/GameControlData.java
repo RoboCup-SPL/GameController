@@ -22,7 +22,7 @@ public class GameControlData implements Serializable {
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final String GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER = "RGTD";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 15;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 16;
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte TEAM_YELLOW = 2;
@@ -38,7 +38,7 @@ public class GameControlData implements Serializable {
     public static final byte COMPETITION_PHASE_PLAYOFF = 1;
 
     public static final byte COMPETITION_TYPE_NORMAL = 0;
-    public static final byte COMPETITION_TYPE_DYNAMIC_BALL_HANDLING = 1;
+    public static final byte COMPETITION_TYPE_SHARED_AUTONOMY = 1;
 
     public static final byte GAME_PHASE_NORMAL = 0;
     public static final byte GAME_PHASE_PENALTYSHOOT = 1;
@@ -101,7 +101,7 @@ public class GameControlData implements Serializable {
     public byte packetNumber = 0;
     public byte playersPerTeam = (byte) Rules.league.teamSize;   // The number of players on a team
     public byte competitionPhase = COMPETITION_PHASE_ROUNDROBIN; // phase of the game (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
-    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the game (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_DYNAMIC_BALL_HANDLING)
+    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the game (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_SHARED_AUTONOMY)
     public byte gamePhase = GAME_PHASE_NORMAL;                   // Extra state information - (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
     public byte gameState = STATE_INITIAL;                       // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)
@@ -128,52 +128,6 @@ public class GameControlData implements Serializable {
      * @return the corresponding byte-stream of the state of this object
      */
     public ByteBuffer toByteArray() {
-        AdvancedData data = (AdvancedData) this;
-        ByteBuffer buffer = ByteBuffer.allocate(SIZE);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(GAMECONTROLLER_STRUCT_HEADER.getBytes(), 0, 4);
-        buffer.put(GAMECONTROLLER_STRUCT_VERSION);
-        buffer.put(packetNumber);
-        buffer.put(playersPerTeam);
-        buffer.put(competitionPhase);
-        buffer.put(competitionType);
-        buffer.put(gamePhase);
-        if (gameState == STATE_PLAYING
-                && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
-            buffer.put(STATE_SET);
-        } else if (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY
-                && data.kickOffReason == AdvancedData.KICKOFF_GOAL
-                && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchAfterGoal) {
-            buffer.put(STATE_PLAYING);
-        } else {
-            buffer.put(gameState);
-        }
-        buffer.put(setPlay);
-        buffer.put(firstHalf);
-        if (gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY && data.kickOffReason == AdvancedData.KICKOFF_GOAL
-                && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchAfterGoal) {
-            buffer.put(data.kickingTeamBeforeGoal);
-        } else {
-            buffer.put(kickingTeam);
-        }
-        buffer.putShort(secsRemaining);
-        buffer.putShort(secondaryTime);
-        for (TeamInfo aTeam : team) {
-            buffer.put(aTeam.toByteArray(gamePhase == GAME_PHASE_NORMAL && gameState == STATE_READY
-                        && data.kickOffReason == AdvancedData.KICKOFF_GOAL
-                        && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchAfterGoal
-                        && data.kickingTeam != aTeam.teamNumber));
-        }
-
-        return buffer;
-    }
-
-    /**
-     * Returns the corresponding byte-stream of the real state of this object.
-     *
-     * @return the corresponding byte-stream of the real state of this object
-     */
-    public ByteBuffer getTrueDataAsByteArray() {
         final ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER.getBytes(), 0, 4);
@@ -190,7 +144,7 @@ public class GameControlData implements Serializable {
         buffer.putShort(secsRemaining);
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {
-            buffer.put(aTeam.toByteArray(false));
+            buffer.put(aTeam.toByteArray());
         }
 
         return buffer;
@@ -254,8 +208,8 @@ public class GameControlData implements Serializable {
             case COMPETITION_TYPE_NORMAL:
                 temp = "normal";
                 break;
-            case COMPETITION_TYPE_DYNAMIC_BALL_HANDLING:
-                temp = "dynamic ball handling";
+            case COMPETITION_TYPE_SHARED_AUTONOMY:
+                temp = "shared autonomy";
                 break;
             default:
                 temp = "undefined(" + competitionType + ")";

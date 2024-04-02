@@ -32,7 +32,7 @@ GAMECONTROLLER_DATA_PORT = 3838
 GAMECONTROLLER_RETURN_PORT = 3939
 
 GAMECONTROLLER_STRUCT_HEADER = b'RGme'
-GAMECONTROLLER_STRUCT_VERSION = 15
+GAMECONTROLLER_STRUCT_VERSION = 16
 
 MAX_NUM_PLAYERS = 20
 
@@ -52,7 +52,7 @@ COMPETITION_PHASE_ROUNDROBIN = 0
 COMPETITION_PHASE_PLAYOFF = 1
 
 COMPETITION_TYPE_NORMAL = 0
-COMPETITION_TYPE_DYNAMIC_BALL_HANDLING = 1
+COMPETITION_TYPE_SHARED_AUTONOMY = 1
 
 GAME_PHASE_NORMAL = 0
 GAME_PHASE_PENALTYSHOOT = 1
@@ -84,6 +84,7 @@ PENALTY_SPL_REQUEST_FOR_PICKUP = 7
 PENALTY_SPL_LOCAL_GAME_STUCK = 8
 PENALTY_SPL_ILLEGAL_POSITION_IN_SET = 9
 PENALTY_SPL_PLAYER_STANCE = 10
+PENALTY_SPL_ILLEGAL_MOTION_IN_INITIAL = 11
 
 PENALTY_SUBSTITUTE = 14
 PENALTY_MANUAL = 15
@@ -111,7 +112,7 @@ RoboCupGameControlData = Struct(
     'packetNumber' / Byte,      # number incremented with each packet sent (with wraparound)  # noqa: E501
     'playersPerTeam' / Byte,    # the number of players on a team
     'competitionPhase' / Byte,  # phase of the competition (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)  # noqa: E501
-    'competitionType' / Byte,   # type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_DYNAMIC_BALL_HANDLING)  # noqa: E501
+    'competitionType' / Byte,   # type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_SHARED_AUTONOMY)  # noqa: E501
     'gamePhase' / Byte,         # phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)  # noqa: E501
     'state' / Byte,             # state of the game (STATE_READY, STATE_PLAYING, etc)  # noqa: E501
     'setPlay' / Byte,           # active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)  # noqa: E501
