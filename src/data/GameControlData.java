@@ -22,7 +22,7 @@ public class GameControlData implements Serializable {
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final String GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER = "RGTD";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 16;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 17;
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte TEAM_YELLOW = 2;
@@ -50,6 +50,7 @@ public class GameControlData implements Serializable {
     public static final byte STATE_SET = 2;
     public static final byte STATE_PLAYING = 3;
     public static final byte STATE_FINISHED = 4;
+    public static final byte STATE_SETUP = 5;
 
     public static final byte SET_PLAY_NONE = 0;
     public static final byte SET_PLAY_GOAL_KICK = 1;
@@ -248,6 +249,9 @@ public class GameControlData implements Serializable {
                 break;
             case STATE_FINISHED:
                 temp = "finish";
+                break;
+            case STATE_SETUP:
+                temp = "setup";
                 break;
             default:
                 temp = "undefined(" + gameState + ")";

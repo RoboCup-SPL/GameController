@@ -28,7 +28,7 @@ import teamcomm.net.GameControlDataReceiver;
 public class EventRecorder {
     public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd.MM.YY - HH:mm 'Uhr'");
     public static final SimpleDateFormat SECONDS_FORMAT = new SimpleDateFormat("mm:ss");
-    public static final String[] GAME_STATE_NAMES = new String[]{"Initial", "Ready", "Set", "Playing", "Finished"};
+    public static final String[] GAME_STATE_NAMES = new String[]{"Initial", "Ready", "Set", "Playing", "Finished", "Setup"};
 
     public static final int GAMECONTROLLER_TIMEOUT = 3000; /**< Timeout in ms when the manual play/stop/reset buttons should be usable again */
 
@@ -115,7 +115,7 @@ public class EventRecorder {
                 lastGameState = data.gameState;
 
                 String gameStateString = GAME_STATE_NAMES[data.gameState];
-                if(data.gameState == GameControlData.STATE_INITIAL){
+                if (data.gameState == GameControlData.STATE_SETUP) {
                     gameStateString += " ( "+ (data.firstHalf == GameControlData.C_TRUE? "First Half":"Second Half")+" )";
                 }
 

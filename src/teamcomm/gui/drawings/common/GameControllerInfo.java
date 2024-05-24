@@ -35,7 +35,7 @@ public class GameControllerInfo extends Static {
                             gamePhase = "First Half";
                         }
                     } else {
-                        if (data.gameState == GameControlData.STATE_INITIAL) {
+                        if (data.gameState == GameControlData.STATE_SETUP || data.gameState == GameControlData.STATE_INITIAL) {
                             gamePhase = "Half Time";
                         } else {
                             gamePhase = "Second Half";
@@ -63,6 +63,9 @@ public class GameControllerInfo extends Static {
             // Display game state
             final String state;
             switch (data.gameState) {
+                case GameControlData.STATE_SETUP:
+                    state = "Setup";
+                    break;
                 case GameControlData.STATE_INITIAL:
                     state = "Initial";
                     break;

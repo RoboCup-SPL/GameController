@@ -76,6 +76,7 @@ public class LogExporter
                 case GameControlData.STATE_INITIAL: currentGameState = 'I'; break;
                 case GameControlData.STATE_FINISHED: currentGameState = 'F'; break;
                 case GameControlData.STATE_SET: currentGameState = 'S'; break;
+                case GameControlData.STATE_SETUP: currentGameState = 'T'; break;
               }
             }
           } /*else if (stream.readInt() == 1) {
