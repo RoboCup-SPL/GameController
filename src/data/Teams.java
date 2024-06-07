@@ -36,21 +36,14 @@ public class Teams {
          * The icon of the team.
          */
         public BufferedImage icon;
-        /**
-         * The first and secondary jersey colors of the team.
-         */
-        public final String[] colors;
 
         /**
          * Create a new team information.
          *
          * @param name The name of the team.
-         * @param colors The names of the jersey colors used by the team. Can be
-         * null if no colors were specified.
          */
-        public Info(String name, String[] colors) {
+        public Info(String name) {
             this.name = name;
-            this.colors = colors;
         }
     }
 
@@ -155,10 +148,7 @@ public class Teams {
                     } catch (NumberFormatException e) {
                     }
                     if (key >= 0) {
-                        final String[] values = entry[1].split(",");
-                        instance.teams[getLeagueIndex()][key] = new Info(values[0],
-                                values.length >= 3 ? new String[]{values[1], values[2]}
-                                : values.length == 2 ? new String[]{values[1]} : new String[0]);
+                        instance.teams[getLeagueIndex()][key] = new Info(entry[1]);
                     } else {
                         Log.error("error in teams.cfg: \"" + entry[0] + "\" is not a valid team number");
                     }
@@ -255,19 +245,5 @@ public class Teams {
             readIcon(team);
         }
         return instance.teams[leagueIndex][team].icon;
-    }
-
-    /**
-     * Returns a team's jersey colors.
-     *
-     * @param team The unique team number of the team you want the icon for.
-     * @return The team's jersey colors or null if none were specified.
-     */
-    public static String[] getColors(int team) {
-        int leagueIndex = getLeagueIndex();
-        if (instance.teams[leagueIndex][team] == null) {
-            readTeams();
-        }
-        return instance.teams[leagueIndex][team].colors;
     }
 }
