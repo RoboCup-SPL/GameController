@@ -304,7 +304,7 @@ public class View3DGSV extends View3D {
                             state = "First Half";
                         }
                     } else {
-                        if (data.gameState == GameControlData.STATE_SETUP || data.gameState == GameControlData.STATE_INITIAL) {
+                        if (data.gameState == GameControlData.STATE_INITIAL || data.gameState == GameControlData.STATE_STANDBY) {
                             state = "Half Time";
                         } else {
                             state = "Second Half";
@@ -334,9 +334,6 @@ public class View3DGSV extends View3D {
 
             // State
             switch (data.gameState) {
-                case GameControlData.STATE_SETUP:
-                    state = "Setup";
-                    break;
                 case GameControlData.STATE_INITIAL:
                     state = "Initial";
                     break;
@@ -378,6 +375,9 @@ public class View3DGSV extends View3D {
                     break;
                 case GameControlData.STATE_FINISHED:
                     state = "Finished";
+                    break;
+                case GameControlData.STATE_STANDBY:
+                    state = "Standby";
                     break;
                 default:
                     state = "";

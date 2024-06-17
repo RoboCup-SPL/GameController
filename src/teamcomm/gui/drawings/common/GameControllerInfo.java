@@ -35,7 +35,7 @@ public class GameControllerInfo extends Static {
                             gamePhase = "First Half";
                         }
                     } else {
-                        if (data.gameState == GameControlData.STATE_SETUP || data.gameState == GameControlData.STATE_INITIAL) {
+                        if (data.gameState == GameControlData.STATE_INITIAL || data.gameState == GameControlData.STATE_STANDBY) {
                             gamePhase = "Half Time";
                         } else {
                             gamePhase = "Second Half";
@@ -63,9 +63,6 @@ public class GameControllerInfo extends Static {
             // Display game state
             final String state;
             switch (data.gameState) {
-                case GameControlData.STATE_SETUP:
-                    state = "Setup";
-                    break;
                 case GameControlData.STATE_INITIAL:
                     state = "Initial";
                     break;
@@ -109,6 +106,9 @@ public class GameControllerInfo extends Static {
                     break;
                 case GameControlData.STATE_FINISHED:
                     state = "Finished";
+                    break;
+                case GameControlData.STATE_STANDBY:
+                    state = "Standby";
                     break;
                 default:
                     state = "";

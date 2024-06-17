@@ -63,7 +63,7 @@ class LogYamlLoader extends Constructor {
     }
 
     /** Helper to map state names to the state number. "timeout" is later mapped to "initial". */
-    private final List<String> states = Arrays.asList("initial", "ready", "set", "playing", "finished", "setup"); // timeout = 0
+    private final List<String> states = Arrays.asList("initial", "ready", "set", "playing", "finished", "standby"); // timeout = 0
 
     /** Helper to map set play names to set player numbers. */
     private final List<String> setPlays = Arrays.asList(
@@ -183,7 +183,7 @@ class LogYamlLoader extends Constructor {
                         default:
                             assert false;
                     }
-                    if (data.gameState != STATE_SETUP && data.gameState != STATE_INITIAL && data.gameState != STATE_FINISHED) {
+                    if (data.gameState != STATE_STANDBY && data.gameState != STATE_INITIAL && data.gameState != STATE_FINISHED) {
                         if (!recording) { // Start a new section?
                             baseTime = time;
                             recording = true;
