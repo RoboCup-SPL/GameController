@@ -6,16 +6,13 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 
 import data.PlayerInfo;
@@ -73,13 +70,7 @@ public class MenuBar extends JMenuBar {
 
         JMenu logging = new JMenu("Logging");
 
-        JPanel loggingPanel = new JPanel();
-        loggingPanel.setLayout(new BoxLayout(loggingPanel, BoxLayout.Y_AXIS));
-
-        loggingPanel.add(new JLabel("<html><body><b>Penalty Logging Settings:</b></body></html>"));
-        loggingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
-
-        for(int i=0;i<10;i++) {
+        for(int i=0;i<12;i++) {
             // Load settings:
             EventRecorder.setLogPenalty(i, true);
 
@@ -89,24 +80,22 @@ public class MenuBar extends JMenuBar {
             final int finalI = i;
 
             // Setup the Checkbox:
-            final JCheckBox checkBox = new JCheckBox(penaltyString);
+            final JCheckBoxMenuItem checkBox = new JCheckBoxMenuItem(penaltyString);
             checkBox.setSelected(true);
             checkBox.addActionListener(e -> EventRecorder.setLogPenalty(finalI, checkBox.isSelected()));
 
-            loggingPanel.add(checkBox);
+            logging.add(checkBox);
         }
 
-        loggingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        logging.addSeparator();
 
-        final JCheckBox checkBox = new JCheckBox("Free Kicks");
+
+        final JCheckBoxMenuItem checkBox = new JCheckBoxMenuItem("Free Kicks");
 
         checkBox.setSelected(true);
         checkBox.addActionListener(e -> EventRecorder.setLogFreeKicks(checkBox.isSelected()));
-        loggingPanel.add(checkBox);
+        logging.add(checkBox);
 
-        loggingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
-
-        logging.add(loggingPanel);
         add(logging);
     }
 }
