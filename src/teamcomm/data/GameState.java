@@ -232,7 +232,7 @@ public class GameState implements GameControlDataEventListener {
         if (e.data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
             logfileName.append(e.data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
         }
-        if (e.data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {
+        if (e.data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL || lastGameControlData.gameState == GameControlData.STATE_STANDBY)) {
             Logger.getInstance().createLogfile(logfileName.toString());
         } else if (e.data.gameState == GameControlData.STATE_INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_INITIAL)) {
             Logger.getInstance().createLogfile(logfileName.append("_initial").toString());
