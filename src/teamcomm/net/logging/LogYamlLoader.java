@@ -77,7 +77,7 @@ class LogYamlLoader extends Constructor {
     private final List<String> penalties = Arrays.asList(
             "noPenalty", "ballHolding", "playerPushing", "motionInSet", "fallenInactive", "illegalPosition",
             "leavingTheField", "pickedUp", "localGameStuck", "illegalPositionInSet", "playerStance",
-            "motionInInitial", "_12", "_13", "substitute"); // playingWithArmsHands = 1
+            "motionInStandby", "_12", "_13", "substitute"); // playingWithArmsHands = 1
 
     /** The current state of the GameController packet. */
     private final GameControlData data = new GameControlData();
