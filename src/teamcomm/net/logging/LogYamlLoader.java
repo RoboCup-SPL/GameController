@@ -293,7 +293,8 @@ class LogYamlLoader extends Constructor {
      * @param entry The attributes for a team.
      */
     private void parseTeamInfo(final TeamInfo info, final Map<String, ?> entry) {
-        info.goalkeeper = (byte)(int)(Integer) entry.get("goalkeeper");
+        final Integer goalkeeper = (Integer) entry.get("goalkeeper");
+        info.goalkeeper = goalkeeper == null ? 0 : (byte)(int) goalkeeper;
         info.score = (byte)(int)(Integer) entry.get("score");
         info.penaltyShot = (byte)(int)(Integer) entry.get("penaltyShot");
         info.singleShots = (short)(int)(Integer) entry.get("penaltyShotMask");
