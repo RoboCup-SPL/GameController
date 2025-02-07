@@ -251,7 +251,8 @@ class LogYamlLoader extends Constructor {
         data.gameState = (byte) Math.max(0, states.indexOf(entry.get("state")));
         data.setPlay = (byte) Math.max(0, setPlays.indexOf(entry.get("setPlay")));
         data.firstHalf = entry.get("phase").equals("firstHalf") ? C_TRUE : C_FALSE;
-        data.kickingTeam = entry.get("kickingSide").equals("home") ? home.teamNumber : away.teamNumber;
+        final Object kickingSide = entry.get("kickingSide");
+        data.kickingTeam = kickingSide == null ? -1 : kickingSide.equals("home") ? home.teamNumber : away.teamNumber;
         if (entry.get("primaryTimer") instanceof Map) {
             @SuppressWarnings("unchecked")
             final Map<String, Object> timer = (Map<String, Object>) entry.get("primaryTimer");
