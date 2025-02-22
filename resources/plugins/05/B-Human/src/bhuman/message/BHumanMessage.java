@@ -21,28 +21,7 @@ public class BHumanMessage extends AdvancedMessage {
         public Timestamp lastKickTimestamp;
 
         public void read(final BitStream __bitStream, final long __timestampBase) {
-            lastKickTimestamp = __bitStream.readTimestamp(__timestampBase, 24, 8, -1, false);
-        }
-    }
-
-    public enum InitialToReady__State {
-        observing,
-        waiting,
-        transition,
-        UNKNOWN
-    }
-
-    public static class InitialToReady {
-        public InitialToReady__State state;
-        public boolean gestureDetected;
-        public int detectedBy;
-        public Timestamp timestamp;
-
-        public void read(final BitStream __bitStream, final long __timestampBase) {
-            state = InitialToReady__State.values()[Math.min((int) __bitStream.readBits(2), InitialToReady__State.values().length - 1)];
-            gestureDetected = __bitStream.readBoolean();
-            detectedBy = __bitStream.readInt(0, 14, 4);
-            timestamp = __bitStream.readTimestamp(__timestampBase, 11, 4, -1, true);
+            lastKickTimestamp = __bitStream.readTimestamp(__timestampBase, 24, 8, -1, true);
         }
     }
 
@@ -50,14 +29,13 @@ public class BHumanMessage extends AdvancedMessage {
         none,
         playBall,
         freeKickWall,
-        closestToTeammatesBall,
+        closestToTeamBall,
         startSetPlay,
         goalkeeper,
         attackingGoalkeeper,
         defender,
         midfielder,
         forward,
-        SACPasser,
         UNKNOWN
     }
 
@@ -76,7 +54,6 @@ public class BHumanMessage extends AdvancedMessage {
         forwardM,
         forwardL,
         forwardR,
-        SACPasser,
         UNKNOWN
     }
 
@@ -107,10 +84,7 @@ public class BHumanMessage extends AdvancedMessage {
 
     public enum Tactic__Type {
         none,
-        t011,
-        t020,
         t123,
-        t100,
         t222,
         t033,
         t211,
@@ -130,8 +104,8 @@ public class BHumanMessage extends AdvancedMessage {
         public Role__Type role;
 
         public void read(final BitStream __bitStream, final long __timestampBase) {
-            proposedTactic = Tactic__Type.values()[Math.min((int) __bitStream.readBits(4), Tactic__Type.values().length - 1)];
-            acceptedTactic = Tactic__Type.values()[Math.min((int) __bitStream.readBits(4), Tactic__Type.values().length - 1)];
+            proposedTactic = Tactic__Type.values()[Math.min((int) __bitStream.readBits(3), Tactic__Type.values().length - 1)];
+            acceptedTactic = Tactic__Type.values()[Math.min((int) __bitStream.readBits(3), Tactic__Type.values().length - 1)];
             proposedMirror = __bitStream.readBoolean();
             acceptedMirror = __bitStream.readBoolean();
             proposedSetPlay = SetPlay__Type.values()[Math.min((int) __bitStream.readBits(5), SetPlay__Type.values().length - 1)];
@@ -221,6 +195,34 @@ public class BHumanMessage extends AdvancedMessage {
         }
     }
 
+    public enum RefereeGesture__Gesture {
+        none,
+        kickInLeft,
+        kickInRight,
+        goalKickLeft,
+        goalKickRight,
+        cornerKickLeft,
+        cornerKickRight,
+        goalLeft,
+        goalRight,
+        pushingFreeKickLeft,
+        pushingFreeKickRight,
+        fullTime,
+        substitution,
+        ready,
+        UNKNOWN
+    }
+
+    public static class RefereeSignal {
+        public RefereeGesture__Gesture signal;
+        public Timestamp timeWhenDetected;
+
+        public void read(final BitStream __bitStream, final long __timestampBase) {
+            signal = RefereeGesture__Gesture.values()[Math.min((int) __bitStream.readBits(4), RefereeGesture__Gesture.values().length - 1)];
+            timeWhenDetected = __bitStream.readTimestamp(__timestampBase, 11, 4, -1, true);
+        }
+    }
+
     public static class RobotStatus {
         public boolean isUpright;
         public Timestamp timeWhenLastUpright;
@@ -283,7 +285,7 @@ public class BHumanMessage extends AdvancedMessage {
     public BehaviorStatus theBehaviorStatus = new BehaviorStatus();
     public StrategyStatus theStrategyStatus = new StrategyStatus();
     public IndirectKick theIndirectKick = new IndirectKick();
-    public InitialToReady theInitialToReady = new InitialToReady();
+    public RefereeSignal theRefereeSignal = new RefereeSignal();
 
     @Override
     public String[] display() {
@@ -313,6 +315,6 @@ public class BHumanMessage extends AdvancedMessage {
         theBehaviorStatus.read(__bitStream, __timestampBase);
         theStrategyStatus.read(__bitStream, __timestampBase);
         theIndirectKick.read(__bitStream, __timestampBase);
-        theInitialToReady.read(__bitStream, __timestampBase);
+        theRefereeSignal.read(__bitStream, __timestampBase);
     }
 }
