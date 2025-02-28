@@ -428,12 +428,14 @@ public class View3DGSV extends View3D {
                     } else {
                         gl.glTranslatef(window.getWidth() / 12, window.getWidth() / 6 + window.getHeight() * 20 / 1080, 0);
                     }
-                    for (int j = 0; j < data.team[i].penaltyShot; j++) {
-                        gl.glTranslatef(0, 2.5f * window.getWidth() * 32 / 1920, 0);
-                        if ((data.team[i].singleShots & (1 << j)) != 0) {
-                            glu.gluDisk(q, 0, window.getWidth() * 32 / 1920, 16, 16);
-                        } else {
-                            glu.gluDisk(q, window.getWidth() * 28 / 1920, window.getWidth() * 32 / 1920, 16, 16);
+                    if (data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT) {
+                        for (int j = 0; j < data.team[i].penaltyShot; j++) {
+                            gl.glTranslatef(0, 2.5f * window.getWidth() * 32 / 1920, 0);
+                            if ((data.team[i].singleShots & (1 << j)) != 0) {
+                                glu.gluDisk(q, 0, window.getWidth() * 32 / 1920, 16, 16);
+                            } else {
+                                glu.gluDisk(q, window.getWidth() * 28 / 1920, window.getWidth() * 32 / 1920, 16, 16);
+                            }
                         }
                     }
                     if (i == 0) {
