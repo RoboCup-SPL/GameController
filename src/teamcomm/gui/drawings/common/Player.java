@@ -57,7 +57,9 @@ public class Player extends PerPlayer {
         if (msg != null && msg.poseValid) {
             gl.glPushMatrix();
 
-            if (player.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && player.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
+            if (player.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL
+                    && (player.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_STANDBY
+                        || player.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET))) {
                 gl.glTranslatef(-msg.playerNum, -3.5f, 0);
                 gl.glRotatef(-90, 0, 0, 1);
             } else {

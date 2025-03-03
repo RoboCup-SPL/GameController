@@ -40,7 +40,9 @@ public class RefereeDetected extends PerPlayer {
                 if (Math.abs(System.currentTimeMillis() - timeWhenDetected) <= 2000) {
                     gl.glPushMatrix();
 
-                    if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL && rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET)) {
+                    if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL
+                            && (rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_STANDBY
+                                || rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET))) {
                         gl.glTranslatef(-bhMsg.playerNumber, -3.5f, 1.f);
                     } else {
                         gl.glTranslatef(gcMsg.pose[0] / 1000.f, gcMsg.pose[1] / 1000.f, 1.f);
