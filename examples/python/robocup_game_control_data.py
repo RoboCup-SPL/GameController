@@ -52,7 +52,7 @@ COMPETITION_PHASE_ROUNDROBIN = 0
 COMPETITION_PHASE_PLAYOFF = 1
 
 COMPETITION_TYPE_NORMAL = 0
-COMPETITION_TYPE_SHARED_AUTONOMY = 1
+COMPETITION_TYPE_MOST_PASSES = 1
 
 GAME_PHASE_NORMAL = 0
 GAME_PHASE_PENALTYSHOOT = 1
@@ -72,6 +72,8 @@ SET_PLAY_PUSHING_FREE_KICK = 2
 SET_PLAY_CORNER_KICK = 3
 SET_PLAY_KICK_IN = 4
 SET_PLAY_PENALTY_KICK = 5
+
+KICKING_TEAM_NONE = 255
 
 PENALTY_NONE = 0
 # SPL
@@ -101,7 +103,7 @@ TeamInfo = Struct(
     'goalkeeperColour' / Byte,  # colour of the goalkeeper
     'goalkeeper' / Byte,        # player number of the goalkeeper (1-MAX_NUM_PLAYERS)
     'score' / Byte,             # team's score
-    'penaltyShot' / Byte,       # penalty shot counter
+    'penaltyShot' / Byte,       # penalty shot counter, or fallback mode flag (if not in GAME_PHASE_PENALTYSHOOT)  # noqa: E501
     'singleShots' / Int16ul,    # bits represent penalty shot success  # noqa: E501
     'messageBudget' / Int16ul,  # number of team messages the team is allowed to send for the remainder of the game  # noqa: E501
     'players' / Array(MAX_NUM_PLAYERS, RobotInfo)  # the team's players
@@ -113,12 +115,12 @@ RoboCupGameControlData = Struct(
     'packetNumber' / Byte,      # number incremented with each packet sent (with wraparound)  # noqa: E501
     'playersPerTeam' / Byte,    # the number of players on a team
     'competitionPhase' / Byte,  # phase of the competition (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)  # noqa: E501
-    'competitionType' / Byte,   # type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_SHARED_AUTONOMY)  # noqa: E501
+    'competitionType' / Byte,   # type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MOST_PASSES)  # noqa: E501
     'gamePhase' / Byte,         # phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)  # noqa: E501
     'state' / Byte,             # state of the game (STATE_READY, STATE_PLAYING, etc)  # noqa: E501
     'setPlay' / Byte,           # active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)  # noqa: E501
     'firstHalf' / Byte,         # 1 = game in first half, 0 otherwise
-    'kickingTeam' / Byte,       # the team number of the next team to kick off, free kick etc
+    'kickingTeam' / Byte,       # the team number of the next team to kick off, free kick etc, or KICKING_TEAM_NONE  # noqa: E501
     'secsRemaining' / Int16sl,  # estimate of number of seconds remaining in the half
     'secondaryTime' / Int16sl,  # number of seconds shown as secondary time (remaining ready, until free ball, etc)  # noqa: E501
     'teams' / Array(2, TeamInfo)

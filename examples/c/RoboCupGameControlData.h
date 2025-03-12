@@ -27,7 +27,7 @@
 #define COMPETITION_PHASE_PLAYOFF    1
 
 #define COMPETITION_TYPE_NORMAL          0
-#define COMPETITION_TYPE_SHARED_AUTONOMY 1
+#define COMPETITION_TYPE_MOST_PASSES     1
 
 #define GAME_PHASE_NORMAL       0
 #define GAME_PHASE_PENALTYSHOOT 1
@@ -47,6 +47,8 @@
 #define SET_PLAY_CORNER_KICK       3
 #define SET_PLAY_KICK_IN           4
 #define SET_PLAY_PENALTY_KICK      5
+
+#define KICKING_TEAM_NONE 255
 
 #define PENALTY_NONE                          0
 // SPL
@@ -78,7 +80,7 @@ struct TeamInfo
   uint8_t goalkeeperColour;                  // colour of the goalkeeper
   uint8_t goalkeeper;                        // player number of the goalkeeper (1-MAX_NUM_PLAYERS)
   uint8_t score;                             // team's score
-  uint8_t penaltyShot;                       // penalty shot counter
+  uint8_t penaltyShot;                       // penalty shot counter, or fallback mode flag (if not in GAME_PHASE_PENALTYSHOOT)
   uint16_t singleShots;                      // bits represent penalty shot success
   uint16_t messageBudget;                    // number of team messages the team is allowed to send for the remainder of the game
   struct RobotInfo players[MAX_NUM_PLAYERS]; // the team's players
@@ -91,12 +93,12 @@ struct RoboCupGameControlData
   uint8_t packetNumber;     // number incremented with each packet sent (with wraparound)
   uint8_t playersPerTeam;   // the number of players on a team
   uint8_t competitionPhase; // phase of the competition (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
-  uint8_t competitionType;  // type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_SHARED_AUTONOMY)
+  uint8_t competitionType;  // type of the competition (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_MOST_PASSES)
   uint8_t gamePhase;        // phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
   uint8_t state;            // state of the game (STATE_READY, STATE_PLAYING, etc)
   uint8_t setPlay;          // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)
   uint8_t firstHalf;        // 1 = game in first half, 0 otherwise
-  uint8_t kickingTeam;      // the team number of the next team to kick off, free kick etc
+  uint8_t kickingTeam;      // the team number of the next team to kick off, free kick etc, or KICKING_TEAM_NONE
   int16_t secsRemaining;    // estimate of number of seconds remaining in the half
   int16_t secondaryTime;    // number of seconds shown as secondary time (remaining ready, until free ball, etc)
   struct TeamInfo teams[2];

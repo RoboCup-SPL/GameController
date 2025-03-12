@@ -38,7 +38,7 @@ public class GameControlData implements Serializable {
     public static final byte COMPETITION_PHASE_PLAYOFF = 1;
 
     public static final byte COMPETITION_TYPE_NORMAL = 0;
-    public static final byte COMPETITION_TYPE_SHARED_AUTONOMY = 1;
+    public static final byte COMPETITION_TYPE_MOST_PASSES = 1;
 
     public static final byte GAME_PHASE_NORMAL = 0;
     public static final byte GAME_PHASE_PENALTYSHOOT = 1;
@@ -58,6 +58,8 @@ public class GameControlData implements Serializable {
     public static final byte SET_PLAY_CORNER_KICK = 3;
     public static final byte SET_PLAY_KICK_IN = 4;
     public static final byte SET_PLAY_PENALTY_KICK = 5;
+
+    public static final byte KICKING_TEAM_NONE = -1;
 
     public static final byte C_FALSE = 0;
     public static final byte C_TRUE = 1;
@@ -99,17 +101,17 @@ public class GameControlData implements Serializable {
     //this is streamed
     // GAMECONTROLLER_STRUCT_HEADER                              // header to identify the structure
     // GAMECONTROLLER_STRUCT_VERSION                             // version of the data structure
-    public byte packetNumber = 0;
-    public byte playersPerTeam = (byte) Rules.league.teamSize;   // The number of players on a team
-    public byte competitionPhase = COMPETITION_PHASE_ROUNDROBIN; // phase of the game (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
-    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the game (COMPETITION_TYPE_NORMAL, COMPETITION_TYPE_SHARED_AUTONOMY)
-    public byte gamePhase = GAME_PHASE_NORMAL;                   // Extra state information - (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
+    public byte packetNumber = 0;                                // number incremented with each packet sent (with wraparound)
+    public byte playersPerTeam = (byte) Rules.league.teamSize;   // the number of players on a team
+    public byte competitionPhase = COMPETITION_PHASE_ROUNDROBIN; // phase of the competition (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
+    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the competition (COMPETITION_TYPE_NORMAL)
+    public byte gamePhase = GAME_PHASE_NORMAL;                   // phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
     public byte gameState = STATE_INITIAL;                       // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)
     public byte firstHalf = C_TRUE;                              // 1 = game in first half, 0 otherwise
-    public byte kickingTeam;                                     // the next team to kick off
+    public byte kickingTeam;                                     // the team number of the next team to kick off, free kick etc, or KICKING_TEAM_NONE
     public short secsRemaining = (short) Rules.league.halfTime;  // estimate of number of seconds remaining in the half
-    public short secondaryTime = 0;                              // sub-time (remaining in ready state etc.) in seconds
+    public short secondaryTime = 0;                              // number of seconds shown as secondary time (remaining ready, until free ball, etc)
     public final TeamInfo[] team = new TeamInfo[2];
 
     /**
@@ -209,8 +211,8 @@ public class GameControlData implements Serializable {
             case COMPETITION_TYPE_NORMAL:
                 temp = "normal";
                 break;
-            case COMPETITION_TYPE_SHARED_AUTONOMY:
-                temp = "shared autonomy";
+            case COMPETITION_TYPE_MOST_PASSES:
+                temp = "most passes";
                 break;
             default:
                 temp = "undefined(" + competitionType + ")";

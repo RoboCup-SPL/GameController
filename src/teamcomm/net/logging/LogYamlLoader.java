@@ -211,7 +211,7 @@ class LogYamlLoader extends Constructor {
             if (params.get("competition") instanceof Map) {
                 @SuppressWarnings("unchecked")
                 final Map<String, Object> competition = (Map<String, Object>) params.get("competition");
-                data.competitionType = competition.get("challengeMode") == null ? COMPETITION_TYPE_NORMAL : COMPETITION_TYPE_SHARED_AUTONOMY;
+                data.competitionType = competition.get("challengeMode") == null ? COMPETITION_TYPE_NORMAL : COMPETITION_TYPE_MOST_PASSES;
                 data.playersPerTeam = (byte)(int)(Integer) competition.get("playersPerTeam");
             }
             if (params.get("game") instanceof Map) {
