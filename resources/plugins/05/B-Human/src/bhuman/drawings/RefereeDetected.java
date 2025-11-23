@@ -50,8 +50,19 @@ public class RefereeDetected extends PerPlayer {
 
                     camera.turnTowardsCamera(gl);
                     try {
+                        BHumanMessage.RefereeGesture__Gesture signal = bhMsg.theRefereeSignal.signal;
+                        if (camera.isFlipped()) {
+                            switch (signal) {
+                                case kickInLeft:
+                                    signal = BHumanMessage.RefereeGesture__Gesture.kickInRight;
+                                    break;
+                                case kickInRight:
+                                    signal = BHumanMessage.RefereeGesture__Gesture.kickInLeft;
+                                    break;
+                            }
+                        }
                         final File f = new File("plugins/" + (rs.getTeamNumber() < 10 ? "0" + rs.getTeamNumber() : String.valueOf(rs.getTeamNumber()))
-                                + "/resources/" + bhMsg.theRefereeSignal.signal + ".png").getAbsoluteFile();
+                                + "/resources/" + signal + ".png").getAbsoluteFile();
                         Image.drawImage(gl, TextureLoader.getInstance().loadTexture(gl, f), 0, 0, 0.3f);
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null,

@@ -123,4 +123,13 @@ public class Camera {
     public void shiftToBottom(final float bottomY) {
         shift = bottomY + (float) (Math.sin(Math.PI / 2 - Math.toRadians(theta)) * radius - Math.sin(Math.PI / 2 - (Math.toRadians(theta) + Math.toRadians(FOVY) / 2)) * radius * Math.cos(Math.PI / 2 - Math.toRadians(theta)) / Math.cos(Math.PI / 2 - (Math.toRadians(theta) + Math.toRadians(FOVY) / 2)));
     }
+
+    /**
+     * Returns whether the field view is mirrored.
+     *
+     * @return Is the field displayed mirrored?
+     */
+    public boolean isFlipped() {
+        return flipped;
+    }
 }
