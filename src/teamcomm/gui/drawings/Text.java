@@ -2,6 +2,9 @@ package teamcomm.gui.drawings;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -12,8 +15,8 @@ import java.awt.geom.Rectangle2D;
 public class Text {
 
     private static TextRenderer renderer = null;
-
     private static final int FONT_SIZE = 72;
+    private static float SCALE_FACTOR = getDesktopScalingFactor();
 
     /**
      * Draw the given text centered at the given position.
@@ -37,10 +40,12 @@ public class Text {
      * @param color array with rgb or rgba values describing the color of the
      * text (color values are in the range [0.0f,1.0f])
      */
-    public static void drawText(final String text, final float centerX, final float centerY, final float size, final float[] color) {
+    public static void drawText(final String text, final float centerX, final float centerY, float size, final float[] color) {
         if (renderer == null) {
             renderer = new TextRenderer(new Font(Font.DIALOG, Font.BOLD, FONT_SIZE), true, true);
         }
+
+        size /= SCALE_FACTOR;
 
         renderer.begin3DRendering();
         renderer.setColor(color[0], color[1], color[2], color.length < 4 ? 1 : color[3]);
@@ -55,5 +60,17 @@ public class Text {
      */
     public static void resetRenderer() {
         renderer = null;
+    }
+
+    /**
+     * Determine the scaling factor of the desktop, because text would be drawn in the wrong size
+     * if the factor differs from 1.
+     * @return The scaling factor, e.g. 2 on Retina displays.
+     */
+    private static float getDesktopScalingFactor() {
+        final GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDefaultConfiguration();
+        final AffineTransform transform = gfxConfig.getDefaultTransform();
+        return (float) transform.getScaleX();
     }
 }
