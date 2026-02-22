@@ -121,10 +121,6 @@
 
   </Compound>
 
-  <Surface name="fieldGreen" diffuseColor="#000000" ambientColor="#20cb20" diffuseTexture="Textures/shadow.png"/>
-  <Surface name="fieldNet" diffuseColor="rgb(100%, 100%, 100%)" diffuseTexture="Textures/net.png"/>
-  <Surface name="fieldWhite" diffuseColor="rgb(100%, 100%, 100%)" specularColor="rgb(80%, 80%, 80%)" shininess="10" diffuseTexture="Textures/shadow.png"/>
-
   <Vertices name="fieldLines">
 # middle line
 -0.025 2.975 0

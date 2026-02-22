@@ -11,7 +11,7 @@ import com.jogamp.opengl.glu.GLU;
 public class Camera {
 
     private static final float NEAR_PLANE = 1;
-    private static final float FAR_PLANE = 20;
+    private static final float FAR_PLANE = 25;
     private static final float FOVY = 40;
 
     private float theta = 45;
