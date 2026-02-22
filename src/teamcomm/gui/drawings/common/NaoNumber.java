@@ -16,7 +16,7 @@ import teamcomm.gui.drawings.Text;
  *
  * @author Felix Thielke
  */
-public class PlayerNumber extends PerPlayer {
+public class NaoNumber extends PerPlayer {
 
     @Override
     public void draw(final GL2 gl, final RobotState player, final Camera camera) {

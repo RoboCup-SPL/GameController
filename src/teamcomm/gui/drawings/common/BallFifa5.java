@@ -15,16 +15,16 @@ import teamcomm.gui.drawings.PerPlayer;
  *
  * @author Felix Thielke
  */
-public class Ball extends PerPlayer {
+public class BallFifa5 extends PerPlayer {
 
-    private static final float ROBOT_HEAD_Z = 0.5f;
-    private static final float BALL_RADIUS = 0.0325f;
-    private static final float MIN_CYLINDER_RADIUS = 0.01f;
+    private static final float ROBOT_HEAD_Z = 1.1f;
+    private static final float BALL_RADIUS = 0.07f;
+    private static final float MIN_CYLINDER_RADIUS = 0.02f;
     private static final float MAX_BALLAGE = 5.0f;
 
     @Override
     protected void init(GL2 gl) {
-        RoSi2Loader.getInstance().cacheModels(gl, new String[]{"ball"});
+        RoSi2Loader.getInstance().cacheModels(gl, new String[]{"ballFifa5"});
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Ball extends PerPlayer {
             gl.glTranslatef(ball[0], ball[1], 0);
 
             // Draw ball
-            gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "ball"));
+            gl.glCallList(RoSi2Loader.getInstance().loadModel(gl, "ballFifa5"));
 
             // Translate back to robot
             gl.glTranslatef(-ball[0], -ball[1], 0);

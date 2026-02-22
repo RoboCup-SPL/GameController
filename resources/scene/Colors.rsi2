@@ -5,6 +5,4 @@
   <Surface name="fieldWhite" diffuseColor="rgb(100%, 100%, 100%)" specularColor="rgb(80%, 80%, 80%)" shininess="10" diffuseTexture="Textures/shadow.png"/>
   <Surface name="goalWhite" diffuseColor="rgb(100%, 100%, 100%)" specularColor="rgb(80%, 80%, 80%)" shininess="10" diffuseTexture="Textures/shadow.png"/>
 
-  <Surface name="ballOrange" diffuseColor="rgb(100%, 0%, 0%)" specularColor="rgb(60%, 60%, 60%)" shininess="30"/>
-
 </Simulation>

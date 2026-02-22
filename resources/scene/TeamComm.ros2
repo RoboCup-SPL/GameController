@@ -3,9 +3,7 @@
   <Include href="Colors.rsi2"/>
   <Include href="NaoV4H21.rsi2"/>
   <Include href="K1.rsi3"/>
-  <Include href="Ball2010SPL.rsi2"/>
-  <Include href="BallFifa3.rsi3"/>
-  <Include href="FieldsSPL.rsi2"/>
+  <Include href="Balls.rsi2"/>
   <Include href="FieldHSLS.rsi2"/>
   <Include href="FieldHSLM.rsi2"/>
   <Include href="FieldHSLL.rsi2"/>
@@ -71,25 +69,17 @@
       <Set name="TeamColor" value="gray"/>
     </Body>
 
-    <Body name="ball" ref="ball">
-      <Translation z="0.0325m" />
+    <Body name="ballFifa1" ref="ballFifa1">
+      <Translation z="0.0765m" />
     </Body>
 
     <Body name="ballFifa3" ref="ballFifa3">
       <Translation z="0.095m" />
     </Body>
 
-    <Compound name="field">
-      <Compound ref="field" />
-    </Compound>
-
-    <Compound name="field2015">
-      <Compound ref="field2015" />
-    </Compound>
-
-    <Compound name="fieldSmall">
-      <Compound ref="fieldSmall" />
-    </Compound>
+    <Body name="ballFifa5" ref="ballFifa5">
+      <Translation z="0.11m" />
+    </Body>
 
     <Compound name="fieldHSLS">
       <Compound ref="fieldHSLS" />

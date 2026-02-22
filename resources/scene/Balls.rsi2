@@ -1,0 +1,23 @@
+<Simulation>
+
+  <Surface name="ballOrange" diffuseColor="rgb(100%, 0%, 0%)" specularColor="rgb(60%, 60%, 60%)" shininess="30"/>
+
+  <Body name="ballFifa1">
+    <SphereAppearance radius="0.0765">
+      <Surface ref="ballOrange"/>
+    </SphereAppearance>
+  </Body>
+
+  <Body name="ballFifa3">
+    <SphereAppearance radius="0.095">
+      <Surface ref="ballOrange"/>
+    </SphereAppearance>
+  </Body>
+
+  <Body name="ballFifa5">
+    <SphereAppearance radius="0.11">
+      <Surface ref="ballOrange"/>
+    </SphereAppearance>
+  </Body>
+
+</Simulation>

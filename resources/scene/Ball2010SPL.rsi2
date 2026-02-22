@@ -1,9 +1,0 @@
-<Simulation>
-
-  <Body name="ball">
-    <SphereAppearance radius="0.0325">
-      <Surface ref="ballOrange"/>
-    </SphereAppearance>
-  </Body>
-
-</Simulation>

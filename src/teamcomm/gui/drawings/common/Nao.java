@@ -17,7 +17,7 @@ import teamcomm.gui.drawings.RoSi2Loader;
  *
  * @author Felix Thielke
  */
-public class Player extends PerPlayer {
+public class Nao extends PerPlayer {
 
     private static String getModelName(final int color) {
         switch (color) {
