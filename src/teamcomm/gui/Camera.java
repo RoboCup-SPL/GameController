@@ -11,7 +11,7 @@ import com.jogamp.opengl.glu.GLU;
 public class Camera {
 
     private static final float NEAR_PLANE = 1;
-    private static final float FAR_PLANE = 25;
+    private static final float FAR_PLANE = 35;
     private static final float FOVY = 40;
 
     private float theta = 45;
@@ -70,8 +70,8 @@ public class Camera {
         radius += amount;
         if (radius < NEAR_PLANE) {
             radius = NEAR_PLANE;
-        } else if (radius > FAR_PLANE - 5) {
-            radius = FAR_PLANE - 5;
+        } else if (radius > FAR_PLANE - 7) {
+            radius = FAR_PLANE - 7;
         }
     }
 

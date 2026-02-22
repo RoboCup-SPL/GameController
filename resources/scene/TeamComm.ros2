@@ -5,6 +5,7 @@
   <Include href="FieldColors.rsi2"/>
   <Include href="FieldsSPL.rsi2"/>
   <Include href="FieldHSLM.rsi2"/>
+  <Include href="FieldHSLL.rsi2"/>
 
   <Scene>
     <Body ref="Nao" name="robotBlue" />
@@ -54,6 +55,10 @@
 
     <Compound name="fieldHSLM">
       <Compound ref="fieldHSLM" />
+    </Compound>
+
+    <Compound name="fieldHSLL">
+      <Compound ref="fieldHSLL" />
     </Compound>
   </Scene>
 </Simulation>
