@@ -1,0 +1,11 @@
+<Simulation>
+
+  <!-- Ball texture by DaveH (http://www.headsub.com/Template/1048/Exploding-Football-Soccer-Ball) -->
+
+  <Body name="ballFifa3">
+    <SphereAppearance radius="0.095">
+      <Surface ref="ballOrange"/>
+    </SphereAppearance>
+  </Body>
+
+</Simulation>

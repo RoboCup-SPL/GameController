@@ -4,6 +4,7 @@
   <Include href="NaoV4H21.rsi2"/>
   <Include href="K1.rsi3"/>
   <Include href="Ball2010SPL.rsi2"/>
+  <Include href="BallFifa3.rsi3"/>
   <Include href="FieldsSPL.rsi2"/>
   <Include href="FieldHSLS.rsi2"/>
   <Include href="FieldHSLM.rsi2"/>
@@ -72,6 +73,10 @@
 
     <Body name="ball" ref="ball">
       <Translation z="0.0325m" />
+    </Body>
+
+    <Body name="ballFifa3" ref="ballFifa3">
+      <Translation z="0.095m" />
     </Body>
 
     <Compound name="field">
