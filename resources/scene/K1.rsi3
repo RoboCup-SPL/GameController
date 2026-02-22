@@ -1,0 +1,147 @@
+<Simulation>
+  <Include href="K1/Head_1_2.rsi3"/>
+  <Include href="K1/Head_2_4.rsi3"/>
+  <Include href="K1/Left_Ankle_Cross_16.rsi3"/>
+  <Include href="K1/Left_Arm_1_4.rsi3"/>
+  <Include href="K1/Left_Arm_2_5.rsi3"/>
+  <Include href="K1/Left_Arm_3_6.rsi3"/>
+  <Include href="K1/Left_Foot_17.rsi3"/>
+  <Include href="K1/Left_Arm_4_7.rsi3"/>
+  <Include href="K1/Left_Hip_Pitch_12.rsi3"/>
+  <Include href="K1/Left_Hip_Roll_13.rsi3"/>
+  <Include href="K1/Left_Hip_Yaw_14.rsi3"/>
+  <Include href="K1/Left_Shank_15.rsi3"/>
+  <Include href="K1/Right_Ankle_Cross_22.rsi3"/>
+  <Include href="K1/Right_Arm_1_8.rsi3"/>
+  <Include href="K1/Right_Arm_2_9.rsi3"/>
+  <Include href="K1/Right_Arm_3_10.rsi3"/>
+  <Include href="K1/Right_Foot_23.rsi3"/>
+  <Include href="K1/Right_Arm_4_11.rsi3"/>
+  <Include href="K1/Right_Hip_Pitch_18.rsi3"/>
+  <Include href="K1/Right_Hip_Roll_19.rsi3"/>
+  <Include href="K1/Right_Hip_Yaw_20.rsi3"/>
+  <Include href="K1/Right_Shank_21.rsi3"/>
+  <Include href="K1/Trunk_1.rsi3"/>
+
+  <Surface name="BoosterDark" diffuseColor="rgb(40%, 40%, 40%)" ambientColor="rgb(32%, 32%, 32%)"/>
+  <Surface name="Booster-skin" diffuseColor="rgb(76%, 76%, 76%)" ambientColor="rgb(60%, 60%, 60%)"/>
+  <Surface name="Booster-red" diffuseColor="rgb(100%, 0%, 0%)" ambientColor="rgb(80%, 0%, 0%)"/>
+  <Surface name="Booster-blue" diffuseColor="rgb(0%, 60%, 80%)" ambientColor="rgb(0%, 48%, 64%)"/>
+  <Surface name="Booster-yellow" diffuseColor="rgb(100%, 100%, 0%)" ambientColor="rgb(80%, 80%, 0%)"/>
+  <Surface name="Booster-black" diffuseColor="rgb(0%, 0%, 0%)" ambientColor="rgb(0%, 0%, 0%)"/>
+  <Surface name="Booster-white" diffuseColor="rgb(100%, 100%, 100%)" ambientColor="rgb(80%, 80%, 80%)"/>
+  <Surface name="Booster-green" diffuseColor="rgb(0%, 80%, 0%)" ambientColor="rgb(0%, 64%, 0%)"/>
+  <Surface name="Booster-orange" diffuseColor="rgb(100%, 50%, 0%)" ambientColor="rgb(80%, 40%, 0%)"/>
+  <Surface name="Booster-purple" diffuseColor="rgb(80%, 0%, 100%)" ambientColor="rgb(64%, 0%, 80%)"/>
+  <Surface name="Booster-brown" diffuseColor="rgb(50%, 20%, 0%)" ambientColor="rgb(40%, 16%, 0%)"/>
+  <Surface name="Booster-gray" diffuseColor="rgb(50%, 50%, 50%)" ambientColor="rgb(40%, 40%, 40%)"/>
+
+  <Body name="K1">
+    <Translation z="0.52"/>
+
+    <Set name="TeamColor" value="Booster-skin"/>
+
+    <ComplexAppearance ref="B_Trunk"/>
+
+    <Appearance name="Head">
+      <Translation x="0.0056m" z="0.2479"/>
+      <Appearance name="HeadYaw">
+        <Translation z="-0.033m"/>
+        <ComplexAppearance ref="B_Head_1"/>
+      </Appearance>
+      <Appearance name="HeadPitch">
+        <ComplexAppearance ref="B_Head_2"/>
+      </Appearance>
+    </Appearance>
+
+    <Appearance name="LeftArm">
+      <Translation y="0.075" z="0.1845m"/>
+      <Appearance name="LeftShoulder">
+        <ComplexAppearance ref="B_Left_Arm_1"/>
+        <Appearance name="LeftUpperArm1">
+          <Rotation x="-80degree"/>
+          <Translation y="0.0675" z="-0.0135"/>
+          <ComplexAppearance ref="B_Left_Arm_2"/>
+          <Appearance name="LeftUpperArm2">
+            <Rotation y="90degree"/>
+            <Translation y="0.045"/>
+            <ComplexAppearance ref="B_Left_Arm_3"/>
+            <Appearance name="LeftHand">
+              <Translation y="0.12"/>
+              <ComplexAppearance ref="B_left_hand_link"/>
+            </Appearance>
+          </Appearance>
+        </Appearance>
+      </Appearance>
+    </Appearance>
+
+    <Appearance name="RightArm">
+      <Translation y="-0.075" z="0.1845m"/>
+      <Appearance name="RightShoulder">
+        <ComplexAppearance ref="B_Right_Arm_1"/>
+        <Appearance name="RightUpperArm1">
+          <Rotation x="80degree"/>
+          <Translation y="-0.0675" z="-0.0135"/>
+          <ComplexAppearance ref="B_Right_Arm_2"/>
+          <Appearance name="RightUpperArm2">
+            <Rotation y="90degree"/>
+            <Translation y="-0.045"/>
+            <ComplexAppearance ref="B_Right_Arm_3"/>
+            <Appearance name="RightHand">
+              <Translation y="-0.12"/>
+              <ComplexAppearance ref="B_right_hand_link"/>
+            </Appearance>
+          </Appearance>
+        </Appearance>
+      </Appearance>
+    </Appearance>
+
+    <Appearance name="LeftLeg">
+      <Translation y="0.096" z="-0.077"/>
+      <ComplexAppearance ref="B_Left_Hip_Pitch"/>
+      <Appearance name="LeftLeg2">
+        <Translation z="-0.025"/>
+        <ComplexAppearance ref="B_Left_Hip_Roll"/>
+        <Appearance name="LeftLeg3">
+          <Translation x="0.01" z="-0.05"/>
+          <ComplexAppearance ref="B_Left_Hip_Yaw"/>
+          <Appearance name="LeftShank">
+            <Translation x="-0.01" z="-0.117"/>
+            <ComplexAppearance ref="B_Left_Shank"/>
+            <Appearance name="LeftAnkle">
+              <Translation z="-0.23"/>
+              <ComplexAppearance ref="B_Left_Ankle_Cross"/>
+              <Appearance name="LeftFoot">
+                <ComplexAppearance ref="B_left_foot_link"/>
+              </Appearance>
+            </Appearance>
+          </Appearance>
+        </Appearance>
+      </Appearance>
+    </Appearance>
+
+    <Appearance name="RightLeg">
+      <Translation y="-0.096" z="-0.077"/>
+      <ComplexAppearance ref="B_Right_Hip_Pitch"/>
+      <Appearance name="RightLeg2">
+        <Translation z="-0.025"/>
+        <ComplexAppearance ref="B_Right_Hip_Roll"/>
+        <Appearance name="RightLeg3">
+          <Translation x="0.01" z="-0.05"/>
+          <ComplexAppearance ref="B_Right_Hip_Yaw"/>
+          <Appearance name="RightShank">
+            <Translation x="-0.01" z="-0.117"/>
+            <ComplexAppearance ref="B_Right_Shank"/>
+            <Appearance name="RightAnkle">
+              <Translation z="-0.23"/>
+              <ComplexAppearance ref="B_Right_Ankle_Cross"/>
+              <Appearance name="RightFoot">
+                <ComplexAppearance ref="B_right_foot_link"/>
+              </Appearance>
+            </Appearance>
+          </Appearance>
+        </Appearance>
+      </Appearance>
+    </Appearance>
+  </Body>
+</Simulation>

@@ -1,8 +1,9 @@
 <Simulation>
 
+  <Include href="Colors.rsi2"/>
   <Include href="NaoV4H21.rsi2"/>
+  <Include href="K1.rsi3"/>
   <Include href="Ball2010SPL.rsi2"/>
-  <Include href="FieldColors.rsi2"/>
   <Include href="FieldsSPL.rsi2"/>
   <Include href="FieldHSLS.rsi2"/>
   <Include href="FieldHSLM.rsi2"/>
@@ -36,6 +37,37 @@
     </Body>
     <Body ref="Nao" name="robotGray">
       <Set name="NaoColor" value="gray"/>
+    </Body>
+
+    <Body ref="K1" name="k1Blue">
+      <Set name="TeamColor" value="blue"/>
+    </Body>
+    <Body ref="K1" name="k1Red">
+      <Set name="TeamColor" value="red"/>
+    </Body>
+    <Body ref="K1" name="k1Black">
+      <Set name="TeamColor" value="black"/>
+    </Body>
+    <Body ref="K1" name="k1Yellow">
+      <Set name="TeamColor" value="yellow"/>
+    </Body>
+    <Body ref="K1" name="k1White">
+      <Set name="TeamColor" value="white"/>
+    </Body>
+    <Body ref="K1" name="k1Green">
+      <Set name="TeamColor" value="green"/>
+    </Body>
+    <Body ref="K1" name="k1Orange">
+      <Set name="TeamColor" value="orange"/>
+    </Body>
+    <Body ref="K1" name="k1Purple">
+      <Set name="TeamColor" value="purple"/>
+    </Body>
+    <Body ref="K1" name="k1Brown">
+      <Set name="TeamColor" value="brown"/>
+    </Body>
+    <Body ref="K1" name="k1Gray">
+      <Set name="TeamColor" value="gray"/>
     </Body>
 
     <Body name="ball" ref="ball">
