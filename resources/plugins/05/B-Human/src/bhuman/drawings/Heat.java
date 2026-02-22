@@ -45,9 +45,9 @@ public class Heat extends PerPlayer {
                 if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL
                         && (rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_STANDBY
                             || rs.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET))) {
-                    gl.glTranslatef(-bhMsg.playerNumber, -3.5f, 1.f);
+                    gl.glTranslatef(-bhMsg.playerNumber, -3.5f, 1.35f);
                 } else {
-                    gl.glTranslatef(gcMsg.pose[0] / 1000.f, gcMsg.pose[1] / 1000.f, 1.f);
+                    gl.glTranslatef(gcMsg.pose[0] / 1000.f, gcMsg.pose[1] / 1000.f, 1.35f);
                 }
 
                 camera.turnTowardsCamera(gl);

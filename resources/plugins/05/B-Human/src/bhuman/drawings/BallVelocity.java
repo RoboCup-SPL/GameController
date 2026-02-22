@@ -15,7 +15,7 @@ import teamcomm.gui.drawings.PerPlayer;
  */
 public class BallVelocity extends PerPlayer {
 
-    private static final float BALL_RADIUS = 0.0325f;
+    private static final float BALL_RADIUS = 0.095f;
     private static final float MAX_BALLAGE = 5.f;
 
     @Override
