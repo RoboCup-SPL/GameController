@@ -18,7 +18,7 @@ import teamcomm.gui.drawings.PerPlayer;
 public class BallFifa3 extends PerPlayer {
 
     private static final float ROBOT_HEAD_Z = 0.85f;
-    private static final float BALL_RADIUS = 0.05f;
+    private static final float BALL_RADIUS = 0.095f;
     private static final float MIN_CYLINDER_RADIUS = 0.015f;
     private static final float MAX_BALLAGE = 5.0f;
 
