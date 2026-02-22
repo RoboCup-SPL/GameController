@@ -4,6 +4,7 @@
   <Include href="Ball2010SPL.rsi2"/>
   <Include href="FieldColors.rsi2"/>
   <Include href="FieldsSPL.rsi2"/>
+  <Include href="FieldHSLS.rsi2"/>
   <Include href="FieldHSLM.rsi2"/>
   <Include href="FieldHSLL.rsi2"/>
 
@@ -51,6 +52,10 @@
 
     <Compound name="fieldSmall">
       <Compound ref="fieldSmall" />
+    </Compound>
+
+    <Compound name="fieldHSLS">
+      <Compound ref="fieldHSLS" />
     </Compound>
 
     <Compound name="fieldHSLM">
