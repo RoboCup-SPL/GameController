@@ -304,18 +304,30 @@ public class View3DGSV extends View3D {
                             state = "First Half";
                         }
                     } else {
-                        if (data.gameState == GameControlData.STATE_INITIAL || data.gameState == GameControlData.STATE_STANDBY) {
+                        if (data.gameState == GameControlData.STATE_INITIAL) {
                             state = "Half Time";
                         } else {
                             state = "Second Half";
                         }
                     }
                     break;
-                case GameControlData.GAME_PHASE_OVERTIME:
-                    state = "Overtime";
+                case GameControlData.GAME_PHASE_EXTRATIME:
+                    if (data.firstHalf == GameControlData.C_TRUE) {
+                        if (data.gameState == GameControlData.STATE_FINISHED) {
+                            state = "Half Time";
+                        } else {
+                            state = "First Extra Half";
+                        }
+                    } else {
+                        if (data.gameState == GameControlData.STATE_INITIAL) {
+                            state = "Half Time";
+                        } else {
+                            state = "Second Extra Half";
+                        }
+                    }
                     break;
                 case GameControlData.GAME_PHASE_PENALTYSHOOT:
-                    state = "Penalty Shootout";
+                    state = "Penalty Shoot-out";
                     break;
                 case GameControlData.GAME_PHASE_TIMEOUT:
                     state = "Time Out";
@@ -354,20 +366,23 @@ public class View3DGSV extends View3D {
                         case GameControlData.SET_PLAY_NONE:
                             state = "Playing";
                             break;
-                        case GameControlData.SET_PLAY_GOAL_KICK:
-                            state = "Goal Kick";
+                        case GameControlData.SET_PLAY_DIRECT_FREE_KICK:
+                            state = "Direct Free Kick";
                             break;
-                        case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
-                            state = "Pushing Free Kick";
-                            break;
-                        case GameControlData.SET_PLAY_CORNER_KICK:
-                            state = "Corner Kick";
-                            break;
-                        case GameControlData.SET_PLAY_KICK_IN:
-                            state = "Kick In";
+                        case GameControlData.SET_PLAY_INDIRECT_FREE_KICK:
+                            state = "Indirect Free Kick";
                             break;
                         case GameControlData.SET_PLAY_PENALTY_KICK:
                             state = "Penalty Kick";
+                            break;
+                        case GameControlData.SET_PLAY_THROW_IN:
+                            state = "Throw-in";
+                            break;
+                        case GameControlData.SET_PLAY_GOAL_KICK:
+                            state = "Goal Kick";
+                            break;
+                        case GameControlData.SET_PLAY_CORNER_KICK:
+                            state = "Corner Kick";
                             break;
                         default:
                             state = "";
@@ -375,9 +390,6 @@ public class View3DGSV extends View3D {
                     break;
                 case GameControlData.STATE_FINISHED:
                     state = "Finished";
-                    break;
-                case GameControlData.STATE_STANDBY:
-                    state = "Standby";
                     break;
                 default:
                     state = "";

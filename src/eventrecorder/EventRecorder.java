@@ -28,7 +28,7 @@ import teamcomm.net.GameControlDataReceiver;
 public class EventRecorder {
     public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd.MM.YY - HH:mm 'Uhr'");
     public static final SimpleDateFormat SECONDS_FORMAT = new SimpleDateFormat("mm:ss");
-    public static final String[] GAME_STATE_NAMES = new String[]{"Initial", "Ready", "Set", "Playing", "Finished", "Standby"};
+    public static final String[] GAME_STATE_NAMES = new String[]{"Initial", "Ready", "Set", "Playing", "Finished"};
 
     public static final int GAMECONTROLLER_TIMEOUT = 3000; /**< Timeout in ms when the manual play/stop/reset buttons should be usable again */
 
@@ -134,20 +134,23 @@ public class EventRecorder {
                 if (data.setPlay == GameControlData.SET_PLAY_NONE) {
                     String setPlayString;
                     switch (lastSetPlay) {
-                        case GameControlData.SET_PLAY_GOAL_KICK:
-                            setPlayString = "Goal Kick Complete";
+                        case GameControlData.SET_PLAY_DIRECT_FREE_KICK:
+                            setPlayString = "Direct Free Kick Complete";
                             break;
-                        case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
-                            setPlayString = "Pushing Free Kick Complete";
-                            break;
-                        case GameControlData.SET_PLAY_CORNER_KICK:
-                            setPlayString = "Corner Kick Complete";
-                            break;
-                        case GameControlData.SET_PLAY_KICK_IN:
-                            setPlayString = "Kick In Complete";
+                        case GameControlData.SET_PLAY_INDIRECT_FREE_KICK:
+                            setPlayString = "Inirect Free Kick Complete";
                             break;
                         case GameControlData.SET_PLAY_PENALTY_KICK:
                             setPlayString = "Penalty Kick Complete";
+                            break;
+                        case GameControlData.SET_PLAY_THROW_IN:
+                            setPlayString = "Throw-in Complete";
+                            break;
+                        case GameControlData.SET_PLAY_GOAL_KICK:
+                            setPlayString = "Goal Kick Complete";
+                            break;
+                        case GameControlData.SET_PLAY_CORNER_KICK:
+                            setPlayString = "Corner Kick Complete";
                             break;
                         default:
                             setPlayString = "";
@@ -167,20 +170,23 @@ public class EventRecorder {
                 } else {
                     String setPlayString;
                     switch (data.setPlay) {
-                        case GameControlData.SET_PLAY_GOAL_KICK:
-                            setPlayString = "Goal Kick for team: ";
+                        case GameControlData.SET_PLAY_DIRECT_FREE_KICK:
+                            setPlayString = "Direct Free Kick for team: ";
                             break;
-                        case GameControlData.SET_PLAY_PUSHING_FREE_KICK:
-                            setPlayString = "Pushing Free Kick for team: ";
-                            break;
-                        case GameControlData.SET_PLAY_CORNER_KICK:
-                            setPlayString = "Corner Kick for team: ";
-                            break;
-                        case GameControlData.SET_PLAY_KICK_IN:
-                            setPlayString = "Kick In for team: ";
+                        case GameControlData.SET_PLAY_INDIRECT_FREE_KICK:
+                            setPlayString = "Indirect Free Kick for team: ";
                             break;
                         case GameControlData.SET_PLAY_PENALTY_KICK:
                             setPlayString = "Penalty Kick for team: ";
+                            break;
+                        case GameControlData.SET_PLAY_THROW_IN:
+                            setPlayString = "Throw-in for team: ";
+                            break;
+                        case GameControlData.SET_PLAY_GOAL_KICK:
+                            setPlayString = "Goal Kick for team: ";
+                            break;
+                        case GameControlData.SET_PLAY_CORNER_KICK:
+                            setPlayString = "Corner Kick for team: ";
                             break;
                         default:
                             setPlayString = "";

@@ -25,8 +25,7 @@ public class NaoNumber extends PerPlayer {
             gl.glPushMatrix();
 
             if (player.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL
-                    && (player.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_STANDBY
-                        || player.getPenalty() == PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET))) {
+                    && player.getPenalty() == PlayerInfo.PENALTY_MOTION_IN_SET)) {
                 gl.glTranslatef(-msg.playerNum, -3.5f, 0.7f);
             } else {
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0.7f);

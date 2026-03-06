@@ -22,7 +22,7 @@ public class GameControlData implements Serializable {
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final String GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER = "RGTD";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 18;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 19;
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte TEAM_YELLOW = 2;
@@ -34,15 +34,13 @@ public class GameControlData implements Serializable {
     public static final byte TEAM_BROWN = 8;
     public static final byte TEAM_GRAY = 9;
 
-    public static final byte COMPETITION_PHASE_ROUNDROBIN = 0;
-    public static final byte COMPETITION_PHASE_PLAYOFF = 1;
-
-    public static final byte COMPETITION_TYPE_NORMAL = 0;
-    public static final byte COMPETITION_TYPE_MOST_PASSES = 1;
+    public static final byte COMPETITION_TYPE_SMALL = 0;
+    public static final byte COMPETITION_TYPE_MIDDLE = 1;
+    public static final byte COMPETITION_TYPE_LARGE = 2;
 
     public static final byte GAME_PHASE_NORMAL = 0;
     public static final byte GAME_PHASE_PENALTYSHOOT = 1;
-    public static final byte GAME_PHASE_OVERTIME = 2;
+    public static final byte GAME_PHASE_EXTRATIME = 2;
     public static final byte GAME_PHASE_TIMEOUT = 3;
 
     public static final byte STATE_INITIAL = 0;
@@ -50,14 +48,14 @@ public class GameControlData implements Serializable {
     public static final byte STATE_SET = 2;
     public static final byte STATE_PLAYING = 3;
     public static final byte STATE_FINISHED = 4;
-    public static final byte STATE_STANDBY = 5;
 
     public static final byte SET_PLAY_NONE = 0;
-    public static final byte SET_PLAY_GOAL_KICK = 1;
-    public static final byte SET_PLAY_PUSHING_FREE_KICK = 2;
-    public static final byte SET_PLAY_CORNER_KICK = 3;
-    public static final byte SET_PLAY_KICK_IN = 4;
-    public static final byte SET_PLAY_PENALTY_KICK = 5;
+    public static final byte SET_PLAY_DIRECT_FREE_KICK = 1;
+    public static final byte SET_PLAY_INDIRECT_FREE_KICK = 2;
+    public static final byte SET_PLAY_PENALTY_KICK = 3;
+    public static final byte SET_PLAY_THROW_IN = 4;
+    public static final byte SET_PLAY_GOAL_KICK = 5;
+    public static final byte SET_PLAY_CORNER_KICK = 6;
 
     public static final byte KICKING_TEAM_NONE = -1;
 
@@ -77,9 +75,9 @@ public class GameControlData implements Serializable {
             1
             + // numPlayers
             1
-            + // competitionPhase
-            1
             + // competitionType
+            1
+            + // stopped
             1
             + // gamePhase
             1
@@ -103,8 +101,8 @@ public class GameControlData implements Serializable {
     // GAMECONTROLLER_STRUCT_VERSION                             // version of the data structure
     public byte packetNumber = 0;                                // number incremented with each packet sent (with wraparound)
     public byte playersPerTeam = (byte) Rules.league.teamSize;   // the number of players on a team
-    public byte competitionPhase = COMPETITION_PHASE_ROUNDROBIN; // phase of the competition (COMPETITION_PHASE_ROUNDROBIN, COMPETITION_PHASE_PLAYOFF)
-    public byte competitionType = COMPETITION_TYPE_NORMAL;       // type of the competition (COMPETITION_TYPE_NORMAL)
+    public byte competitionType = COMPETITION_TYPE_SMALL;        // type of the competition (COMPETITION_TYPE_SMALL, etc)
+    public byte stopped = C_FALSE;                               // ...
     public byte gamePhase = GAME_PHASE_NORMAL;                   // phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
     public byte gameState = STATE_INITIAL;                       // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)
@@ -137,8 +135,8 @@ public class GameControlData implements Serializable {
         buffer.put(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
-        buffer.put(competitionPhase);
         buffer.put(competitionType);
+        buffer.put(stopped);
         buffer.put(gamePhase);
         buffer.put(gameState);
         buffer.put(setPlay);
@@ -170,8 +168,8 @@ public class GameControlData implements Serializable {
         }
         packetNumber = buffer.get();
         playersPerTeam = buffer.get();
-        competitionPhase = buffer.get();
         competitionType = buffer.get();
+        stopped = buffer.get();
         gamePhase = buffer.get();
         gameState = buffer.get();
         setPlay = buffer.get();
@@ -195,30 +193,32 @@ public class GameControlData implements Serializable {
         out += "            Version: " + GAMECONTROLLER_STRUCT_VERSION + "\n";
         out += "      Packet Number: " + (packetNumber & 0xFF) + "\n";
         out += "   Players per Team: " + playersPerTeam + "\n";
-        switch(competitionPhase) {
-            case COMPETITION_PHASE_ROUNDROBIN:
-                temp = "round robin";
-                break;
-            case COMPETITION_PHASE_PLAYOFF:
-                temp = "playoff";
-                break;
-            default:
-                temp = "undefined(" + competitionPhase + ")";
-                break;
-        }
-        out += "   competitionPhase: " + temp + "\n";
         switch(competitionType) {
-            case COMPETITION_TYPE_NORMAL:
-                temp = "normal";
+            case COMPETITION_TYPE_SMALL:
+                temp = "small";
                 break;
-            case COMPETITION_TYPE_MOST_PASSES:
-                temp = "most passes";
+            case COMPETITION_TYPE_MIDDLE:
+                temp = "middle";
+                break;
+            case COMPETITION_TYPE_LARGE:
+                temp = "large";
                 break;
             default:
                 temp = "undefined(" + competitionType + ")";
                 break;
         }
         out += "    competitionType: " + temp + "\n";
+        switch (stopped) {
+            case C_TRUE:
+                temp = "true";
+                break;
+            case C_FALSE:
+                temp = "false";
+                break;
+            default:
+                temp = "undefined(" + firstHalf + ")";
+        }
+        out += "            stopped: " + temp + "\n";
         switch (gamePhase) {
             case GAME_PHASE_NORMAL:
                 temp = "normal";
@@ -226,8 +226,8 @@ public class GameControlData implements Serializable {
             case GAME_PHASE_PENALTYSHOOT:
                 temp = "penaltyshoot";
                 break;
-            case GAME_PHASE_OVERTIME:
-                temp = "overtime";
+            case GAME_PHASE_EXTRATIME:
+                temp = "extratime";
                 break;
             case GAME_PHASE_TIMEOUT:
                 temp = "timeout";
@@ -252,9 +252,6 @@ public class GameControlData implements Serializable {
             case STATE_FINISHED:
                 temp = "finish";
                 break;
-            case STATE_STANDBY:
-                temp = "standby";
-                break;
             default:
                 temp = "undefined(" + gameState + ")";
         }
@@ -263,20 +260,23 @@ public class GameControlData implements Serializable {
             case SET_PLAY_NONE:
                 temp = "none";
                 break;
-            case SET_PLAY_GOAL_KICK:
-                temp = "goal kick";
+            case SET_PLAY_DIRECT_FREE_KICK:
+                temp = "direct free kick";
                 break;
-            case SET_PLAY_PUSHING_FREE_KICK:
-                temp = "pushing free kick";
-                break;
-            case SET_PLAY_CORNER_KICK:
-                temp = "corner kick";
-                break;
-            case SET_PLAY_KICK_IN:
-                temp = "kick in";
+            case SET_PLAY_INDIRECT_FREE_KICK:
+                temp = "indirect free kick";
                 break;
             case SET_PLAY_PENALTY_KICK:
                 temp = "penalty kick";
+                break;
+            case SET_PLAY_THROW_IN:
+                temp = "throw-in";
+                break;
+            case SET_PLAY_GOAL_KICK:
+                temp = "goal kick";
+                break;
+            case SET_PLAY_CORNER_KICK:
+                temp = "corner kick";
                 break;
             default:
                 temp = "undefined(" + setPlay + ")";
