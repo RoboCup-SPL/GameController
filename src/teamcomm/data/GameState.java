@@ -4,7 +4,6 @@ import common.ApplicationLock;
 import common.net.logging.Logger;
 import data.GameControlData;
 import data.GameControlReturnData;
-import data.Rules;
 import data.SPLTeamMessage;
 import data.TeamInfo;
 import data.Teams;

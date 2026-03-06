@@ -4,8 +4,6 @@ import bhuman.message.BHumanMessage;
 import com.jogamp.opengl.GL2;
 import data.GameControlReturnData;
 import data.PlayerInfo;
-import data.Rules;
-import data.SPL;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -39,8 +37,7 @@ public class WhistleHeard extends PerPlayer {
                 if (Math.abs(System.currentTimeMillis() - timeWhenWhistled) <= 2000) {
                     gl.glPushMatrix();
 
-                    if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL
-                            && rs.getPenalty() == PlayerInfo.PENALTY_MOTION_IN_SET)) {
+                    if (rs.getPenalty() != PlayerInfo.PENALTY_NONE && rs.getPenalty() != PlayerInfo.PENALTY_MOTION_IN_SET) {
                         gl.glTranslatef(-bhMsg.playerNumber, -3.5f, 1.35f);
                     } else {
                         gl.glTranslatef(gcMsg.pose[0] / 1000.f, gcMsg.pose[1] / 1000.f, 1.35f);

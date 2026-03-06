@@ -4,7 +4,6 @@ import com.jogamp.opengl.GL2;
 import data.GameControlReturnData;
 import data.PlayerInfo;
 import data.Rules;
-import data.SPL;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
@@ -24,8 +23,7 @@ public class K1Number extends PerPlayer {
         if (msg != null && msg.playerNumValid && msg.poseValid) {
             gl.glPushMatrix();
 
-            if (player.getPenalty() != PlayerInfo.PENALTY_NONE && !(Rules.league instanceof SPL
-                    && player.getPenalty() == PlayerInfo.PENALTY_MOTION_IN_SET)) {
+            if (player.getPenalty() != PlayerInfo.PENALTY_NONE && player.getPenalty() != PlayerInfo.PENALTY_MOTION_IN_SET) {
                 gl.glTranslatef(-msg.playerNum, -3.5f, 1.05f);
             } else {
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 1.05f);
