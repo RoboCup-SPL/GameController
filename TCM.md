@@ -1,7 +1,7 @@
-# RoboCup SPL TeamCommunicationMonitor
+# RoboCup HSL TeamCommunicationMonitor
 
 The TeamCommunicationMonitor (TCM) is a tool for visualizing the data
-communicated between robots during SPL games.
+communicated between robots during HSL games.
 
 It serves two main purposes:
 

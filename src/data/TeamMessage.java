@@ -3,7 +3,7 @@ package data;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-public class SPLTeamMessage implements Serializable {
+public class TeamMessage implements Serializable {
 
     private static final long serialVersionUID = 2204681477211322628L;
 
@@ -13,8 +13,8 @@ public class SPLTeamMessage implements Serializable {
 
     public boolean valid;
 
-    public static SPLTeamMessage createFrom(final SPLTeamMessage message) {
-        final SPLTeamMessage m = new SPLTeamMessage();
+    public static TeamMessage createFrom(final TeamMessage message) {
+        final TeamMessage m = new TeamMessage();
         m.data = message.data;
         m.valid = message.valid;
         return m;

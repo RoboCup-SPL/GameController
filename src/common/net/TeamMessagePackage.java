@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author Felix Thielke
  */
-public class SPLTeamMessagePackage implements Serializable {
+public class TeamMessagePackage implements Serializable {
 
     private static final long serialVersionUID = 758311663011901849L;
 
@@ -35,7 +35,7 @@ public class SPLTeamMessagePackage implements Serializable {
      * message was received
      * @param message raw message data
      */
-    public SPLTeamMessagePackage(final String host, final int team, final byte[] message) {
+    public TeamMessagePackage(final String host, final int team, final byte[] message) {
         this.host = host;
         this.team = team;
         this.message = message;

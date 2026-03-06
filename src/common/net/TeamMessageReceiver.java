@@ -2,7 +2,7 @@ package common.net;
 
 import common.Log;
 import common.net.logging.Logger;
-import data.SPLTeamMessage;
+import data.TeamMessage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author Felix Thielke
  */
-public class SPLTeamMessageReceiver extends Thread {
+public class TeamMessageReceiver extends Thread {
 
     private class ReceiverThread extends Thread {
 
@@ -37,7 +37,7 @@ public class SPLTeamMessageReceiver extends Thread {
         private int openChannels = 0;
 
         public ReceiverThread(final boolean multicast, final int[] teams) throws IOException {
-            setName("SPLTeamMessageReceiver");
+            setName("TeamMessageReceiver");
 
             selector = SelectorProvider.provider().openSelector();
             this.multicast = multicast;
@@ -79,7 +79,7 @@ public class SPLTeamMessageReceiver extends Thread {
         @Override
         public void run() {
             // Receive one more byte than the maximum length to detect packets that are too long.
-            ByteBuffer buffer = ByteBuffer.allocate(SPLTeamMessage.MAX_SIZE + 1);
+            ByteBuffer buffer = ByteBuffer.allocate(TeamMessage.MAX_SIZE + 1);
             while (!isInterrupted()) {
                 try {
                     if (selector.select(openChannels < (teams == null ? MAX_TEAMNUMBER : teams.length) ? 50 : 500) > 0) {
@@ -97,13 +97,13 @@ public class SPLTeamMessageReceiver extends Thread {
                                 buffer.get(data, 0, data.length);
                                 if (multicast) {
                                     // This works only for teams who have the player number in the second byte of the team message.
-                                    queue.add(new SPLTeamMessagePackage("10.0." + team + "." + (buffer.get(1) & 15), team, data));
+                                    queue.add(new TeamMessagePackage("10.0." + team + "." + (buffer.get(1) & 15), team, data));
                                 } else {
-                                    queue.add(new SPLTeamMessagePackage(address.getAddress().getHostAddress(), team, data));
+                                    queue.add(new TeamMessagePackage(address.getAddress().getHostAddress(), team, data));
                                 }
                             }
 
-                            buffer = ByteBuffer.allocate(SPLTeamMessage.MAX_SIZE + 1);
+                            buffer = ByteBuffer.allocate(TeamMessage.MAX_SIZE + 1);
                             it.remove();
                         }
                     }
@@ -129,7 +129,7 @@ public class SPLTeamMessageReceiver extends Thread {
     private static final int MAX_TEAMNUMBER = 100;
 
     private final ReceiverThread receiver;
-    private final LinkedBlockingQueue<SPLTeamMessagePackage> queue = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<TeamMessagePackage> queue = new LinkedBlockingQueue<>();
 
     /**
      * Constructor.
@@ -139,7 +139,7 @@ public class SPLTeamMessageReceiver extends Thread {
      * @throws IOException if a problem occurs while creating the receiver
      * threads
      */
-    public SPLTeamMessageReceiver(final boolean multicast, final int[] teams) throws IOException {
+    public TeamMessageReceiver(final boolean multicast, final int[] teams) throws IOException {
         // Create receiver thread
         receiver = new ReceiverThread(multicast, teams);
     }
@@ -148,7 +148,7 @@ public class SPLTeamMessageReceiver extends Thread {
         return true;
     }
 
-    protected void handleMessage(final SPLTeamMessagePackage p) {
+    protected void handleMessage(final TeamMessagePackage p) {
 
     }
 
@@ -160,7 +160,7 @@ public class SPLTeamMessageReceiver extends Thread {
 
             // Handle received packages
             while (!isInterrupted()) {
-                final SPLTeamMessagePackage p = queue.take();
+                final TeamMessagePackage p = queue.take();
 
                 // Log package
                 Logger.getInstance().log(p);
@@ -186,7 +186,7 @@ public class SPLTeamMessageReceiver extends Thread {
      *
      * @param p package
      */
-    public void addToPackageQueue(final SPLTeamMessagePackage p) {
+    public void addToPackageQueue(final TeamMessagePackage p) {
         queue.add(p);
     }
 

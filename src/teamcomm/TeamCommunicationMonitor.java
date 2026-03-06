@@ -13,7 +13,7 @@ import teamcomm.gui.MainWindow;
 import teamcomm.gui.View3DGSV;
 import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.GameControlReturnDataReceiverTCM;
-import teamcomm.net.SPLTeamMessageReceiverTCM;
+import teamcomm.net.TeamMessageReceiverTCM;
 import teamcomm.net.logging.LogReplayer;
 
 /**
@@ -42,7 +42,7 @@ public class TeamCommunicationMonitor {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         GameControlDataReceiver gcDataReceiver = null;
         GameControlReturnDataReceiverTCM gcReturnDataReceiver;
-        SPLTeamMessageReceiverTCM receiver;
+        TeamMessageReceiverTCM receiver;
 
         parseArgs(args);
 
@@ -107,7 +107,7 @@ public class TeamCommunicationMonitor {
 
         // Initialize listeners for robots
         gcReturnDataReceiver = GameControlReturnDataReceiverTCM.getInstance();
-        receiver = SPLTeamMessageReceiverTCM.createInstance(multicast);
+        receiver = TeamMessageReceiverTCM.createInstance(multicast);
 
         // Initialize robot view part of the GUI
         System.setProperty("newt.window.icons", "null,null");

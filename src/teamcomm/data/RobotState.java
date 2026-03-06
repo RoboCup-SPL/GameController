@@ -2,7 +2,7 @@ package teamcomm.data;
 
 import data.PlayerInfo;
 import data.GameControlReturnData;
-import data.SPLTeamMessage;
+import data.TeamMessage;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import javax.swing.event.EventListenerList;
@@ -33,7 +33,7 @@ public class RobotState {
     private static final int AVERAGE_CALCULATION_TIME = 10000;
 
     private final String address;
-    private SPLTeamMessage lastTeamMessage;
+    private TeamMessage lastTeamMessage;
     private GameControlReturnData lastGCRDMessage;
     private long lastTeamMessageTimestamp;
     private long lastGCRDMessageTimestamp;
@@ -63,11 +63,11 @@ public class RobotState {
     }
 
     /**
-     * Handles a SPL team message received by the robot this object corresponds to.
+     * Handles a team message received by the robot this object corresponds to.
      *
-     * @param message received SPL team message or null if the message was invalid
+     * @param message received team message or null if the message was invalid
      */
-    public void registerMessage(final SPLTeamMessage message) {
+    public void registerMessage(final TeamMessage message) {
         if (!message.valid) {
             illegalTeamMessageCount++;
         }
@@ -123,7 +123,7 @@ public class RobotState {
      *
      * @return message
      */
-    public SPLTeamMessage getLastTeamMessage() {
+    public TeamMessage getLastTeamMessage() {
         return lastTeamMessage;
     }
 

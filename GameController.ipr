@@ -115,9 +115,6 @@
         <element id="directory" name="deps">
           <element id="dir-copy" path="$PROJECT_DIR$/deps" />
         </element>
-        <element id="directory" name="examples">
-          <element id="dir-copy" path="$PROJECT_DIR$/examples" />
-        </element>
         <element id="directory" name="scene">
           <element id="dir-copy" path="$PROJECT_DIR$/resources/scene" />
         </element>

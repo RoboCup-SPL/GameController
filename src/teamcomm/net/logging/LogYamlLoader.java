@@ -1,7 +1,7 @@
 package teamcomm.net.logging;
 
 import common.net.GameControlReturnDataPackage;
-import common.net.SPLTeamMessagePackage;
+import common.net.TeamMessagePackage;
 import data.GameControlData;
 import static data.GameControlData.*;
 import data.PlayerInfo;
@@ -175,7 +175,7 @@ class LogYamlLoader extends Constructor {
                             if (!recording) {
                                 continue;
                             }
-                            message = new SPLTeamMessagePackage(
+                            message = new TeamMessagePackage(
                                     (String) entry.get("host"),
                                     (Integer) entry.get("team"),
                                     Base64.getDecoder().decode((String) entry.get("data")));

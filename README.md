@@ -1,7 +1,7 @@
-# RoboCup SPL GameController Support Tools
+# RoboCup HSL GameController Support Tools
 
 These are the GameController support tools developed by team B-Human for
-the RoboCup SPL. Originally, this repository contained the GameController
+the RoboCup HSL. Originally, this repository contained the GameController
 as well. It was used in the RoboCup SPL from 2013 to 2022. Since 2023,
 [a new version](https://github.com/RoboCup-SPL/GameController3) is being used.
 
@@ -40,7 +40,7 @@ To start it, run
 ## 3. TeamCommunicationMonitor
 
 The TeamCommunicationMonitor (TCM) is a tool for visualizing the data
-communicated by robots during SPL games.
+communicated by robots during HSL games.
 
 It serves two main purposes:
 

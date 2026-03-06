@@ -2,10 +2,10 @@ package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
 import data.GameControlData;
-import data.Rules;
 import data.TeamInfo;
 import teamcomm.data.GameState;
 import teamcomm.gui.Camera;
+import teamcomm.gui.Colors;
 import teamcomm.gui.drawings.Static;
 import teamcomm.gui.drawings.Text;
 
@@ -141,10 +141,10 @@ public class GameControllerInfo extends Static {
     }
 
     private static float[] getColor(final byte color) {
-        if (color < 0 || color >= Rules.league.teamColor.length) {
+        if (color < 0 || color >= Colors.teamColors.length) {
             return new float[]{1, 1, 1, 1};
         }
-        return Rules.league.teamColor[color].getComponents(new float[4]);
+        return Colors.teamColors[color].getComponents(new float[4]);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package teamcomm;
 
 import common.Log;
-import data.SPLTeamMessage;
+import data.TeamMessage;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -80,10 +80,10 @@ public class PluginLoader {
      * @param teamNumber number of the team
      * @return class for instantiating messages from the given team
      */
-    public Class<? extends SPLTeamMessage> getMessageClass(final int teamNumber) {
+    public Class<? extends TeamMessage> getMessageClass(final int teamNumber) {
         final Class<? extends AdvancedMessage> c = pluginsDisabled ? null : messageClasses.get(teamNumber);
 
-        return c != null ? c : SPLTeamMessage.class;
+        return c != null ? c : TeamMessage.class;
     }
 
     /**

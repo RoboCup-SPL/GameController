@@ -1,8 +1,8 @@
 package common.net.logging;
 
 import common.Log;
-import common.net.SPLTeamMessagePackage;
 import common.net.GameControlReturnDataPackage;
+import common.net.TeamMessagePackage;
 import data.GameControlData;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class Logger {
         if (!enabled) {
             enabled = true;
             createLogfile();
-            System.out.println("Enabled logging of SPLTeamMessages");
+            System.out.println("Enabled logging of TeamMessages");
         }
     }
 
@@ -54,7 +54,7 @@ public class Logger {
         if (enabled) {
             enabled = false;
             closeLogfile();
-            System.out.println("Disabled logging of SPLTeamMessages");
+            System.out.println("Disabled logging of TeamMessages");
         }
     }
 
@@ -120,12 +120,12 @@ public class Logger {
     }
 
     /**
-     * Logs the given SPLTeamMessage package.
+     * Logs the given TeamMessage package.
      *
      * @param p package
      */
-    public void log(final SPLTeamMessagePackage p) {
-        log(SPLTeamMessagePackage.class, p);
+    public void log(final TeamMessagePackage p) {
+        log(TeamMessagePackage.class, p);
     }
 
     /**

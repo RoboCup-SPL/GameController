@@ -2,7 +2,7 @@ package teamcomm.gui;
 
 import common.Log;
 import data.GameControlReturnData;
-import data.SPLTeamMessage;
+import data.TeamMessage;
 import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -83,7 +83,7 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
      */
     private void update(final RobotState robot) {
         final GameControlReturnData returnMessage = robot.getLastGCRDMessage();
-        final SPLTeamMessage teamMessage = robot.getLastTeamMessage();
+        final TeamMessage teamMessage = robot.getLastTeamMessage();
         if (returnMessage == null && teamMessage == null) {
             return;
         }
@@ -135,7 +135,7 @@ public class RobotDetailFrameDefault extends RobotDetailFrame {
 
         if (teamMessage != null) {
             if (teamMessage.valid) {
-                sb.append("Additional data: ").append(teamMessage.data.length).append("B (").append(teamMessage.data.length * 100 / SPLTeamMessage.MAX_SIZE).append("%)");
+                sb.append("Additional data: ").append(teamMessage.data.length).append("B (").append(teamMessage.data.length * 100 / TeamMessage.MAX_SIZE).append("%)");
             } else {
                 sb.append("<font color='red'>Additional data: ").append(teamMessage.data.length).append("B</font>");
             }

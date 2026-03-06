@@ -4,7 +4,7 @@ import bhuman.message.BHumanMessage;
 import bhuman.message.data.Angle;
 import bhuman.message.data.Eigen;
 import bhuman.message.data.Timestamp;
-import data.SPLTeamMessage;
+import data.TeamMessage;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -111,7 +111,7 @@ public class BHumanDetailFrame extends RobotDetailFrame {
      * Updates the frame with information of the given robot.
      */
     private void update(final RobotState robot) {
-        final SPLTeamMessage msg = robot.getLastTeamMessage();
+        final TeamMessage msg = robot.getLastTeamMessage();
         if (!BHumanMessage.class.isInstance(msg)) {
             return;
         }

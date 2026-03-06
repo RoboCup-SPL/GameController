@@ -2,7 +2,6 @@
 <!DOCTYPE project>
 <project default="jar">
     <property name="src.dir"        value="src"/>
-    <property name="examples.dir"   value="examples"/>
     <property name="deps.dir"       value="deps"/>
     <property name="build.dir"      value="build"/>
     <property name="classes.dir"    value="${build.dir}"/>
@@ -76,9 +75,6 @@
                 <include name="**/*.jar" />
                 <include name="**/resources/**" />
             </fileset>
-        </copy>
-        <copy todir="${jar.dir}/examples" overwrite="true">
-            <fileset dir="${examples.dir}" />
         </copy>
         <copy todir="${jar.dir}/deps" overwrite="true">
             <fileset dir="${deps.dir}">

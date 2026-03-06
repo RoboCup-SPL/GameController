@@ -3,10 +3,10 @@ package teamcomm.gui.drawings.common;
 import com.jogamp.opengl.GL2;
 import data.GameControlReturnData;
 import data.PlayerInfo;
-import data.Rules;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
+import teamcomm.gui.Colors;
 import teamcomm.gui.drawings.PerPlayer;
 import teamcomm.gui.drawings.Text;
 
@@ -30,7 +30,7 @@ public class K1Number extends PerPlayer {
             }
 
             camera.turnTowardsCamera(gl);
-            Text.drawText("" + msg.playerNum, 0, 0, 0.3f, Rules.league.teamColor[GameState.getInstance().getTeamColor(player.getTeamNumber(), player.getPlayerNumber())].getRGBColorComponents(null));
+            Text.drawText("" + msg.playerNum, 0, 0, 0.3f, Colors.teamColors[GameState.getInstance().getTeamColor(player.getTeamNumber(), player.getPlayerNumber())].getRGBColorComponents(null));
 
             gl.glPopMatrix();
         }

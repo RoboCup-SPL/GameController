@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.event.EventListenerList;
 import teamcomm.data.GameState;
 import teamcomm.net.GameControlReturnDataReceiverTCM;
-import teamcomm.net.SPLTeamMessageReceiverTCM;
+import teamcomm.net.TeamMessageReceiverTCM;
 
 /**
  * Singleton class for replaying log files.
@@ -55,8 +55,8 @@ public class LogReplayer {
             }
         }
 
-        // Drain package queue of SPLTeamMessageReceiver and GameControlReturnDataReceiver
-        SPLTeamMessageReceiverTCM.getInstance().clearPackageQueue();
+        // Drain package queue of TeamMessageReceiver and GameControlReturnDataReceiver
+        TeamMessageReceiverTCM.getInstance().clearPackageQueue();
         GameControlReturnDataReceiverTCM.getInstance().clearPackageQueue();
 
         // Reset GameState
@@ -118,8 +118,8 @@ public class LogReplayer {
                 listener.logReplayEnded();
             }
 
-            // Drain package queue of SPLTeamMessageReceiver and GameControlReturnDataReceiver
-            SPLTeamMessageReceiverTCM.getInstance().clearPackageQueue();
+            // Drain package queue of TeamMessageReceiver and GameControlReturnDataReceiver
+            TeamMessageReceiverTCM.getInstance().clearPackageQueue();
             GameControlReturnDataReceiverTCM.getInstance().clearPackageQueue();
 
             // Reset GameState
