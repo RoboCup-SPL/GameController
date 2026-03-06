@@ -29,10 +29,6 @@ public abstract class Rules
 
     /** The rules of the league playing. */
     public static Rules league = LEAGUES[0];
-    /** The league's name this rules are for. */
-    public String leagueName;
-    /** The league's directory name with its teams and icons. */
-    public String leagueDirectory;
     /** The Java Colors the left and the right team starts with. */
     public Color[] teamColor;
 }

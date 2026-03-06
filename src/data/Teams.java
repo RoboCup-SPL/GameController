@@ -73,59 +73,38 @@ public class Teams {
     /**
      * The information read from the config files.
      */
-    private final Info[][] teams;
+    private final Info[] teams;
 
     /**
      * Creates a new Teams object.
      */
     private Teams() {
-        teams = new Info[Rules.LEAGUES.length][];
-        for (int i = 0; i < Rules.LEAGUES.length; i++) {
-            String dir = Rules.LEAGUES[i].leagueDirectory;
-            int maxValue = 0;
-            BufferedReader br = null;
-            try {
-                InputStream inStream = Files.newInputStream(Paths.get(PATH + dir + "/" + CONFIG));
-                br = new BufferedReader(
-                        new InputStreamReader(inStream, CHARSET));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    try {
-                        final int value = Integer.parseInt(line.split("=", 2)[0]);
-                        if (value > maxValue) {
-                            maxValue = value;
-                        }
-                    } catch (NumberFormatException e) {
+        int maxValue = 0;
+        BufferedReader br = null;
+        try {
+            InputStream inStream = Files.newInputStream(Paths.get(PATH + CONFIG));
+            br = new BufferedReader(new InputStreamReader(inStream, CHARSET));
+            String line;
+            while ((line = br.readLine()) != null) {
+                try {
+                    final int value = Integer.parseInt(line.split("=", 2)[0]);
+                    if (value > maxValue) {
+                        maxValue = value;
                     }
-                }
-            } catch (IOException e) {
-                Log.error("cannot load " + PATH + dir + "/" + CONFIG);
-            } finally {
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (Exception e) {
-                    }
+                } catch (NumberFormatException e) {
                 }
             }
-            teams[i] = new Info[maxValue + 1];
-        }
-    }
-
-    /**
-     * Returns the index the current league has within the LEAGUES-array.
-     *
-     * @return the leagues index.
-     */
-    private static int getLeagueIndex() {
-        for (int i = 0; i < Rules.LEAGUES.length; i++) {
-            if (Rules.LEAGUES[i] == Rules.league) {
-                return i;
+        } catch (IOException e) {
+            Log.error("cannot load " + PATH + CONFIG);
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                }
             }
         }
-        //should never happen
-        Log.error("selected league is odd");
-        return -1;
+        teams = new Info[maxValue + 1];
     }
 
     /**
@@ -135,9 +114,8 @@ public class Teams {
     public static void readTeams() {
         BufferedReader br = null;
         try {
-            InputStream inStream = Files.newInputStream(Paths.get(PATH + Rules.league.leagueDirectory + "/" + CONFIG));
-            br = new BufferedReader(
-                    new InputStreamReader(inStream, CHARSET));
+            InputStream inStream = Files.newInputStream(Paths.get(PATH + CONFIG));
+            br = new BufferedReader(new InputStreamReader(inStream, CHARSET));
             String line;
             while ((line = br.readLine()) != null) {
                 final String[] entry = line.split("=", 2);
@@ -148,7 +126,7 @@ public class Teams {
                     } catch (NumberFormatException e) {
                     }
                     if (key >= 0) {
-                        instance.teams[getLeagueIndex()][key] = new Info(entry[1]);
+                        instance.teams[key] = new Info(entry[1]);
                     } else {
                         Log.error("error in teams.cfg: \"" + entry[0] + "\" is not a valid team number");
                     }
@@ -157,7 +135,7 @@ public class Teams {
                 }
             }
         } catch (Exception e) {
-            Log.error("cannot load " + PATH + Rules.league.leagueDirectory + "/" + CONFIG);
+            Log.error("cannot load " + PATH + CONFIG);
         } finally {
             if (br != null) {
                 try {
@@ -175,14 +153,13 @@ public class Teams {
      * @return An array containing the names at their teamNumber's position.
      */
     public static String[] getNames(boolean withNumbers) {
-        int leagueIndex = getLeagueIndex();
-        if (instance.teams[leagueIndex][0] == null) {
+        if (instance.teams[0] == null) {
             readTeams();
         }
-        String[] out = new String[instance.teams[leagueIndex].length];
-        for (int i = 0; i < instance.teams[leagueIndex].length; i++) {
-            if (instance.teams[leagueIndex][i] != null) {
-                out[i] = instance.teams[leagueIndex][i].name + (withNumbers ? " (" + i + ")" : "");
+        String[] out = new String[instance.teams.length];
+        for (int i = 0; i < instance.teams.length; i++) {
+            if (instance.teams[i] != null) {
+                out[i] = instance.teams[i].name + (withNumbers ? " (" + i + ")" : "");
             }
         }
         return out;
@@ -210,7 +187,7 @@ public class Teams {
             graphics.setColor(new Color(0f, 0f, 0f, 0f));
             graphics.fillRect(0, 0, out.getWidth(), out.getHeight());
         }
-        instance.teams[getLeagueIndex()][team].icon = out;
+        instance.teams[team].icon = out;
     }
 
     /**
@@ -221,7 +198,7 @@ public class Teams {
      */
     public static File getIconPath(int team) {
         for (final String ending : PIC_ENDING) {
-            final File file = new File(PATH + Rules.league.leagueDirectory + "/" + team + "." + ending);
+            final File file = new File(PATH + team + "." + ending);
             if (file.exists()) {
                 return file;
             }
@@ -237,13 +214,12 @@ public class Teams {
      * @return The team's icon.
      */
     public static BufferedImage getIcon(int team) {
-        int leagueIndex = getLeagueIndex();
-        if (instance.teams[leagueIndex][team] == null) {
+        if (instance.teams[team] == null) {
             readTeams();
         }
-        if (instance.teams[leagueIndex][team].icon == null) {
+        if (instance.teams[team].icon == null) {
             readIcon(team);
         }
-        return instance.teams[leagueIndex][team].icon;
+        return instance.teams[team].icon;
     }
 }

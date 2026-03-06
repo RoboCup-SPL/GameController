@@ -34,10 +34,7 @@ by the GameStateVisualizer mode of the TeamCommunicationMonitor.
 
 To start it, run
 
-`java -jar TeamCommunicationMonitor.jar --gsv -l <league>`.
-
-The parameter `-l` (or `--league`) is optional; if it is not given, the GSV
-assumes a game in the SPL.
+`java -jar TeamCommunicationMonitor.jar --gsv`.
 
 
 ## 3. TeamCommunicationMonitor

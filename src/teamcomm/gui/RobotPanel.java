@@ -48,7 +48,7 @@ public class RobotPanel extends JPanel implements RobotStateEventListener {
     private final JLabel teamLogo = new JLabel((Icon) null, SwingConstants.CENTER);
 
     private static final Color defaultColor = new JLabel("test").getForeground();
-    private static final String ICONS_PATH = "config/icons/";
+    private static final String ICONS_PATH = "icons/";
     private static final String ICON_ONLINE = "wlan_status_green.png";
     private static final String ICON_OFFLINE = "wlan_status_red.png";
     private static final String ICON_HIGH_LATENCY = "wlan_status_yellow.png";

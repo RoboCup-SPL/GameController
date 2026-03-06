@@ -62,7 +62,7 @@ public class MainFrame extends JFrame {
     private static final long serialVersionUID = -6572494292734211470L;
 
     public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("mm:ss");
-    public static final String ICONS_PATH = "config/icons/";
+    public static final String ICONS_PATH = "icons/";
 
     public static final Color MANUALLY_LOG_ENTRY_COLOR = new Color(0xFFFFFF);
     public static final Color GAMESTATE_LOG_ENTRY_COLOR = new Color(0xFFCACA);

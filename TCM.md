@@ -33,10 +33,6 @@ By passing the command line parameter `-s` or `--silent`, the TCM is started in
 "silent" mode, in which it does not display anything but still stores all
 received messages in log files.
 
-Although the TCM was made for usage in SPL games, the league can be changed by
-passing the command line parameter `-l` or `--league`. This is mainly useful for
-the GameStateVisualizer mode.
-
 
 ## User Interface
 

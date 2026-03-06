@@ -7,7 +7,7 @@ public class SPLTeamMessage implements Serializable {
 
     private static final long serialVersionUID = 2204681477211322628L;
 
-    public static final int MAX_SIZE = 128;
+    public static final int MAX_SIZE = 512;
 
     public byte[] data;
 

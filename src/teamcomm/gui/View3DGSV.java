@@ -212,12 +212,12 @@ public class View3DGSV extends View3D {
         for (final BackgroundAlign align : BackgroundAlign.values()) {
             for (final String format : new String[]{".png", ".jpeg", ".jpg"}) {
                 try {
-                    background = TextureLoader.getInstance().loadTexture(glad.getGL(), new File("config/" + Rules.league.leagueDirectory + "/background" + align.suffix + format));
+                    background = TextureLoader.getInstance().loadTexture(glad.getGL(), new File("config/background" + align.suffix + format));
                     backgroundAlign = align;
                     break loaded;
                 } catch (final IOException e) {
                 } catch (final Exception e) {
-                    System.err.println("The background image " + "config/" + Rules.league.leagueDirectory + "/background" + align.suffix + format + " could not be loaded.\nUsually this happens if its width or height is not an even number.");
+                    System.err.println("The background image " + "config/background" + align.suffix + format + " could not be loaded.\nUsually this happens if its width or height is not an even number.");
                 }
             }
         }

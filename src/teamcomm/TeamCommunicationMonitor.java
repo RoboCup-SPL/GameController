@@ -3,7 +3,6 @@ package teamcomm;
 import com.jogamp.opengl.GLProfile;
 import common.ApplicationLock;
 import common.net.logging.Logger;
-import data.Rules;
 import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
@@ -203,8 +202,6 @@ public class TeamCommunicationMonitor {
 
     private static final String ARG_HELP_SHORT = "-h";
     private static final String ARG_HELP = "--help";
-    private static final String ARG_LEAGUE_SHORT = "-l";
-    private static final String ARG_LEAGUE = "--league";
     private static final String ARG_SILENT_SHORT = "-s";
     private static final String ARG_SILENT = "--silent";
     private static final String ARG_REPLAYLOG_SHORT = "-rl";
@@ -224,7 +221,6 @@ public class TeamCommunicationMonitor {
                 case ARG_HELP:
                     System.out.println("Usage: java -jar TeamCommunicationMonitor.jar {options}"
                             + "\n  (-h | --help)                   display help"
-                            + "\n  (-l | --league) <league>        select league"
                             + "\n  (-s | --silent)                 start in silent mode"
                             + "\n  (-rl | --replaylog) <path>      immediately replay the given log file"
                             + "\n  (--gsv)                         start as GameStateVisualizer"
@@ -232,15 +228,6 @@ public class TeamCommunicationMonitor {
                             + "\n  (-m | --multicast)              also join multicast groups for simulated team communication"
                             + "\n  (-p | --forceplugins)           GSV: force usage of plugins");
                     System.exit(0);
-                case ARG_LEAGUE_SHORT:
-                case ARG_LEAGUE:
-                    final String leagueName = args[++i];
-                    for (final Rules league : Rules.LEAGUES) {
-                        if (league.leagueDirectory.equalsIgnoreCase(leagueName)) {
-                            Rules.league = league;
-                        }
-                    }
-                    break;
                 case ARG_SILENT_SHORT:
                 case ARG_SILENT:
                     silentMode = true;
