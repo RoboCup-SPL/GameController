@@ -33,10 +33,6 @@ public abstract class Rules
     public String leagueName;
     /** The league's directory name with its teams and icons. */
     public String leagueDirectory;
-    /** How many robots are in a team. */
-    public int teamSize;
     /** The Java Colors the left and the right team starts with. */
     public Color[] teamColor;
-    /** Time in seconds one half is long. */
-    public int halfTime;
 }

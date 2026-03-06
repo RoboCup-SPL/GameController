@@ -71,9 +71,9 @@ public class GameControlData implements Serializable {
             1
             + // version
             1
-            + // packet number
+            + // packetNumber
             1
-            + // numPlayers
+            + // playersPerTeam
             1
             + // competitionType
             1
@@ -100,7 +100,7 @@ public class GameControlData implements Serializable {
     // GAMECONTROLLER_STRUCT_HEADER                              // header to identify the structure
     // GAMECONTROLLER_STRUCT_VERSION                             // version of the data structure
     public byte packetNumber = 0;                                // number incremented with each packet sent (with wraparound)
-    public byte playersPerTeam = (byte) Rules.league.teamSize;   // the number of players on a team
+    public byte playersPerTeam = 0;                              // the number of players on a team
     public byte competitionType = COMPETITION_TYPE_SMALL;        // type of the competition (COMPETITION_TYPE_SMALL, etc)
     public byte stopped = C_FALSE;                               // ...
     public byte gamePhase = GAME_PHASE_NORMAL;                   // phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
@@ -108,7 +108,7 @@ public class GameControlData implements Serializable {
     public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)
     public byte firstHalf = C_TRUE;                              // 1 = game in first half, 0 otherwise
     public byte kickingTeam;                                     // the team number of the next team to kick off, free kick etc, or KICKING_TEAM_NONE
-    public short secsRemaining = (short) Rules.league.halfTime;  // estimate of number of seconds remaining in the half
+    public short secsRemaining = 0;                              // estimate of number of seconds remaining in the half
     public short secondaryTime = 0;                              // number of seconds shown as secondary time (remaining ready, until free ball, etc)
     public final TeamInfo[] team = new TeamInfo[2];
 
