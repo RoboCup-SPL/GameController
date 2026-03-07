@@ -7,6 +7,9 @@ import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import teamcomm.data.GameState;
 import teamcomm.gui.MainWindow;
@@ -32,6 +35,9 @@ public class TeamCommunicationMonitor {
 
     private static boolean shutdown = false;
     private static final Object commandMutex = new Object();
+    private static final Set<String> activeDrawings = new HashSet<>(
+            Arrays.asList("BallFifa1", "FieldHSLS", "Nao", "NaoNumber")
+    );
 
     /**
      * Startup method of the team communication monitor.
@@ -112,7 +118,7 @@ public class TeamCommunicationMonitor {
         // Initialize robot view part of the GUI
         System.setProperty("newt.window.icons", "null,null");
         MainWindow robotView = silentMode || gsvMode ? null : new MainWindow();
-        View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV(forceWindowed) : null);
+        View3DGSV gsvView = silentMode ? null : (gsvMode ? new View3DGSV(forceWindowed, activeDrawings) : null);
 
         // Set initial state for PluginLoader
         if ((silentMode || gsvMode) && !forceEnablePlugins) {
@@ -143,7 +149,7 @@ public class TeamCommunicationMonitor {
                                 robotView = null;
                             }
                             if (gsvView == null) {
-                                gsvView = new View3DGSV(forceWindowed);
+                                gsvView = new View3DGSV(forceWindowed, activeDrawings);
                             }
                             if (!forceEnablePlugins) {
                                 PluginLoader.getInstance().disablePlugins();
@@ -207,12 +213,14 @@ public class TeamCommunicationMonitor {
     private static final String ARG_REPLAYLOG_SHORT = "-rl";
     private static final String ARG_REPLAYLOG = "--replaylog";
     private static final String ARG_GSV = "--gsv";
-    private static final String ARG_WINDOWED = "--windowed";
     private static final String ARG_WINDOWED_SHORT = "-w";
-    private static final String ARG_MULTICAST = "--multicast";
+    private static final String ARG_WINDOWED = "--windowed";
     private static final String ARG_MULTICAST_SHORT = "-m";
-    private static final String ARG_FORCEPLUGINS = "--forceplugins";
+    private static final String ARG_MULTICAST = "--multicast";
     private static final String ARG_FORCEPLUGINS_SHORT = "-p";
+    private static final String ARG_FORCEPLUGINS = "--forceplugins";
+    private static final String ARG_DRAWINGS_SHORT = "-d";
+    private static final String ARG_DRAWINGS = "--drawings";
 
     private static void parseArgs(final String[] args) {
         for (int i = 0; i < args.length; i++) {
@@ -221,6 +229,7 @@ public class TeamCommunicationMonitor {
                 case ARG_HELP:
                     System.out.println("Usage: java -jar TeamCommunicationMonitor.jar {options}"
                             + "\n  (-h | --help)                   display help"
+                            + "\n  (-d | --drawings) <drawings>    GSV: comma-separated list of drawings"
                             + "\n  (-s | --silent)                 start in silent mode"
                             + "\n  (-rl | --replaylog) <path>      immediately replay the given log file"
                             + "\n  (--gsv)                         start as GameStateVisualizer"
@@ -228,6 +237,11 @@ public class TeamCommunicationMonitor {
                             + "\n  (-m | --multicast)              also join multicast groups for simulated team communication"
                             + "\n  (-p | --forceplugins)           GSV: force usage of plugins");
                     System.exit(0);
+                case ARG_DRAWINGS_SHORT:
+                case ARG_DRAWINGS:
+                    activeDrawings.clear();
+                    activeDrawings.addAll(Arrays.asList(args[++i].split(",")));
+                    break;
                 case ARG_SILENT_SHORT:
                 case ARG_SILENT:
                     silentMode = true;

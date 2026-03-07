@@ -14,6 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -22,8 +23,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import teamcomm.PluginLoader;
@@ -51,8 +54,10 @@ public class View3DGSV extends View3D {
     private GraphicsDevice currentScreenDevice;
     private final TextRenderer[] textRenderers = new TextRenderer[4];
     private final int[] textRendererSizes = new int[4];
+    private final Set<String> activeDrawings;
+    private static float SCALE_FACTOR = getDesktopScalingFactor();
 
-    private static final float NEAR_FIELD_BORDER_Y = -3.7f;
+    private final float nearFieldBorderY;
 
     private enum BackgroundAlign {
         NONE(""),
@@ -76,7 +81,11 @@ public class View3DGSV extends View3D {
      *
      * @param forceWindowed force the GSV window into windowed mode
      */
-    public View3DGSV(final boolean forceWindowed) {
+    public View3DGSV(final boolean forceWindowed, final Set<String> activeDrawings) {
+        this.activeDrawings = activeDrawings;
+        nearFieldBorderY = activeDrawings.contains("FieldHSLL") ? -8.0f
+                : activeDrawings.contains("FieldHSLM") ? -5.5f
+                : -4.0f;
         final GLProfile glp = GLProfile.get(GLProfile.GL2);
         final GLCapabilities caps = new GLCapabilities(glp);
         caps.setSampleBuffers(true);
@@ -109,7 +118,7 @@ public class View3DGSV extends View3D {
             // Setup keyboard / mouse interaction
             canvas.addMouseWheelListener(me -> {
                 camera.addRadius((float) (-me.getPreciseWheelRotation() * 0.05));
-                camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
+                camera.shiftToBottom(nearFieldBorderY);
             });
             canvas.addKeyListener(new KeyAdapter() {
                 @Override
@@ -126,12 +135,12 @@ public class View3DGSV extends View3D {
                         case KeyEvent.VK_UP:
                         case KeyEvent.VK_PLUS:
                             camera.addRadius(-0.05f * ((ke.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0 ? 2 : 1));
-                            camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
+                            camera.shiftToBottom(nearFieldBorderY);
                             break;
                         case KeyEvent.VK_DOWN:
                         case KeyEvent.VK_MINUS:
                             camera.addRadius(0.05f * ((ke.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0 ? 2 : 1));
-                            camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
+                            camera.shiftToBottom(nearFieldBorderY);
                             break;
                     }
                 }
@@ -188,22 +197,15 @@ public class View3DGSV extends View3D {
 
         for (final Drawing d : drawings) {
             if (d.getClass().getName().startsWith("teamcomm.gui.drawings.common")) {
-                switch (d.getClass().getSimpleName()) {
-                    case "Ball":
-                    case "Field":
-                    case "Player":
-                    case "PlayerNumber":
-                        d.setActive(true);
-                        break;
-                    default:
-                        d.setActive(false);
-                }
+                d.setActive(activeDrawings.contains(d.getClass().getSimpleName()));
             } else {
                 d.setActive(true);
             }
         }
-        camera.addRadius(4.f);
-        camera.shiftToBottom(NEAR_FIELD_BORDER_Y);
+        camera.addRadius(activeDrawings.contains("FieldHSLL") ? 20.f
+                : activeDrawings.contains("FieldHSLM") ? 10.f
+                : 4.f);
+        camera.shiftToBottom(nearFieldBorderY);
 
         GameState.getInstance().setMirrored(true);
 
@@ -229,9 +231,10 @@ public class View3DGSV extends View3D {
         textRendererSizes[RENDERER_STATE] = 60 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_GAME_PHASE] = 80 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_TIME] = 120 * window.getWidth() / 1920;
-        textRendererSizes[RENDERER_SCORE] = window.getWidth() / 6;
+        textRendererSizes[RENDERER_SCORE] = 320 * window.getWidth() / 1920;
+        final float scaleFactor = getDesktopScalingFactor();
         for (int i = 0; i < textRenderers.length; i++) {
-            textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, Font.PLAIN, textRendererSizes[i]), true, true);
+            textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, Font.PLAIN, (int) (textRendererSizes[i] / scaleFactor)), true, true);
         }
     }
 
@@ -522,5 +525,17 @@ public class View3DGSV extends View3D {
             }
         }
         super.teamChanged(e);
+    }
+
+    /**
+     * Determine the scaling factor of the desktop, because text would be drawn in the wrong size
+     * if the factor differs from 1.
+     * @return The scaling factor, e.g. 2 on Retina displays.
+     */
+    private static float getDesktopScalingFactor() {
+        final GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDefaultConfiguration();
+        final AffineTransform transform = gfxConfig.getDefaultTransform();
+        return (float) transform.getScaleX();
     }
 }
