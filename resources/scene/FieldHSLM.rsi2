@@ -21,6 +21,20 @@
 
   </Compound>
 
+  <Compound name="goalsHSLSM">
+
+    <Compound ref="fieldGoalHSLM" name="Goal1">
+      <Translation x="-4.5m"/>
+      <Set name="color" value="goalWhite"/>
+    </Compound>
+    <Compound ref="fieldGoalHSLM" name="Goal2">
+      <Translation x="4.5m"/>
+      <Rotation z="180degree"/>
+      <Set name="color" value="goalWhite"/>
+    </Compound>
+
+  </Compound>
+
   <Compound name="fieldGoalHSLM">
 
     <CylinderAppearance height="1.55m" radius="0.05m" name="post1">

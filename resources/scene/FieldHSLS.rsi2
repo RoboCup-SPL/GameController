@@ -9,12 +9,16 @@
     <ComplexAppearance ref="fieldMarkHSLS"/>
     <ComplexAppearance ref="fieldGreenHSLS"/>
 
+  </Compound>
+
+  <Compound name="goalsHSLS">
+
     <Compound ref="fieldGoalHSLS" name="Goal1">
-      <Translation x="-4.499999999999999m"/>
+      <Translation x="-4.5m"/>
       <Set name="color" value="goalWhite"/>
     </Compound>
     <Compound ref="fieldGoalHSLS" name="Goal2">
-      <Translation x="4.499999999999999m"/>
+      <Translation x="4.5m"/>
       <Rotation z="180degree"/>
       <Set name="color" value="goalWhite"/>
     </Compound>

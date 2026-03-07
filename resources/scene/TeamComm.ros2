@@ -83,6 +83,16 @@
 
     <Compound name="fieldHSLS">
       <Compound ref="fieldHSLS" />
+      <Compound ref="goalsHSLS" />
+    </Compound>
+
+    <Compound name="fieldHSLSM">
+      <Compound ref="fieldHSLS" />
+      <Compound ref="goalsHSLSM" />
+    </Compound>
+
+    <Compound name="goalsHSLSM">
+      <Compound ref="goalsHSLSM" />
     </Compound>
 
     <Compound name="fieldHSLM">
