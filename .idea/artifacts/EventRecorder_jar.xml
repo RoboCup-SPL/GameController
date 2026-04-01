@@ -1,0 +1,25 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="EventRecorder:jar">
+    <output-path>$PROJECT_DIR$/bin</output-path>
+    <root id="archive" name="EventRecorder.jar">
+      <element id="directory" name="eventrecorder">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/eventrecorder" />
+      </element>
+      <element id="directory" name="teamcomm/net">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/net" />
+      </element>
+      <element id="directory" name="teamcomm/data/event">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/data/event" />
+      </element>
+      <element id="directory" name="common">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
+      </element>
+      <element id="directory" name="data">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/eventrecorder/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

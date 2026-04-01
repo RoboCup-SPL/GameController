@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="common:jar">
+    <output-path>$PROJECT_DIR$/bin/plugins</output-path>
+    <root id="archive" name="common.jar">
+      <element id="directory" name="teamcomm/gui/drawings/common">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/gui/drawings/common" />
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/teamcomm/gui/drawings/common/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,25 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="GameControllerTester:jar">
+    <output-path>$PROJECT_DIR$/bin</output-path>
+    <root id="archive" name="GameControllerTester.jar">
+      <element id="directory" name="tester">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/tester" />
+      </element>
+      <element id="directory" name="teamcomm/net">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/net" />
+      </element>
+      <element id="directory" name="teamcomm/data/event">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/teamcomm/data/event" />
+      </element>
+      <element id="directory" name="common">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/common" />
+      </element>
+      <element id="directory" name="data">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/data" />
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/tester/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

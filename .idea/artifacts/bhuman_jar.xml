@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="bhuman:jar">
+    <output-path>$PROJECT_DIR$/bin/plugins/05</output-path>
+    <root id="archive" name="bhuman.jar">
+      <element id="directory" name="bhuman">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/bhuman" />
+      </element>
+      <element id="directory" name="util">
+        <element id="dir-copy" path="$PROJECT_DIR$/build/util" />
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/resources/plugins/05/B-Human/src/bhuman/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

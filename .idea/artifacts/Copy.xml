@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="Copy">
+    <output-path>$PROJECT_DIR$/bin</output-path>
+    <root id="root">
+      <element id="directory" name="config">
+        <element id="dir-copy" path="$PROJECT_DIR$/resources/config" />
+      </element>
+      <element id="directory" name="deps">
+        <element id="dir-copy" path="$PROJECT_DIR$/deps" />
+      </element>
+      <element id="directory" name="scene">
+        <element id="dir-copy" path="$PROJECT_DIR$/resources/scene" />
+      </element>
+      <element id="directory" name=".">
+        <element id="file-copy" path="$PROJECT_DIR$/LICENSE" />
+        <element id="file-copy" path="$PROJECT_DIR$/README.md" />
+        <element id="file-copy" path="$PROJECT_DIR$/TCM.md" />
+      </element>
+      <element id="directory" name="plugins/05/resources">
+        <element id="dir-copy" path="$PROJECT_DIR$/resources/plugins/05/resources" />
+      </element>
+    </root>
+  </artifact>
+</component>
