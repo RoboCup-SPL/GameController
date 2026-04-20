@@ -101,7 +101,7 @@ class LogYamlLoader extends Constructor {
      */
     static void load(final File file, final Deque<LogReplayTask.LoggedObject> queue) throws IOException {
         final LoaderOptions options = new LoaderOptions();
-        options.setCodePointLimit(67108864);
+        options.setCodePointLimit(2147483647);
         new LogYamlLoader(options).parse(file, queue);
     }
 
@@ -188,8 +188,13 @@ class LogYamlLoader extends Constructor {
                             baseTime = time;
                             recording = true;
                         }
-                        queue.addLast(new LogReplayTask.LoggedObject(time - baseTime + recordedTime, message));
+                        // Create a copy for the log.
+                        final GameControlData copy = new GameControlData();
+                        copy.fromByteArray(ByteBuffer.wrap(data.toByteArray().array()));
+                        queue.addLast(new LogReplayTask.LoggedObject(time - baseTime + recordedTime, copy, message));
                     } else if (recording) { // Ending the current section?
+                        // end section signal
+                        queue.addLast(new LogReplayTask.LoggedObject(time - baseTime + recordedTime, null, 14383421));
                         recordedTime += time - baseTime;
                         recording = false;
                     }
