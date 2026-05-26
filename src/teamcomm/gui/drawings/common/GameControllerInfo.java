@@ -42,7 +42,7 @@ public class GameControllerInfo extends Static {
                         }
                     }
                     break;
-                case GameControlData.GAME_PHASE_EXTRATIME:
+                case GameControlData.GAME_PHASE_EXTRA_TIME:
                     if (data.firstHalf == GameControlData.C_TRUE) {
                         if (data.gameState == GameControlData.STATE_FINISHED) {
                             gamePhase = "Half Time";
@@ -57,7 +57,7 @@ public class GameControllerInfo extends Static {
                         }
                     }
                     break;
-                case GameControlData.GAME_PHASE_PENALTYSHOOT:
+                case GameControlData.GAME_PHASE_PENALTY_SHOOT_OUT:
                     gamePhase = "Penalty Shoot-out";
                     break;
                 case GameControlData.GAME_PHASE_TIMEOUT:

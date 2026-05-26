@@ -228,7 +228,7 @@ public class GameState implements GameControlDataEventListener {
         } else {
             logfileName.append(getTeamName((int) e.data.team[1].teamNumber, false, false)).append("_").append(getTeamName((int) e.data.team[0].teamNumber, false, false));
         }
-        if (e.data.gamePhase != GameControlData.GAME_PHASE_PENALTYSHOOT) {
+        if (e.data.gamePhase != GameControlData.GAME_PHASE_PENALTY_SHOOT_OUT) {
             logfileName.append(e.data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
         }
         if (e.data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {

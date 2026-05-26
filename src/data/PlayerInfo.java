@@ -21,15 +21,17 @@ public class PlayerInfo implements Serializable {
     public static final byte PENALTY_NONE = 0;
     public static final byte PENALTY_ILLEGAL_POSITIONING = 1;
     public static final byte PENALTY_MOTION_IN_SET = 2;
-    public static final byte PENALTY_LOCAL_GAME_STUCK = 3;
-    public static final byte PENALTY_INCAPABLE_ROBOT = 4;
-    public static final byte PENALTY_PICK_UP = 5;
-    public static final byte PENALTY_BALL_HOLDING = 6;
-    public static final byte PENALTY_LEAVING_THE_FIELD = 7;
-    public static final byte PENALTY_PLAYING_WITH_ARMS_HANDS = 8;
-    public static final byte PENALTY_PUSHING = 9;
-    public static final byte PENALTY_SENT_OFF = 10;
-    public static final byte PENALTY_SUBSTITUTE = 11;
+    public static final byte PENALTY_MOTION_IN_STOP = 3;
+    public static final byte PENALTY_LOCAL_GAME_STUCK = 4;
+    public static final byte PENALTY_INCAPABLE_ROBOT = 5;
+    public static final byte PENALTY_PICK_UP = 6;
+    public static final byte PENALTY_BALL_HOLDING = 7;
+    public static final byte PENALTY_LEAVING_THE_FIELD = 8;
+    public static final byte PENALTY_PLAYING_WITH_ARMS_HANDS = 9;
+    public static final byte PENALTY_PUSHING = 10;
+    public static final byte PENALTY_CAUTIONED = 11;
+    public static final byte PENALTY_SENT_OFF = 12;
+    public static final byte PENALTY_SUBSTITUTE = 13;
 
     /**
      * The size in bytes this class has packed.
@@ -39,14 +41,11 @@ public class PlayerInfo implements Serializable {
             + // penalty
             1
             + // secsTillUnpenalised
-            1
-            + // warnings
             1;  // cautions
 
     //this is streamed
     public byte penalty = PENALTY_NONE; // penalty state of the player
     public byte secsTillUnpenalised;    // estimate of time till unpenalised
-    public byte warnings;               // number of warnings
     public byte cautions;               // number of cautions (yellow cards)
 
     /**
@@ -59,7 +58,6 @@ public class PlayerInfo implements Serializable {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(penalty);
         buffer.put(secsTillUnpenalised);
-        buffer.put(warnings);
         buffer.put(cautions);
         return buffer.array();
     }
@@ -73,7 +71,6 @@ public class PlayerInfo implements Serializable {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         penalty = buffer.get();
         secsTillUnpenalised = buffer.get();
-        warnings = buffer.get();
         cautions = buffer.get();
     }
 
@@ -85,6 +82,8 @@ public class PlayerInfo implements Serializable {
                 return "illegal positioning";
             case PENALTY_MOTION_IN_SET:
                 return "motion in set";
+            case PENALTY_MOTION_IN_STOP:
+                return "motion in stop";
             case PENALTY_LOCAL_GAME_STUCK:
                 return "local game stuck";
             case PENALTY_INCAPABLE_ROBOT:
@@ -99,6 +98,8 @@ public class PlayerInfo implements Serializable {
                 return "leaving the field";
             case PENALTY_PUSHING:
                 return "pushing";
+            case PENALTY_CAUTIONED:
+                return "cautioned";
             case PENALTY_SENT_OFF:
                 return "sent off";
             case PENALTY_SUBSTITUTE:
@@ -114,7 +115,6 @@ public class PlayerInfo implements Serializable {
         String temp = getPenaltyName(penalty);
         out += "            penalty: " + temp + "\n";
         out += "secsTillUnpenalised: " + secsTillUnpenalised + "\n";
-        out += "           warnings: " + warnings + "\n";
         out += "           cautions: " + cautions + "\n";
         return out;
     }

@@ -313,7 +313,7 @@ public class View3DGSV extends View3D {
                         }
                     }
                     break;
-                case GameControlData.GAME_PHASE_EXTRATIME:
+                case GameControlData.GAME_PHASE_EXTRA_TIME:
                     if (data.firstHalf == GameControlData.C_TRUE) {
                         if (data.gameState == GameControlData.STATE_FINISHED) {
                             state = "Half Time";
@@ -328,7 +328,7 @@ public class View3DGSV extends View3D {
                         }
                     }
                     break;
-                case GameControlData.GAME_PHASE_PENALTYSHOOT:
+                case GameControlData.GAME_PHASE_PENALTY_SHOOT_OUT:
                     state = "Penalty Shoot-out";
                     break;
                 case GameControlData.GAME_PHASE_TIMEOUT:
@@ -442,7 +442,7 @@ public class View3DGSV extends View3D {
                     } else {
                         gl.glTranslatef(window.getWidth() / 12, window.getWidth() / 6 + window.getHeight() * 20 / 1080, 0);
                     }
-                    if (data.gamePhase == GameControlData.GAME_PHASE_PENALTYSHOOT) {
+                    if (data.gamePhase == GameControlData.GAME_PHASE_PENALTY_SHOOT_OUT) {
                         for (int j = 0; j < data.team[i].penaltyShot; j++) {
                             gl.glTranslatef(0, 2.5f * window.getWidth() * 32 / 1920, 0);
                             if ((data.team[i].singleShots & (1 << j)) != 0) {

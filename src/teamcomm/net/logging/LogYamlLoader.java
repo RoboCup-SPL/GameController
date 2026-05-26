@@ -63,21 +63,24 @@ class LogYamlLoader extends Constructor {
     }
 
     /** Helper to map state names to the state number. "timeout" is later mapped to "initial". */
-    private final List<String> states = Arrays.asList("initial", "ready", "set", "playing", "finished", "standby"); // timeout = 0
+    private final List<String> states = Arrays.asList("initial", "ready", "set", "playing", "finished"); // timeout = 0
 
-    /** Helper to map set play names to set player numbers. */
+    /** Helper to map division names to division numbers. */
+    private final List<String> divisions = Arrays.asList("small", "middle", "large");
+
+    /** Helper to map set play names to set play numbers. */
     private final List<String> setPlays = Arrays.asList(
-            "noSetPlay", "goalKick","pushingFreeKick", "cornerKick", "kickIn", "penaltyKick");
+            "noSetPlay", "directFreeKick", "indirectFreeKick", "penaltyKick", "throwIn", "goalKick", "cornerKick"); // kickOff = 0
 
     /** Helper to map color names to color numbers. */
     private final List<String> colors = Arrays.asList(
             "blue", "red", "yellow", "black", "white", "green", "orange", "purple", "brown", "gray");
 
-    /** Helper to map penalty names to penalty numbers. "playingWithArmsHands" is later mapped to "ballHolding". */
+    /** Helper to map penalty names to penalty numbers. */
     private final List<String> penalties = Arrays.asList(
-            "noPenalty", "ballHolding", "playerPushing", "motionInSet", "fallenInactive", "illegalPosition",
-            "leavingTheField", "pickedUp", "localGameStuck", "illegalPositionInSet", "playerStance",
-            "motionInStandby", "_12", "_13", "substitute"); // playingWithArmsHands = 1
+            "noPenalty", "illegalPositioning", "motionInSet", "motionInStop", "localGameStuck",
+            "incapableRobot", "pickedUp", "ballHolding", "leavingTheField", "playingWithArmsHands",
+            "pushing", "cautioned", "sentOff", "substitute");
 
     /** The current state of the GameController packet. */
     private final GameControlData data = new GameControlData();
@@ -211,7 +214,7 @@ class LogYamlLoader extends Constructor {
             if (params.get("competition") instanceof Map) {
                 @SuppressWarnings("unchecked")
                 final Map<String, Object> competition = (Map<String, Object>) params.get("competition");
-                data.competitionType = COMPETITION_TYPE_MIDDLE; // TODO: competition.get("challengeMode") == null ? COMPETITION_TYPE_NORMAL : COMPETITION_TYPE_MOST_PASSES;
+                data.competitionType = (byte) divisions.indexOf(competition.get("division"));
                 data.playersPerTeam = (byte)(int)(Integer) competition.get("playersPerTeam");
             }
             if (params.get("game") instanceof Map) {
@@ -246,10 +249,13 @@ class LogYamlLoader extends Constructor {
      */
     private void parseGameControlData(final Map<String, ?> entry) {
         data.packetNumber = (byte) (data.packetNumber + 1);
-        data.gamePhase = entry.get("phase").equals("PenaltyShootout") ? GAME_PHASE_PENALTYSHOOT : GAME_PHASE_NORMAL;
-        data.gameState = (byte) Math.max(0, states.indexOf(entry.get("state")));
-        data.setPlay = (byte) Math.max(0, setPlays.indexOf(entry.get("setPlay")));
-        data.firstHalf = entry.get("phase").equals("firstHalf") ? C_TRUE : C_FALSE;
+        final String phase = (String) entry.get("phase");
+        data.gamePhase = phase.equals("penaltyShootout") ? GAME_PHASE_PENALTY_SHOOT_OUT
+                       : phase.contains("Extra") ? GAME_PHASE_EXTRA_TIME
+                       : GAME_PHASE_NORMAL;
+        data.gameState = (byte) Math.max(0, states.indexOf(entry.get("state"))); // max(0, ...) maps timeout to 0.
+        data.setPlay = (byte) Math.max(0, setPlays.indexOf(entry.get("setPlay"))); // max(0, ...) maps kickOff to 0.
+        data.firstHalf = phase.startsWith("first") ? C_TRUE : C_FALSE;
         final Object kickingSide = entry.get("kickingSide");
         data.kickingTeam = kickingSide == null ? -1 : kickingSide.equals("home") ? home.teamNumber : away.teamNumber;
         if (entry.get("primaryTimer") instanceof Map) {
@@ -312,7 +318,7 @@ class LogYamlLoader extends Constructor {
      */
     private PlayerInfo parsePlayerInfo(final Map<String, Object> entry) {
         final PlayerInfo info = new PlayerInfo();
-        info.penalty = (byte) Math.abs(penalties.indexOf(entry.get("penalty")));
+        info.penalty = (byte) penalties.indexOf(entry.get("penalty"));
         if (entry.get("penaltyTimer") instanceof String) {
             info.secsTillUnpenalised = 0;
         }
@@ -325,6 +331,7 @@ class LogYamlLoader extends Constructor {
                 info.secsTillUnpenalised = (byte) (int) list.get(0);
             }
         }
+        info.cautions = (byte)(int)(Integer) entry.get("cautions");
         return info;
     }
 }

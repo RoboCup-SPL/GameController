@@ -22,7 +22,7 @@ public class GameControlData implements Serializable {
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final String GAMECONTROLLER_TRUEGAMEDATA_STRUCT_HEADER = "RGTD";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 19;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 20;
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte TEAM_YELLOW = 2;
@@ -39,8 +39,8 @@ public class GameControlData implements Serializable {
     public static final byte COMPETITION_TYPE_LARGE = 2;
 
     public static final byte GAME_PHASE_NORMAL = 0;
-    public static final byte GAME_PHASE_PENALTYSHOOT = 1;
-    public static final byte GAME_PHASE_EXTRATIME = 2;
+    public static final byte GAME_PHASE_PENALTY_SHOOT_OUT = 1;
+    public static final byte GAME_PHASE_EXTRA_TIME = 2;
     public static final byte GAME_PHASE_TIMEOUT = 3;
 
     public static final byte STATE_INITIAL = 0;
@@ -103,9 +103,9 @@ public class GameControlData implements Serializable {
     public byte playersPerTeam = 0;                              // the number of players on a team
     public byte competitionType = COMPETITION_TYPE_SMALL;        // type of the competition (COMPETITION_TYPE_SMALL, etc)
     public byte stopped = C_FALSE;                               // ...
-    public byte gamePhase = GAME_PHASE_NORMAL;                   // phase of the game (GAME_PHASE_NORMAL, GAME_PHASE_PENALTYSHOOT, etc)
-    public byte gameState = STATE_INITIAL;                       // state of the game (STATE_READY, STATE_PLAYING, etc)
-    public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_KICK, etc)
+    public byte gamePhase = GAME_PHASE_NORMAL;                   // phase of the game (GAME_PHASE_NORMAL, etc)
+    public byte gameState = STATE_INITIAL;                       // state of the game (STATE_INITIAL, etc)
+    public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, etc)
     public byte firstHalf = C_TRUE;                              // 1 = game in first half, 0 otherwise
     public byte kickingTeam;                                     // the team number of the next team to kick off, free kick etc, or KICKING_TEAM_NONE
     public short secsRemaining = 0;                              // estimate of number of seconds remaining in the half
@@ -223,11 +223,11 @@ public class GameControlData implements Serializable {
             case GAME_PHASE_NORMAL:
                 temp = "normal";
                 break;
-            case GAME_PHASE_PENALTYSHOOT:
-                temp = "penaltyshoot";
+            case GAME_PHASE_PENALTY_SHOOT_OUT:
+                temp = "penalty shoot-out";
                 break;
-            case GAME_PHASE_EXTRATIME:
-                temp = "extratime";
+            case GAME_PHASE_EXTRA_TIME:
+                temp = "extra time";
                 break;
             case GAME_PHASE_TIMEOUT:
                 temp = "timeout";
