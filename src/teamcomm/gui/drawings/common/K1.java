@@ -56,7 +56,7 @@ public class K1 extends PerPlayer {
             gl.glPushMatrix();
 
             if (player.getPenalty() != PlayerInfo.PENALTY_NONE && player.getPenalty() != PlayerInfo.PENALTY_MOTION_IN_SET) {
-                gl.glTranslatef(-msg.playerNum, -3.5f, 0);
+                gl.glTranslatef(-msg.playerNum, -7.f, 0);
                 gl.glRotatef(-90, 0, 0, 1);
             } else {
                 gl.glTranslatef(msg.pose[0] / 1000.f, msg.pose[1] / 1000.f, 0);
