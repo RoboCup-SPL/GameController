@@ -60,49 +60,33 @@ public class BHumanMessage extends AdvancedMessage {
 
     public enum SetPlay__Type {
         none,
-        directKickOff,
         directKickOff5v5,
         directKickOff3v3,
-        directKickOff3v3b,
-        kiteKickOff,
         diamondKickOff5v5,
         arrowKickOff5v5,
         opponentKickOff3v3,
-        opponentKickOff3v3b,
-        theOneTrueOwnPenaltyKick,
-        theOneTrueOwnPenaltyKickAttacking,
         ownPenaltyKick5v5,
         ownPenaltyKick3v3,
-        theOneTrueOpponentPenaltyKick,
         opponentPenaltyKick5v5,
         opponentPenaltyKick3v3,
-        ownCornerKick,
-        ownCornerKickAttacking,
-        ownGoalKick,
         ownKickInOwnHalf,
         ownKickInOpponentHalf,
-        passFreeKick3v3,
-        passFreeKick3v3b,
-        passFreeKick5v5,
-        cornerKick3v3,
-        cornerKick3v3b,
-        cornerKick5v5,
+        ownGoalKick,
+        ownCornerKick,
         opponentCornerKick,
-        placeholder3v3,
-        placeholder3v3b,
-        placeholder5v5,
+        opponentGoalKick,
+        opponentKickInOpponentHalf,
+        opponentKickInOwnHalf,
+        opponentFreeKickOwnHalf,
+        opponentFreeKickOpponentHalf,
         UNKNOWN
     }
 
     public enum Tactic__Type {
         none,
-        t123,
-        t222,
-        t033,
         t211,
         t121,
         t112,
-        t201,
         t101,
         UNKNOWN
     }
@@ -118,8 +102,8 @@ public class BHumanMessage extends AdvancedMessage {
         public Role__Type role;
 
         public void read(final BitStream __bitStream, final long __timestampBase) {
-            proposedTactic = Tactic__Type.values()[Math.min((int) __bitStream.readBits(4), Tactic__Type.values().length - 1)];
-            acceptedTactic = Tactic__Type.values()[Math.min((int) __bitStream.readBits(4), Tactic__Type.values().length - 1)];
+            proposedTactic = Tactic__Type.values()[Math.min((int) __bitStream.readBits(3), Tactic__Type.values().length - 1)];
+            acceptedTactic = Tactic__Type.values()[Math.min((int) __bitStream.readBits(3), Tactic__Type.values().length - 1)];
             proposedMirror = __bitStream.readBoolean();
             acceptedMirror = __bitStream.readBoolean();
             proposedSetPlay = SetPlay__Type.values()[Math.min((int) __bitStream.readBits(5), SetPlay__Type.values().length - 1)];
@@ -209,24 +193,6 @@ public class BHumanMessage extends AdvancedMessage {
         }
     }
 
-    public enum RefereeGesture__Gesture {
-        none,
-        kickInLeft,
-        kickInRight,
-        ready,
-        UNKNOWN
-    }
-
-    public static class RefereeSignal {
-        public RefereeGesture__Gesture signal;
-        public Timestamp timeWhenDetected;
-
-        public void read(final BitStream __bitStream, final long __timestampBase) {
-            signal = RefereeGesture__Gesture.values()[Math.min((int) __bitStream.readBits(2), RefereeGesture__Gesture.values().length - 1)];
-            timeWhenDetected = __bitStream.readTimestamp(__timestampBase, 11, 4, -1, true);
-        }
-    }
-
     public static class RobotStatus {
         public boolean isUpright;
         public Timestamp timeWhenLastUpright;
@@ -289,7 +255,6 @@ public class BHumanMessage extends AdvancedMessage {
     public BehaviorStatus theBehaviorStatus = new BehaviorStatus();
     public StrategyStatus theStrategyStatus = new StrategyStatus();
     public IndirectKick theIndirectKick = new IndirectKick();
-    public RefereeSignal theRefereeSignal = new RefereeSignal();
 
     @Override
     public String[] display() {
@@ -319,6 +284,5 @@ public class BHumanMessage extends AdvancedMessage {
         theBehaviorStatus.read(__bitStream, __timestampBase);
         theStrategyStatus.read(__bitStream, __timestampBase);
         theIndirectKick.read(__bitStream, __timestampBase);
-        theRefereeSignal.read(__bitStream, __timestampBase);
     }
 }
