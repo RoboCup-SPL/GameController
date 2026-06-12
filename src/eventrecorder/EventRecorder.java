@@ -138,7 +138,7 @@ public class EventRecorder {
                             setPlayString = "Direct Free Kick Complete";
                             break;
                         case GameControlData.SET_PLAY_INDIRECT_FREE_KICK:
-                            setPlayString = "Inirect Free Kick Complete";
+                            setPlayString = "Indirect Free Kick Complete";
                             break;
                         case GameControlData.SET_PLAY_PENALTY_KICK:
                             setPlayString = "Penalty Kick Complete";
