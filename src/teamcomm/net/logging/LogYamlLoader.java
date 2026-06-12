@@ -96,7 +96,7 @@ class LogYamlLoader extends Constructor {
 
     /**
      * Load the YAML log file.
-     * Note the file size is currently limited to 64 mb.
+     * Note the file size is currently limited to 2 GiB - 1.
      * @param file The file to load.
      * @param queue The queue that is filled with the data that was
      *              found in the file.
