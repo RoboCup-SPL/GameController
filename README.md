@@ -2,11 +2,10 @@
 
 These are the GameController support tools developed by team B-Human for
 the RoboCup HSL. Originally, this repository contained the GameController
-as well. It was used in the RoboCup SPL from 2013 to 2022. Since 2023,
-[a new version](https://github.com/RoboCup-SPL/GameController3) is being used.
-
-Please note that the Humanoid League currently uses a
-[fork](https://github.com/RoboCup-Humanoid-TC/GameController).
+as well. It was used in the RoboCup SPL from 2013 to 2022. From 2023 to 2025,
+[a new version](https://github.com/RoboCup-SPL/GameController3) was used.
+The Humanoid Soccer League (2026-) is using
+[this version](https://github.com/RoboCup-HumanoidSoccerLeague/GameController).
 
 The sources mentioned in some sections of this document are available at
 [https://github.com/RoboCup-SPL/GameController](https://github.com/RoboCup-SPL/GameController).
