@@ -224,9 +224,9 @@ public class GameState implements GameControlDataEventListener {
         // state changed from or to initial/finished
         final StringBuilder logfileName = new StringBuilder();
         if (e.data.firstHalf == GameControlData.C_TRUE) {
-            logfileName.append(getTeamName((int) e.data.team[0].teamNumber, false, false)).append("_").append(getTeamName((int) e.data.team[1].teamNumber, false, false));
+            logfileName.append(cleanupTeamName(getTeamName((int) e.data.team[0].teamNumber, false, false))).append("_").append(cleanupTeamName(getTeamName((int) e.data.team[1].teamNumber, false, false)));
         } else {
-            logfileName.append(getTeamName((int) e.data.team[1].teamNumber, false, false)).append("_").append(getTeamName((int) e.data.team[0].teamNumber, false, false));
+            logfileName.append(cleanupTeamName(getTeamName((int) e.data.team[1].teamNumber, false, false))).append("_").append(cleanupTeamName(getTeamName((int) e.data.team[0].teamNumber, false, false)));
         }
         if (e.data.gamePhase != GameControlData.GAME_PHASE_PENALTY_SHOOT_OUT) {
             logfileName.append(e.data.firstHalf == GameControlData.C_TRUE ? "_1st" : "_2nd").append("Half");
@@ -518,6 +518,16 @@ public class GameState implements GameControlDataEventListener {
         } else {
             return "Unknown" + (withPrefix ? " Team" : "");
         }
+    }
+
+    /**
+     * Replaces characters in team names that shouldn't be part of a file name.
+     *
+     * @param teamName the raw team name
+     * @return the team name so that it can appear in a file name
+     */
+    private String cleanupTeamName(final String teamName) {
+        return teamName.replaceAll("[ <>:\"/\\\\|?*_]", "-");
     }
 
     /**
