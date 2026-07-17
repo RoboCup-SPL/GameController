@@ -35,7 +35,7 @@ import teamcomm.gui.drawings.Text;
 public abstract class View3D implements GLEventListener, TeamEventListener {
 
     public static final int ANIMATION_FPS = 10;
-    private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
+    private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static float scaleFactor = 1.f;
 
     protected AnimatorBase animator;
@@ -288,7 +288,7 @@ public abstract class View3D implements GLEventListener, TeamEventListener {
      * @param device The graphics device used for drawing.
      */
     public static void updateDesktopScalingFactor(final GraphicsDevice device) {
-        scaleFactor = IS_WINDOWS ? 1.f
-                : (float) device.getDefaultConfiguration().getDefaultTransform().getScaleX();
+        scaleFactor = IS_OSX ? (float) device.getDefaultConfiguration().getDefaultTransform().getScaleX()
+                : 1.f;
     }
 }
