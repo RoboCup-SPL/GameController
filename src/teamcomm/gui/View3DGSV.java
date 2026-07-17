@@ -55,7 +55,6 @@ public class View3DGSV extends View3D {
     private final TextRenderer[] textRenderers = new TextRenderer[4];
     private final int[] textRendererSizes = new int[4];
     private final Set<String> activeDrawings;
-    private static float SCALE_FACTOR = getDesktopScalingFactor();
 
     private final float nearFieldBorderY;
 
@@ -232,6 +231,7 @@ public class View3DGSV extends View3D {
         textRendererSizes[RENDERER_GAME_PHASE] = 80 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_TIME] = 120 * window.getWidth() / 1920;
         textRendererSizes[RENDERER_SCORE] = 320 * window.getWidth() / 1920;
+        updateDesktopScalingFactor(currentScreenDevice);
         final float scaleFactor = getDesktopScalingFactor();
         for (int i = 0; i < textRenderers.length; i++) {
             textRenderers[i] = new TextRenderer(new Font(Font.DIALOG, Font.PLAIN, (int) (textRendererSizes[i] / scaleFactor)), true, true);
@@ -525,17 +525,5 @@ public class View3DGSV extends View3D {
             }
         }
         super.teamChanged(e);
-    }
-
-    /**
-     * Determine the scaling factor of the desktop, because text would be drawn in the wrong size
-     * if the factor differs from 1.
-     * @return The scaling factor, e.g. 2 on Retina displays.
-     */
-    private static float getDesktopScalingFactor() {
-        final GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice().getDefaultConfiguration();
-        final AffineTransform transform = gfxConfig.getDefaultTransform();
-        return (float) transform.getScaleX();
     }
 }

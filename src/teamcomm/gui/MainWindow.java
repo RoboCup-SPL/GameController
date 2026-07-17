@@ -34,6 +34,7 @@ import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
+import teamcomm.gui.drawings.Text;
 import teamcomm.net.logging.LogReplayer;
 
 /**
@@ -131,6 +132,9 @@ public class MainWindow extends JFrame implements TeamEventListener {
         mb.add(createFileMenu());
         mb.add(createViewMenu());
         setJMenuBar(mb);
+
+        // Update desktop scaling factor for window
+        View3D.updateDesktopScalingFactor(getGraphicsConfiguration().getDevice());
 
         // Display window
         setPreferredSize(new Dimension(1442, 720));
