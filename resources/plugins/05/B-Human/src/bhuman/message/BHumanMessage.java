@@ -46,6 +46,8 @@ public class BHumanMessage extends AdvancedMessage {
         attackingGoalkeeper,
         defender,
         defenderL,
+        defenderML,
+        defenderMR,
         defenderR,
         midfielder,
         midfielderM,
@@ -60,25 +62,34 @@ public class BHumanMessage extends AdvancedMessage {
 
     public enum SetPlay__Type {
         none,
-        directKickOff5v5,
-        directKickOff3v3,
-        diamondKickOff5v5,
-        arrowKickOff5v5,
-        opponentKickOff3v3,
-        ownPenaltyKick5v5,
-        ownPenaltyKick3v3,
-        opponentPenaltyKick5v5,
-        opponentPenaltyKick3v3,
+        ownKickOff,
+        ownKickOff11v11,
+        opponentKickOff,
+        opponentKickOff11v11,
+        ownPenaltyKick,
+        ownPenaltyKick11v11,
+        opponentPenaltyKick,
+        opponentPenaltyKick11v11,
         ownKickInOwnHalf,
+        ownKickInOwnHalf11v11,
         ownKickInOpponentHalf,
+        ownKickInOpponentHalf11v11,
         ownGoalKick,
+        ownGoalKick11v11,
         ownCornerKick,
+        ownCornerKick11v11,
         opponentCornerKick,
+        opponentCornerKick11v11,
         opponentGoalKick,
+        opponentGoalKick11v11,
         opponentKickInOpponentHalf,
+        opponentKickInOpponentHalf11v11,
         opponentKickInOwnHalf,
+        opponentKickInOwnHalf11v11,
         opponentFreeKickOwnHalf,
+        opponentFreeKickOwnHalf11v11,
         opponentFreeKickOpponentHalf,
+        opponentFreeKickOpponentHalf11v11,
         UNKNOWN
     }
 
@@ -87,7 +98,8 @@ public class BHumanMessage extends AdvancedMessage {
         t211,
         t121,
         t112,
-        t101,
+        t343,
+        t433,
         UNKNOWN
     }
 
@@ -166,10 +178,10 @@ public class BHumanMessage extends AdvancedMessage {
         public Eigen.Vector2f velocity = new Eigen.Vector2f();
 
         public void read(final BitStream __bitStream, final long __timestampBase) {
-            position.x = __bitStream.readFloat(-12800, 12800, 11);
-            position.y = __bitStream.readFloat(-12800, 12800, 11);
-            velocity.x = __bitStream.readFloat(-8000, 8000, 11);
-            velocity.y = __bitStream.readFloat(-8000, 8000, 11);
+            position.x = __bitStream.readFloat(-29000, 29000, 13);
+            position.y = __bitStream.readFloat(-29000, 29000, 13);
+            velocity.x = __bitStream.readFloat(-10000, 10000, 12);
+            velocity.y = __bitStream.readFloat(-10000, 10000, 12);
         }
     }
 
