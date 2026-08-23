@@ -44,7 +44,7 @@ public class TeamInfo implements Serializable {
             MAX_NUM_PLAYERS * PlayerInfo.SIZE;
 
     //this is streamed
-    public byte teamNumber;                                         // unique team number
+    public int teamNumber;                                          // unique team number
     public byte fieldPlayerColor;                                   // color of the field players
     public byte goalkeeperColor;                                    // color of the goalkeeper
     public byte goalkeeper = 1;                                     // player number of the goalkeeper (0-MAX_NUM_PLAYERS)
@@ -71,7 +71,7 @@ public class TeamInfo implements Serializable {
     public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(teamNumber);
+        buffer.put((byte) teamNumber);
         buffer.put(fieldPlayerColor);
         buffer.put(goalkeeperColor);
         buffer.put(goalkeeper);
@@ -93,7 +93,7 @@ public class TeamInfo implements Serializable {
      */
     public void fromByteArray(ByteBuffer buffer) {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-        teamNumber = buffer.get();
+        teamNumber = (char) buffer.get();
         fieldPlayerColor = buffer.get();
         goalkeeperColor = buffer.get();
         goalkeeper = buffer.get();

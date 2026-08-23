@@ -107,7 +107,7 @@ public class GameControlData implements Serializable {
     public byte gameState = STATE_INITIAL;                       // state of the game (STATE_INITIAL, etc)
     public byte setPlay = SET_PLAY_NONE;                         // active set play (SET_PLAY_NONE, etc)
     public byte firstHalf = C_TRUE;                              // 1 = game in first half, 0 otherwise
-    public byte kickingTeam;                                     // the team number of the next team to kick off, free kick etc, or KICKING_TEAM_NONE
+    public int kickingTeam;                                      // the team number of the next team to kick off, free kick etc, or KICKING_TEAM_NONE
     public short secsRemaining = 0;                              // estimate of number of seconds remaining in the half
     public short secondaryTime = 0;                              // number of seconds shown as secondary time (remaining ready, until free ball, etc)
     public final TeamInfo[] team = new TeamInfo[2];
@@ -141,7 +141,7 @@ public class GameControlData implements Serializable {
         buffer.put(gameState);
         buffer.put(setPlay);
         buffer.put(firstHalf);
-        buffer.put(kickingTeam);
+        buffer.put((byte) kickingTeam);
         buffer.putShort(secsRemaining);
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {
@@ -174,7 +174,7 @@ public class GameControlData implements Serializable {
         gameState = buffer.get();
         setPlay = buffer.get();
         firstHalf = buffer.get();
-        kickingTeam = buffer.get();
+        kickingTeam = (char) buffer.get();
         secsRemaining = buffer.getShort();
         secondaryTime = buffer.getShort();
         for (final TeamInfo t : team) {

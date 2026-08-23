@@ -42,7 +42,7 @@ public class EventRecorder {
     private static TeamInfo[] lastTeamData = null;
     private static byte lastGameState = -1;
     private static byte lastSetPlay = -1;
-    private static byte lastKickingTeam = -1;
+    private static int lastKickingTeam = -1;
 
     private static final boolean[] logPenalty = new boolean[16];
     private static boolean logFreeKicks = true;
@@ -192,7 +192,7 @@ public class EventRecorder {
                             setPlayString = "";
                             break;
                     }
-                    setPlayString += Byte.toString(data.kickingTeam);
+                    setPlayString += Integer.toString(data.kickingTeam);
 
                     // Insert before empty logEntries:
                     int insertPlace = EventRecorder.model.logEntries.size();
