@@ -74,57 +74,61 @@ public class GameControllerInfo extends Static {
 
             // Display game state
             final String state;
-            switch (data.gameState) {
-                case GameControlData.STATE_INITIAL:
-                    state = "Initial";
-                    break;
-                case GameControlData.STATE_READY:
-                    if (data.setPlay == GameControlData.SET_PLAY_PENALTY_KICK) {
-                        state = "Ready (Penalty Kick)";
-                    } else {
-                        state = "Ready";
-                    }
-                    break;
-                case GameControlData.STATE_SET:
-                    if (data.setPlay == GameControlData.SET_PLAY_PENALTY_KICK) {
-                        state = "Set (Penalty Kick)";
-                    } else {
-                        state = "Set";
-                    }
-                    break;
-                case GameControlData.STATE_PLAYING:
-                    switch (data.setPlay) {
-                        case GameControlData.SET_PLAY_NONE:
-                            state = "Playing";
-                            break;
-                        case GameControlData.SET_PLAY_DIRECT_FREE_KICK:
-                            state = "Direct Free Kick";
-                            break;
-                        case GameControlData.SET_PLAY_INDIRECT_FREE_KICK:
-                            state = "Indirect Free Kick";
-                            break;
-                        case GameControlData.SET_PLAY_PENALTY_KICK:
-                            state = "Penalty Kick";
-                            break;
-                        case GameControlData.SET_PLAY_THROW_IN:
-                            state = "Throw-in";
-                            break;
-                        case GameControlData.SET_PLAY_GOAL_KICK:
-                            state = "Goal Kick";
-                            break;
-                        case GameControlData.SET_PLAY_CORNER_KICK:
-                            state = "Corner Kick";
-                            break;
-                        default:
-                            state = "";
-                    }
-                    break;
-                case GameControlData.STATE_FINISHED:
-                    state = "Finished";
-                    break;
-                default:
-                    state = "";
-                    break;
+            if (data.stopped != 0) {
+                state = "Stopped";
+            } else {
+                switch (data.gameState) {
+                    case GameControlData.STATE_INITIAL:
+                        state = "Initial";
+                        break;
+                    case GameControlData.STATE_READY:
+                        if (data.setPlay == GameControlData.SET_PLAY_PENALTY_KICK) {
+                            state = "Ready (Penalty Kick)";
+                        } else {
+                            state = "Ready";
+                        }
+                        break;
+                    case GameControlData.STATE_SET:
+                        if (data.setPlay == GameControlData.SET_PLAY_PENALTY_KICK) {
+                            state = "Set (Penalty Kick)";
+                        } else {
+                            state = "Set";
+                        }
+                        break;
+                    case GameControlData.STATE_PLAYING:
+                        switch (data.setPlay) {
+                            case GameControlData.SET_PLAY_NONE:
+                                state = "Playing";
+                                break;
+                            case GameControlData.SET_PLAY_DIRECT_FREE_KICK:
+                                state = "Direct Free Kick";
+                                break;
+                            case GameControlData.SET_PLAY_INDIRECT_FREE_KICK:
+                                state = "Indirect Free Kick";
+                                break;
+                            case GameControlData.SET_PLAY_PENALTY_KICK:
+                                state = "Penalty Kick";
+                                break;
+                            case GameControlData.SET_PLAY_THROW_IN:
+                                state = "Throw-in";
+                                break;
+                            case GameControlData.SET_PLAY_GOAL_KICK:
+                                state = "Goal Kick";
+                                break;
+                            case GameControlData.SET_PLAY_CORNER_KICK:
+                                state = "Corner Kick";
+                                break;
+                            default:
+                                state = "";
+                        }
+                        break;
+                    case GameControlData.STATE_FINISHED:
+                        state = "Finished";
+                        break;
+                    default:
+                        state = "";
+                        break;
+                }
             }
             Text.drawText(state, 0, 0.3f, 0.3f);
 
